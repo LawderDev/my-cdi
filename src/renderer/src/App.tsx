@@ -1,39 +1,56 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import React, { useState } from 'react'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { CssBaseline, Box } from '@mui/material'
+import Navbar from './components/Navbar'
+import JournalPage from './pages/JournalPage'
+import StatisticsPage from './pages/StatisticsPage'
+
+// Thème MUI personnalisé
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2'
+    },
+    secondary: {
+      main: '#dc004e'
+    },
+    background: {
+      default: '#f5f5f5'
+    }
+  },
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
+  }
+})
+
+type PageType = 'journal' | 'statistics'
 
 function App(): React.JSX.Element {
-  const ipcHandle = (): void =>
-    window.electron.ipcRenderer.send('student:add', {
-      nom: 'Doe',
-      prenom: 'John',
-      classe: 'Terminale'
-    })
+  const [currentPage, setCurrentPage] = useState<PageType>('journal')
+
+  const handlePageChange = (page: PageType) => {
+    setCurrentPage(page)
+  }
+
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case 'journal':
+        return <JournalPage />
+      case 'statistics':
+        return <StatisticsPage />
+      default:
+        return <JournalPage />
+    }
+  }
 
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ minHeight: '100vh', backgroundColor: 'background.default' }}>
+        <Navbar currentPage={currentPage} onPageChange={handlePageChange} />
+        {renderCurrentPage()}
+      </Box>
+    </ThemeProvider>
   )
 }
 
