@@ -8,6 +8,10 @@ export function registerFrequentationRoutes(
     return frequentationController.addFrequentation(startsAt, activity, studentId)
   })
 
+  ipcMain.on('frequentation:addMultiple', (_, { frequentations }) => {
+    return frequentationController.addMultipleFrequentations(frequentations)
+  })
+
   ipcMain.on('frequentation:getByDate', (_, date) => {
     return frequentationController.getFrequentationByDate(date)
   })
