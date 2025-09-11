@@ -30,7 +30,12 @@ function App(): React.JSX.Element {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box
-        sx={{ height: '100vh', width: '100vw', backgroundColor: theme.palette.background.default }}
+        sx={{
+          height: '100vh',
+          width: '100vw',
+          backgroundColor: theme.palette.background.default,
+          overflow: 'scroll'
+        }}
       >
         <Navbar currentPage={currentPage} onPageChange={handlePageChange} />
         {renderCurrentPage()}

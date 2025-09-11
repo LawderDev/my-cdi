@@ -1,74 +1,87 @@
 import React from 'react'
-import { Container, Typography, Paper, Box, Autocomplete, Chip, TextField } from '@mui/material'
+import { Container, Autocomplete, Chip, TextField, Checkbox, Button } from '@mui/material'
+import Table from '../components/Table'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker'
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import dayjs from 'dayjs'
-import { theme } from '../theme'
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />
+const checkedIcon = <CheckBoxIcon fontSize="small" />
 
 const JournalPage: React.FC = () => {
   const fixedOptions = [top100Films[6]]
   const [value, setValue] = React.useState([...fixedOptions, top100Films[13]])
 
   return (
-    <Container sx={{ mt: 4, mb: 4, display: 'flex', gap: 10, height: '85%', alignItems: 'center' }}>
+    <Container sx={{ mt: '30px', minWidth: '100%', display: 'flex', gap: 3 }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <StaticDateTimePicker displayStaticWrapperAs="mobile" value={dayjs()} />
-      </LocalizationProvider>
-      <Container sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 2}}>
-        <Autocomplete
-          multiple
-          id="fixed-tags-demo"
-          value={value}
-          onChange={(event, newValue) => {
-            setValue([
-              ...fixedOptions,
-              ...newValue.filter((option) => !fixedOptions.includes(option))
-            ])
-          }}
-          options={top100Films}
-          getOptionLabel={(option) => option.title}
-          renderValue={(values, getItemProps) =>
-            values.map((option, index) => {
-              const { key, ...itemProps } = getItemProps({ index })
-              return (
-                <Chip
-                  key={key}
-                  label={option.title}
-                  {...itemProps}
-                  disabled={fixedOptions.includes(option)}
-                />
-              )
-            })
-          }
-          style={{ width: 500 }}
-          renderInput={(params) => (
-            <TextField {...params} label="Fixed tag" placeholder="Favorites" />
-          )}
+        <StaticDateTimePicker
+          value={dayjs()}
+          sx={{ height: '570px', marginTop: '4.9%', marginLeft: '24px' }}
         />
-        <Paper
-          elevation={2}
-          sx={{
-            p: 4,
-            height: '85%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: theme.palette.background.paper
-          }}
-        >
-          <Box textAlign="center">
-            <Typography variant="h6" sx={{ color: theme.palette.text.primary }}>
-              Page en cours de développement
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ color: theme.palette.text.primary, opacity: 0.7, mt: 1 }}
-            >
-              Les fonctionnalités de gestion des fréquentations seront bientôt disponibles
-            </Typography>
-          </Box>
-        </Paper>
+      </LocalizationProvider>
+
+      <Container
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          height: '85vh'
+        }}
+      >
+        <Container sx={{ display: 'flex', padding: '0px !important' }}>
+          <Autocomplete
+            multiple
+            id="fixed-tags-demo"
+            limitTags={4}
+            sx={{ width: '80% !important' }}
+            value={value}
+            onChange={(_, newValue) => {
+              setValue([
+                ...fixedOptions,
+                ...newValue.filter((option) => !fixedOptions.includes(option))
+              ])
+            }}
+            options={top100Films}
+            getOptionLabel={(option) => option.title}
+            renderValue={(values, getItemProps) =>
+              values.map((option, index) => {
+                const { key, ...itemProps } = getItemProps({ index })
+                return (
+                  <Chip
+                    key={key}
+                    label={option.title}
+                    {...itemProps}
+                    disabled={fixedOptions.includes(option)}
+                  />
+                )
+              })
+            }
+            renderOption={(props, option, { selected }) => {
+              const { key, ...optionProps } = props
+              return (
+                <li key={key} {...optionProps}>
+                  <Checkbox
+                    icon={icon}
+                    checkedIcon={checkedIcon}
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                  />
+                  {option.title}
+                </li>
+              )
+            }}
+            style={{ width: 500 }}
+            renderInput={(params) => (
+              <TextField {...params} label="Fixed tag" placeholder="Favorites" />
+            )}
+          />
+          <Button variant="text" sx={{ marginLeft: '16px' }}>Ajouter les élèves</Button>
+        </Container>
+        <Table />
       </Container>
     </Container>
   )
