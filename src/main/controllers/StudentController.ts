@@ -61,6 +61,7 @@ export class StudentController {
     try {
       const rows = this.queries.getAllStudents.all()
       const students = rows.map((row: Record<string, unknown>) => Student.fromDbRow(row))
+      console.log('✅ Élèves récupérés:', students)
       return { success: true, data: students }
     } catch (error) {
       console.error('❌ Erreur récupération élèves:', error)

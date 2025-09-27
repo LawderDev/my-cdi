@@ -28,6 +28,20 @@ export class FrequentationController {
         `)
       },
 
+      getAllFrequentationsWithStudent: this.db.prepare(`
+        SELECT
+          f.id, f.starts_at, f.activity, f.created_at,
+          s.id as student_id, s.nom, s.prenom, s.classe
+        FROM frequentation f
+        JOIN students s ON f.student_id = s.id
+        ORDER BY f.starts_at DESC
+      `),
+
+      getAllFrequentations: this.db.prepare(`
+        SELECT * FROM frequentation
+        ORDER BY starts_at DESC
+      `),
+
       getFrequentationByDate: this.db.prepare(`
         SELECT
           f.id, f.starts_at, f.activity, f.created_at,
@@ -47,6 +61,28 @@ export class FrequentationController {
         WHERE DATE(f.starts_at) BETWEEN ? AND ?
         ORDER BY f.starts_at DESC
       `)
+    }
+  }
+
+  getAllFrequentations(withStudent: boolean = false): {
+    success: boolean
+    data?: object[]
+    error?: string
+  } {
+    try {
+      let rows: Record<string, unknown>[] = []
+      if (withStudent) {
+        rows = this.queries.getAllFrequentationsWithStudent.all()
+      } else {
+        rows = this.queries.getAllFrequentations.all()
+      }
+
+      const frequentations = rows.map((row) => Frequentation.fromDbRow(row).toJSON())
+      console.log('✅ Fréquentations récupérées:', frequentations)
+      return { success: true, data: frequentations }
+    } catch (error) {
+      console.error('❌ Erreur récupération fréquentations:', error)
+      return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
   }
 

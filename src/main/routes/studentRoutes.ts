@@ -2,19 +2,22 @@ import { ipcMain } from 'electron'
 import { StudentController } from '../controllers/StudentController'
 
 export function registerStudentRoutes(studentController: StudentController): void {
-  ipcMain.on('student:helloWorld', () => {
-    return studentController.helloWorld()
+  ipcMain.on('student:helloWorld', (event) => {
+    event.reply('student:helloWorld:response', studentController.helloWorld())
   })
 
-  ipcMain.on('student:add', (_, { nom, prenom, classe }) => {
-    return studentController.addStudent(nom, prenom, classe)
+  ipcMain.on('student:add', (event, { nom, prenom, classe }) => {
+    const result = studentController.addStudent(nom, prenom, classe)
+    event.reply('student:add:response', result)
   })
 
-  ipcMain.on('student:getAll', () => {
-    return studentController.getAllStudents()
+  ipcMain.on('student:getAll', (event) => {
+    const result = studentController.getAllStudents()
+    event.reply('student:getAll:response', result)
   })
 
-  ipcMain.on('student:getByClass', (_, classe) => {
-    return studentController.getStudentsByClass(classe)
+  ipcMain.on('student:getByClass', (event, classe) => {
+    const result = studentController.getStudentsByClass(classe)
+    event.reply('student:getByClass:response', result)
   })
 }

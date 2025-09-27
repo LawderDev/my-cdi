@@ -9,7 +9,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ currentPage, onPageChange }) => {
   return (
-    <AppBar position='relative'>
+    <AppBar position='static'>
       <Toolbar sx={{ backgroundColor: theme.palette.background.default }}>
         <Typography
           variant="h6"
