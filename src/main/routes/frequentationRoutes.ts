@@ -14,6 +14,11 @@ export function registerFrequentationRoutes(
     event.reply('frequentation:add:response', result)
   })
 
+  ipcMain.on('frequentation:delete', (event, { ids }) => {
+    const result = frequentationController.deleteFrequentations(ids)
+    event.reply('frequentation:delete:response', result)
+  })
+
   ipcMain.on('frequentation:addMultiple', (event, { frequentations }) => {
     const result = frequentationController.addMultipleFrequentations(frequentations)
     event.reply('frequentation:addMultiple:response', result)

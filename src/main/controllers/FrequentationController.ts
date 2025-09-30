@@ -66,7 +66,9 @@ export class FrequentationController {
         JOIN students s ON f.student_id = s.id
         WHERE DATE(f.starts_at) BETWEEN ? AND ?
         ORDER BY f.starts_at DESC
-      `)
+      `),
+
+      // La requête sera préparée dynamiquement dans la méthode deleteFrequentations
     }
   }
 
@@ -172,6 +174,24 @@ export class FrequentationController {
       }
     } catch (error) {
       console.error('❌ Erreur ajout multiple fréquentations:', error)
+      return { success: false, error: error instanceof Error ? error.message : String(error) }
+    }
+  }
+
+  deleteFrequentations(ids: number[]): { success: boolean; ids?: number[]; error?: string } {
+    try {
+      if (!ids || ids.length === 0) {
+        return { success: false, error: 'Aucun ID de fréquentation fourni pour la suppression' }
+      }
+
+      // Génère dynamiquement les placeholders (?, ?, ...)
+      const placeholders = ids.map(() => '?').join(', ')
+      const query = `DELETE FROM frequentation WHERE id IN (${placeholders})`
+      this.db.prepare(query).run(...ids)
+      console.log(`✅ Fréquentations supprimées: ${ids}`)
+      return { success: true, ids: ids }
+    } catch (error) {
+      console.error('❌ Erreur suppression fréquentations:', error)
       return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
   }

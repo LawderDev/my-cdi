@@ -37,6 +37,7 @@ const JournalPage: FC = () => {
   const [students, setStudents] = useState<StudentItem[]>([])
   const [selectedStudents, setSelectedStudents] = useState<StudentItem[]>([])
   const [frequentations, setFrequentations] = useState<FrequentationItem[]>([])
+  const [selectedFrequentations, setSelectedFrequentations] = useState<number[]>([])
 
   const initDatas = (): void => {
     getStudentsWithoutFrequentationAt(dayjs().format('YYYY-MM-DD'))
@@ -73,6 +74,16 @@ const JournalPage: FC = () => {
     }
   }
 
+  const handleDeleteFrequentations = (
+    _event: unknown,
+    data: { success: boolean; ids: number[] }
+  ): void => {
+    if (data.success) {
+      initDatas()
+      setSelectedFrequentations([])
+    }
+  }
+
   // Fonctions pour enregistrer les listeners
   const registerStudentsWithoutFrequentationListener = (): (() => void) => {
     return window.electron.ipcRenderer.on(
@@ -95,15 +106,24 @@ const JournalPage: FC = () => {
     )
   }
 
+  const registerDeleteFrequentationsListener = (): (() => void) => {
+    return window.electron.ipcRenderer.on(
+      'frequentation:delete:response',
+      handleDeleteFrequentations
+    )
+  }
+
   useEffect(() => {
     const removeStudentsListener = registerStudentsWithoutFrequentationListener()
     const removeFreqListener = registerFrequentationsListener()
     const removeCreateListener = registerCreateFrequentationListener()
+    const removeDeleteFreqListener = registerDeleteFrequentationsListener()
     initDatas()
     return () => {
       removeStudentsListener()
       removeFreqListener()
       removeCreateListener()
+      removeDeleteFreqListener()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -114,6 +134,11 @@ const JournalPage: FC = () => {
 
   const getFrequentationsByDate = (date: string): void => {
     window.electron.ipcRenderer.send('frequentation:getByDate', date)
+  }
+
+  const deleteFrequentations = (ids: number[]): void => {
+    console.log('Deleting frequentations with IDs:', ids)
+    window.electron.ipcRenderer.send('frequentation:delete', { ids })
   }
 
   const createFrequentation = (students: StudentItem[]): void => {
@@ -187,7 +212,37 @@ const JournalPage: FC = () => {
             Ajouter les élèves
           </Button>
         </Container>
-        <Table frequentations={frequentations} />
+        <Table
+          frequentations={frequentations}
+          selectedFrequentations={selectedFrequentations}
+          onSelectedFrequentationsChange={setSelectedFrequentations}
+          onDeleteFrequentation={deleteFrequentations}
+        />
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              if (selectedFrequentations.length === frequentations.length) {
+                setSelectedFrequentations([])
+              } else {
+                setSelectedFrequentations(frequentations.map((f) => f.id))
+              }
+            }}
+            disabled={frequentations.length === 0}
+          >
+            {selectedFrequentations.length === frequentations.length && frequentations.length > 0
+              ? 'Désélectionner tout'
+              : 'Sélectionner tout'}
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            disabled={selectedFrequentations.length === 0}
+            onClick={() => deleteFrequentations(selectedFrequentations)}
+          >
+            Supprimer la sélection
+          </Button>
+        </div>
       </Container>
     </Container>
   )

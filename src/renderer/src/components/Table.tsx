@@ -1,4 +1,4 @@
-import { JSX } from 'react'
+import { JSX, useState } from 'react'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -8,6 +8,9 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
+import IconButton from '@mui/material/IconButton'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 interface FrequentationItem {
   id: number
@@ -26,9 +29,37 @@ interface FrequentationItem {
 
 interface StudentsTableProps {
   frequentations: FrequentationItem[]
+  selectedFrequentations: number[]
+  onSelectedFrequentationsChange: (ids: number[]) => void
+  onDeleteFrequentation: (ids: number[]) => void
 }
 
-function StudentsTable({ frequentations }: StudentsTableProps): JSX.Element {
+function StudentsTable({
+  frequentations,
+  selectedFrequentations,
+  onSelectedFrequentationsChange,
+  onDeleteFrequentation,
+}: StudentsTableProps): JSX.Element {
+  const isFrequentationSelected = (id: number): boolean => selectedFrequentations.includes(id)
+
+  const handleSelectFrequentation = (id: number): void => {
+    if (isFrequentationSelected(id)) {
+      onSelectedFrequentationsChange(selectedFrequentations.filter((sid) => sid !== id))
+      return
+    }
+    onSelectedFrequentationsChange([...selectedFrequentations, id])
+  }
+
+  const deleteFrequentation = (event: React.MouseEvent, id: number): void => {
+    event.stopPropagation()
+    onDeleteFrequentation([id])
+  }
+
+  const modifyFrequentation = (event: React.MouseEvent, id: number): void => {
+    event.stopPropagation()
+    console.log('Modify frequentation with id:', id)
+  }
+
   return (
     <Box sx={{ width: '100%', height: '77vh' }}>
       <Paper sx={{ width: '100%', height: '100%', mb: 2, overflow: 'scroll', margin: 0, p: 2 }}>
@@ -51,6 +82,9 @@ function StudentsTable({ frequentations }: StudentsTableProps): JSX.Element {
                 <TableCell align="center" padding="normal">
                   Classe
                 </TableCell>
+                <TableCell align="center" padding="normal">
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -60,16 +94,18 @@ function StudentsTable({ frequentations }: StudentsTableProps): JSX.Element {
                   <TableRow
                     hover
                     role="checkbox"
-                    aria-checked={false}
+                    aria-checked={isFrequentationSelected(row.id)}
                     tabIndex={-1}
                     key={labelId}
-                    selected={false}
+                    selected={isFrequentationSelected(row.id)}
                     sx={{ cursor: 'pointer' }}
+                    onClick={() => handleSelectFrequentation(row.id)}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
                         color="primary"
-                        checked={false}
+                        checked={isFrequentationSelected(row.id)}
+                        onChange={() => handleSelectFrequentation(row.id)}
                         slotProps={{
                           input: {
                             'aria-labelledby': labelId
@@ -85,6 +121,27 @@ function StudentsTable({ frequentations }: StudentsTableProps): JSX.Element {
                     </TableCell>
                     <TableCell align="center" padding="normal">
                       {row.student.classe}
+                    </TableCell>
+                    <TableCell align="center" padding="normal">
+                      <IconButton
+                        aria-label="modifier"
+                        size="small"
+                        onClick={(event) => {
+                          modifyFrequentation(event, row.id)
+                        }}
+                      >
+                        <EditIcon fontSize="inherit" />
+                      </IconButton>
+                      <IconButton
+                        aria-label="supprimer"
+                        size="small"
+                        sx={{ ml: 1 }}
+                        onClick={(event) => {
+                          deleteFrequentation(event, row.id)
+                        }}
+                      >
+                        <DeleteIcon fontSize="inherit" />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 )
