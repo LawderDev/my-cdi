@@ -38,61 +38,82 @@ const JournalPage: FC = () => {
   const [selectedStudents, setSelectedStudents] = useState<StudentItem[]>([])
   const [frequentations, setFrequentations] = useState<FrequentationItem[]>([])
 
-  useEffect(() => {
-    initDatas()
-  }, [])
-
   const initDatas = (): void => {
-    getStudents()
-    getFrequentations()
+    getStudentsWithoutFrequentationAt(dayjs().format('YYYY-MM-DD'))
+    getFrequentationsByDate(dayjs().format('YYYY-MM-DD'))
   }
 
   const getStudentLabel: (student: StudentItem) => string = (student) =>
     `${student.nom} ${student.prenom} ${student.classe}`
 
-  useEffect(() => {
-    const listener = (_event: unknown, data: { success: boolean; data: StudentItem[] }): void => {
-      setStudents(data.data)
-    }
-    const removeListener = window.electron.ipcRenderer.on('student:getAll:response', listener)
+  // Listeners dédiés
+  const handleStudentsWithoutFrequentation = (
+    _event: unknown,
+    data: { success: boolean; data: StudentItem[] }
+  ): void => {
+    console.log('Students without frequentation data received:', data)
+    setStudents(data.data)
+  }
 
-    const freqListener = (
-      _event: unknown,
-      data: { success: boolean; data: FrequentationItem[] }
-    ): void => {
-      setFrequentations(data.data)
+  const handleFrequentationsByDate = (
+    _event: unknown,
+    data: { success: boolean; data: FrequentationItem[] }
+  ): void => {
+    console.log('Frequentations by date data received:', data)
+    setFrequentations(data.data)
+  }
+
+  const handleCreateFrequentation = (
+    _event: unknown,
+    data: { success: boolean; data: StudentItem[] }
+  ): void => {
+    if (data.success) {
+      initDatas()
+      setSelectedStudents([])
     }
-    const removeFreqListener = window.electron.ipcRenderer.on(
-      'frequentation:getAll:response',
-      freqListener
+  }
+
+  // Fonctions pour enregistrer les listeners
+  const registerStudentsWithoutFrequentationListener = (): (() => void) => {
+    return window.electron.ipcRenderer.on(
+      'student:getWithoutFrequentationAt:response',
+      handleStudentsWithoutFrequentation
     )
+  }
 
-    const createListener = (
-      _event: unknown,
-      data: { success: boolean; data: StudentItem[] }
-    ): void => {
-      if (data.success) {
-        initDatas()
-      }
-    }
-    const removeCreateListener = window.electron.ipcRenderer.on(
+  const registerFrequentationsListener = (): (() => void) => {
+    return window.electron.ipcRenderer.on(
+      'frequentation:getByDate:response',
+      handleFrequentationsByDate
+    )
+  }
+
+  const registerCreateFrequentationListener = (): (() => void) => {
+    return window.electron.ipcRenderer.on(
       'frequentation:addMultiple:response',
-      createListener
+      handleCreateFrequentation
     )
+  }
 
+  useEffect(() => {
+    const removeStudentsListener = registerStudentsWithoutFrequentationListener()
+    const removeFreqListener = registerFrequentationsListener()
+    const removeCreateListener = registerCreateFrequentationListener()
+    initDatas()
     return () => {
-      removeListener()
+      removeStudentsListener()
       removeFreqListener()
       removeCreateListener()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const getStudents = (): void => {
-    window.electron.ipcRenderer.send('student:getAll')
+  const getStudentsWithoutFrequentationAt = (date: string): void => {
+    window.electron.ipcRenderer.send('student:getWithoutFrequentationAt', date)
   }
 
-  const getFrequentations = (): void => {
-    window.electron.ipcRenderer.send('frequentation:getAll', { withStudent: true })
+  const getFrequentationsByDate = (date: string): void => {
+    window.electron.ipcRenderer.send('frequentation:getByDate', date)
   }
 
   const createFrequentation = (students: StudentItem[]): void => {
@@ -124,7 +145,7 @@ const JournalPage: FC = () => {
         <Container sx={{ display: 'flex', padding: '0px !important' }}>
           <Autocomplete
             multiple
-            id="fixed-tags-demo"
+            id="fixed-tags"
             limitTags={4}
             sx={{ width: '80% !important' }}
             value={selectedStudents}
@@ -166,7 +187,6 @@ const JournalPage: FC = () => {
             Ajouter les élèves
           </Button>
         </Container>
-        {frequentations.length}
         <Table frequentations={frequentations} />
       </Container>
     </Container>

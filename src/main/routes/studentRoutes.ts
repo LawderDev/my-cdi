@@ -16,6 +16,12 @@ export function registerStudentRoutes(studentController: StudentController): voi
     event.reply('student:getAll:response', result)
   })
 
+  ipcMain.on('student:getWithoutFrequentationAt', (event, date) => {
+    const result = studentController.getStudentsWithoutFrequentationAt(date)
+    console.log('Result from getWithoutFrequentationAt:', result)
+    event.reply('student:getWithoutFrequentationAt:response', result)
+  })
+
   ipcMain.on('student:getByClass', (event, classe) => {
     const result = studentController.getStudentsByClass(classe)
     event.reply('student:getByClass:response', result)

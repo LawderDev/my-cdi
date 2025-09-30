@@ -30,6 +30,14 @@ export class StudentController {
         ORDER BY nom, prenom
       `),
 
+      getStudentsWithoutFrequentationAt: this.db.prepare(`
+        SELECT * FROM students
+        WHERE id NOT IN (
+          SELECT DISTINCT student_id FROM frequentation WHERE DATE(starts_at) = DATE(?)
+        )
+        ORDER BY classe, nom, prenom
+      `),
+
       updateStudent: this.db.prepare(`
         UPDATE students
         SET nom = ?, prenom = ?, classe = ?, updated_at = CURRENT_TIMESTAMP
@@ -65,6 +73,25 @@ export class StudentController {
       return { success: true, data: students }
     } catch (error) {
       console.error('❌ Erreur récupération élèves:', error)
+      return { success: false, error: error instanceof Error ? error.message : String(error) }
+    }
+  }
+
+  getStudentsWithoutFrequentationAt(date: string): {
+    success: boolean
+    data?: Student[]
+    error?: string
+  } {
+    try {
+      if (typeof date !== 'string' || !date.length) {
+        return { success: false, error: 'Frequentation date is required or invalid' }
+      }
+      const rows = this.queries.getStudentsWithoutFrequentationAt.all(date)
+      const students = rows.map((row: Record<string, unknown>) => Student.fromDbRow(row))
+      console.log('✅ Élèves sans fréquentation récupérés:', students)
+      return { success: true, data: students }
+    } catch (error) {
+      console.error('❌ Erreur récupération élèves sans fréquentation:', error)
       return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
   }

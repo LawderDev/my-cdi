@@ -20,7 +20,7 @@ export function registerFrequentationRoutes(
   })
 
   ipcMain.on('frequentation:getByDate', (event, date) => {
-    const result = frequentationController.getFrequentationByDate(date)
+    const result = frequentationController.getFrequentationByDateWithStudent(date)
     event.reply('frequentation:getByDate:response', result)
   })
 }
