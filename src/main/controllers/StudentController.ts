@@ -57,7 +57,6 @@ export class StudentController {
   ): { success: boolean; id?: number; error?: string } {
     try {
       const result = this.queries.addStudent.run(nom.trim(), prenom.trim(), classe.trim())
-      console.log(`✅ Élève ajouté: ${prenom} ${nom} (${classe})`)
       return { success: true, id: result.lastInsertRowid as number }
     } catch (error) {
       console.error('❌ Erreur ajout élève:', error)
@@ -69,7 +68,6 @@ export class StudentController {
     try {
       const rows = this.queries.getAllStudents.all()
       const students = rows.map((row: Record<string, unknown>) => Student.fromDbRow(row))
-      console.log('✅ Élèves récupérés:', students)
       return { success: true, data: students }
     } catch (error) {
       console.error('❌ Erreur récupération élèves:', error)
@@ -88,7 +86,6 @@ export class StudentController {
       }
       const rows = this.queries.getStudentsWithoutFrequentationAt.all(date)
       const students = rows.map((row: Record<string, unknown>) => Student.fromDbRow(row))
-      console.log('✅ Élèves sans fréquentation récupérés:', students)
       return { success: true, data: students }
     } catch (error) {
       console.error('❌ Erreur récupération élèves sans fréquentation:', error)
@@ -105,10 +102,5 @@ export class StudentController {
       console.error('❌ Erreur récupération élèves par classe:', error)
       return { success: false, error: error instanceof Error ? error.message : String(error) }
     }
-  }
-
-  helloWorld(): string {
-    console.log('Hello from StudentController!')
-    return 'pong from controller'
   }
 }

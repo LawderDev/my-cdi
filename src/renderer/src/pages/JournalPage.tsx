@@ -38,92 +38,101 @@ const JournalPage: FC = () => {
   const [selectedStudents, setSelectedStudents] = useState<StudentItem[]>([])
   const [frequentations, setFrequentations] = useState<FrequentationItem[]>([])
   const [selectedFrequentations, setSelectedFrequentations] = useState<number[]>([])
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs())
 
-  const initDatas = (): void => {
-    getStudentsWithoutFrequentationAt(dayjs().format('YYYY-MM-DD'))
-    getFrequentationsByDate(dayjs().format('YYYY-MM-DD'))
+  let cleanupListeners: (() => void) | null = null
+
+  const initDatas = (date: dayjs.Dayjs): void => {
+    getStudentsWithoutFrequentationAt(date.format('YYYY-MM-DD'))
+    getFrequentationsByDate(date.format('YYYY-MM-DD'))
   }
 
   const getStudentLabel: (student: StudentItem) => string = (student) =>
     `${student.nom} ${student.prenom} ${student.classe}`
 
-  // Listeners dédiés
-  const handleStudentsWithoutFrequentation = (
-    _event: unknown,
-    data: { success: boolean; data: StudentItem[] }
-  ): void => {
-    console.log('Students without frequentation data received:', data)
-    setStudents(data.data)
-  }
-
-  const handleFrequentationsByDate = (
-    _event: unknown,
-    data: { success: boolean; data: FrequentationItem[] }
-  ): void => {
-    console.log('Frequentations by date data received:', data)
-    setFrequentations(data.data)
-  }
-
-  const handleCreateFrequentation = (
-    _event: unknown,
-    data: { success: boolean; data: StudentItem[] }
-  ): void => {
-    if (data.success) {
-      initDatas()
-      setSelectedStudents([])
+  const setupListeners = (currentDate: dayjs.Dayjs): void => {
+    if (cleanupListeners) {
+      cleanupListeners()
     }
-  }
 
-  const handleDeleteFrequentations = (
-    _event: unknown,
-    data: { success: boolean; ids: number[] }
-  ): void => {
-    if (data.success) {
-      initDatas()
-      setSelectedFrequentations([])
+    const handleStudentsWithoutFrequentation = (
+      _event: unknown,
+      data: { success: boolean; data: StudentItem[] }
+    ): void => {
+      if (data.success) {
+        console.log('Students without frequentation:', data.data)
+        setStudents(data.data)
+      }
     }
-  }
 
-  // Fonctions pour enregistrer les listeners
-  const registerStudentsWithoutFrequentationListener = (): (() => void) => {
-    return window.electron.ipcRenderer.on(
+    const handleFrequentationsByDate = (
+      _event: unknown,
+      data: { success: boolean; data: FrequentationItem[] }
+    ): void => {
+      if (data.success) {
+        console.log('Frequentations for date:', data.data)
+        setFrequentations(data.data)
+      }
+    }
+
+    const handleCreateFrequentation = (
+      _event: unknown,
+      data: { success: boolean; data: StudentItem[] }
+    ): void => {
+      if (data.success) {
+        initDatas(currentDate)
+        setSelectedStudents([])
+      }
+    }
+
+    const handleDeleteFrequentations = (
+      _event: unknown,
+      data: { success: boolean; ids: number[] }
+    ): void => {
+      if (data.success) {
+        initDatas(currentDate)
+        setSelectedFrequentations([])
+      }
+    }
+
+    // Enregistrer les listeners
+    const removeStudentsListener = window.electron.ipcRenderer.on(
       'student:getWithoutFrequentationAt:response',
       handleStudentsWithoutFrequentation
     )
-  }
 
-  const registerFrequentationsListener = (): (() => void) => {
-    return window.electron.ipcRenderer.on(
+    const removeFreqListener = window.electron.ipcRenderer.on(
       'frequentation:getByDate:response',
       handleFrequentationsByDate
     )
-  }
 
-  const registerCreateFrequentationListener = (): (() => void) => {
-    return window.electron.ipcRenderer.on(
+    const removeCreateListener = window.electron.ipcRenderer.on(
       'frequentation:addMultiple:response',
       handleCreateFrequentation
     )
-  }
 
-  const registerDeleteFrequentationsListener = (): (() => void) => {
-    return window.electron.ipcRenderer.on(
+    const removeDeleteFreqListener = window.electron.ipcRenderer.on(
       'frequentation:delete:response',
       handleDeleteFrequentations
     )
-  }
 
-  useEffect(() => {
-    const removeStudentsListener = registerStudentsWithoutFrequentationListener()
-    const removeFreqListener = registerFrequentationsListener()
-    const removeCreateListener = registerCreateFrequentationListener()
-    const removeDeleteFreqListener = registerDeleteFrequentationsListener()
-    initDatas()
-    return () => {
+    // Stocker la fonction de nettoyage
+    cleanupListeners = () => {
       removeStudentsListener()
       removeFreqListener()
       removeCreateListener()
       removeDeleteFreqListener()
+    }
+  }
+
+  useEffect(() => {
+    setupListeners(selectedDate)
+    initDatas(selectedDate)
+
+    return () => {
+      if (cleanupListeners) {
+        cleanupListeners()
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -137,24 +146,34 @@ const JournalPage: FC = () => {
   }
 
   const deleteFrequentations = (ids: number[]): void => {
-    console.log('Deleting frequentations with IDs:', ids)
     window.electron.ipcRenderer.send('frequentation:delete', { ids })
   }
 
   const createFrequentation = (students: StudentItem[]): void => {
     const frequentations = students.map((student) => ({
-      startsAt: new Date().toISOString(),
+      startsAt: selectedDate.format('YYYY-MM-DDTHH:mm:ss'),
       activity: 'Travail',
       studentId: student.id
     }))
     window.electron.ipcRenderer.send('frequentation:addMultiple', { frequentations })
   }
 
+  const onDateChange = (newValue: dayjs.Dayjs | null): void => {
+    if (newValue) {
+      setSelectedStudents([])
+      setSelectedDate(newValue)
+
+      setupListeners(newValue)
+      initDatas(newValue)
+    }
+  }
+
   return (
     <Container sx={{ mt: '30px', minWidth: '100%', display: 'flex', gap: 3 }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <StaticDateTimePicker
-          value={dayjs()}
+          value={selectedDate}
+          onChange={onDateChange}
           sx={{ height: '570px', marginTop: '4.9%', marginLeft: '24px' }}
         />
       </LocalizationProvider>

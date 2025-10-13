@@ -66,9 +66,7 @@ export class FrequentationController {
         JOIN students s ON f.student_id = s.id
         WHERE DATE(f.starts_at) BETWEEN ? AND ?
         ORDER BY f.starts_at DESC
-      `),
-
-      // La requête sera préparée dynamiquement dans la méthode deleteFrequentations
+      `)
     }
   }
 
