@@ -1,4 +1,4 @@
-import { JSX } from 'react'
+import { FC, MouseEvent, useCallback } from 'react'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -12,64 +12,48 @@ import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 
-interface FrequentationItem {
-  id: number
-  starts_at: string
-  activity: string
-  created_at: string
-  student: {
-    id: number
-    nom: string
-    prenom: string
-    classe: string
-    fullName: string
-  }
-  formattedStartTime: string
-}
+import { useStudentsTable } from '../hooks/useStudentsTable'
+import { Frequentation } from '../types/frequentation'
+import {
+  rootBoxStyles,
+  paperStyles,
+  tableStyles,
+  selectableRowStyles,
+  deleteButtonStyles
+} from './StudentsTable.styles'
 
 interface StudentsTableProps {
-  frequentations: FrequentationItem[]
+  frequentations: Frequentation[]
   selectedFrequentations: number[]
   onSelectedFrequentationsChange: (ids: number[]) => void
   onDeleteFrequentation: (ids: number[]) => void
 }
 
-function StudentsTable({
+const StudentsTable: FC<StudentsTableProps> = ({
   frequentations,
   selectedFrequentations,
   onSelectedFrequentationsChange,
-  onDeleteFrequentation,
-}: StudentsTableProps): JSX.Element {
-  const isFrequentationSelected = (id: number): boolean => selectedFrequentations.includes(id)
+  onDeleteFrequentation
+}) => {
+  const { isSelected, handleRowClick, handleCheckboxChange, handleDeleteClick } = useStudentsTable({
+    selectedFrequentations,
+    onSelectedFrequentationsChange,
+    onDeleteFrequentation
+  })
 
-  const handleSelectFrequentation = (id: number): void => {
-    if (isFrequentationSelected(id)) {
-      onSelectedFrequentationsChange(selectedFrequentations.filter((sid) => sid !== id))
-      return
-    }
-    onSelectedFrequentationsChange([...selectedFrequentations, id])
-  }
-
-  const deleteFrequentation = (event: React.MouseEvent, id: number): void => {
-    event.stopPropagation()
-    onDeleteFrequentation([id])
-  }
-
-  const modifyFrequentation = (event: React.MouseEvent, id: number): void => {
-    event.stopPropagation()
-    console.log('Modify frequentation with id:', id)
-  }
+  const handleModifyFrequentation = useCallback(
+    (event: MouseEvent<HTMLButtonElement>, id: number) => {
+      event.stopPropagation()
+      console.log('Modify frequentation with id:', id)
+    },
+    []
+  )
 
   return (
-    <Box sx={{ width: '100%', height: '77vh' }}>
-      <Paper sx={{ width: '100%', height: '100%', mb: 2, overflow: 'scroll', margin: 0, p: 2 }}>
+    <Box sx={rootBoxStyles}>
+      <Paper sx={paperStyles}>
         <TableContainer>
-          <Table
-            sx={{ minWidth: 750, maxHeight: 100 }}
-            stickyHeader
-            aria-labelledby="tableTitle"
-            size="medium"
-          >
+          <Table sx={tableStyles} stickyHeader aria-labelledby="tableTitle" size="medium">
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox" />
@@ -94,18 +78,18 @@ function StudentsTable({
                   <TableRow
                     hover
                     role="checkbox"
-                    aria-checked={isFrequentationSelected(row.id)}
+                    aria-checked={isSelected(row.id)}
                     tabIndex={-1}
                     key={labelId}
-                    selected={isFrequentationSelected(row.id)}
-                    sx={{ cursor: 'pointer' }}
-                    onClick={() => handleSelectFrequentation(row.id)}
+                    selected={isSelected(row.id)}
+                    sx={selectableRowStyles}
+                    onClick={() => handleRowClick(row.id)}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
                         color="primary"
-                        checked={isFrequentationSelected(row.id)}
-                        onChange={() => handleSelectFrequentation(row.id)}
+                        checked={isSelected(row.id)}
+                        onChange={(event) => handleCheckboxChange(event, row.id)}
                         slotProps={{
                           input: {
                             'aria-labelledby': labelId
@@ -126,19 +110,15 @@ function StudentsTable({
                       <IconButton
                         aria-label="modifier"
                         size="small"
-                        onClick={(event) => {
-                          modifyFrequentation(event, row.id)
-                        }}
+                        onClick={(event) => handleModifyFrequentation(event, row.id)}
                       >
                         <EditIcon fontSize="inherit" />
                       </IconButton>
                       <IconButton
                         aria-label="supprimer"
                         size="small"
-                        sx={{ ml: 1 }}
-                        onClick={(event) => {
-                          deleteFrequentation(event, row.id)
-                        }}
+                        sx={deleteButtonStyles}
+                        onClick={(event) => handleDeleteClick(event, row.id)}
                       >
                         <DeleteIcon fontSize="inherit" />
                       </IconButton>
