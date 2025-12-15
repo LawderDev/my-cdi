@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useCallback } from 'react'
+import { FC, MouseEvent } from 'react'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -41,13 +41,11 @@ const StudentsTable: FC<StudentsTableProps> = ({
     onDeleteFrequentation
   })
 
-  const handleModifyFrequentation = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, id: number) => {
-      event.stopPropagation()
-      console.log('Modify frequentation with id:', id)
-    },
-    []
-  )
+  // Plain handler — not memoized because it's not passed to a memoized child
+  const handleModifyFrequentation = (event: MouseEvent<HTMLButtonElement>, id: number): void => {
+    event.stopPropagation()
+    console.log('Modify frequentation with id:', id)
+  }
 
   return (
     <Box sx={rootBoxStyles}>

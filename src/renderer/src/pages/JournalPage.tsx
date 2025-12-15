@@ -1,11 +1,12 @@
-import { FC, useCallback, useState } from 'react'
+import { FC, useState } from 'react'
 import { Container, Autocomplete, Chip, TextField, Checkbox, Button, Box } from '@mui/material'
 import Table from '../components/StudentsTable'
+import StudentsRenderValue from '../components/StudentsAutocomplete/StudentsRenderValue'
+import StudentRenderOption from '../components/StudentsAutocomplete/StudentRenderOption'
+import StudentsRenderInput from '../components/StudentsAutocomplete/StudentsRenderInput'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker'
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import dayjs from 'dayjs'
 
 import { useFrequentationListeners } from '../hooks/useFrequentationListeners'
@@ -21,9 +22,6 @@ import {
   actionsContainerStyles
 } from './JournalPage.styles'
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />
-const checkedIcon = <CheckBoxIcon fontSize="small" />
-
 const JournalPage: FC = () => {
   const [students, setStudents] = useState<Student[]>([])
   const [selectedStudents, setSelectedStudents] = useState<Student[]>([])
@@ -31,73 +29,39 @@ const JournalPage: FC = () => {
   const [selectedFrequentations, setSelectedFrequentations] = useState<number[]>([])
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs())
 
-  const getStudentsWithoutFrequentationAt = useCallback((date: string): void => {
-    window.electron.ipcRenderer.send('student:getWithoutFrequentationAt', date)
-  }, [])
-
-  const getFrequentationsByDate = useCallback((date: string): void => {
-    window.electron.ipcRenderer.send('frequentation:getByDate', date)
-  }, [])
-
-  const loadData = useCallback(
-    (date: dayjs.Dayjs): void => {
-      const formattedDate = date.format('YYYY-MM-DD')
-      getStudentsWithoutFrequentationAt(formattedDate)
-      getFrequentationsByDate(formattedDate)
-    },
-    [getStudentsWithoutFrequentationAt, getFrequentationsByDate]
-  )
-
-  const clearSelectedStudents = useCallback((): void => {
-    setSelectedStudents([])
-  }, [])
-
-  const clearSelectedFrequentations = useCallback((): void => {
-    setSelectedFrequentations([])
-  }, [])
-
   useFrequentationListeners({
     selectedDate,
-    loadData,
     onStudentsReceived: setStudents,
     onFrequentationsReceived: setFrequentations,
-    clearSelectedStudents,
-    clearSelectedFrequentations
+    setSelectedStudents,
+    setSelectedFrequentations
   })
 
-  const deleteFrequentations = useCallback((ids: number[]): void => {
+  const deleteFrequentations = (ids: number[]): void => {
     window.electron.ipcRenderer.send('frequentation:delete', { ids })
-  }, [])
+  }
 
-  const createFrequentation = useCallback(
-    (studentsToCreate: Student[]): void => {
-      const frequentationsPayload = studentsToCreate.map((student) => ({
-        startsAt: selectedDate.format('YYYY-MM-DDTHH:mm:ss'),
-        activity: 'Travail',
-        studentId: student.id
-      }))
-      window.electron.ipcRenderer.send('frequentation:addMultiple', {
-        frequentations: frequentationsPayload
-      })
-    },
-    [selectedDate]
-  )
+  const createFrequentation = (studentsToCreate: Student[]): void => {
+    const frequentationsPayload = studentsToCreate.map((student) => ({
+      startsAt: selectedDate.format('YYYY-MM-DDTHH:mm:ss'),
+      activity: 'Travail',
+      studentId: student.id
+    }))
+    window.electron.ipcRenderer.send('frequentation:addMultiple', {
+      frequentations: frequentationsPayload
+    })
+  }
 
-  const getStudentLabel = useCallback(
-    (student: Student): string => `${student.nom} ${student.prenom} ${student.classe}`,
-    []
-  )
+  const getStudentLabel = (student: Student): string =>
+    `${student.nom} ${student.prenom} ${student.classe}`
 
-  const onDateChange = useCallback(
-    (newValue: dayjs.Dayjs | null): void => {
-      if (newValue && !newValue.isSame(selectedDate, 'minute')) {
-        setSelectedStudents([])
-        setSelectedFrequentations([])
-        setSelectedDate(newValue)
-      }
-    },
-    [selectedDate]
-  )
+  const onDateChange = (newValue: dayjs.Dayjs | null): void => {
+    if (newValue && !newValue.isSame(selectedDate, 'minute')) {
+      setSelectedStudents([])
+      setSelectedFrequentations([])
+      setSelectedDate(newValue)
+    }
+  }
 
   return (
     <Container sx={rootContainerStyles}>
@@ -118,29 +82,13 @@ const JournalPage: FC = () => {
             }}
             options={students}
             getOptionLabel={getStudentLabel}
-            renderValue={(values, getItemProps) =>
-              values.map((option, index) => {
-                const { key, ...itemProps } = getItemProps({ index })
-                return <Chip key={key} label={getStudentLabel(option)} {...itemProps} />
-              })
-            }
-            renderOption={(props, option, { selected }) => {
-              const { key, ...optionProps } = props
-              return (
-                <li key={key} {...optionProps}>
-                  <Checkbox
-                    icon={icon}
-                    checkedIcon={checkedIcon}
-                    sx={{ mr: 1 }}
-                    checked={selected}
-                  />
-                  {getStudentLabel(option)}
-                </li>
-              )
-            }}
-            renderInput={(params) => (
-              <TextField {...params} label="Fixed tag" placeholder="Favorites" />
+            renderValue={(values, getItemProps) => (
+              <StudentsRenderValue values={values} getItemProps={getItemProps} />
             )}
+            renderOption={(props, option, { selected }) => (
+              <StudentRenderOption props={props} option={option} selected={selected} />
+            )}
+            renderInput={(params) => <StudentsRenderInput params={params} />}
           />
           <Button
             variant="text"

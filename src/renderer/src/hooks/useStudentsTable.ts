@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useCallback } from 'react'
+import { ChangeEvent, MouseEvent } from 'react'
 
 interface UseStudentsTableParams {
   selectedFrequentations: number[]
@@ -18,47 +18,33 @@ export const useStudentsTable = ({
   onSelectedFrequentationsChange,
   onDeleteFrequentation
 }: UseStudentsTableParams): UseStudentsTableResult => {
-  const isSelected = useCallback(
-    (id: number): boolean => selectedFrequentations.includes(id),
-    [selectedFrequentations]
-  )
 
-  const toggleSelection = useCallback(
-    (id: number): void => {
-      if (isSelected(id)) {
-        onSelectedFrequentationsChange(
-          selectedFrequentations.filter((selectedId) => selectedId !== id)
-        )
-        return
-      }
+  const isSelected = (id: number): boolean => selectedFrequentations.includes(id)
 
-      onSelectedFrequentationsChange([...selectedFrequentations, id])
-    },
-    [isSelected, onSelectedFrequentationsChange, selectedFrequentations]
-  )
+  const toggleSelection = (id: number): void => {
+    if (isSelected(id)) {
+      onSelectedFrequentationsChange(
+        selectedFrequentations.filter((selectedId) => selectedId !== id)
+      )
+      return
+    }
 
-  const handleRowClick = useCallback(
-    (id: number): void => {
-      toggleSelection(id)
-    },
-    [toggleSelection]
-  )
+    onSelectedFrequentationsChange([...selectedFrequentations, id])
+  }
 
-  const handleCheckboxChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>, id: number): void => {
-      event.stopPropagation()
-      toggleSelection(id)
-    },
-    [toggleSelection]
-  )
+  const handleRowClick = (id: number): void => {
+    toggleSelection(id)
+  }
 
-  const handleDeleteClick = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, id: number): void => {
-      event.stopPropagation()
-      onDeleteFrequentation([id])
-    },
-    [onDeleteFrequentation]
-  )
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, id: number): void => {
+    event.stopPropagation()
+    toggleSelection(id)
+  }
+
+  const handleDeleteClick = (event: MouseEvent<HTMLButtonElement>, id: number): void => {
+    event.stopPropagation()
+    onDeleteFrequentation([id])
+  }
 
   return {
     isSelected,

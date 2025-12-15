@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, Dispatch, SetStateAction } from 'react'
 import dayjs from 'dayjs'
 
 import { Student } from '../types/student'
@@ -6,22 +6,26 @@ import { Frequentation } from '../types/frequentation'
 
 interface UseFrequentationListenersOptions {
   selectedDate: dayjs.Dayjs
-  loadData: (date: dayjs.Dayjs) => void
   onStudentsReceived: (students: Student[]) => void
   onFrequentationsReceived: (frequentations: Frequentation[]) => void
-  clearSelectedStudents: () => void
-  clearSelectedFrequentations: () => void
+  setSelectedStudents: Dispatch<SetStateAction<Student[]>>
+  setSelectedFrequentations: Dispatch<SetStateAction<number[]>>
 }
 
 export const useFrequentationListeners = ({
   selectedDate,
-  loadData,
   onStudentsReceived,
   onFrequentationsReceived,
-  clearSelectedStudents,
-  clearSelectedFrequentations
+  setSelectedStudents,
+  setSelectedFrequentations
 }: UseFrequentationListenersOptions): void => {
   useEffect(() => {
+    const sendLoadData = (date: dayjs.Dayjs): void => {
+      const formattedDate = date.format('YYYY-MM-DD')
+      window.electron.ipcRenderer.send('student:getWithoutFrequentationAt', formattedDate)
+      window.electron.ipcRenderer.send('frequentation:getByDate', formattedDate)
+    }
+
     const handleStudentsWithoutFrequentation = (
       _event: unknown,
       response: { success: boolean; data: Student[] }
@@ -45,8 +49,9 @@ export const useFrequentationListeners = ({
       response: { success: boolean; data: Student[] }
     ): void => {
       if (response.success) {
-        loadData(selectedDate)
-        clearSelectedStudents()
+        // reload data directly from the hook to avoid requiring a stable loadData prop
+        sendLoadData(selectedDate)
+        setSelectedStudents([])
       }
     }
 
@@ -55,8 +60,9 @@ export const useFrequentationListeners = ({
       response: { success: boolean; ids: number[] }
     ): void => {
       if (response.success) {
-        loadData(selectedDate)
-        clearSelectedFrequentations()
+        // reload data directly from the hook to avoid requiring a stable loadData prop
+        sendLoadData(selectedDate)
+        setSelectedFrequentations([])
       }
     }
 
@@ -80,7 +86,7 @@ export const useFrequentationListeners = ({
       handleDeleteFrequentations
     )
 
-    loadData(selectedDate)
+    sendLoadData(selectedDate)
 
     return () => {
       removeStudentsListener()
@@ -90,10 +96,9 @@ export const useFrequentationListeners = ({
     }
   }, [
     selectedDate,
-    loadData,
     onStudentsReceived,
     onFrequentationsReceived,
-    clearSelectedStudents,
-    clearSelectedFrequentations
+    setSelectedStudents,
+    setSelectedFrequentations
   ])
 }
