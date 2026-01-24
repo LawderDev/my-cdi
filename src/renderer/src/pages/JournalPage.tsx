@@ -1,5 +1,5 @@
-import { FC, useState } from 'react'
-import { Container, Autocomplete, Chip, TextField, Checkbox, Button, Box } from '@mui/material'
+import { FC, useState, useEffect } from 'react'
+import { Container, Autocomplete, Button, Box } from '@mui/material'
 import Table from '../components/StudentsTable'
 import StudentsRenderValue from '../components/StudentsAutocomplete/StudentsRenderValue'
 import StudentRenderOption from '../components/StudentsAutocomplete/StudentRenderOption'
@@ -8,10 +8,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker'
 import dayjs from 'dayjs'
-
-import { useFrequentationListeners } from '../hooks/useFrequentationListeners'
-import { Frequentation } from '../types/frequentation'
-import { Student } from '../types/student'
+import useJournalData from '../hooks/useJournalData'
+import type { Student } from '../types/student'
 import {
   rootContainerStyles,
   datePickerStyles,
@@ -20,36 +18,36 @@ import {
   autocompleteStyles,
   addStudentsButtonStyles,
   actionsContainerStyles
-} from './JournalPage.styles'
+} from '../styles/JournalPage.styles'
 
 const JournalPage: FC = () => {
-  const [students, setStudents] = useState<Student[]>([])
   const [selectedStudents, setSelectedStudents] = useState<Student[]>([])
-  const [frequentations, setFrequentations] = useState<Frequentation[]>([])
   const [selectedFrequentations, setSelectedFrequentations] = useState<number[]>([])
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs())
+  const {
+    students,
+    frequentations,
+    fetchDailyDataAt,
+    createFrequentationsAt,
+    deleteFrequentationsAt
+  } = useJournalData()
 
-  useFrequentationListeners({
-    selectedDate,
-    onStudentsReceived: setStudents,
-    onFrequentationsReceived: setFrequentations,
-    setSelectedStudents,
-    setSelectedFrequentations
-  })
+  useEffect(() => {
+    fetchDailyDataAt(selectedDate)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  const deleteFrequentations = (ids: number[]): void => {
-    window.electron.ipcRenderer.send('frequentation:delete', { ids })
-  }
-
-  const createFrequentation = (studentsToCreate: Student[]): void => {
+  const createFrequentation = async (studentsToCreate: Student[]): Promise<void> => {
     const frequentationsPayload = studentsToCreate.map((student) => ({
       startsAt: selectedDate.format('YYYY-MM-DDTHH:mm:ss'),
       activity: 'Travail',
       studentId: student.id
     }))
-    window.electron.ipcRenderer.send('frequentation:addMultiple', {
-      frequentations: frequentationsPayload
-    })
+
+    const result = await createFrequentationsAt(frequentationsPayload, selectedDate)
+    if (result) {
+      setSelectedStudents([])
+    }
   }
 
   const getStudentLabel = (student: Student): string =>
@@ -60,6 +58,7 @@ const JournalPage: FC = () => {
       setSelectedStudents([])
       setSelectedFrequentations([])
       setSelectedDate(newValue)
+      fetchDailyDataAt(newValue)
     }
   }
 
@@ -102,7 +101,10 @@ const JournalPage: FC = () => {
           frequentations={frequentations}
           selectedFrequentations={selectedFrequentations}
           onSelectedFrequentationsChange={setSelectedFrequentations}
-          onDeleteFrequentation={deleteFrequentations}
+          onDeleteFrequentation={async (ids: number[]) => {
+            const result = await deleteFrequentationsAt(ids, selectedDate)
+            if (result) setSelectedFrequentations([])
+          }}
         />
         <Box sx={actionsContainerStyles}>
           <Button
@@ -124,7 +126,10 @@ const JournalPage: FC = () => {
             variant="outlined"
             color="error"
             disabled={selectedFrequentations.length === 0}
-            onClick={() => deleteFrequentations(selectedFrequentations)}
+            onClick={async () => {
+              const result = await deleteFrequentationsAt(selectedFrequentations, selectedDate)
+              if (result) setSelectedFrequentations([])
+            }}
           >
             Supprimer la sélection
           </Button>

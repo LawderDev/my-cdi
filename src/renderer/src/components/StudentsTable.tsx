@@ -13,14 +13,14 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import { useStudentsTable } from '../hooks/useStudentsTable'
-import { Frequentation } from '../types/frequentation'
+import type { Frequentation } from '../types/frequentation'
 import {
   rootBoxStyles,
   paperStyles,
   tableStyles,
   selectableRowStyles,
   deleteButtonStyles
-} from './StudentsTable.styles'
+} from '../styles/StudentsTable.styles'
 
 interface StudentsTableProps {
   frequentations: Frequentation[]

@@ -1,14 +1,10 @@
-import { Student } from './student'
-
-export interface FrequentationStudent extends Student {
-  fullName: string
-}
+import type { Student } from './student'
 
 export interface Frequentation {
   id: number
   starts_at: string
   activity: string
   created_at: string
-  student: FrequentationStudent
+  student: Student
   formattedStartTime: string
 }

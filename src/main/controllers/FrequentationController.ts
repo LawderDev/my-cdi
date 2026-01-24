@@ -196,7 +196,7 @@ export class FrequentationController {
 
   getFrequentationByDateWithStudent(date: string): {
     success: boolean
-    data?: object[]
+    data?: Frequentation[]
     error?: string
   } {
     try {
