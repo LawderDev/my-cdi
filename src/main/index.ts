@@ -3,12 +3,23 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { CDIDatabase } from './database/database'
-import { registerAllRoutes } from './routes'
+import { createStudentModule } from './modules/student'
+import { createFrequentationModule } from './modules/frequentation'
 
-let database: CDIDatabase
+// Initialize database
+const database = new CDIDatabase()
+
+// Initialize modules (kept in scope for IPC handlers)
+const modules = {
+  student: createStudentModule(database.getDb()),
+  frequentation: createFrequentationModule(database.getDb())
+}
+
+// Keep modules in global scope to prevent garbage collection
+;(global as any).modules = modules
 
 function createWindow(): void {
-  // Create the browser window.
+  // Create browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -26,10 +37,8 @@ function createWindow(): void {
     mainWindow.show()
   })
 
-  mainWindow.on('closed', () => {
-    if (database) {
-      database.close()
-    }
+  mainWindow.on('closed', async () => {
+    await database.close()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -50,7 +59,19 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  database = new CDIDatabase()
+  // Initialize all modules (database is initialized above, modules are initialized above)
+  console.log('🚀 Initializing application modules...')
+
+  try {
+    // Database cleanup
+    database.cleanup()
+    console.log('✅ Database cleanup completed')
+
+    console.log('🎉 All modules initialized successfully!')
+  } catch (error) {
+    console.error('❌ Failed to initialize modules:', error)
+    throw error
+  }
 
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
@@ -61,9 +82,6 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
-
-  // Register all IPC routes
-  registerAllRoutes(database)
 
   createWindow()
 
@@ -77,11 +95,9 @@ app.whenReady().then(() => {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
-    if (database) {
-      database.close()
-    }
+    await database.close()
     app.quit()
   }
 })

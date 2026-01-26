@@ -8,3 +8,9 @@ export interface Frequentation {
   student: Student
   formattedStartTime: string
 }
+
+export interface CreateFrequentationPayload {
+  startsAt: string
+  activity: string
+  studentId: number
+}

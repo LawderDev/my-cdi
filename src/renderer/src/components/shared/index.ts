@@ -1,0 +1,5 @@
+export { StudentRow } from './StudentRow'
+export { StudentActions } from './StudentActions'
+export { StudentTableHeader } from './StudentTableHeader'
+export { StudentSearchBar } from './StudentSearchBar'
+export { StudentTable } from './StudentTable'

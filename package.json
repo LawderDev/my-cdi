@@ -31,7 +31,8 @@
     "@mui/x-date-pickers": "^8.11.1",
     "better-sqlite3": "^12.2.0",
     "dayjs": "^1.11.18",
-    "electron-updater": "^6.3.9"
+    "electron-updater": "^6.3.9",
+    "papaparse": "^5.4.1"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",

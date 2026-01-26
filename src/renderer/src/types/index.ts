@@ -1,6 +1,5 @@
-import type { Student } from './student'
-import type { Frequentation } from './frequentation'
+// Re-export shared types for frontend use
+export * from '../../../shared/types'
 
-export type { Student, Frequentation }
-
-export default {}
+// Frontend-specific view models and extensions
+export * from './view.models'

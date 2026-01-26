@@ -1,7 +1,8 @@
+import { electronAPI } from '@electron-toolkit/preload'
 import { useState } from 'react'
 
 function Versions(): React.JSX.Element {
-  const [versions] = useState(window.electron.process.versions)
+  const [versions] = useState(electronAPI.process.versions)
 
   return (
     <ul className="versions">

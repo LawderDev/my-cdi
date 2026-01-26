@@ -33,14 +33,15 @@ class CDIDatabase {
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
 
-      CREATE TABLE IF NOT EXISTS frequentation (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        starts_at DATETIME NOT NULL,
-        activity TEXT NOT NULL,
-        student_id INTEGER NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (student_id) REFERENCES students (id) ON DELETE CASCADE
-      );
+       CREATE TABLE IF NOT EXISTS frequentation (
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
+         starts_at DATETIME NOT NULL,
+         activity TEXT NOT NULL,
+         student_id INTEGER NOT NULL,
+         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+         FOREIGN KEY (student_id) REFERENCES students (id) ON DELETE CASCADE
+       );
 
       -- Index pour les performances
       CREATE INDEX IF NOT EXISTS idx_students_nom ON students(nom, prenom);
@@ -51,6 +52,17 @@ class CDIDatabase {
 
     try {
       this.db.exec(createTables)
+
+      // Add updated_at column to frequentation table if it doesn't exist (migration)
+      try {
+        this.db.exec(
+          `ALTER TABLE frequentation ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP`
+        )
+        console.log('✅ Migration: added updated_at column to frequentation table')
+      } catch (alterError) {
+        // Column might already exist, ignore error
+      }
+
       console.log('✅ Tables créées/vérifiées')
     } catch (error) {
       console.error('❌ Erreur création tables:', error)

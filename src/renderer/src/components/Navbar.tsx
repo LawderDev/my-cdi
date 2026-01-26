@@ -3,8 +3,8 @@ import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material'
 import { theme } from '../theme'
 
 interface NavbarProps {
-  currentPage: 'journal' | 'statistics'
-  onPageChange: (page: 'journal' | 'statistics') => void
+  currentPage: 'journal' | 'statistics' | 'students'
+  onPageChange: (page: 'journal' | 'statistics' | 'students') => void
 }
 
 const Navbar: React.FC<NavbarProps> = ({ currentPage, onPageChange }) => {
@@ -51,6 +51,21 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onPageChange }) => {
             }}
           >
             Statistiques
+          </Button>
+          <Button
+            color="inherit"
+            variant={currentPage === 'students' ? 'outlined' : 'text'}
+            onClick={() => onPageChange('students')}
+            sx={{
+              color: theme.palette.text.primary,
+              borderColor: currentPage === 'students' ? theme.palette.primary.main : 'transparent',
+              '&:hover': {
+                backgroundColor: `rgba(124, 77, 255, 0.1)`,
+                color: theme.palette.primary.main
+              }
+            }}
+          >
+            Élèves
           </Button>
         </Box>
       </Toolbar>
