@@ -6,6 +6,14 @@ import { CDIDatabase } from './database/database'
 import { createStudentModule } from './modules/student'
 import { createFrequentationModule } from './modules/frequentation'
 
+// Declare global types
+declare global {
+  var modules: {
+    student: ReturnType<typeof createStudentModule>
+    frequentation: ReturnType<typeof createFrequentationModule>
+  }
+}
+
 // Initialize database
 const database = new CDIDatabase()
 
@@ -16,7 +24,7 @@ const modules = {
 }
 
 // Keep modules in global scope to prevent garbage collection
-;(global as any).modules = modules
+global.modules = modules
 
 function createWindow(): void {
   // Create browser window.
@@ -37,10 +45,6 @@ function createWindow(): void {
     mainWindow.show()
   })
 
-  mainWindow.on('closed', async () => {
-    await database.close()
-  })
-
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
@@ -58,6 +62,8 @@ function createWindow(): void {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+app.on('before-quit', async () => {})
+
 app.whenReady().then(() => {
   // Initialize all modules (database is initialized above, modules are initialized above)
   console.log('🚀 Initializing application modules...')
@@ -97,7 +103,6 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
-    await database.close()
     app.quit()
   }
 })

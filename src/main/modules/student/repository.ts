@@ -1,6 +1,4 @@
-// Student Module Repository
-// Data access layer for student operations
-
+import Database from 'better-sqlite3'
 import { BaseRepository } from '../../shared/base.repository'
 import { StudentEntity, StudentDbRow } from '../../../main/types/entities/student.entity'
 import { CreateStudentDto, UpdateStudentDto } from '../../../shared/types/dtos/student.dto'
@@ -22,7 +20,7 @@ import {
 } from './repository.helpers'
 
 export class StudentModuleRepository extends BaseRepository implements StudentRepository {
-  constructor(db: any) {
+  constructor(db: Database.Database) {
     super(db)
   }
   async create(studentDto: CreateStudentDto): Promise<StudentEntity> {

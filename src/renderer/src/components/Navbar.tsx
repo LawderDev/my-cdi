@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material'
-import { theme } from '../theme'
+import { theme } from '@renderer/lib/theme'
 
 interface NavbarProps {
   currentPage: 'journal' | 'statistics' | 'students'

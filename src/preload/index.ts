@@ -22,7 +22,7 @@ import type { CreateFrequentationPayload } from '../renderer/src/types/frequenta
 // Enhanced API with both new and legacy methods
 const api = {
   // Generic invoke method for new APIs
-  invoke: <T = any>(channel: string, ...args: any[]): Promise<T> => {
+  invoke: <T = unknown>(channel: string, ...args: unknown[]): Promise<T> => {
     return ipcRenderer.invoke(channel, ...args)
   },
 

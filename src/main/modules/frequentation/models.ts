@@ -80,8 +80,6 @@ export const FrequentationBusinessOperations = {
         isNaN(frequentation.startsAt.getTime())
       ) {
         errors.push('La date et heure de début ne sont pas valides')
-      } else if (frequentation.startsAt instanceof Date && frequentation.startsAt > new Date()) {
-        errors.push('La date et heure de début ne peuvent pas être dans le futur')
       }
     }
 

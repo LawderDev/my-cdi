@@ -1,6 +1,7 @@
 // Frequentation Module Repository
 // Data access layer for frequentation operations
 
+import Database from 'better-sqlite3'
 import { BaseRepository } from '../../shared/base.repository'
 import {
   FrequentationEntity,
@@ -35,7 +36,7 @@ export class FrequentationModuleRepository
   extends BaseRepository
   implements FrequentationRepository
 {
-  constructor(db: any) {
+  constructor(db: Database.Database) {
     super(db)
   }
 
@@ -81,7 +82,7 @@ export class FrequentationModuleRepository
     }
 
     const setParts: string[] = []
-    const params: any[] = []
+    const params: unknown[] = []
 
     if (entity.starts_at !== undefined) {
       setParts.push('starts_at = ?')

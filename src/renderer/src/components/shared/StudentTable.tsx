@@ -15,7 +15,7 @@ import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { useStudentsSelection } from '../../hooks/useStudentsSelection'
 import type { StudentViewModel } from '../../types/view.models'
 import type { FrequentationViewModel } from '../../types/view.models'
-import { studentHelpers } from '../../helpers/student.helpers'
+import { studentHelpers } from '../../lib/utils/student.helpers'
 import { translateActivityToFrench } from '@shared/types/activities.enum'
 
 interface StudentTableProps {

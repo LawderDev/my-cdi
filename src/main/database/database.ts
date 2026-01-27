@@ -59,7 +59,7 @@ class CDIDatabase {
           `ALTER TABLE frequentation ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP`
         )
         console.log('✅ Migration: added updated_at column to frequentation table')
-      } catch (alterError) {
+      } catch {
         // Column might already exist, ignore error
       }
 

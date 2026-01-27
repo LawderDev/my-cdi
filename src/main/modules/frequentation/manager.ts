@@ -31,12 +31,12 @@ export class FrequentationModuleManager implements FrequentationManager {
         }
       }
 
-      // Validate that startsAt is not in the future (basic business rule)
+      // Validate that startsAt is not empty (basic business rule)
       const startsAt = new Date(createDto.startsAt)
-      if (startsAt > new Date()) {
+      if (!startsAt || isNaN(startsAt.getTime())) {
         return {
           success: false,
-          error: 'La date et heure de fréquentation ne peuvent pas être dans le futur'
+          error: 'Date et heure de fréquentation invalides'
         }
       }
 

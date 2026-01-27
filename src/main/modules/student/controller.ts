@@ -122,24 +122,28 @@ export class StudentModuleController implements StudentController {
     // Delete student
     ipcMain.handle(
       'student:delete',
-      async (_event, id: number): Promise<{ success: boolean; error?: string }> => {
+      async (
+        _event,
+        payload: { ids: number[] }
+      ): Promise<{ success: boolean; count?: number; error?: string }> => {
+        const { ids } = payload
         try {
-          const result = await this.studentManager.delete(id)
+          const results = await Promise.all(ids.map((id) => this.studentManager.delete(id)))
+          const successCount = results.filter((r) => r.success).length
 
-          if (!result.success) {
+          if (successCount === ids.length) {
+            return { success: true, count: successCount }
+          } else {
             return {
               success: false,
-              error: result.error
+              count: successCount,
+              error: `Échec de la suppression de ${ids.length - successCount} étudiant(s)`
             }
-          }
-
-          return {
-            success: true
           }
         } catch (error) {
           return {
             success: false,
-            error: `Erreur lors de la suppression de l'étudiant: ${error}`
+            error: `Erreur lors de la suppression des étudiants: ${error}`
           }
         }
       }

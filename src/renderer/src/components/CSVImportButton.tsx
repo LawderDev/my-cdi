@@ -1,14 +1,14 @@
 import React from 'react'
 import { Button } from '@mui/material'
 import Papa from 'papaparse'
-import StudentService from '../services/student.service'
+import StudentService from '@renderer/lib/api/student.service'
 
 interface Props {
   onImported?: () => void
 }
 
 const CSVImportButton: React.FC<Props> = ({ onImported }) => {
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -28,11 +28,12 @@ const CSVImportButton: React.FC<Props> = ({ onImported }) => {
         const valid = mapped.filter((m) => m.nom && m.prenom)
         try {
           const res = await StudentService.importStudents(valid)
-          // eslint-disable-next-line no-console
-          console.log('Import result', res)
-          if (onImported) onImported()
+          if (res.success) {
+            if (onImported) onImported()
+          } else {
+            console.error('Import failed:', res.error)
+          }
         } catch (err) {
-          // eslint-disable-next-line no-console
           console.error('Import failed', err)
         }
       }
@@ -41,7 +42,13 @@ const CSVImportButton: React.FC<Props> = ({ onImported }) => {
 
   return (
     <>
-      <input id="csv-input" type="file" accept=".csv" onChange={handleFile} style={{ display: 'none' }} />
+      <input
+        id="csv-input"
+        type="file"
+        accept=".csv"
+        onChange={handleFile}
+        style={{ display: 'none' }}
+      />
       <label htmlFor="csv-input">
         <Button variant="outlined" component="span">
           Importer CSV

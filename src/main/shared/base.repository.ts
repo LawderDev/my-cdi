@@ -4,7 +4,7 @@ import Database from 'better-sqlite3'
 export abstract class BaseRepository {
   constructor(protected db: Database.Database) {}
 
-  protected executeQuery<T>(sql: string, params: any[] = []): Promise<T[]> {
+  protected executeQuery<T>(sql: string, params: unknown[] = []): Promise<T[]> {
     try {
       const stmt = this.db.prepare(sql)
       const rows = stmt.all(params) as T[]
@@ -14,7 +14,7 @@ export abstract class BaseRepository {
     }
   }
 
-  protected executeGet<T>(sql: string, params: any[] = []): Promise<T | null> {
+  protected executeGet<T>(sql: string, params: unknown[] = []): Promise<T | null> {
     try {
       const stmt = this.db.prepare(sql)
       const row = stmt.get(params) as T | undefined
@@ -26,7 +26,7 @@ export abstract class BaseRepository {
 
   protected executeRun(
     sql: string,
-    params: any[] = []
+    params: unknown[] = []
   ): Promise<{ lastID: number; changes: number }> {
     try {
       const stmt = this.db.prepare(sql)

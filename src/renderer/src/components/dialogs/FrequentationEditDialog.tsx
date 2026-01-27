@@ -17,7 +17,7 @@ import {
 interface FrequentationEditDialogProps {
   open: boolean
   onClose: () => void
-  onSave: (activity: string) => void
+  onSave: (activity: string) => Promise<boolean>
   initialActivity: string
 }
 
@@ -33,17 +33,19 @@ export const FrequentationEditDialog: React.FC<FrequentationEditDialogProps> = (
     setActivity(translateActivityToFrench(initialActivity))
   }, [initialActivity])
 
-  const handleSave = () => {
+  const handleSave = async (): Promise<void> => {
     if (!activity.trim()) {
       console.warn('Cannot save empty activity')
       return
     }
     const englishActivity = translateActivityToEnglish(activity)
-    onSave(englishActivity)
-    onClose()
+    const success = await onSave(englishActivity)
+    if (success) {
+      onClose()
+    }
   }
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setActivity(initialActivity) // Reset on cancel
     onClose()
   }
