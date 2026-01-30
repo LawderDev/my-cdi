@@ -1,5 +1,6 @@
 import React from 'react'
 import { TableCell, TableRow, Checkbox } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 interface StudentTableHeaderProps {
   showCheckbox?: boolean
@@ -14,6 +15,8 @@ export const StudentTableHeader: React.FC<StudentTableHeaderProps> = ({
   allSelected = false,
   onSelectAll
 }) => {
+  const { t } = useTranslation()
+
   return (
     <TableRow>
       {showCheckbox && (
@@ -30,7 +33,7 @@ export const StudentTableHeader: React.FC<StudentTableHeaderProps> = ({
       <TableCell>Nom</TableCell>
       <TableCell>Prénom</TableCell>
       <TableCell>Classe</TableCell>
-      {showActions && <TableCell align="right">Actions</TableCell>}
+      {showActions && <TableCell align="right">{t('table.actions')}</TableCell>}
     </TableRow>
   )
 }

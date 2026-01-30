@@ -5,6 +5,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { queryClient } from '../lib/queryClient'
 import { theme } from '../lib/theme'
+import '../lib/i18n'
 
 interface ProviderProps {
   children: React.ReactNode

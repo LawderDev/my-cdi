@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useMemo } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -8,11 +8,8 @@ import {
   TextField,
   Autocomplete
 } from '@mui/material'
-import {
-  ACTIVITY_OPTIONS,
-  translateActivityToEnglish,
-  translateActivityToFrench
-} from '@shared/types/activities.enum'
+import { ActivityType } from '@shared/types/activities.enum'
+import { useTranslation } from 'react-i18next'
 
 interface FrequentationEditDialogProps {
   open: boolean
@@ -27,19 +24,19 @@ export const FrequentationEditDialog: React.FC<FrequentationEditDialogProps> = (
   onSave,
   initialActivity
 }) => {
-  const [activity, setActivity] = useState(translateActivityToFrench(initialActivity))
+  const { t } = useTranslation()
 
-  useEffect(() => {
-    setActivity(translateActivityToFrench(initialActivity))
-  }, [initialActivity])
+  const activityOptions = useMemo(() => Object.values(ActivityType), [])
+
+  const [activity, setActivity] = useState(initialActivity)
 
   const handleSave = async (): Promise<void> => {
     if (!activity.trim()) {
       console.warn('Cannot save empty activity')
       return
     }
-    const englishActivity = translateActivityToEnglish(activity)
-    const success = await onSave(englishActivity)
+
+    const success = await onSave(activity || 'other')
     if (success) {
       onClose()
     }
@@ -52,32 +49,33 @@ export const FrequentationEditDialog: React.FC<FrequentationEditDialogProps> = (
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>Modifier l&apos;activité</DialogTitle>
+      <DialogTitle>{t('dialog.editActivity.title')}</DialogTitle>
       <DialogContent>
         <Autocomplete
           value={activity}
           onChange={(_, newValue) => {
-            if (newValue) setActivity(newValue)
+            setActivity(newValue || '')
           }}
-          options={ACTIVITY_OPTIONS}
+          options={activityOptions}
+          getOptionLabel={(option) => t(`activity.${option}`)}
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Activité"
+              label={t('activity.title')}
               margin="normal"
               autoFocus
               required
               error={activity.trim() === ''}
-              helperText={activity.trim() === '' ? "L'activité est requise" : ''}
+              helperText={activity.trim() === '' ? t('dialog.editActivity.required') : ''}
             />
           )}
           freeSolo
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Annuler</Button>
+        <Button onClick={handleClose}>{t('common.cancel')}</Button>
         <Button onClick={handleSave} variant="contained" disabled={activity.trim() === ''}>
-          Sauvegarder
+          {t('common.save')}
         </Button>
       </DialogActions>
     </Dialog>

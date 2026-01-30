@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Container, Button } from '@mui/material'
 import { Autocomplete, TextField } from '@mui/material'
 import StudentsRenderValue from '../../students/components/studentsRenderValue'
@@ -10,7 +10,8 @@ import {
   autocompleteStyles,
   addStudentsButtonStyles
 } from '../../../lib/styles/JournalPage.styles'
-import { ACTIVITY_OPTIONS, translateActivityToEnglish } from '@shared/types/activities.enum'
+import { ActivityType } from '@shared/types/activities.enum'
+import { useTranslation } from 'react-i18next'
 
 interface StudentSelectorProps {
   selectedStudents: StudentViewModel[]
@@ -25,15 +26,17 @@ export const StudentSelector: React.FC<StudentSelectorProps> = ({
   onSelectionChange,
   onAddStudents
 }) => {
-  const [selectedActivity, setSelectedActivity] = useState<string>('Travail')
+  const { t } = useTranslation()
+  const activityOptions = useMemo(() => Object.values(ActivityType), [])
+
+  const [selectedActivity, setSelectedActivity] = useState<string>(activityOptions[0] || '')
 
   const getStudentLabel = (student: StudentViewModel): string =>
     `${student.nom} ${student.prenom} ${student.classe}`
 
   const handleAddStudents = (): void => {
     if (selectedStudents.length > 0) {
-      const englishActivity = translateActivityToEnglish(selectedActivity)
-      onAddStudents(selectedStudents, englishActivity)
+      onAddStudents(selectedStudents, selectedActivity)
     }
   }
 
@@ -66,8 +69,11 @@ export const StudentSelector: React.FC<StudentSelectorProps> = ({
         onChange={(_, newValue) => {
           if (newValue) setSelectedActivity(newValue)
         }}
-        options={ACTIVITY_OPTIONS}
-        renderInput={(params) => <TextField {...params} label="Activité" variant="outlined" />}
+        options={activityOptions}
+        getOptionLabel={(option) => t(`activity.${option}`)}
+        renderInput={(params) => (
+          <TextField {...params} label={t('activity.title')} variant="outlined" />
+        )}
         freeSolo
         forcePopupIcon={true}
       />
@@ -77,7 +83,7 @@ export const StudentSelector: React.FC<StudentSelectorProps> = ({
         onClick={handleAddStudents}
         disabled={selectedStudents.length === 0}
       >
-        Ajouter les élèves
+        {t('journalPage.addStudentsButton.label')}
       </Button>
     </Container>
   )

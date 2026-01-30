@@ -14,8 +14,10 @@ import type { StudentViewModel } from '../../types/view.models'
 import { rootContainerStyles } from '../../lib/styles/StudentsTable.styles'
 import type { CreateStudentDto } from '@shared/types'
 import { useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 const StudentsPage: FC = () => {
+  const { t } = useTranslation()
   const studentsData = useStudentsData()
   const studentSearch = useStudentSearch({ allStudents: studentsData.students })
   const studentSelection = useStudentSelection()
@@ -52,10 +54,10 @@ const StudentsPage: FC = () => {
   return (
     <Container sx={rootContainerStyles}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <h2>Liste des élèves</h2>
+        <h2>{t('studentPage.title')}</h2>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button variant="contained" onClick={() => setAdding(true)}>
-            Ajouter un élève
+            {t('studentPage.addStudentButton.label')}
           </Button>
           <CSVImportButton
             onImported={() => {

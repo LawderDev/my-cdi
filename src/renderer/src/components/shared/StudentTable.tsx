@@ -16,7 +16,7 @@ import { useStudentsSelection } from '../../hooks/useStudentsSelection'
 import type { StudentViewModel } from '../../types/view.models'
 import type { FrequentationViewModel } from '../../types/view.models'
 import { studentHelpers } from '../../lib/utils/student.helpers'
-import { translateActivityToFrench } from '@shared/types/activities.enum'
+import { useTranslation } from 'react-i18next'
 
 interface StudentTableProps {
   data: StudentViewModel[] | FrequentationViewModel[]
@@ -40,6 +40,8 @@ export const StudentTable: React.FC<StudentTableProps> = ({
     selectedIds,
     onSelectionChange
   })
+
+  const { t } = useTranslation()
 
   const handleEdit = (
     event: React.MouseEvent,
@@ -85,11 +87,11 @@ export const StudentTable: React.FC<StudentTableProps> = ({
           >
             <TableRow>
               <TableCell padding="checkbox" />
-              <TableCell>Nom</TableCell>
-              <TableCell>Prénom</TableCell>
-              <TableCell>Classe</TableCell>
-              {isFrequentationTable && <TableCell>Activité</TableCell>}
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>{t('table.lastName')}</TableCell>
+              <TableCell>{t('table.firstName')}</TableCell>
+              <TableCell>{t('table.class')}</TableCell>
+              {isFrequentationTable && <TableCell>{t('table.activity')}</TableCell>}
+              <TableCell align="right">{t('table.actions')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -118,11 +120,7 @@ export const StudentTable: React.FC<StudentTableProps> = ({
                   <TableCell>{student.nom}</TableCell>
                   <TableCell>{student.prenom}</TableCell>
                   <TableCell>{student.classe}</TableCell>
-                  {isFrequentationTable && (
-                    <TableCell>
-                      {translateActivityToFrench((item as FrequentationViewModel).activity)}
-                    </TableCell>
-                  )}
+                  {isFrequentationTable && <TableCell>{t(`activity.${item.activity}`)}</TableCell>}
                   <TableCell align="right">
                     <IconButton size="small" onClick={(e) => handleEdit(e, item)} sx={{ mr: 1 }}>
                       <EditIcon

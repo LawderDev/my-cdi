@@ -9,6 +9,7 @@ import {
   Stack
 } from '@mui/material'
 import type { Student } from '../../types/student'
+import { useTranslation } from 'react-i18next'
 
 interface StudentAddDialogProps {
   open: boolean
@@ -17,6 +18,7 @@ interface StudentAddDialogProps {
 }
 
 const StudentAddDialog: React.FC<StudentAddDialogProps> = ({ open, onClose, onCreate }) => {
+  const { t } = useTranslation()
   const [student, setStudent] = useState<Omit<Student, 'id'>>({
     nom: '',
     prenom: '',
@@ -26,6 +28,7 @@ const StudentAddDialog: React.FC<StudentAddDialogProps> = ({ open, onClose, onCr
 
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasValidated(false)
     }
   }, [open])
@@ -57,7 +60,7 @@ const StudentAddDialog: React.FC<StudentAddDialogProps> = ({ open, onClose, onCr
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>Ajouter un élève</DialogTitle>
+      <DialogTitle>{t('studentPage.addStudentButton.label')}</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ marginTop: 1 }}>
           <TextField
@@ -90,9 +93,9 @@ const StudentAddDialog: React.FC<StudentAddDialogProps> = ({ open, onClose, onCr
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Annuler</Button>
+        <Button onClick={handleClose}>{t('common.cancel')}</Button>
         <Button variant="contained" onClick={handleSave}>
-          Ajouter
+          {t('common.add')}
         </Button>
       </DialogActions>
     </Dialog>

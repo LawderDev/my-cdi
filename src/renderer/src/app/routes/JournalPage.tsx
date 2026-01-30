@@ -17,12 +17,10 @@ import { useFrequentationActions } from '../../features/journal/hooks/useFrequen
 import type { StudentViewModel } from '../../types/view.models'
 import type { FrequentationViewModel } from '../../types/view.models'
 import { rootContainerStyles, layoutContainerStyles } from '../../lib/styles/JournalPage.styles'
-import {
-  translateActivityToFrench,
-  translateActivityToEnglish
-} from '@shared/types/activities.enum'
+import { useTranslation } from 'react-i18next'
 
 const JournalPage: FC = () => {
+  const { t } = useTranslation()
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs())
 
   const [deleteModal, setDeleteModal] = useState({
@@ -137,13 +135,13 @@ const JournalPage: FC = () => {
             if (editModal.frequentation) {
               const success = await frequentationActions.updateFrequentation(
                 editModal.frequentation.id,
-                { activity: translateActivityToEnglish(activity) }
+                { activity: activity }
               )
               return success
             }
             return false
           }}
-          initialActivity={translateActivityToFrench(editModal.frequentation?.activity || '')}
+          initialActivity={editModal.frequentation?.activity || ''}
         />
       </Container>
     </Container>

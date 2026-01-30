@@ -1,6 +1,7 @@
 import React from 'react'
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material'
 import { theme } from '@renderer/lib/theme'
+import { useTranslation } from 'react-i18next'
 
 interface NavbarProps {
   currentPage: 'journal' | 'statistics' | 'students'
@@ -8,6 +9,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ currentPage, onPageChange }) => {
+  const { t } = useTranslation()
   return (
     <AppBar position="static">
       <Toolbar sx={{ backgroundColor: theme.palette.background.default }}>
@@ -50,7 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onPageChange }) => {
               }
             }}
           >
-            Statistiques
+            {t('navBar.statistics')}
           </Button>
           <Button
             color="inherit"
@@ -65,7 +67,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onPageChange }) => {
               }
             }}
           >
-            Élèves
+            {t('navBar.students')}
           </Button>
         </Box>
       </Toolbar>

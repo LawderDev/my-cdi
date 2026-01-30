@@ -1,0 +1,52 @@
+{
+  "navBar": {
+    "journal": "Journal",
+    "students": "Élèves",
+    "statistics": "Statistiques"
+  },
+  "journalPage": {
+    "studentAutocomplete": {
+      "label": "Élèves",
+      "placeholder": "Sélectionner des élèves"
+    },
+    "addStudentsButton": {
+      "label": "Ajouter des élèves"
+    }
+  },
+  "studentPage": {
+    "title": "Liste des élèves",
+    "addStudentButton": {
+      "label": "Ajouter un élève",
+      "importCsv": "Importer des CSV",
+      "searchStudents": "Rechercher des élèves..."
+    }
+  },
+  "table": {
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "class": "Classe",
+    "activity": "Activité",
+    "actions": "Actions",
+    "selectAll": "Tout sélectionner",
+    "deselectAll": "Tout désélectionner"
+  },
+  "activity": {
+    "title": "Activité",
+    "work": "Travail",
+    "reading": "Lecture",
+    "computer": "Ordinateur",
+    "relaxation": "Détente",
+    "other": "Autre"
+  },
+  "dialog": {
+    "editActivity": {
+      "title": "Modifier l'activité",
+      "required": "L'activité est requise"
+    }
+  },
+  "common": {
+    "cancel": "Annuler",
+    "save": "Sauvegarder",
+    "add": "Ajouter"
+  }
+}
