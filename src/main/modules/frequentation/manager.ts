@@ -269,7 +269,8 @@ export class FrequentationModuleManager implements FrequentationManager {
         id: model.studentId,
         nom: model.studentName.split(' ')[1] || '',
         prenom: model.studentName.split(' ')[0] || '',
-        classe: model.studentClass
+        classe: model.studentClass,
+        ine: model.studentIne
       }
     }
   }

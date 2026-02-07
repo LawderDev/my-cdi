@@ -34,7 +34,8 @@ export const useStudentSearch = ({
       (student) =>
         student.nom.toLowerCase().includes(lowerSearchTerm) ||
         student.prenom.toLowerCase().includes(lowerSearchTerm) ||
-        student.classe.toLowerCase().includes(lowerSearchTerm)
+        student.classe.toLowerCase().includes(lowerSearchTerm) ||
+        student.ine.toLowerCase().includes(lowerSearchTerm)
     )
   }, [allStudents, searchTerm])
 

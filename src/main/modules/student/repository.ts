@@ -25,7 +25,7 @@ export class StudentModuleRepository extends BaseRepository implements StudentRe
   }
   async create(studentDto: CreateStudentDto): Promise<StudentEntity> {
     const entity = transformStudentDtoToEntity(studentDto)
-    const params = [entity.nom, entity.prenom, entity.classe]
+    const params = [entity.nom, entity.prenom, entity.classe, entity.ine]
 
     const result = await this.executeRun(INSERT_STUDENT, params)
     const createdStudent = await this.findById(result.lastID)
@@ -58,7 +58,7 @@ export class StudentModuleRepository extends BaseRepository implements StudentRe
       return this.findById(id)
     }
 
-    const params = [entity.nom, entity.prenom, entity.classe, id]
+    const params = [entity.nom, entity.prenom, entity.classe, entity.ine, id]
 
     await this.executeRun(UPDATE_STUDENT, params)
     return this.findById(id)

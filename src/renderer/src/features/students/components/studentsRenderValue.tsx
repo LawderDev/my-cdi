@@ -6,15 +6,19 @@ import { StudentViewModel } from '../../../types/view.models'
 type Props = {
   values: StudentViewModel[]
   getTagProps: AutocompleteRenderGetTagProps
+  duplicateCounts: Record<string, number>
 }
 
-const StudentsRenderValue: React.FC<Props> = ({ values, getTagProps }) => (
+const StudentsRenderValue: React.FC<Props> = ({ values, getTagProps, duplicateCounts }) => (
   <>
     {values.map((option, index) => {
       const { key, ...tagProps } = getTagProps({ index })
-      return (
-        <Chip key={key} label={`${option.nom} ${option.prenom} ${option.classe}`} {...tagProps} />
-      )
+      const dupKey = `${option.nom} ${option.prenom} ${option.classe}`.toLowerCase()
+      const hasDuplicates = duplicateCounts[dupKey] > 1
+      const display = hasDuplicates
+        ? `${option.nom} ${option.prenom} ${option.classe} (${option.ine})`
+        : `${option.nom} ${option.prenom} ${option.classe}`
+      return <Chip key={key} label={display} {...tagProps} />
     })}
   </>
 )

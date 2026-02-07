@@ -48,6 +48,7 @@ const StudentsPage: FC = () => {
   }
 
   const handleDeleteSelected = async (): Promise<void> => {
+    await studentsData.deleteStudents(studentSelection.selectedStudents.map(s => s.id))
     studentSelection.clearSelection()
   }
 

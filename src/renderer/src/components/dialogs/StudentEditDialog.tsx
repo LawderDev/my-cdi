@@ -57,6 +57,13 @@ const StudentEditDialog: React.FC<StudentEditDialogProps> = ({
               onChange={handleFieldChange('classe')}
               fullWidth
             />
+            <TextField
+              label="INE"
+              value={student.ine}
+              onChange={(e) => onUpdateStudent({ ine: e.target.value })}
+              fullWidth
+              required
+            />
           </Stack>
         )}
       </DialogContent>

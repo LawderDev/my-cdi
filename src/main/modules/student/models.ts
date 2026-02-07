@@ -12,13 +12,15 @@ export function createStudentModel(
   id: number,
   nom: string,
   prenom: string,
-  classe: string
+  classe: string,
+  ine: string
 ): StudentModel {
   return {
     id,
     nom,
     prenom,
     classe,
+    ine,
     fullName: `${prenom} ${nom}`.trim()
   }
 }
@@ -29,8 +31,9 @@ export function createStudentModelFromEntity(entity: {
   nom: string
   prenom: string
   classe: string
+  ine: string
 }): StudentModel {
-  return createStudentModel(entity.id, entity.nom, entity.prenom, entity.classe)
+  return createStudentModel(entity.id, entity.nom, entity.prenom, entity.classe, entity.ine)
 }
 
 // Business model functions (object-based operations)

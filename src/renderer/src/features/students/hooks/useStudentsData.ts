@@ -19,6 +19,7 @@ export const useStudentsData = (): {
   openDelete: (id: number) => void
   closeDelete: () => void
   confirmDelete: () => Promise<void>
+  deleteStudents: (ids: number[]) => Promise<void>
 } => {
   const [editing, setEditing] = useState<StudentViewModel | null>(null)
   const [deleting, setDeleting] = useState<number | null>(null)
@@ -122,6 +123,15 @@ export const useStudentsData = (): {
     }
   }
 
+  const deleteStudents = async (ids: number[]): Promise<void> => {
+    try {
+      await deleteMutation.mutateAsync(ids)
+    } catch (err) {
+      console.error('Error deleting students:', err)
+      throw err
+    }
+  }
+
   return {
     students,
     editing,
@@ -135,6 +145,7 @@ export const useStudentsData = (): {
     updateEditingStudent,
     openDelete,
     closeDelete,
-    confirmDelete
+    confirmDelete,
+    deleteStudents
   }
 }

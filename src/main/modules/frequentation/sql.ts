@@ -30,7 +30,7 @@ export const SELECT_FREQUENTATIONS_BY_STUDENT_ID = `
 export const SELECT_FREQUENTATIONS_BY_DATE_RANGE = `
   SELECT
     f.id, f.starts_at, f.activity, f.student_id, f.created_at, f.updated_at,
-    s.nom, s.prenom, s.classe
+    s.nom, s.prenom, s.classe, s.ine
   FROM frequentation f
   LEFT JOIN students s ON f.student_id = s.id
   WHERE f.starts_at >= ? AND f.starts_at <= ?
@@ -40,7 +40,7 @@ export const SELECT_FREQUENTATIONS_BY_DATE_RANGE = `
 export const SELECT_ALL_FREQUENTATIONS_WITH_STUDENT = `
   SELECT
     f.id, f.starts_at, f.activity, f.student_id, f.created_at, f.updated_at,
-    s.nom, s.prenom, s.classe
+    s.nom, s.prenom, s.classe, s.ine
   FROM frequentation f
   LEFT JOIN students s ON f.student_id = s.id
   ORDER BY f.starts_at DESC

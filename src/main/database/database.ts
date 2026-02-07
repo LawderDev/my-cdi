@@ -29,6 +29,7 @@ class CDIDatabase {
         nom TEXT NOT NULL,
         prenom TEXT NOT NULL,
         classe TEXT NOT NULL,
+        ine TEXT NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
@@ -59,6 +60,16 @@ class CDIDatabase {
           `ALTER TABLE frequentation ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP`
         )
         console.log('✅ Migration: added updated_at column to frequentation table')
+      } catch {
+        // Column might already exist, ignore error
+      }
+
+      // Add ine column to students table if it doesn't exist (migration)
+      try {
+        this.db.exec(
+          `ALTER TABLE students ADD COLUMN ine TEXT NOT NULL DEFAULT ''`
+        )
+        console.log('✅ Migration: added ine column to students table')
       } catch {
         // Column might already exist, ignore error
       }

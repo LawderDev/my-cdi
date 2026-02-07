@@ -17,6 +17,7 @@ export interface FrequentationWithStudentEntity {
   nom: string // student.nom
   prenom: string // student.prenom
   classe: string // student.classe
+  ine: string // student.ine
   created_at: string
   updated_at: string
 }
@@ -35,4 +36,5 @@ export interface FrequentationWithStudentDbRow extends FrequentationDbRow {
   nom: string
   prenom: string
   classe: string
+  ine: string
 }

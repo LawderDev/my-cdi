@@ -44,10 +44,6 @@ export const StudentService = {
     return result as BulkStudentResponseDto
   },
 
-  async getStats(): Promise<{ total: number; byClass: Record<string, number> }> {
-    const result = await window.electronAPI.invoke('student:getStats')
-    return result as { total: number; byClass: Record<string, number> }
-  },
 
   async validate(
     studentData: CreateStudentDto | UpdateStudentDto
@@ -83,13 +79,14 @@ export const StudentService = {
   },
 
   async importStudents(
-    students: Array<{ nom: string; prenom: string; classe?: string }>
+    students: Array<{ nom: string; prenom: string; classe?: string; ine: string }>
   ): Promise<{ success: boolean; count?: number; error?: string }> {
     // Transform old format to new DTO format
     const dtos: CreateStudentDto[] = students.map((s) => ({
       nom: s.nom,
       prenom: s.prenom,
-      classe: s.classe || ''
+      classe: s.classe || '',
+      ine: s.ine
     }))
 
     const result = await this.createBatch(dtos)

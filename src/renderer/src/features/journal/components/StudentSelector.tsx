@@ -29,6 +29,15 @@ export const StudentSelector: React.FC<StudentSelectorProps> = ({
   const { t } = useTranslation()
   const activityOptions = useMemo(() => Object.values(ActivityType), [])
 
+  const duplicateCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    availableStudents.forEach((student) => {
+      const key = `${student.nom} ${student.prenom} ${student.classe}`.toLowerCase()
+      counts[key] = (counts[key] || 0) + 1
+    })
+    return counts
+  }, [availableStudents])
+
   const [selectedActivity, setSelectedActivity] = useState<string>(activityOptions[0] || '')
 
   const getStudentLabel = (student: StudentViewModel): string =>
@@ -55,10 +64,19 @@ export const StudentSelector: React.FC<StudentSelectorProps> = ({
         getOptionLabel={getStudentLabel}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         renderTags={(values, getTagProps) => (
-          <StudentsRenderValue values={values} getTagProps={getTagProps} />
+          <StudentsRenderValue
+            values={values}
+            getTagProps={getTagProps}
+            duplicateCounts={duplicateCounts}
+          />
         )}
         renderOption={(props, option, { selected }) => (
-          <StudentRenderOption props={props} option={option} selected={selected} />
+          <StudentRenderOption
+            props={props}
+            option={option}
+            selected={selected}
+            duplicateCounts={duplicateCounts}
+          />
         )}
         renderInput={(params) => <StudentsRenderInput params={params} />}
       />

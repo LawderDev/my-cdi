@@ -4,6 +4,7 @@ export interface StudentEntity {
   nom: string
   prenom: string
   classe: string
+  ine: string
   created_at: string // ISO string from database
   updated_at: string // ISO string from database
 }
@@ -14,6 +15,7 @@ export interface StudentDbRow {
   nom: string
   prenom: string
   classe: string
+  ine: string
   created_at: string
   updated_at: string
 }

@@ -5,6 +5,7 @@ export interface StudentModel {
   nom: string
   prenom: string
   classe: string
+  ine: string
   fullName: string // Computed property
 }
 

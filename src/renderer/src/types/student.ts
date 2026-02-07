@@ -3,4 +3,5 @@ export interface Student {
   nom: string
   prenom: string
   classe: string
+  ine: string
 }

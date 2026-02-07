@@ -3,25 +3,25 @@
 
 // Insert queries
 export const INSERT_STUDENT = `
-  INSERT INTO students (nom, prenom, classe, created_at, updated_at)
-  VALUES (?, ?, ?, datetime('now'), datetime('now'))
+  INSERT INTO students (nom, prenom, classe, ine, created_at, updated_at)
+  VALUES (?, ?, ?, ?, datetime('now'), datetime('now'))
 `
 
 // Select queries
 export const SELECT_ALL_STUDENTS = `
-  SELECT id, nom, prenom, classe, created_at, updated_at
+  SELECT id, nom, prenom, classe, ine, created_at, updated_at
   FROM students
   ORDER BY nom ASC, prenom ASC
 `
 
 export const SELECT_STUDENT_BY_ID = `
-  SELECT id, nom, prenom, classe, created_at, updated_at
+  SELECT id, nom, prenom, classe, ine, created_at, updated_at
   FROM students
   WHERE id = ?
 `
 
 export const SELECT_STUDENTS_BY_CLASS = `
-  SELECT id, nom, prenom, classe, created_at, updated_at
+  SELECT id, nom, prenom, classe, ine, created_at, updated_at
   FROM students
   WHERE classe = ?
   ORDER BY nom ASC, prenom ASC
@@ -30,7 +30,7 @@ export const SELECT_STUDENTS_BY_CLASS = `
 // Update queries
 export const UPDATE_STUDENT = `
   UPDATE students
-  SET nom = ?, prenom = ?, classe = ?, updated_at = datetime('now')
+  SET nom = ?, prenom = ?, classe = ?, ine = ?, updated_at = datetime('now')
   WHERE id = ?
 `
 
@@ -47,7 +47,7 @@ export const COUNT_STUDENTS = `
 
 // Complex queries
 export const SELECT_STUDENTS_WITHOUT_FREQUENTATION_AT_DATE = `
-  SELECT s.id, s.nom, s.prenom, s.classe, s.created_at, s.updated_at
+  SELECT s.id, s.nom, s.prenom, s.classe, s.ine, s.created_at, s.updated_at
   FROM students s
   WHERE s.id NOT IN (
     SELECT DISTINCT f.student_id FROM frequentation f

@@ -26,19 +26,17 @@ export class StudentModuleManager implements StudentManager {
         }
       }
 
-      // Check if student with same name already exists
+      // Check if student with same INE already exists
       const existingStudents = await this.studentRepository.findAll()
       const existingModels = existingStudents.map(createStudentModelFromEntity)
       const duplicate = existingModels.find(
-        (s) =>
-          s.nom.toLowerCase() === createDto.nom.trim().toLowerCase() &&
-          s.prenom.toLowerCase() === createDto.prenom.trim().toLowerCase()
+        (s) => s.ine.trim().toLowerCase() === createDto.ine.trim().toLowerCase()
       )
 
       if (duplicate) {
         return {
           success: false,
-          error: 'Un étudiant avec le même nom et prénom existe déjà'
+          error: 'Un étudiant avec le même INE existe déjà'
         }
       }
 
@@ -87,21 +85,17 @@ export class StudentModuleManager implements StudentManager {
         }
       }
 
-      // Check for duplicates (excluding current student)
-      if (updateDto.nom || updateDto.prenom) {
+      // Check for INE duplicates (excluding current student)
+      if (updateDto.ine) {
         const allEntities = await this.studentRepository.findAll()
-        const existingModel = createStudentModelFromEntity(existingEntity)
         const duplicate = allEntities.find(
-          (e) =>
-            e.id !== id &&
-            e.nom.toLowerCase() === (updateDto.nom || existingModel.nom).toLowerCase() &&
-            e.prenom.toLowerCase() === (updateDto.prenom || existingModel.prenom).toLowerCase()
+          (e) => e.id !== id && e.ine.trim().toLowerCase() === updateDto.ine!.trim().toLowerCase()
         )
 
         if (duplicate) {
           return {
             success: false,
-            error: 'Un étudiant avec le même nom et prénom existe déjà'
+            error: 'Un étudiant avec le même INE existe déjà'
           }
         }
       }
@@ -224,7 +218,8 @@ export class StudentModuleManager implements StudentManager {
       id: model.id,
       nom: model.nom,
       prenom: model.prenom,
-      classe: model.classe
+      classe: model.classe,
+      ine: model.ine
     }
   }
 

@@ -15,7 +15,8 @@ export function createFrequentationModel(
   activity: string,
   studentId: number,
   studentName: string,
-  studentClass: string
+  studentClass: string,
+  studentIne: string
 ): FrequentationModel {
   return {
     id,
@@ -23,7 +24,8 @@ export function createFrequentationModel(
     activity,
     studentId,
     studentName,
-    studentClass
+    studentClass,
+    studentIne
   }
 }
 
@@ -36,6 +38,7 @@ export function createFrequentationModelFromEntityWithStudent(entity: {
   nom: string
   prenom: string
   classe: string
+  ine: string
 }): FrequentationModel {
   return createFrequentationModel(
     entity.id,
@@ -43,7 +46,8 @@ export function createFrequentationModelFromEntityWithStudent(entity: {
     entity.activity,
     entity.student_id,
     `${entity.prenom} ${entity.nom}`.trim(),
-    entity.classe
+    entity.classe,
+    entity.ine
   )
 }
 
@@ -61,7 +65,8 @@ export function createFrequentationModelFromEntity(entity: {
     entity.activity,
     entity.student_id,
     'Unknown Student', // Placeholder - should be populated from JOIN
-    'Unknown Class' // Placeholder - should be populated from JOIN
+    'Unknown Class', // Placeholder - should be populated from JOIN
+    'Unknown INE' // Placeholder - should be populated from JOIN
   )
 }
 

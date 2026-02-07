@@ -17,15 +17,16 @@ const CSVImportButton: React.FC<Props> = ({ onImported }) => {
       delimiter: ';',
       complete: async (results) => {
         const rows = results.data as Array<Record<string, string>>
-        // Map headers (case-insensitive) to nom/prenom/classe
+        // Map headers (case-insensitive) to nom/prenom/classe/ine
         const mapped = rows.map((r) => ({
           nom: ((r['Nom de famille'] || r['nom'] || r['NOM'] || '') as string).trim(),
           prenom: ((r['Prénom 1'] || r['prenom'] || r['PRENOM'] || '') as string).trim(),
-          classe: ((r['Division'] || r['classe'] || '') as string).trim()
+          classe: ((r['Division'] || r['classe'] || '') as string).trim(),
+          ine: ((r['INE'] || r['ine'] || '') as string).trim()
         }))
 
-        // Basic validation: nom & prenom
-        const valid = mapped.filter((m) => m.nom && m.prenom)
+        // Basic validation: nom, prenom, and ine required
+        const valid = mapped.filter((m) => m.nom && m.prenom && m.ine)
         try {
           const res = await StudentService.importStudents(valid)
           if (res.success) {

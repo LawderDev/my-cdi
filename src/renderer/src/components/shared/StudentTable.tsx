@@ -43,6 +43,33 @@ export const StudentTable: React.FC<StudentTableProps> = ({
 
   const { t } = useTranslation()
 
+  // Compute duplicate counts based on nom + prenom + classe (only for frequentation tables)
+  const duplicateCounts = React.useMemo(() => {
+    if (!isFrequentationTable) return {}
+    const counts: Record<string, number> = {}
+    data.forEach((item) => {
+      const student = 'student' in item ? item.student : item
+      const key = `${student.nom} ${student.prenom} ${student.classe}`.toLowerCase()
+      counts[key] = (counts[key] || 0) + 1
+    })
+    return counts
+  }, [data, isFrequentationTable])
+
+  const getDisplayName = React.useCallback(
+    (student: StudentViewModel): string => {
+      if (!isFrequentationTable) {
+        return `${student.prenom} ${student.nom}`
+      }
+      const key = `${student.nom} ${student.prenom} ${student.classe}`.toLowerCase()
+      const hasDuplicates = duplicateCounts[key] > 1
+      if (hasDuplicates) {
+        return `${student.prenom} ${student.nom} (${student.ine})`
+      }
+      return `${student.prenom} ${student.nom}`
+    },
+    [duplicateCounts, isFrequentationTable]
+  )
+
   const handleEdit = (
     event: React.MouseEvent,
     item: StudentViewModel | FrequentationViewModel
@@ -87,10 +114,20 @@ export const StudentTable: React.FC<StudentTableProps> = ({
           >
             <TableRow>
               <TableCell padding="checkbox" />
-              <TableCell>{t('table.lastName')}</TableCell>
-              <TableCell>{t('table.firstName')}</TableCell>
-              <TableCell>{t('table.class')}</TableCell>
-              {isFrequentationTable && <TableCell>{t('table.activity')}</TableCell>}
+              {!isFrequentationTable ? (
+                <>
+                  <TableCell>{t('table.lastName')}</TableCell>
+                  <TableCell>{t('table.firstName')}</TableCell>
+                  <TableCell>{t('table.class')}</TableCell>
+                  <TableCell>{t('table.ine')}</TableCell>
+                </>
+              ) : (
+                <>
+                  <TableCell>{t('table.fullName')}</TableCell>
+                  <TableCell>{t('table.class')}</TableCell>
+                  <TableCell>{t('table.activity')}</TableCell>
+                </>
+              )}
               <TableCell align="right">{t('table.actions')}</TableCell>
             </TableRow>
           </TableHead>
@@ -117,10 +154,20 @@ export const StudentTable: React.FC<StudentTableProps> = ({
                       size="small"
                     />
                   </TableCell>
-                  <TableCell>{student.nom}</TableCell>
-                  <TableCell>{student.prenom}</TableCell>
-                  <TableCell>{student.classe}</TableCell>
-                  {isFrequentationTable && <TableCell>{t(`activity.${item.activity}`)}</TableCell>}
+                  {!isFrequentationTable ? (
+                    <>
+                      <TableCell>{student.nom}</TableCell>
+                      <TableCell>{student.prenom}</TableCell>
+                      <TableCell>{student.classe}</TableCell>
+                      <TableCell>{student.ine}</TableCell>
+                    </>
+                  ) : (
+                    <>
+                      <TableCell>{getDisplayName(student)}</TableCell>
+                      <TableCell>{student.classe}</TableCell>
+                      <TableCell>{t(`activity.${item.activity}`)}</TableCell>
+                    </>
+                  )}
                   <TableCell align="right">
                     <IconButton size="small" onClick={(e) => handleEdit(e, item)} sx={{ mr: 1 }}>
                       <EditIcon

@@ -24,7 +24,9 @@
   "table": {
     "firstName": "Prénom",
     "lastName": "Nom",
+    "fullName": "Nom complet",
     "class": "Classe",
+    "ine": "INE",
     "activity": "Activité",
     "actions": "Actions",
     "selectAll": "Tout sélectionner",

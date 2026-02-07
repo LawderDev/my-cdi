@@ -24,6 +24,7 @@ export interface FrequentationResponseDto {
     nom: string
     prenom: string
     classe: string
+    ine: string
   }
 }
 

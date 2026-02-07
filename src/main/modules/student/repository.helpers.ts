@@ -11,7 +11,8 @@ export function transformStudentDtoToEntity(
   return {
     nom: dto.nom.trim(),
     prenom: dto.prenom.trim(),
-    classe: dto.classe.trim()
+    classe: dto.classe.trim(),
+    ine: dto.ine.trim()
   }
 }
 
@@ -24,6 +25,7 @@ export function transformStudentUpdateDtoToEntity(
   if (dto.nom !== undefined) partial.nom = dto.nom.trim()
   if (dto.prenom !== undefined) partial.prenom = dto.prenom.trim()
   if (dto.classe !== undefined) partial.classe = dto.classe.trim()
+  if (dto.ine !== undefined) partial.ine = dto.ine.trim()
 
   return partial
 }
@@ -31,7 +33,7 @@ export function transformStudentUpdateDtoToEntity(
 // Database Row → Entity transformation (replaces Record<string, unknown>)
 export function transformStudentDbRowToEntity(row: StudentDbRow): StudentEntity {
   // Validate required fields
-  const requiredFields = ['id', 'nom', 'prenom', 'classe']
+  const requiredFields = ['id', 'nom', 'prenom', 'classe', 'ine']
   const missingFields = requiredFields.filter((field) => !(field in row))
 
   if (missingFields.length > 0) {
@@ -43,6 +45,7 @@ export function transformStudentDbRowToEntity(row: StudentDbRow): StudentEntity 
     nom: String(row.nom || ''),
     prenom: String(row.prenom || ''),
     classe: String(row.classe || ''),
+    ine: String(row.ine || ''),
     created_at: String(row.created_at || ''),
     updated_at: String(row.updated_at || '')
   }

@@ -22,7 +22,8 @@ const StudentAddDialog: React.FC<StudentAddDialogProps> = ({ open, onClose, onCr
   const [student, setStudent] = useState<Omit<Student, 'id'>>({
     nom: '',
     prenom: '',
-    classe: ''
+    classe: '',
+    ine: ''
   })
   const [hasValidated, setHasValidated] = useState(false)
 
@@ -46,17 +47,17 @@ const StudentAddDialog: React.FC<StudentAddDialogProps> = ({ open, onClose, onCr
     }
     const success = await onCreate(student)
     if (success) {
-      setStudent({ nom: '', prenom: '', classe: '' }) // Reset form
+      setStudent({ nom: '', prenom: '', classe: '', ine: '' }) // Reset form
       onClose()
     }
   }
 
   const handleClose = (): void => {
-    setStudent({ nom: '', prenom: '', classe: '' }) // Reset on cancel
+    setStudent({ nom: '', prenom: '', classe: '', ine: '' }) // Reset on cancel
     onClose()
   }
 
-  const isValid = student.nom.trim() && student.prenom.trim() && student.classe.trim()
+  const isValid = student.nom.trim() && student.prenom.trim() && student.classe.trim() && student.ine.trim()
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
@@ -89,6 +90,15 @@ const StudentAddDialog: React.FC<StudentAddDialogProps> = ({ open, onClose, onCr
             required
             error={hasValidated && !student.classe.trim()}
             helperText={hasValidated && !student.classe.trim() ? 'La classe est requise' : ''}
+          />
+          <TextField
+            label="INE"
+            value={student.ine}
+            onChange={(e) => setStudent((prev) => ({ ...prev, ine: e.target.value }))}
+            fullWidth
+            required
+            error={hasValidated && !student.ine.trim()}
+            helperText={hasValidated && !student.ine.trim() ? 'L\'INE est requis' : ''}
           />
         </Stack>
       </DialogContent>

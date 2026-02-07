@@ -67,6 +67,7 @@ export function transformFrequentationWithStudentDbRowToEntity(
     ...baseEntity,
     nom: String(row.nom || ''),
     prenom: String(row.prenom || ''),
-    classe: String(row.classe || '')
+    classe: String(row.classe || ''),
+    ine: String(row.ine || '')
   }
 }

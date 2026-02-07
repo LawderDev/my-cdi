@@ -7,6 +7,7 @@ export interface FrequentationModel {
   studentId: number
   studentName: string // Computed: "prenom nom"
   studentClass: string
+  studentIne: string
 }
 
 // Validation result

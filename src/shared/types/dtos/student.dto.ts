@@ -5,6 +5,7 @@ export interface CreateStudentDto {
   nom: string
   prenom: string
   classe: string
+  ine: string
 }
 
 // Update student request (all fields optional for partial updates)
@@ -12,6 +13,7 @@ export interface UpdateStudentDto {
   nom?: string
   prenom?: string
   classe?: string
+  ine?: string
 }
 
 // Student response (what frontend receives)
@@ -20,6 +22,7 @@ export interface StudentResponseDto {
   nom: string
   prenom: string
   classe: string
+  ine: string
 }
 
 // Student list response
