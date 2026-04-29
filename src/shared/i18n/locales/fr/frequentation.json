@@ -1,0 +1,13 @@
+{
+  "title": "Journal des fréquentations",
+  "add": "Marquer la présence",
+  "activity": {
+    "work": "Travail",
+    "reading": "Lecture",
+    "computer": "Ordinateur",
+    "relaxation": "Détente",
+    "other": "Autre"
+  },
+  "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{count}} fréquentation(s) ?",
+  "noEntries": "Aucune fréquentation pour cette date"
+}

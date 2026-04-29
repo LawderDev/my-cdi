@@ -1,0 +1,15 @@
+{
+  "title": "Gestion des élèves",
+  "add": "Ajouter un élève",
+  "edit": "Modifier l'élève",
+  "delete": "Supprimer l'élève",
+  "import": "Importer CSV",
+  "fields": {
+    "nom": "Nom",
+    "prenom": "Prénom",
+    "classe": "Classe",
+    "ine": "INE"
+  },
+  "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{count}} élève(s) ?",
+  "duplicateIne": "Un élève avec cet INE existe déjà"
+}
