@@ -4,7 +4,18 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
+    resolve: {
+      alias: {
+        '@student': resolve('src/features/student/main'),
+        '@frequentation': resolve('src/features/frequentation/main'),
+        '@student-shared': resolve('src/features/student/shared'),
+        '@frequentation-shared': resolve('src/features/frequentation/shared'),
+        '@shared': resolve('src/shared'),
+        '@lib': resolve('src/shared/lib'),
+        '@types': resolve('src/shared/types')
+      }
+    }
   },
   preload: {
     plugins: [externalizeDepsPlugin()]
@@ -12,14 +23,20 @@ export default defineConfig({
   renderer: {
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/src'),
-        '@shared': resolve('src/shared')
+        '@student': resolve('src/features/student/renderer'),
+        '@frequentation': resolve('src/features/frequentation/renderer'),
+        '@student-shared': resolve('src/features/student/shared'),
+        '@frequentation-shared': resolve('src/features/frequentation/shared'),
+        '@shared': resolve('src/shared'),
+        '@ui': resolve('src/shared/ui'),
+        '@lib': resolve('src/shared/lib'),
+        '@types': resolve('src/shared/types')
       }
     },
     plugins: [
       react({
         babel: {
-          plugins: [['babel-plugin-react-compiler']]
+          plugins: [['babel-plugin-react-compiler', { target: '19' }]]
         }
       })
     ]
