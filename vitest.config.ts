@@ -10,8 +10,8 @@ export default defineConfig({
     setupFiles: ['./src/shared/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
     alias: {
-      '@student': resolve('src/features/student/renderer'),
-      '@frequentation': resolve('src/features/frequentation/renderer'),
+      '@student': resolve('src/features/student/main'),
+      '@frequentation': resolve('src/features/frequentation/main'),
       '@student-shared': resolve('src/features/student/shared'),
       '@frequentation-shared': resolve('src/features/frequentation/shared'),
       '@shared': resolve('src/shared'),
