@@ -2,14 +2,16 @@ import { app, BrowserWindow, shell } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { createDbConnection, closeDbConnection } from '@shared/db/connection'
-import type { initializeModules as InitializeModulesFn } from './modules'
+import { initializeModules } from './modules'
 
 const DATABASE_PATH = 'data/database.db'
+const WINDOW_WIDTH_PX = 1200
+const WINDOW_HEIGHT_PX = 800
 
-function createWindow() {
+function createWindow(): void {
   const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: WINDOW_WIDTH_PX,
+    height: WINDOW_HEIGHT_PX,
     show: false,
     autoHideMenuBar: true,
     webPreferences: {
@@ -43,9 +45,7 @@ app.whenReady().then(() => {
   })
 
   createDbConnection()
-
-  const modules: { initializeModules: typeof InitializeModulesFn } = require('./modules')
-  modules.initializeModules(DATABASE_PATH)
+  initializeModules(DATABASE_PATH)
 
   createWindow()
 })

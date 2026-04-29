@@ -1,8 +1,8 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { STUDENT_CHANNELS, FREQUENTATION_CHANNELS } from '@shared/ipc/channels'
 
-function invoke<Input, Output>(channel: string, input: Input) {
-  return ipcRenderer.invoke(channel, input) as Promise<Output>
+function invoke<Output>(channel: string, input: unknown): Promise<Output> {
+  return ipcRenderer.invoke(channel, input)
 }
 
 const electronAPI = {

@@ -18,9 +18,7 @@ export interface StudentApi {
   create: (input: CreateStudentDto) => Promise<IpcResult<StudentResponseDto>>
   get: (input: { id: number }) => Promise<IpcResult<StudentResponseDto>>
   list: (input: { classe?: string }) => Promise<IpcResult<StudentListResponseDto>>
-  update: (
-    input: { id: number } & UpdateStudentDto
-  ) => Promise<IpcResult<StudentResponseDto>>
+  update: (input: { id: number } & UpdateStudentDto) => Promise<IpcResult<StudentResponseDto>>
   delete: (input: { id: number }) => Promise<IpcResult<void>>
   importCsv: (input: { csv: string }) => Promise<IpcResult<BulkStudentResponseDto>>
 }

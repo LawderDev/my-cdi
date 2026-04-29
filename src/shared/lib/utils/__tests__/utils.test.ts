@@ -7,9 +7,11 @@ describe('generateId', () => {
     expect(typeof id).toBe('string')
   })
 
+  const SAMPLE_COUNT = 100
+
   it('returns unique values', () => {
-    const ids = new Set(Array.from({ length: 100 }, generateId))
-    expect(ids.size).toBe(100)
+    const ids = new Set(Array.from({ length: SAMPLE_COUNT }, generateId))
+    expect(ids.size).toBe(SAMPLE_COUNT)
   })
 })
 

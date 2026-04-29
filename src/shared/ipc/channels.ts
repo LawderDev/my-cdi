@@ -18,4 +18,5 @@ export const FREQUENTATION_CHANNELS = {
 } as const
 
 export type StudentChannel = (typeof STUDENT_CHANNELS)[keyof typeof STUDENT_CHANNELS]
-export type FrequentationChannel = (typeof FREQUENTATION_CHANNELS)[keyof typeof FREQUENTATION_CHANNELS]
+export type FrequentationChannel =
+  (typeof FREQUENTATION_CHANNELS)[keyof typeof FREQUENTATION_CHANNELS]
