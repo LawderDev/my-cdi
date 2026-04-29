@@ -1,7 +1,10 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, shell } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { createDbConnection, closeDbConnection } from '@shared/db/connection'
+import type { initializeModules as InitializeModulesFn } from './modules'
+
+const DATABASE_PATH = 'data/database.db'
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -21,7 +24,7 @@ function createWindow() {
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
-    require('electron').shell.openExternal(details.url)
+    shell.openExternal(details.url)
     return { action: 'deny' }
   })
 
@@ -39,12 +42,10 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  const db = createDbConnection()
+  createDbConnection()
 
-  const { initializeModules } = require('./modules') as {
-    initializeModules: (databasePath: string) => void
-  }
-  initializeModules('data/database.db')
+  const modules: { initializeModules: typeof InitializeModulesFn } = require('./modules')
+  modules.initializeModules(DATABASE_PATH)
 
   createWindow()
 })
