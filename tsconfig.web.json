@@ -1,25 +1,33 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
-    "src/renderer/src/env.d.ts",
-    "src/renderer/src/**/*",
-    "src/renderer/src/**/*.tsx",
-    "src/preload/*.d.ts",
-    "src/shared/**/*"
+    "src/renderer/**/*.ts",
+    "src/renderer/**/*.tsx",
+    "src/preload/*.ts",
+    "src/shared/**/*.ts",
+    "src/shared/**/*.tsx",
+    "src/features/**/*.ts",
+    "src/features/**/*.tsx"
   ],
   "compilerOptions": {
-    "composite": false,
-    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "composite": true,
     "baseUrl": ".",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "paths": {
-      "@renderer/*": [
-        "src/renderer/src/*"
-      ],
-      "@shared/*": [
-        "src/shared/*"
-      ]
+      "@student/*": ["src/features/student/renderer/*"],
+      "@frequentation/*": ["src/features/frequentation/renderer/*"],
+      "@student-shared": ["src/features/student/shared"],
+      "@frequentation-shared": ["src/features/frequentation/shared"],
+      "@shared/*": ["src/shared/*"],
+      "@ui/*": ["src/shared/ui/*"],
+      "@lib/*": ["src/shared/lib/*"],
+      "@lib": ["src/shared/lib"],
+      "@types": ["src/shared/types"]
     }
   }
 }
