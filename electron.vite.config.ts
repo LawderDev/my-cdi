@@ -18,7 +18,14 @@ export default defineConfig({
     }
   },
   preload: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
+    resolve: {
+      alias: {
+        '@shared': resolve('src/shared'),
+        '@lib': resolve('src/shared/lib'),
+        '@types': resolve('src/shared/types')
+      }
+    }
   },
   renderer: {
     resolve: {
