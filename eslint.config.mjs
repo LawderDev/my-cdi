@@ -6,14 +6,14 @@ import eslintPluginReactRefresh from 'eslint-plugin-react-refresh'
 import eslintPluginImport from 'eslint-plugin-import'
 
 export default tseslint.config(
-  { ignores: ['**/node_modules', '**/dist', '**/out'] },
+  { ignores: ['**/node_modules', '**/dist', '**/out', '**/drizzle'] },
   tseslint.configs.recommended,
   eslintPluginReact.configs.flat.recommended,
   eslintPluginReact.configs.flat['jsx-runtime'],
   {
     settings: {
       react: {
-        version: 'detect'
+        version: '19.0'
       }
     }
   },
@@ -27,41 +27,56 @@ export default tseslint.config(
     rules: {
       ...eslintPluginReactHooks.configs.recommended.rules,
       ...eslintPluginReactRefresh.configs.vite.rules,
-      'react/prop-types': 'off',
-      'import/no-restricted-paths': [
+      'react/prop-types': 'off'
+    }
+  },
+  eslintConfigPrettier,
+  {
+    files: ['**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-non-null-assertion': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
+      'no-magic-numbers': [
         'error',
         {
-          zones: [
-            // Forbid cross-feature imports
-            {
-              target: './src/renderer/src/features/journal',
-              from: './src/renderer/src/features',
-              except: ['./journal']
-            },
-            {
-              target: './src/renderer/src/features/students',
-              from: './src/renderer/src/features',
-              except: ['./students']
-            },
-            // Enforce unidirectional
-            {
-              target: './src/renderer/src/features',
-              from: './src/renderer/src/app'
-            },
-            {
-              target: [
-                './src/renderer/src/components',
-                './src/renderer/src/hooks',
-                './src/renderer/src/lib',
-                './src/renderer/src/types',
-                './src/renderer/src/utils'
-              ],
-              from: ['./src/renderer/src/features', './src/renderer/src/app']
-            }
-          ]
+          ignore: [-1, 0, 1],
+          ignoreArrayIndexes: true,
+          ignoreDefaultValues: true,
+          enforceConst: true,
+          detectObjects: true
+        }
+      ],
+      curly: ['error', 'all'],
+      'nonblock-statement-body-position': ['error', 'below'],
+      'import/no-cycle': 'error',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "TSAsExpression > TSTypeReference[typeName.name!='const']",
+          message: 'Type assertions (as Type) are forbidden. Use type guards or proper typing.'
+        },
+        {
+          selector: 'TSAsExpression > TSUnknownKeyword',
+          message: 'Casting to unknown via "as unknown" is forbidden.'
+        },
+        {
+          selector: 'TSAsExpression > TSStringKeyword',
+          message: 'Type assertions to primitives are forbidden.'
+        },
+        {
+          selector: 'TSAsExpression > TSNumberKeyword',
+          message: 'Type assertions to primitives are forbidden.'
+        },
+        {
+          selector: 'TSAsExpression > TSBooleanKeyword',
+          message: 'Type assertions to primitives are forbidden.'
+        },
+        {
+          selector:
+            "CallExpression[callee.name='invalidateQueries'] > ObjectExpression > Property[key.name='queryKey'] > ArrayExpression > Literal",
+          message: 'Use query key factory constants, not inline string literals'
         }
       ]
     }
-  },
-  eslintConfigPrettier
+  }
 )
