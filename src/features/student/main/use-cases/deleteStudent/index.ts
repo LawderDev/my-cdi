@@ -1,0 +1,1 @@
+export { deleteStudent } from './deleteStudent'
