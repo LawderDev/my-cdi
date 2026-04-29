@@ -1,6 +1,12 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
-  "include": ["src/main/**/*.ts", "src/preload/*.ts", "src/shared/**/*.ts", "src/features/**/*.ts"],
+  "include": [
+    "src/main/**/*.ts",
+    "src/preload/*.ts",
+    "src/shared/**/*.ts",
+    "src/features/*/shared/**/*.ts",
+    "src/features/*/main/**/*.ts"
+  ],
   "compilerOptions": {
     "strict": true,
     "noUncheckedIndexedAccess": true,

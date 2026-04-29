@@ -6,8 +6,9 @@
     "src/preload/*.ts",
     "src/shared/**/*.ts",
     "src/shared/**/*.tsx",
-    "src/features/**/*.ts",
-    "src/features/**/*.tsx"
+    "src/features/*/shared/**/*.ts",
+    "src/features/*/renderer/**/*.ts",
+    "src/features/*/renderer/**/*.tsx"
   ],
   "compilerOptions": {
     "strict": true,
