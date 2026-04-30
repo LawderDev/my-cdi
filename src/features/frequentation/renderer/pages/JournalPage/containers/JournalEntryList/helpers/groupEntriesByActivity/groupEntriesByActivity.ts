@@ -9,6 +9,7 @@ export function groupEntriesByActivity(
     [ActivityType.READING]: [],
     [ActivityType.COMPUTER]: [],
     [ActivityType.RELAXATION]: [],
+    [ActivityType.GAME]: [],
     [ActivityType.OTHER]: []
   }
   for (const entry of entries) {

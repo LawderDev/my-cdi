@@ -9,6 +9,7 @@ describe('buildActivityOptions', () => {
       [ActivityType.READING]: 'Lecture',
       [ActivityType.COMPUTER]: 'Ordinateur',
       [ActivityType.RELAXATION]: 'Détente',
+      [ActivityType.GAME]: 'Jeu de société',
       [ActivityType.OTHER]: 'Autre'
     }
     const result = buildActivityOptions(Object.values(ActivityType), (a) => labels[a])
@@ -18,6 +19,7 @@ describe('buildActivityOptions', () => {
       { value: ActivityType.READING, label: 'Lecture' },
       { value: ActivityType.COMPUTER, label: 'Ordinateur' },
       { value: ActivityType.RELAXATION, label: 'Détente' },
+      { value: ActivityType.GAME, label: 'Jeu de société' },
       { value: ActivityType.OTHER, label: 'Autre' }
     ])
   })

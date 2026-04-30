@@ -14,6 +14,7 @@ export const frequentationTable = sqliteTable(
         ActivityType.READING,
         ActivityType.COMPUTER,
         ActivityType.RELAXATION,
+        ActivityType.GAME,
         ActivityType.OTHER
       ]
     }).notNull(),

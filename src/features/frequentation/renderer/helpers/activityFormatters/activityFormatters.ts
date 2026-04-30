@@ -5,6 +5,7 @@ const ACTIVITY_COLOR_MAP: Record<ActivityType, string> = {
   [ActivityType.READING]: '#388e3c',
   [ActivityType.COMPUTER]: '#7b1fa2',
   [ActivityType.RELAXATION]: '#f57c00',
+  [ActivityType.GAME]: '#d32f2f',
   [ActivityType.OTHER]: '#616161'
 }
 
@@ -13,6 +14,7 @@ const ACTIVITY_ICON_MAP: Record<ActivityType, string> = {
   [ActivityType.READING]: 'MenuBook',
   [ActivityType.COMPUTER]: 'Computer',
   [ActivityType.RELAXATION]: 'SelfImprovement',
+  [ActivityType.GAME]: 'Casino',
   [ActivityType.OTHER]: 'MoreHoriz'
 }
 

@@ -3,5 +3,6 @@ export enum ActivityType {
   READING = 'reading',
   COMPUTER = 'computer',
   RELAXATION = 'relaxation',
+  GAME = 'game',
   OTHER = 'other'
 }
