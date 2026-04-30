@@ -9,7 +9,17 @@ import { useImportStudentsCsv } from '@student/api/useStudentMutations'
 
 const CSV_ACCEPT = '.csv'
 
-const HIDDEN_INPUT_STYLE = { display: 'none' } as const
+const VISUALLY_HIDDEN_STYLE: React.CSSProperties = {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: 'hidden',
+  clip: 'rect(0, 0, 0, 0)',
+  whiteSpace: 'nowrap',
+  border: 0
+}
 const TRIGGER_ICON_FONT_SIZE_PX = 16
 const TRIGGER_ICON_STYLE = { fontSize: TRIGGER_ICON_FONT_SIZE_PX } as const
 const DROPZONE_ICON_FONT_SIZE_PX = 40
@@ -162,13 +172,14 @@ export function StudentCsvImportButton() {
             </Box>
           ) : null}
         </Box>
-        <Box
-          component="input"
+        <input
           ref={inputRef}
           type="file"
           accept={CSV_ACCEPT}
+          aria-hidden
+          tabIndex={-1}
           onChange={handleFileChange}
-          sx={HIDDEN_INPUT_STYLE}
+          style={VISUALLY_HIDDEN_STYLE}
         />
         <Box
           sx={{

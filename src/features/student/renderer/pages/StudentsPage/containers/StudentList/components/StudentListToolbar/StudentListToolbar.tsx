@@ -1,6 +1,8 @@
 import type { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
 import { Button } from '@ui/components/Button'
 import { Icon } from '@ui/components/Icon'
 import { StudentCsvImportButton } from '../../containers/StudentCsvImportButton'
@@ -18,9 +20,6 @@ const SMALL_ICON_STYLE = { fontSize: SMALL_ICON_FONT_SIZE_PX } as const
 const SEARCH_WRAPPER_MAX_WIDTH_PX = 380
 const SEARCH_INPUT_HEIGHT_PX = 40
 const SEARCH_INPUT_FONT_SIZE_PX = 13
-const SEARCH_INPUT_PADDING_LEFT_PX = 38
-const SEARCH_INPUT_PADDING_RIGHT_PX = 14
-const SEARCH_ICON_LEFT_PX = 10
 const SEARCH_ICON_FONT_SIZE_PX = 18
 const COUNT_FONT_SIZE_PX = 12
 const COUNT_FONT_WEIGHT = 500
@@ -39,50 +38,53 @@ export function StudentListToolbar({
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2.5 }}>
-      <Box
-        sx={{
-          position: 'relative',
-          flex: 1,
-          maxWidth: `${SEARCH_WRAPPER_MAX_WIDTH_PX}px`
+      <TextField
+        type="search"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        placeholder={t('searchPlaceholder')}
+        size="small"
+        variant="outlined"
+        fullWidth
+        slotProps={{
+          input: {
+            'aria-label': t('searchPlaceholder'),
+            startAdornment: (
+              <InputAdornment position="start">
+                <Icon
+                  name="search"
+                  style={{
+                    color: 'var(--text-dim)',
+                    fontSize: `${SEARCH_ICON_FONT_SIZE_PX}px`
+                  }}
+                />
+              </InputAdornment>
+            )
+          }
         }}
-      >
-        <Icon
-          name="search"
-          style={{
-            position: 'absolute',
-            left: `${SEARCH_ICON_LEFT_PX}px`,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: 'var(--text-dim)',
-            fontSize: `${SEARCH_ICON_FONT_SIZE_PX}px`
-          }}
-        />
-        <Box
-          component="input"
-          type="text"
-          aria-label={t('searchPlaceholder')}
-          placeholder={t('searchPlaceholder')}
-          value={searchTerm}
-          onChange={handleSearchChange}
-          sx={{
-            width: '100%',
+        sx={{
+          flex: 1,
+          maxWidth: `${SEARCH_WRAPPER_MAX_WIDTH_PX}px`,
+          '& .MuiOutlinedInput-root': {
             height: `${SEARCH_INPUT_HEIGHT_PX}px`,
-            bgcolor: 'var(--surface)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-sm)',
-            pl: `${SEARCH_INPUT_PADDING_LEFT_PX}px`,
-            pr: `${SEARCH_INPUT_PADDING_RIGHT_PX}px`,
             fontSize: `${SEARCH_INPUT_FONT_SIZE_PX}px`,
-            outline: 'none',
-            transition: 'border 0.2s',
+            bgcolor: 'var(--surface)',
             color: 'var(--title)',
-            '&:focus': {
-              borderColor: 'var(--accent)',
-              boxShadow: '0 0 0 3px var(--accent-bg)'
-            }
-          }}
-        />
-      </Box>
+            borderRadius: 'var(--radius-sm)',
+            transition: 'border-color 0.2s'
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'var(--border)'
+          },
+          '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'var(--border-light)'
+          },
+          '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'var(--accent)',
+            boxShadow: '0 0 0 3px var(--accent-bg)'
+          }
+        }}
+      />
       <Box
         component="span"
         sx={{
