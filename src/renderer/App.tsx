@@ -1,6 +1,9 @@
 import { BrowserRouter } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ThemeProvider } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
 import { ErrorBoundary } from '@ui/components/ErrorBoundary'
+import { theme } from '@ui/theme'
 import { AppRoutes } from './routes'
 
 import '@shared/i18n/config'
@@ -18,11 +21,14 @@ const queryClient = new QueryClient({
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ErrorBoundary>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </ErrorBoundary>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <ErrorBoundary>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </ErrorBoundary>
+      </ThemeProvider>
     </QueryClientProvider>
   )
 }
