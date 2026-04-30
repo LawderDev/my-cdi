@@ -44,5 +44,10 @@
   "edit": {
     "title": "Modifier l'entrée",
     "save": "Enregistrer"
+  },
+  "calendar": {
+    "previousMonth": "Mois précédent",
+    "nextMonth": "Mois suivant",
+    "today": "Aujourd'hui"
   }
 }
