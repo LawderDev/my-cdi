@@ -1,6 +1,7 @@
 import { Outlet, useNavigate } from 'react-router'
 import { ROUTES } from '@lib/routes'
 import { Navbar } from '../Navbar'
+import { UpdateBanner } from '../UpdateBanner'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts'
 import type { KeyboardShortcut } from '../../hooks/useKeyboardShortcuts'
@@ -35,6 +36,7 @@ export function AppShell() {
 
   return (
     <AppLayoutView navbar={<Navbar />}>
+      <UpdateBanner />
       <Outlet />
     </AppLayoutView>
   )
