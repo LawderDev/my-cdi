@@ -87,3 +87,55 @@ textarea {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--border-light);
 }
+
+.act-ordinateur {
+  background: rgba(96, 165, 250, 0.12);
+  color: #60a5fa;
+}
+.act-ordinateur .act-dot {
+  background: #60a5fa;
+}
+.act-travail {
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
+}
+.act-travail .act-dot {
+  background: #4ade80;
+}
+.act-lecture {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+}
+.act-lecture .act-dot {
+  background: #fbbf24;
+}
+.act-detente {
+  background: rgba(192, 132, 252, 0.12);
+  color: #c084fc;
+}
+.act-detente .act-dot {
+  background: #c084fc;
+}
+.act-jeu {
+  background: rgba(248, 113, 113, 0.12);
+  color: #f87171;
+}
+.act-jeu .act-dot {
+  background: #f87171;
+}
+.act-autre {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+}
+.act-autre .act-dot {
+  background: #94a3b8;
+}
+
+.period-matin {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+}
+.period-aprem {
+  background: rgba(96, 165, 250, 0.12);
+  color: #60a5fa;
+}

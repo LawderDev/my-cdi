@@ -1,21 +1,30 @@
 import { ActivityType } from '@types'
 
 const ACTIVITY_COLOR_MAP: Record<ActivityType, string> = {
-  [ActivityType.WORK]: '#1976d2',
-  [ActivityType.READING]: '#388e3c',
-  [ActivityType.COMPUTER]: '#7b1fa2',
-  [ActivityType.RELAXATION]: '#f57c00',
-  [ActivityType.GAME]: '#d32f2f',
-  [ActivityType.OTHER]: '#616161'
+  [ActivityType.COMPUTER]: '#60a5fa',
+  [ActivityType.WORK]: '#4ade80',
+  [ActivityType.READING]: '#fbbf24',
+  [ActivityType.RELAXATION]: '#c084fc',
+  [ActivityType.GAME]: '#f87171',
+  [ActivityType.OTHER]: '#94a3b8'
 }
 
 const ACTIVITY_ICON_MAP: Record<ActivityType, string> = {
-  [ActivityType.WORK]: 'EditNote',
-  [ActivityType.READING]: 'MenuBook',
-  [ActivityType.COMPUTER]: 'Computer',
-  [ActivityType.RELAXATION]: 'SelfImprovement',
-  [ActivityType.GAME]: 'Casino',
-  [ActivityType.OTHER]: 'MoreHoriz'
+  [ActivityType.COMPUTER]: 'computer',
+  [ActivityType.WORK]: 'edit',
+  [ActivityType.READING]: 'menu_book',
+  [ActivityType.RELAXATION]: 'weekend',
+  [ActivityType.GAME]: 'casino',
+  [ActivityType.OTHER]: 'more_horiz'
+}
+
+const ACTIVITY_CSS_CLASS_MAP: Record<ActivityType, string> = {
+  [ActivityType.COMPUTER]: 'act-ordinateur',
+  [ActivityType.WORK]: 'act-travail',
+  [ActivityType.READING]: 'act-lecture',
+  [ActivityType.RELAXATION]: 'act-detente',
+  [ActivityType.GAME]: 'act-jeu',
+  [ActivityType.OTHER]: 'act-autre'
 }
 
 export function getActivityColor(activity: ActivityType): string {
@@ -24,4 +33,8 @@ export function getActivityColor(activity: ActivityType): string {
 
 export function getActivityIcon(activity: ActivityType): string {
   return ACTIVITY_ICON_MAP[activity]
+}
+
+export function getActivityCssClass(activity: ActivityType): string {
+  return ACTIVITY_CSS_CLASS_MAP[activity]
 }

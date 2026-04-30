@@ -1,1 +1,1 @@
-export { getActivityColor, getActivityIcon } from './activityFormatters'
+export { getActivityColor, getActivityIcon, getActivityCssClass } from './activityFormatters'
