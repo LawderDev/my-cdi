@@ -1,15 +1,29 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import { ActivityRadioGroup } from '@frequentation/pages/JournalPage/containers/JournalEntryForm/components/ActivityRadioGroup'
+import { Modal } from '@ui/components/Modal'
+import { Button } from '@ui/components/Button'
+import { Avatar } from '@ui/components/Avatar'
+import { ActivityGrid } from '@frequentation/components/ActivityGrid'
+import type { ActivityGridOption } from '@frequentation/components/ActivityGrid'
+import type { JournalEntryViewModel } from '@frequentation/types'
 import type { ActivityType } from '@types'
 
 interface JournalEntryEditDialogProps {
   open: boolean
   activity: ActivityType
-  activities: { value: ActivityType; label: string }[]
+  activities: ActivityGridOption[]
   onActivityChange: (next: ActivityType) => void
   onSubmit: () => void
   onClose: () => void
+  entry?: JournalEntryViewModel
+}
+
+const HEADER_CLASSES = 'flex items-center gap-2.5 mb-4 p-2.5 bg-surface rounded-sm'
+
+const NAME_CLASSES = 'font-medium text-sm'
+const CLASSE_CLASSES = 'text-xs text-text-dim'
+
+function buildInitials(prenom: string, nom: string): string {
+  return `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase()
 }
 
 export function JournalEntryEditDialog({
@@ -18,22 +32,41 @@ export function JournalEntryEditDialog({
   activities,
   onActivityChange,
   onSubmit,
-  onClose
+  onClose,
+  entry
 }: JournalEntryEditDialogProps) {
   const { t } = useTranslation('frequentation')
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>{t('edit.title')}</DialogTitle>
-      <DialogContent>
-        <ActivityRadioGroup activities={activities} value={activity} onChange={onActivityChange} />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>{t('form.cancel')}</Button>
-        <Button variant="contained" onClick={onSubmit}>
-          {t('edit.save')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={t('edit.title')}
+      maxWidth="sm"
+      footer={
+        <>
+          <Button variant="secondary" onClick={onClose}>
+            {t('form.cancel')}
+          </Button>
+          <Button variant="primary" onClick={onSubmit}>
+            {t('edit.save')}
+          </Button>
+        </>
+      }
+    >
+      {entry ? (
+        <div className={HEADER_CLASSES}>
+          <Avatar
+            initials={buildInitials(entry.student.prenom, entry.student.nom)}
+            colorSeed={entry.student.id}
+          />
+          <div>
+            <div className={NAME_CLASSES}>{entry.student.displayName}</div>
+            <div className={CLASSE_CLASSES}>{entry.student.classe}</div>
+          </div>
+        </div>
+      ) : null}
+      <ActivityGrid options={activities} value={activity} onChange={onActivityChange} />
+    </Modal>
   )
 }

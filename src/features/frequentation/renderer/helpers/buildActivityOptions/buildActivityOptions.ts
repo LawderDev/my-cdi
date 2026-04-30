@@ -1,8 +1,10 @@
 import type { ActivityType } from '@types'
+import { getActivityIcon } from '../activityFormatters'
 
 export interface ActivityOption {
   value: ActivityType
   label: string
+  iconName: string
 }
 
 export function buildActivityOptions(
@@ -11,6 +13,7 @@ export function buildActivityOptions(
 ): ActivityOption[] {
   return activities.map((activity) => ({
     value: activity,
-    label: getLabel(activity)
+    label: getLabel(activity),
+    iconName: getActivityIcon(activity)
   }))
 }

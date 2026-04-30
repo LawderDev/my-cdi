@@ -4,14 +4,15 @@ import { I18nextProvider } from 'react-i18next'
 import i18n from '@shared/i18n/config'
 import { JournalEntryEditDialog } from '../JournalEntryEditDialog'
 import { ActivityType } from '@types'
+import type { ActivityGridOption } from '@frequentation/components/ActivityGrid'
 
-const ACTIVITIES = [
-  { value: ActivityType.WORK, label: 'Travail' },
-  { value: ActivityType.READING, label: 'Lecture' }
+const ACTIVITIES: ActivityGridOption[] = [
+  { value: ActivityType.WORK, label: 'Travail', iconName: 'edit' },
+  { value: ActivityType.READING, label: 'Lecture', iconName: 'menu_book' }
 ]
 
 describe('JournalEntryEditDialog', () => {
-  it('forwards radio selection to onActivityChange', () => {
+  it('forwards tile click to onActivityChange', () => {
     const onActivityChange = vi.fn()
     render(
       <I18nextProvider i18n={i18n}>
@@ -25,7 +26,7 @@ describe('JournalEntryEditDialog', () => {
         />
       </I18nextProvider>
     )
-    fireEvent.click(screen.getByLabelText('Lecture'))
+    fireEvent.click(screen.getByRole('button', { name: 'Lecture' }))
     expect(onActivityChange).toHaveBeenCalledWith(ActivityType.READING)
   })
 
