@@ -23,7 +23,7 @@ export function useJournalBatchActions(options: UseJournalBatchActionsOptions) {
   const { t } = useTranslation('frequentation')
   const { getLabel, allActivities } = useActivityLabels()
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const [activityMenuAnchor, setActivityMenuAnchor] = useState<HTMLElement | null>(null)
+  const [activityMenuOpen, setActivityMenuOpen] = useState(false)
 
   const { mutate: mutateDelete } = useBatchDelete({
     onSuccess: () => {
@@ -34,7 +34,7 @@ export function useJournalBatchActions(options: UseJournalBatchActionsOptions) {
 
   const { mutate: mutateUpdate } = useBatchUpdateActivity({
     onSuccess: () => {
-      setActivityMenuAnchor(null)
+      setActivityMenuOpen(false)
       onAfterUpdate()
     }
   })
@@ -76,12 +76,15 @@ export function useJournalBatchActions(options: UseJournalBatchActionsOptions) {
     mutateDelete(selectedIds)
   }
 
-  function openActivityMenu(anchor: HTMLElement) {
-    setActivityMenuAnchor(anchor)
+  function toggleActivityMenu() {
+    if (!hasSelection) {
+      return
+    }
+    setActivityMenuOpen((prev) => !prev)
   }
 
   function closeActivityMenu() {
-    setActivityMenuAnchor(null)
+    setActivityMenuOpen(false)
   }
 
   function selectActivity(activity: ActivityType) {
@@ -97,7 +100,7 @@ export function useJournalBatchActions(options: UseJournalBatchActionsOptions) {
     isTotalEmpty: totalCount === ZERO_TOTAL,
     activityOptions,
     confirmOpen,
-    activityMenuAnchor,
+    activityMenuOpen,
     selectToggleLabel,
     changeActivityLabel,
     deleteSelectionLabel,
@@ -108,7 +111,7 @@ export function useJournalBatchActions(options: UseJournalBatchActionsOptions) {
     openConfirmDelete,
     closeConfirmDelete,
     confirmDelete,
-    openActivityMenu,
+    toggleActivityMenu,
     closeActivityMenu,
     selectActivity
   } as const
