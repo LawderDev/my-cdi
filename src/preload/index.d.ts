@@ -41,6 +41,7 @@ export interface FrequentationApi {
 export interface ElectronAPI {
   student: StudentApi
   frequentation: FrequentationApi
+  getAppVersion: () => Promise<string>
 }
 
 declare global {

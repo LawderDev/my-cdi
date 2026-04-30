@@ -1,6 +1,8 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { STUDENT_CHANNELS, FREQUENTATION_CHANNELS } from '@shared/ipc/channels'
 
+const APP_VERSION_CHANNEL = 'app:getVersion'
+
 function invoke<Output>(channel: string, input: unknown): Promise<Output> {
   return ipcRenderer.invoke(channel, input)
 }
@@ -22,6 +24,18 @@ const electronAPI = {
     delete: (input: unknown) => invoke(FREQUENTATION_CHANNELS.DELETE, input),
     createBatch: (input: unknown) => invoke(FREQUENTATION_CHANNELS.CREATE_BATCH, input),
     getJournalEntries: (input: unknown) => invoke(FREQUENTATION_CHANNELS.GET_JOURNAL_ENTRIES, input)
+  },
+  getAppVersion: async (): Promise<string> => {
+    const result = await ipcRenderer.invoke(APP_VERSION_CHANNEL)
+    if (
+      typeof result === 'object' &&
+      result !== null &&
+      'data' in result &&
+      typeof result.data === 'string'
+    ) {
+      return result.data
+    }
+    return ''
   }
 }
 

@@ -7,6 +7,7 @@ import { initializeModules } from './modules'
 const DATABASE_PATH = 'data/database.db'
 const WINDOW_WIDTH_PX = 1200
 const WINDOW_HEIGHT_PX = 800
+const APP_VERSION_CHANNEL = 'app:getVersion'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -48,6 +49,10 @@ app.whenReady().then(() => {
   initializeModules(ipcMain).catch((error: unknown) => {
     const message = error instanceof Error ? error.message : 'Unknown error'
     console.error(`Failed to initialize modules: ${message}`)
+  })
+
+  ipcMain.handle(APP_VERSION_CHANNEL, () => {
+    return { success: true, data: app.getVersion() }
   })
 
   createWindow()
