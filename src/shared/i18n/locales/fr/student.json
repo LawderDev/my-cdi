@@ -8,7 +8,9 @@
     "nom": "Nom",
     "prenom": "Prénom",
     "classe": "Classe",
-    "ine": "INE"
+    "ine": "INE",
+    "actions": "Actions",
+    "search": "Rechercher des élèves..."
   },
   "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{count}} élève(s) ?",
   "duplicateIne": "Un élève avec cet INE existe déjà"

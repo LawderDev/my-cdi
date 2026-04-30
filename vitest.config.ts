@@ -9,15 +9,26 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/shared/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
-    alias: {
-      '@student': resolve('src/features/student/main'),
-      '@frequentation': resolve('src/features/frequentation/main'),
-      '@student-shared': resolve('src/features/student/shared'),
-      '@frequentation-shared': resolve('src/features/frequentation/shared'),
-      '@shared': resolve('src/shared'),
-      '@ui': resolve('src/shared/ui'),
-      '@lib': resolve('src/shared/lib'),
-      '@types': resolve('src/shared/types')
-    }
+    alias: [
+      { find: '@student-shared', replacement: resolve('src/features/student/shared') },
+      { find: '@frequentation-shared', replacement: resolve('src/features/frequentation/shared') },
+      {
+        find: /^@student\/(types|helpers|api|validations|pages|components|hooks)(.*)$/,
+        replacement: resolve('src/features/student/renderer') + '/$1$2'
+      },
+      {
+        find: /^@frequentation\/(types|helpers|api|validations|pages|components|hooks)(.*)$/,
+        replacement: resolve('src/features/frequentation/renderer') + '/$1$2'
+      },
+      { find: /^@student(\/.*)?$/, replacement: resolve('src/features/student/main') + '$1' },
+      {
+        find: /^@frequentation(\/.*)?$/,
+        replacement: resolve('src/features/frequentation/main') + '$1'
+      },
+      { find: '@ui', replacement: resolve('src/shared/ui') },
+      { find: '@lib', replacement: resolve('src/shared/lib') },
+      { find: '@types', replacement: resolve('src/shared/types') },
+      { find: '@shared', replacement: resolve('src/shared') }
+    ]
   }
 })
