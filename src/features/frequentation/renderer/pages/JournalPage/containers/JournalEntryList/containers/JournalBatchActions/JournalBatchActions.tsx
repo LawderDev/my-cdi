@@ -1,4 +1,7 @@
-import { useEffect, useRef } from 'react'
+import { useState } from 'react'
+import Box from '@mui/material/Box'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import { Button } from '@ui/components/Button'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useJournalBatchActions } from './hooks/useJournalBatchActions'
@@ -13,13 +16,9 @@ interface JournalBatchActionsProps {
   onAfterUpdate: () => void
 }
 
-const ROW_CLASSES = 'flex gap-2 items-center mt-2 px-2'
-const COUNT_CLASSES = 'text-xs text-text-dim font-medium'
-const MENU_WRAPPER_CLASSES = 'relative'
-const MENU_DROPDOWN_CLASSES =
-  'absolute top-full left-0 mt-1 min-w-[180px] bg-card border border-border rounded-sm shadow-[var(--shadow-lg)] z-30 py-1'
-const MENU_ITEM_CLASSES =
-  'block w-full text-left px-3 py-2 text-[13px] text-text hover:bg-surface transition-colors duration-150'
+const COUNT_FONT_SIZE_PX = 12
+const COUNT_FONT_WEIGHT = 500
+const MENU_MIN_WIDTH_PX = 180
 
 export function JournalBatchActions(props: JournalBatchActionsProps) {
   const {
@@ -43,26 +42,7 @@ export function JournalBatchActions(props: JournalBatchActionsProps) {
     selectActivity
   } = useJournalBatchActions(props)
 
-  const menuWrapperRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!activityMenuOpen) {
-      return
-    }
-    function handlePointerDown(event: MouseEvent) {
-      const target = event.target
-      if (!(target instanceof Node)) {
-        return
-      }
-      if (menuWrapperRef.current && !menuWrapperRef.current.contains(target)) {
-        closeActivityMenu()
-      }
-    }
-    document.addEventListener('mousedown', handlePointerDown)
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown)
-    }
-  }, [activityMenuOpen, closeActivityMenu])
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
   function handleActivityClick(value: ActivityType) {
     selectActivity(value)
@@ -71,35 +51,52 @@ export function JournalBatchActions(props: JournalBatchActionsProps) {
 
   return (
     <>
-      <div className={ROW_CLASSES}>
+      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 1, px: 1 }}>
         <Button variant="secondary" onClick={toggleSelection} disabled={isTotalEmpty}>
           {selectToggleLabel}
         </Button>
-        <div className={MENU_WRAPPER_CLASSES} ref={menuWrapperRef}>
+        <Box ref={setAnchorEl} sx={{ display: 'inline-block' }}>
           <Button variant="secondary" disabled={!hasSelection} onClick={toggleActivityMenu}>
             {changeActivityLabel}
           </Button>
-          {activityMenuOpen ? (
-            <div className={MENU_DROPDOWN_CLASSES} role="menu">
-              {activityOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  role="menuitem"
-                  className={MENU_ITEM_CLASSES}
-                  onClick={() => handleActivityClick(option.value)}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          ) : null}
-        </div>
+        </Box>
+        <Menu
+          anchorEl={anchorEl}
+          open={activityMenuOpen}
+          onClose={closeActivityMenu}
+          slotProps={{
+            paper: {
+              sx: {
+                minWidth: `${MENU_MIN_WIDTH_PX}px`,
+                bgcolor: 'var(--card)',
+                border: '1px solid var(--border)',
+                boxShadow: 'var(--shadow-lg)'
+              }
+            }
+          }}
+        >
+          {activityOptions.map((option) => (
+            <MenuItem key={option.value} onClick={() => handleActivityClick(option.value)}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Menu>
         <Button variant="danger" disabled={!hasSelection} onClick={openConfirmDelete}>
           {deleteSelectionLabel}
         </Button>
-        {hasSelection ? <span className={COUNT_CLASSES}>{selectedCountLabel}</span> : null}
-      </div>
+        {hasSelection ? (
+          <Box
+            component="span"
+            sx={{
+              fontSize: `${COUNT_FONT_SIZE_PX}px`,
+              color: 'var(--text-dim)',
+              fontWeight: COUNT_FONT_WEIGHT
+            }}
+          >
+            {selectedCountLabel}
+          </Box>
+        ) : null}
+      </Box>
 
       <ConfirmDialog
         open={confirmOpen}

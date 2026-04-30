@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { Modal } from '@ui/components/Modal'
 import { Button } from '@ui/components/Button'
 import { Avatar } from '@ui/components/Avatar'
@@ -17,10 +18,9 @@ interface JournalEntryEditDialogProps {
   entry?: JournalEntryViewModel
 }
 
-const HEADER_CLASSES = 'flex items-center gap-2.5 mb-4 p-2.5 bg-surface rounded-sm'
-
-const NAME_CLASSES = 'font-medium text-sm'
-const CLASSE_CLASSES = 'text-xs text-text-dim'
+const NAME_FONT_SIZE_PX = 13
+const CLASSE_FONT_SIZE_PX = 11
+const NAME_FONT_WEIGHT = 500
 
 function buildInitials(prenom: string, nom: string): string {
   return `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase()
@@ -55,16 +55,30 @@ export function JournalEntryEditDialog({
       }
     >
       {entry ? (
-        <div className={HEADER_CLASSES}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1.25,
+            mb: 2,
+            p: 1.25,
+            bgcolor: 'var(--surface)',
+            borderRadius: 'var(--radius-sm)'
+          }}
+        >
           <Avatar
             initials={buildInitials(entry.student.prenom, entry.student.nom)}
             colorSeed={entry.student.id}
           />
-          <div>
-            <div className={NAME_CLASSES}>{entry.student.displayName}</div>
-            <div className={CLASSE_CLASSES}>{entry.student.classe}</div>
-          </div>
-        </div>
+          <Box>
+            <Box sx={{ fontWeight: NAME_FONT_WEIGHT, fontSize: `${NAME_FONT_SIZE_PX}px` }}>
+              {entry.student.displayName}
+            </Box>
+            <Box sx={{ fontSize: `${CLASSE_FONT_SIZE_PX}px`, color: 'var(--text-dim)' }}>
+              {entry.student.classe}
+            </Box>
+          </Box>
+        </Box>
       ) : null}
       <ActivityGrid options={activities} value={activity} onChange={onActivityChange} />
     </Modal>

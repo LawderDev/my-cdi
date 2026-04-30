@@ -65,12 +65,12 @@ describe('CalendarView', () => {
     })
   })
 
-  it('flags today, selected, and has-visits cells with the matching CSS classes', () => {
+  it('flags today, selected, and has-visits cells with the matching data attributes', () => {
     const { container } = renderView()
     const todayBtn = container.querySelector('[data-iso="2026-04-15"]')
-    expect(todayBtn?.classList.contains('today')).toBe(true)
-    expect(todayBtn?.classList.contains('selected')).toBe(true)
-    expect(todayBtn?.classList.contains('has-visits')).toBe(true)
+    expect(todayBtn?.getAttribute('data-today')).toBe('true')
+    expect(todayBtn?.getAttribute('data-selected')).toBe('true')
+    expect(todayBtn?.getAttribute('data-has-visits')).toBe('true')
   })
 
   it('calls onSelectDay with the iso of the clicked day', () => {

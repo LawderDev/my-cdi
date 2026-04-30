@@ -11,8 +11,7 @@ describe('ActivityChip', () => {
 
   it('applies the activity CSS class for color tone', () => {
     const { container } = render(<ActivityChip activity={ActivityType.WORK} label="Travail" />)
-    const span = container.querySelector('.att-activity')
+    const span = container.querySelector('.act-travail')
     expect(span).not.toBeNull()
-    expect(span?.classList.contains('act-travail')).toBe(true)
   })
 })

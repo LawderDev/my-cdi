@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { Icon } from '@ui/components/Icon'
 import type { EntryPeriodFilter } from '../../helpers/filterEntriesByPeriod'
 
@@ -8,19 +9,14 @@ interface JournalEntryToolbarProps {
   onPeriodChange: (next: EntryPeriodFilter) => void
 }
 
-const HEADER_CLASSES =
-  'attendance-header flex items-center justify-between px-5 py-4 border-b border-border'
-
-const TITLE_CLASSES = 'text-[15px] font-semibold flex items-center gap-2'
-const TITLE_ICON_CLASSES = 'text-accent text-lg'
-
-const COUNT_CLASSES =
-  'attendance-count text-xs bg-accent-bg text-accent px-2.5 py-0.5 rounded-[10px] font-semibold'
-
-const FILTERS_CLASSES = 'flex gap-2'
-
-const SELECT_CLASSES =
-  'h-[30px] pr-6 pl-2 bg-surface border border-border rounded-xs text-xs text-text cursor-pointer outline-none appearance-none'
+const TITLE_FONT_SIZE_PX = 15
+const TITLE_FONT_WEIGHT = 600
+const TITLE_ICON_FONT_SIZE_PX = 18
+const COUNT_FONT_SIZE_PX = 12
+const COUNT_FONT_WEIGHT = 600
+const COUNT_BORDER_RADIUS_PX = 10
+const SELECT_HEIGHT_PX = 30
+const SELECT_FONT_SIZE_PX = 12
 
 function isPeriodFilter(value: string): value is EntryPeriodFilter {
   return value === 'all' || value === 'matin' || value === 'aprem'
@@ -41,19 +37,71 @@ export function JournalEntryToolbar({
   }
 
   return (
-    <div className={HEADER_CLASSES}>
-      <h3 className={TITLE_CLASSES}>
-        <Icon name="groups" className={TITLE_ICON_CLASSES} />
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        px: 2.5,
+        py: 2,
+        borderBottom: '1px solid var(--border)'
+      }}
+    >
+      <Box
+        component="h3"
+        sx={{
+          fontSize: `${TITLE_FONT_SIZE_PX}px`,
+          fontWeight: TITLE_FONT_WEIGHT,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          m: 0
+        }}
+      >
+        <Icon
+          name="groups"
+          style={{ fontSize: `${TITLE_ICON_FONT_SIZE_PX}px`, color: 'var(--accent)' }}
+        />
         {t('present')}
-        <span className={COUNT_CLASSES}>{entryCount}</span>
-      </h3>
-      <div className={FILTERS_CLASSES}>
-        <select className={SELECT_CLASSES} value={period} onChange={handleChange}>
+        <Box
+          component="span"
+          sx={{
+            fontSize: `${COUNT_FONT_SIZE_PX}px`,
+            bgcolor: 'var(--accent-bg)',
+            color: 'var(--accent)',
+            px: 1.25,
+            py: 0.25,
+            borderRadius: `${COUNT_BORDER_RADIUS_PX}px`,
+            fontWeight: COUNT_FONT_WEIGHT
+          }}
+        >
+          {entryCount}
+        </Box>
+      </Box>
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box
+          component="select"
+          value={period}
+          onChange={handleChange}
+          sx={{
+            height: `${SELECT_HEIGHT_PX}px`,
+            pr: 3,
+            pl: 1,
+            bgcolor: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-xs)',
+            fontSize: `${SELECT_FONT_SIZE_PX}px`,
+            color: 'var(--text)',
+            cursor: 'pointer',
+            outline: 'none',
+            appearance: 'none'
+          }}
+        >
           <option value="all">{t('period.all')}</option>
           <option value="matin">{t('period.matin')}</option>
           <option value="aprem">{t('period.aprem')}</option>
-        </select>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   )
 }

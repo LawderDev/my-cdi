@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { Autocomplete } from '@ui/components/Autocomplete'
 import { Chip } from '@ui/components/Chip'
 import type { AutocompleteOption } from '@ui/components/Autocomplete'
@@ -17,12 +18,10 @@ interface StudentMultiSelectProps {
   loading: boolean
 }
 
-const LABEL_CLASSES =
-  'block text-[11px] font-semibold uppercase tracking-wider text-text-dim mb-1.5'
-
-const CHIPS_ROW_CLASSES = 'flex flex-wrap gap-1.5 min-h-7'
-
-const LOADING_CLASSES = 'text-xs text-text-dim mb-2'
+const LABEL_FONT_SIZE_PX = 11
+const LABEL_FONT_WEIGHT = 600
+const LOADING_FONT_SIZE_PX = 12
+const CHIPS_MIN_HEIGHT_PX = 28
 
 export function StudentMultiSelect({
   students,
@@ -54,9 +53,26 @@ export function StudentMultiSelect({
   }
 
   return (
-    <div>
-      <span className={LABEL_CLASSES}>{t('form.selectStudents')}</span>
-      {loading ? <div className={LOADING_CLASSES}>{t('loading')}</div> : null}
+    <Box>
+      <Box
+        component="span"
+        sx={{
+          display: 'block',
+          fontSize: `${LABEL_FONT_SIZE_PX}px`,
+          fontWeight: LABEL_FONT_WEIGHT,
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em',
+          color: 'var(--text-dim)',
+          mb: 0.75
+        }}
+      >
+        {t('form.selectStudents')}
+      </Box>
+      {loading ? (
+        <Box sx={{ fontSize: `${LOADING_FONT_SIZE_PX}px`, color: 'var(--text-dim)', mb: 1 }}>
+          {t('loading')}
+        </Box>
+      ) : null}
       <Autocomplete<number>
         placeholder={t('form.searchStudent')}
         options={options}
@@ -65,7 +81,15 @@ export function StudentMultiSelect({
         onInputChange={setInputValue}
         excludedValues={selectedIds}
       />
-      <div className={CHIPS_ROW_CLASSES}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 0.75,
+          minHeight: `${CHIPS_MIN_HEIGHT_PX}px`,
+          mt: 1
+        }}
+      >
         {selectedStudents.map((student) => (
           <Chip
             key={student.id}
@@ -73,7 +97,7 @@ export function StudentMultiSelect({
             onRemove={() => handleRemove(student.id)}
           />
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { Card } from '@ui/components/Card'
 import { EmptyState } from '@ui/components/EmptyState'
 import { useJournalEntries } from '@frequentation/api/useFrequentationQueries'
@@ -17,9 +18,6 @@ interface JournalEntryListProps {
   selectedDate: string
   onEditEntry: (entry: JournalEntryViewModel) => void
 }
-
-const CARD_CLASSES = 'attendance-card flex-1 flex flex-col min-h-0 overflow-hidden'
-const LIST_CLASSES = 'attendance-list flex-1 overflow-y-auto p-2'
 
 export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryListProps) {
   const { t } = useTranslation('frequentation')
@@ -42,7 +40,16 @@ export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryList
   }
 
   return (
-    <Card padding="none" className={CARD_CLASSES}>
+    <Card
+      padding="none"
+      sx={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 0,
+        overflow: 'hidden'
+      }}
+    >
       <JournalEntryToolbar
         entryCount={filtered.length}
         period={period}
@@ -56,7 +63,7 @@ export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryList
         onAfterDelete={clearSelection}
         onAfterUpdate={clearSelection}
       />
-      <div className={LIST_CLASSES}>
+      <Box sx={{ flex: 1, overflowY: 'auto', p: 1 }}>
         {filtered.length === 0 ? (
           <EmptyState
             iconName="event_available"
@@ -75,7 +82,7 @@ export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryList
             />
           ))
         )}
-      </div>
+      </Box>
     </Card>
   )
 }

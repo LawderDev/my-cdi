@@ -1,41 +1,57 @@
+import Box from '@mui/material/Box'
 import { Icon } from '@ui/components/Icon'
 import type { ActivityGridOption, ActivityGridProps } from './types/ActivityGridProps'
 
-const GRID_CLASSES = 'grid grid-cols-3 gap-2'
-
-const TILE_BASE_CLASSES =
-  'flex flex-col items-center gap-1.5 px-2 py-3 border rounded-sm cursor-pointer transition-all duration-150 text-xs font-medium select-none'
-
-const TILE_DEFAULT_CLASSES =
-  'border-border text-text bg-card hover:border-border-light hover:bg-surface'
-
-const TILE_SELECTED_CLASSES = 'border-accent bg-accent-bg text-accent'
-
-const ICON_CLASSES = 'text-[22px]'
+const GRID_COLUMNS = 3
+const ICON_FONT_SIZE_PX = 22
+const TILE_FONT_SIZE_PX = 12
+const TILE_FONT_WEIGHT = 500
+const TILE_TRANSITION = 'all 0.15s'
 
 export function ActivityGrid({ options, value, onChange }: ActivityGridProps) {
   function renderTile(option: ActivityGridOption) {
     const isSelected = option.value === value
-    const tileClass = [
-      TILE_BASE_CLASSES,
-      isSelected ? TILE_SELECTED_CLASSES : TILE_DEFAULT_CLASSES
-    ].join(' ')
-
     return (
-      <button
+      <Box
+        component="button"
         type="button"
         key={option.value}
-        className={tileClass}
         data-selected={isSelected}
         aria-pressed={isSelected}
         aria-label={option.label}
         onClick={() => onChange(option.value)}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 0.75,
+          px: 1,
+          py: 1.5,
+          border: '1px solid',
+          borderColor: isSelected ? 'var(--accent)' : 'var(--border)',
+          borderRadius: 'var(--radius-sm)',
+          cursor: 'pointer',
+          transition: TILE_TRANSITION,
+          fontSize: `${TILE_FONT_SIZE_PX}px`,
+          fontWeight: TILE_FONT_WEIGHT,
+          userSelect: 'none',
+          bgcolor: isSelected ? 'var(--accent-bg)' : 'var(--card)',
+          color: isSelected ? 'var(--accent)' : 'var(--text)',
+          '&:hover': {
+            borderColor: isSelected ? 'var(--accent)' : 'var(--border-light)',
+            bgcolor: isSelected ? 'var(--accent-bg)' : 'var(--surface)'
+          }
+        }}
       >
-        <Icon name={option.iconName} className={ICON_CLASSES} />
-        <span>{option.label}</span>
-      </button>
+        <Icon name={option.iconName} style={{ fontSize: `${ICON_FONT_SIZE_PX}px` }} />
+        <Box component="span">{option.label}</Box>
+      </Box>
     )
   }
 
-  return <div className={GRID_CLASSES}>{options.map(renderTile)}</div>
+  return (
+    <Box sx={{ display: 'grid', gridTemplateColumns: `repeat(${GRID_COLUMNS}, 1fr)`, gap: 1 }}>
+      {options.map(renderTile)}
+    </Box>
+  )
 }

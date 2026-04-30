@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box'
 import { getActivityCssClass } from '@frequentation/helpers/activityFormatters'
 import type { ActivityType } from '@types'
 
@@ -6,16 +7,38 @@ interface ActivityChipProps {
   label: string
 }
 
-const BASE_CLASSES =
-  'att-activity inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[11px] font-medium'
+const FONT_SIZE_PX = 11
+const FONT_WEIGHT = 500
+const DOT_SIZE_PX = 6
 
 export function ActivityChip({ activity, label }: ActivityChipProps) {
   const cssClass = getActivityCssClass(activity)
-  const finalClass = `${BASE_CLASSES} ${cssClass}`
   return (
-    <span className={finalClass}>
-      <span className="act-dot w-1.5 h-1.5 rounded-full inline-block" />
+    <Box
+      component="span"
+      className={cssClass}
+      sx={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 0.5,
+        px: 1,
+        py: 0.25,
+        borderRadius: 'var(--radius-xs)',
+        fontSize: `${FONT_SIZE_PX}px`,
+        fontWeight: FONT_WEIGHT
+      }}
+    >
+      <Box
+        component="span"
+        className="act-dot"
+        sx={{
+          width: `${DOT_SIZE_PX}px`,
+          height: `${DOT_SIZE_PX}px`,
+          borderRadius: '50%',
+          display: 'inline-block'
+        }}
+      />
       {label}
-    </span>
+    </Box>
   )
 }

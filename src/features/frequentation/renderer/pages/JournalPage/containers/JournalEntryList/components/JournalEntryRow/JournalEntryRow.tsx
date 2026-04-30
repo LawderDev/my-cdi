@@ -1,7 +1,9 @@
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { Avatar } from '@ui/components/Avatar'
 import { IconButton } from '@ui/components/IconButton'
+import { MONO_FONT_FAMILY } from '@ui/theme'
 import { ActivityChip } from '@frequentation/components/ActivityChip'
 import { getEntryPeriod } from '../../helpers/getEntryPeriod'
 import type { JournalEntryViewModel } from '@frequentation/types'
@@ -14,46 +16,28 @@ interface JournalEntryRowProps {
   onDelete: () => void
 }
 
-const ROW_BASE_CLASSES =
-  'attendance-row group relative flex items-center gap-3 px-3 py-2.5 rounded-sm cursor-pointer transition-colors duration-150 hover:bg-surface mt-0.5'
-
-const ROW_SELECTED_CLASSES = 'bg-accent-bg'
-
-const INFO_CLASSES = 'flex-1 min-w-0'
-const NAME_CLASSES = 'text-[13px] font-medium flex items-center gap-1.5'
-const CLASSE_CLASSES = 'att-class text-[11px] text-text-dim font-medium ml-1'
-const META_CLASSES = 'flex items-center gap-2 mt-0.5'
-const TIME_CLASSES = 'att-time font-mono text-[11px] text-text-dim'
-
-const PERIOD_BASE_CLASSES =
-  'period-badge text-[10px] font-semibold px-1.5 py-px rounded-xs uppercase tracking-wider'
-
-const PERIOD_MATIN_CLASSES = 'period-matin bg-amber-400/10 text-amber-400'
-const PERIOD_APREM_CLASSES = 'period-aprem bg-blue-400/10 text-blue-400'
-
-const ACTIONS_CLASSES =
-  'att-actions flex gap-0.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100'
-
 const TIME_FORMAT = 'HH:mm'
+
+const NAME_FONT_SIZE_PX = 13
+const NAME_FONT_WEIGHT = 500
+const CLASSE_FONT_SIZE_PX = 11
+const CLASSE_FONT_WEIGHT = 500
+const TIME_FONT_SIZE_PX = 11
+const PERIOD_FONT_SIZE_PX = 10
+const PERIOD_FONT_WEIGHT = 600
+
+const ACTIONS_CLASS = 'att-actions'
 
 function buildInitials(prenom: string, nom: string): string {
   return `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase()
-}
-
-function buildPeriodClass(period: 'matin' | 'aprem'): string {
-  return [PERIOD_BASE_CLASSES, period === 'matin' ? PERIOD_MATIN_CLASSES : PERIOD_APREM_CLASSES]
-    .filter(Boolean)
-    .join(' ')
 }
 
 export function JournalEntryRow({ entry, selected, onEdit, onDelete }: JournalEntryRowProps) {
   const { t } = useTranslation('frequentation')
   const period = getEntryPeriod(entry.startsAt)
   const periodLabel = period === 'matin' ? t('period.matin') : t('period.aprem')
+  const periodClass = period === 'matin' ? 'period-matin' : 'period-aprem'
   const time = dayjs(entry.startsAt).format(TIME_FORMAT)
-  const rowClass = [ROW_BASE_CLASSES, selected ? ROW_SELECTED_CLASSES : '']
-    .filter(Boolean)
-    .join(' ')
 
   function handleEditClick(event: React.MouseEvent) {
     event.stopPropagation()
@@ -66,23 +50,89 @@ export function JournalEntryRow({ entry, selected, onEdit, onDelete }: JournalEn
   }
 
   return (
-    <div role="row" className={rowClass} onClick={onEdit}>
+    <Box
+      role="row"
+      onClick={onEdit}
+      sx={{
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1.5,
+        px: 1.5,
+        py: 1.25,
+        borderRadius: 'var(--radius-sm)',
+        cursor: 'pointer',
+        transition: 'background-color 0.15s',
+        bgcolor: selected ? 'var(--accent-bg)' : 'transparent',
+        mt: 0.5,
+        '&:hover': {
+          bgcolor: selected ? 'var(--accent-bg)' : 'var(--surface)'
+        },
+        [`&:hover .${ACTIONS_CLASS}`]: {
+          opacity: 1
+        }
+      }}
+    >
       <Avatar
         initials={buildInitials(entry.student.prenom, entry.student.nom)}
         colorSeed={entry.student.id}
       />
-      <div className={INFO_CLASSES}>
-        <div className={NAME_CLASSES}>
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box
+          sx={{
+            fontSize: `${NAME_FONT_SIZE_PX}px`,
+            fontWeight: NAME_FONT_WEIGHT,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.75
+          }}
+        >
           {entry.student.displayName}
-          <span className={CLASSE_CLASSES}>{entry.student.classe}</span>
-        </div>
-        <div className={META_CLASSES}>
-          <span className={TIME_CLASSES}>{time}</span>
-          <span className={buildPeriodClass(period)}>{periodLabel}</span>
+          <Box
+            component="span"
+            sx={{
+              fontSize: `${CLASSE_FONT_SIZE_PX}px`,
+              color: 'var(--text-dim)',
+              fontWeight: CLASSE_FONT_WEIGHT,
+              ml: 0.5
+            }}
+          >
+            {entry.student.classe}
+          </Box>
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.25 }}>
+          <Box
+            component="span"
+            sx={{
+              fontFamily: MONO_FONT_FAMILY,
+              fontSize: `${TIME_FONT_SIZE_PX}px`,
+              color: 'var(--text-dim)'
+            }}
+          >
+            {time}
+          </Box>
+          <Box
+            component="span"
+            className={periodClass}
+            sx={{
+              fontSize: `${PERIOD_FONT_SIZE_PX}px`,
+              fontWeight: PERIOD_FONT_WEIGHT,
+              px: 0.75,
+              py: '1px',
+              borderRadius: 'var(--radius-xs)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em'
+            }}
+          >
+            {periodLabel}
+          </Box>
           <ActivityChip activity={entry.activity} label={entry.activityLabel} />
-        </div>
-      </div>
-      <div className={ACTIONS_CLASSES}>
+        </Box>
+      </Box>
+      <Box
+        className={ACTIONS_CLASS}
+        sx={{ display: 'flex', gap: 0.25, opacity: 0, transition: 'opacity 0.15s' }}
+      >
         <IconButton iconName="edit" aria-label={t('row.edit')} onClick={handleEditClick} />
         <IconButton
           iconName="delete"
@@ -90,7 +140,7 @@ export function JournalEntryRow({ entry, selected, onEdit, onDelete }: JournalEn
           aria-label={t('row.delete')}
           onClick={handleDeleteClick}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }

@@ -1,41 +1,83 @@
+import Box from '@mui/material/Box'
 import { Card } from '@ui/components/Card'
 import { IconButton } from '@ui/components/IconButton'
 import type { CalendarCell } from '../../helpers/buildCalendarMonth'
 import type { CalendarViewProps } from './types/CalendarViewProps'
 
-const HEADER_CLASSES = 'flex items-center justify-between mb-4'
-const TITLE_CLASSES = 'text-[15px] font-semibold'
-const NAV_CLASSES = 'flex gap-1'
-const GRID_CLASSES = 'grid grid-cols-7 gap-0.5 text-center'
-const DOW_CLASSES = 'text-[11px] font-semibold text-text-dim py-1.5 uppercase tracking-wider'
+const TITLE_FONT_SIZE_PX = 15
+const TITLE_FONT_WEIGHT = 600
+const DOW_FONT_SIZE_PX = 11
+const DOW_FONT_WEIGHT = 600
+const DAY_FONT_SIZE_PX = 13
+const DAY_TODAY_FONT_WEIGHT = 600
+const DAY_SIZE_PX = 36
+const OTHER_MONTH_OPACITY = 0.4
+const TODAY_SHADOW = '0 2px 8px rgba(124,77,255,0.35)'
+const DAY_TRANSITION = 'all 0.15s'
 
-const DAY_BASE_CLASSES =
-  'cal-day w-9 h-9 rounded-full mx-auto flex items-center justify-center text-[13px] cursor-pointer transition-all duration-150 relative hover:bg-surface'
+const WEEK_DAYS_COUNT = 7
+const VISITS_DOT_SIZE_PX = 4
+const VISITS_DOT_BOTTOM_PX = -8
 
-const DAY_TODAY_CLASSES =
-  'today bg-accent text-white font-semibold shadow-[0_2px_8px_rgba(124,77,255,0.35)]'
+interface CalendarDayProps {
+  cell: CalendarCell
+  onSelect: (iso: string) => void
+}
 
-const DAY_SELECTED_CLASSES = 'selected outline outline-2 outline-accent outline-offset-2'
-
-const DAY_OTHER_MONTH_CLASSES = 'other-month text-text-dim opacity-40'
-
-const DAY_HAS_VISITS_CLASSES = 'has-visits'
-
-function buildDayClass(cell: CalendarCell): string {
-  const parts = [DAY_BASE_CLASSES]
-  if (cell.isToday) {
-    parts.push(DAY_TODAY_CLASSES)
-  }
-  if (cell.isSelected) {
-    parts.push(DAY_SELECTED_CLASSES)
-  }
-  if (!cell.isCurrentMonth) {
-    parts.push(DAY_OTHER_MONTH_CLASSES)
-  }
-  if (cell.hasVisits) {
-    parts.push(DAY_HAS_VISITS_CLASSES)
-  }
-  return parts.join(' ')
+function CalendarDay({ cell, onSelect }: CalendarDayProps) {
+  return (
+    <Box
+      component="button"
+      type="button"
+      data-iso={cell.iso}
+      data-current-month={cell.isCurrentMonth}
+      data-today={cell.isToday}
+      data-selected={cell.isSelected}
+      data-has-visits={cell.hasVisits}
+      onClick={() => onSelect(cell.iso)}
+      sx={{
+        position: 'relative',
+        width: `${DAY_SIZE_PX}px`,
+        height: `${DAY_SIZE_PX}px`,
+        borderRadius: '50%',
+        mx: 'auto',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: `${DAY_FONT_SIZE_PX}px`,
+        cursor: 'pointer',
+        transition: DAY_TRANSITION,
+        border: 'none',
+        bgcolor: cell.isToday ? 'var(--accent)' : 'transparent',
+        color: cell.isToday ? '#fff' : 'var(--title)',
+        fontWeight: cell.isToday ? DAY_TODAY_FONT_WEIGHT : undefined,
+        boxShadow: cell.isToday ? TODAY_SHADOW : undefined,
+        outline: cell.isSelected ? '2px solid var(--accent)' : 'none',
+        outlineOffset: cell.isSelected ? '2px' : undefined,
+        opacity: !cell.isCurrentMonth ? OTHER_MONTH_OPACITY : 1,
+        '&:hover': {
+          bgcolor: cell.isToday ? 'var(--accent)' : 'var(--surface)'
+        },
+        ...(cell.hasVisits
+          ? {
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                left: '50%',
+                bottom: `${VISITS_DOT_BOTTOM_PX}px`,
+                transform: 'translateX(-50%)',
+                width: `${VISITS_DOT_SIZE_PX}px`,
+                height: `${VISITS_DOT_SIZE_PX}px`,
+                borderRadius: '50%',
+                bgcolor: cell.isToday ? '#fff' : 'var(--accent)'
+              }
+            }
+          : {})
+      }}
+    >
+      {cell.dayOfMonth}
+    </Box>
+  )
 }
 
 export function CalendarView({
@@ -50,39 +92,45 @@ export function CalendarView({
   todayLabel,
   nextLabel
 }: CalendarViewProps) {
-  function renderCell(cell: CalendarCell) {
-    return (
-      <button
-        type="button"
-        key={cell.iso}
-        className={buildDayClass(cell)}
-        data-iso={cell.iso}
-        data-current-month={cell.isCurrentMonth}
-        onClick={() => onSelectDay(cell.iso)}
-      >
-        {cell.dayOfMonth}
-      </button>
-    )
-  }
-
   return (
     <Card>
-      <div className={HEADER_CLASSES}>
-        <div className={TITLE_CLASSES}>{monthLabel}</div>
-        <div className={NAV_CLASSES}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+        <Box sx={{ fontSize: `${TITLE_FONT_SIZE_PX}px`, fontWeight: TITLE_FONT_WEIGHT }}>
+          {monthLabel}
+        </Box>
+        <Box sx={{ display: 'flex', gap: 0.5 }}>
           <IconButton iconName="chevron_left" aria-label={prevLabel} onClick={onPrev} />
           <IconButton iconName="today" aria-label={todayLabel} onClick={onToday} />
           <IconButton iconName="chevron_right" aria-label={nextLabel} onClick={onNext} />
-        </div>
-      </div>
-      <div className={GRID_CLASSES}>
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${WEEK_DAYS_COUNT}, 1fr)`,
+          gap: 0.25,
+          textAlign: 'center'
+        }}
+      >
         {weekdayLabels.map((label) => (
-          <div key={label} className={DOW_CLASSES}>
+          <Box
+            key={label}
+            sx={{
+              fontSize: `${DOW_FONT_SIZE_PX}px`,
+              fontWeight: DOW_FONT_WEIGHT,
+              color: 'var(--text-dim)',
+              py: 0.75,
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em'
+            }}
+          >
             {label}
-          </div>
+          </Box>
         ))}
-        {cells.map(renderCell)}
-      </div>
+        {cells.map((cell) => (
+          <CalendarDay key={cell.iso} cell={cell} onSelect={onSelectDay} />
+        ))}
+      </Box>
     </Card>
   )
 }

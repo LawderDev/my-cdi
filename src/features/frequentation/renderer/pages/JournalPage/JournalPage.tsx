@@ -1,12 +1,9 @@
+import Box from '@mui/material/Box'
 import { Calendar } from './containers/Calendar'
 import { JournalEntryForm } from './containers/JournalEntryForm'
 import { JournalEntryList } from './containers/JournalEntryList'
 import { JournalEntryEditDialog } from '@frequentation/components/JournalEntryEditDialog'
 import { useJournalPage } from './hooks/useJournalPage'
-
-const PAGE_CLASSES = 'grid grid-cols-[320px_1fr] gap-6 h-full'
-const LEFT_COLUMN_CLASSES = 'flex flex-col gap-4'
-const RIGHT_COLUMN_CLASSES = 'flex flex-col gap-4 min-h-0'
 
 export function JournalPage() {
   const {
@@ -22,14 +19,21 @@ export function JournalPage() {
   } = useJournalPage()
 
   return (
-    <div className={PAGE_CLASSES}>
-      <div className={LEFT_COLUMN_CLASSES}>
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: '320px 1fr',
+        gap: 3,
+        height: '100%'
+      }}
+    >
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Calendar selectedDate={selectedDate} onSelectDate={setSelectedDate} />
         <JournalEntryForm selectedDate={selectedDate} />
-      </div>
-      <div className={RIGHT_COLUMN_CLASSES}>
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minHeight: 0 }}>
         <JournalEntryList selectedDate={selectedDate} onEditEntry={startEditing} />
-      </div>
+      </Box>
       {editingEntry && editingActivity ? (
         <JournalEntryEditDialog
           open
@@ -41,6 +45,6 @@ export function JournalPage() {
           entry={editingEntry}
         />
       ) : null}
-    </div>
+    </Box>
   )
 }
