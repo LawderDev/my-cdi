@@ -121,7 +121,7 @@ export function JournalEntryRow({ entry, selected, onEdit, onDelete }: JournalEn
               py: '1px',
               borderRadius: 'var(--radius-xs)',
               textTransform: 'uppercase',
-              letterSpacing: '0.05em'
+              letterSpacing: '0.5px'
             }}
           >
             {periodLabel}

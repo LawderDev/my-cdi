@@ -61,7 +61,7 @@ export function StudentMultiSelect({
           fontSize: `${LABEL_FONT_SIZE_PX}px`,
           fontWeight: LABEL_FONT_WEIGHT,
           textTransform: 'uppercase',
-          letterSpacing: '0.05em',
+          letterSpacing: '0.8px',
           color: 'var(--text-dim)',
           mb: 0.75
         }}

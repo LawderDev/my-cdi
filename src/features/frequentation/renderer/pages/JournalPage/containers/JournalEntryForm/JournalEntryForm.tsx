@@ -46,7 +46,7 @@ export function JournalEntryForm({ selectedDate, onSubmitted }: JournalEntryForm
           fontSize: `${SECTION_LABEL_FONT_SIZE_PX}px`,
           fontWeight: SECTION_LABEL_FONT_WEIGHT,
           textTransform: 'uppercase',
-          letterSpacing: '0.05em',
+          letterSpacing: '0.8px',
           color: 'var(--text-dim)',
           mb: 1.25
         }}
@@ -65,7 +65,7 @@ export function JournalEntryForm({ selectedDate, onSubmitted }: JournalEntryForm
             fontSize: `${TIME_DISPLAY_FONT_SIZE_PX}px`,
             fontWeight: TIME_DISPLAY_FONT_WEIGHT,
             color: 'var(--accent)',
-            letterSpacing: '0.05em'
+            letterSpacing: '1px'
           }}
         >
           {time}

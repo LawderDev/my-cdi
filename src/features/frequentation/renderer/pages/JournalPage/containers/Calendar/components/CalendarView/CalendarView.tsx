@@ -17,7 +17,7 @@ const DAY_TRANSITION = 'all 0.15s'
 
 const WEEK_DAYS_COUNT = 7
 const VISITS_DOT_SIZE_PX = 4
-const VISITS_DOT_BOTTOM_PX = -8
+const VISITS_DOT_BOTTOM_PX = 3
 
 interface CalendarDayProps {
   cell: CalendarCell
@@ -121,7 +121,7 @@ export function CalendarView({
               color: 'var(--text-dim)',
               py: 0.75,
               textTransform: 'uppercase',
-              letterSpacing: '0.05em'
+              letterSpacing: '0.5px'
             }}
           >
             {label}
