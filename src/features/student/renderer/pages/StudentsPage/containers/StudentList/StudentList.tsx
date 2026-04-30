@@ -59,7 +59,7 @@ export function StudentList({ onEditStudent, onAddStudent }: StudentListProps) {
         totalCount={filteredStudents.length}
         onSelectAll={handleSelectAll}
         onClearSelection={clearSelection}
-        onDeleteSelected={clearSelection}
+        onAfterDelete={clearSelection}
       />
     </div>
   )

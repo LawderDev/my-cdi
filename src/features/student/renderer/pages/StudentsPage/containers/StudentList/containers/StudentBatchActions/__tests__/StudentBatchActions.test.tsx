@@ -44,7 +44,7 @@ describe('StudentBatchActions', () => {
         totalCount={TOTAL_COUNT}
         onSelectAll={vi.fn()}
         onClearSelection={vi.fn()}
-        onDeleteSelected={vi.fn()}
+        onAfterDelete={vi.fn()}
       />
     )
 
@@ -61,7 +61,7 @@ describe('StudentBatchActions', () => {
         totalCount={TOTAL_COUNT}
         onSelectAll={vi.fn()}
         onClearSelection={vi.fn()}
-        onDeleteSelected={vi.fn()}
+        onAfterDelete={vi.fn()}
       />
     )
 
@@ -77,7 +77,7 @@ describe('StudentBatchActions', () => {
         totalCount={TOTAL_COUNT}
         onSelectAll={vi.fn()}
         onClearSelection={vi.fn()}
-        onDeleteSelected={vi.fn()}
+        onAfterDelete={vi.fn()}
       />
     )
 

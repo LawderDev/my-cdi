@@ -11,7 +11,7 @@ interface StudentBatchActionsProps {
   totalCount: number
   onSelectAll: () => void
   onClearSelection: () => void
-  onDeleteSelected: () => void
+  onAfterDelete: () => void
 }
 
 const NO_SELECTION = 0
@@ -31,7 +31,7 @@ export function StudentBatchActions({
   totalCount,
   onSelectAll,
   onClearSelection,
-  onDeleteSelected
+  onAfterDelete
 }: StudentBatchActionsProps) {
   const { t: tCommon } = useTranslation('common')
   const { t: tStudent } = useTranslation('student')
@@ -43,7 +43,7 @@ export function StudentBatchActions({
 
   const { mutate: batchDelete, isPending } = useBatchDelete({
     onSuccess: () => {
-      onDeleteSelected()
+      onAfterDelete()
       closeConfirm()
     }
   })
