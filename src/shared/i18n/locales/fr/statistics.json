@@ -1,0 +1,24 @@
+{
+  "title": "Statistiques",
+  "loading": "Chargement…",
+  "kpi": {
+    "totalVisits": "Visites totales",
+    "averagePerDay": "Moyenne / jour",
+    "morningRate": "Taux matin",
+    "afternoonRate": "Taux après-midi"
+  },
+  "period": {
+    "week": "Cette semaine",
+    "month": "Ce mois",
+    "quarter": "Ce trimestre",
+    "semester": "Ce semestre",
+    "year": "Cette année",
+    "custom": "Personnalisé"
+  },
+  "charts": {
+    "weekly": "Fréquentation par jour",
+    "activities": "Activités",
+    "trend": "Évolution sur la période",
+    "visits": "visites"
+  }
+}

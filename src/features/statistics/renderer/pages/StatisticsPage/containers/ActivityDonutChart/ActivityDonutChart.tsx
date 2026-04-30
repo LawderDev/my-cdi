@@ -1,0 +1,70 @@
+import { useTranslation } from 'react-i18next'
+import { ChartCard } from '@statistics/components/ChartCard'
+import { ChartLegend } from '@statistics/components/ChartLegend'
+import { buildDonutSlices } from './helpers/buildDonutSlices'
+import type { ActivityDonutChartProps } from './types/ActivityDonutChartProps'
+
+const WRAP_CLASSES = 'flex items-center gap-6'
+const SVG_CLASSES = 'shrink-0'
+const CX = 70
+const CY = 70
+const SIZE = 140
+const VALUE_OFFSET = -4
+const LABEL_OFFSET = 12
+const VALUE_FONT_SIZE = 18
+const VALUE_FONT_WEIGHT = 700
+const LABEL_FONT_SIZE = 9
+const LABEL_FONT_WEIGHT = 500
+const FILL_OPACITY = 0.9
+
+export function ActivityDonutChart({ activityCounts }: ActivityDonutChartProps) {
+  const { t } = useTranslation('statistics')
+  const { t: tFreq } = useTranslation('frequentation')
+  const slices = buildDonutSlices(activityCounts)
+  const total = activityCounts.reduce((sum, item) => sum + item.count, 0)
+  const legendItems = slices.map((slice) => ({
+    color: slice.color,
+    label: tFreq(`activity.${slice.activity}`),
+    value: slice.value
+  }))
+  return (
+    <ChartCard titleIcon="donut_small" title={t('charts.activities')}>
+      <div className={WRAP_CLASSES}>
+        <svg
+          className={SVG_CLASSES}
+          width={SIZE}
+          height={SIZE}
+          viewBox={`0 0 ${SIZE} ${SIZE}`}
+          aria-label={t('charts.activities')}
+        >
+          {slices.map((slice) => (
+            <path key={slice.activity} d={slice.d} fill={slice.color} opacity={FILL_OPACITY} />
+          ))}
+          <text
+            x={CX}
+            y={CY + VALUE_OFFSET}
+            textAnchor="middle"
+            fill="var(--title)"
+            fontFamily="var(--mono)"
+            fontSize={VALUE_FONT_SIZE}
+            fontWeight={VALUE_FONT_WEIGHT}
+          >
+            {total}
+          </text>
+          <text
+            x={CX}
+            y={CY + LABEL_OFFSET}
+            textAnchor="middle"
+            fill="var(--text-dim)"
+            fontFamily="var(--font)"
+            fontSize={LABEL_FONT_SIZE}
+            fontWeight={LABEL_FONT_WEIGHT}
+          >
+            {t('charts.visits')}
+          </text>
+        </svg>
+        <ChartLegend items={legendItems} />
+      </div>
+    </ChartCard>
+  )
+}
