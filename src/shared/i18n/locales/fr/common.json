@@ -25,5 +25,11 @@
     "title": "Statistiques",
     "comingSoon": "Cette fonctionnalité est en cours de développement",
     "description": "Les statistiques d'utilisation du CDI seront bientôt disponibles ici."
+  },
+  "pageTitles": {
+    "journal": "Journal — Mon CDI",
+    "students": "Élèves — Mon CDI",
+    "statistics": "Statistiques — Mon CDI",
+    "default": "Mon CDI"
   }
 }

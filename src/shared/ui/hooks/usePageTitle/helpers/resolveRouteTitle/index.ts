@@ -1,0 +1,1 @@
+export { resolveRouteTitle } from './resolveRouteTitle'
