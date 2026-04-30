@@ -1,0 +1,1 @@
+export { activityTypeSchema } from './activityTypeSchema'
