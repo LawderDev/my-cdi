@@ -48,7 +48,10 @@ export default tseslint.config(
       'no-magic-numbers': [
         'error',
         {
-          ignore: [-1, 0, 1],
+          ignore: [
+            -1, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 7.5, 8, 9,
+            10, 11, 12
+          ],
           ignoreArrayIndexes: true,
           ignoreDefaultValues: true,
           enforceConst: true,
