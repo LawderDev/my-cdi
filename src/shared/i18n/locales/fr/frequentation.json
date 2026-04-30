@@ -9,8 +9,10 @@
   "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{count}} fréquentation(s) ?",
   "fields": {
     "student": "Élève",
+    "classe": "Classe",
     "activity": "Activité",
-    "actions": "Actions"
+    "actions": "Actions",
+    "date": "Date"
   },
   "activity": {
     "work": "Travail",

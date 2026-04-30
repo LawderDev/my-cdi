@@ -46,7 +46,7 @@ export function JournalEntryTable({
           <TableRow>
             <TableCell padding="checkbox" />
             <TableCell>{t('fields.student')}</TableCell>
-            <TableCell>Classe</TableCell>
+            <TableCell>{t('fields.classe')}</TableCell>
             <TableCell>{t('fields.activity')}</TableCell>
             <TableCell align="right">{t('fields.actions')}</TableCell>
           </TableRow>
