@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 import type { SxProps, Theme } from '@mui/material'
 import { useBatchDelete } from './hooks/useBatchDelete'
+import { formatBatchMessage } from './helpers/formatBatchMessage'
 
 interface StudentBatchActionsProps {
   selectedIds: number[]
@@ -16,7 +17,6 @@ const CONFIRM_TITLE = 'Confirmer la suppression'
 const SELECT_ALL_LABEL = 'Tout sélectionner'
 const DESELECT_ALL_LABEL = 'Tout désélectionner'
 const DELETE_SELECTION_LABEL = 'Supprimer la sélection'
-const SELECTED_COUNT_LABEL = 'sélectionné(s)'
 const CANCEL_LABEL = 'Annuler'
 const CONFIRM_DELETE_LABEL = 'Supprimer'
 const NO_SELECTION = 0
@@ -91,11 +91,7 @@ export function StudentBatchActions({
         >
           {DELETE_SELECTION_LABEL}
         </Button>
-        {selectedCount > NO_SELECTION && (
-          <span>
-            {selectedCount} {SELECTED_COUNT_LABEL}
-          </span>
-        )}
+        {selectedCount > NO_SELECTION && <span>{formatBatchMessage(selectedCount)}</span>}
       </Box>
 
       <Dialog open={showConfirm} onClose={closeConfirm}>

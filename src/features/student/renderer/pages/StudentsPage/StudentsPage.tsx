@@ -1,15 +1,14 @@
-import { Container, Typography, Box } from '@mui/material'
-import { useTranslation } from 'react-i18next'
+import { Container } from '@mui/material'
 import { useStudentsPage } from './hooks/useStudentsPage'
+import { StudentsPageHeader } from './components/StudentsPageHeader'
 import { StudentList } from './containers/StudentList'
 import { StudentForm } from './containers/StudentForm'
 
 const CONTAINER_TOP_MARGIN = 3
-const HEADER_BOTTOM_MARGIN = 2
 
 export function StudentsPage() {
-  const { t } = useTranslation('student')
   const {
+    title,
     isAddDialogOpen,
     openAddDialog,
     closeAddDialog,
@@ -21,9 +20,7 @@ export function StudentsPage() {
 
   return (
     <Container sx={{ mt: CONTAINER_TOP_MARGIN }}>
-      <Box sx={{ mb: HEADER_BOTTOM_MARGIN }}>
-        <Typography variant="h4">{t('title')}</Typography>
-      </Box>
+      <StudentsPageHeader title={title} />
 
       <StudentList
         onEditStudent={setEditingStudent}
