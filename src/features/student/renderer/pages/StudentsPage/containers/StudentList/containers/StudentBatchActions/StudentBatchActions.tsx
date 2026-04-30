@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
-import type { SxProps, Theme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { Button } from '@ui/components/Button'
+import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useBatchDelete } from './hooks/useBatchDelete'
 import { formatBatchMessage } from './helpers/formatBatchMessage'
 
@@ -15,15 +15,10 @@ interface StudentBatchActionsProps {
 }
 
 const NO_SELECTION = 0
-const TOOLBAR_GAP = 1
-const TOOLBAR_TOP_MARGIN = 1
 
-const toolbarStyles: SxProps<Theme> = {
-  display: 'flex',
-  gap: TOOLBAR_GAP,
-  alignItems: 'center',
-  mt: TOOLBAR_TOP_MARGIN
-}
+const STRIP_CLASSES =
+  'flex items-center gap-3 px-3 py-2 bg-surface border border-border rounded-sm text-xs text-text-dim'
+const COUNT_CLASSES = 'font-medium'
 
 export function StudentBatchActions({
   selectedIds,
@@ -37,7 +32,7 @@ export function StudentBatchActions({
   const { t: tStudent } = useTranslation('student')
   const [showConfirm, setShowConfirm] = useState(false)
 
-  const closeConfirm = () => {
+  function closeConfirm() {
     setShowConfirm(false)
   }
 
@@ -49,8 +44,9 @@ export function StudentBatchActions({
   })
 
   const isAllSelected = selectedCount === totalCount && totalCount > NO_SELECTION
+  const hasSelection = selectedCount > NO_SELECTION
 
-  const handleSelectToggle = () => {
+  function handleSelectToggle() {
     if (isAllSelected) {
       onClearSelection()
       return
@@ -58,54 +54,43 @@ export function StudentBatchActions({
     onSelectAll()
   }
 
-  const handleDeleteClick = () => {
-    if (selectedCount > NO_SELECTION) {
+  function handleDeleteClick() {
+    if (hasSelection) {
       setShowConfirm(true)
     }
   }
 
-  const handleConfirmDelete = () => {
+  function handleConfirmDelete() {
     batchDelete(selectedIds)
   }
 
   return (
     <>
-      <Box sx={toolbarStyles}>
+      <div className={STRIP_CLASSES}>
         <Button
-          variant="outlined"
+          variant="secondary"
           onClick={handleSelectToggle}
-          disabled={totalCount === NO_SELECTION}
+          disabled={totalCount === NO_SELECTION || isPending}
         >
           {isAllSelected ? tCommon('app.deselectAll') : tCommon('app.selectAll')}
         </Button>
-        <Button
-          variant="outlined"
-          color="error"
-          disabled={selectedCount === NO_SELECTION}
-          onClick={handleDeleteClick}
-        >
+        <Button variant="danger" disabled={!hasSelection || isPending} onClick={handleDeleteClick}>
           {tCommon('app.batchDelete')}
         </Button>
-        {selectedCount > NO_SELECTION && <span>{formatBatchMessage(selectedCount)}</span>}
-      </Box>
+        {hasSelection ? (
+          <span className={COUNT_CLASSES}>{formatBatchMessage(selectedCount)}</span>
+        ) : null}
+      </div>
 
-      <Dialog open={showConfirm} onClose={closeConfirm}>
-        <DialogTitle>{tCommon('app.confirmDelete')}</DialogTitle>
-        <DialogContent>{tStudent('deleteConfirm', { count: selectedCount })}</DialogContent>
-        <DialogActions>
-          <Button onClick={closeConfirm} disabled={isPending}>
-            {tCommon('app.cancel')}
-          </Button>
-          <Button
-            color="error"
-            variant="contained"
-            onClick={handleConfirmDelete}
-            disabled={isPending}
-          >
-            {tCommon('app.delete')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmDialog
+        open={showConfirm}
+        title={tCommon('app.confirmDelete')}
+        message={tStudent('deleteConfirm', { count: selectedCount })}
+        confirmLabel={tCommon('app.delete')}
+        destructive
+        onConfirm={handleConfirmDelete}
+        onClose={closeConfirm}
+      />
     </>
   )
 }

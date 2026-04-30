@@ -1,17 +1,7 @@
-import {
-  Table,
-  TableBody,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableCell,
-  Paper
-} from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { Icon } from '@ui/components/Icon'
 import { StudentTableRow } from '../StudentTableRow'
-import { tableContainerStyles, headerCellStyles } from './StudentTable.styles'
 import { buildNextSortConfig } from './helpers/buildNextSortConfig'
-import { renderSortIndicator } from './helpers/renderSortIndicator'
 import type { StudentViewModel, StudentSortConfig, StudentSortField } from '@student/types'
 
 interface StudentTableProps {
@@ -26,6 +16,16 @@ interface StudentTableProps {
 
 const SORT_COLUMNS: readonly StudentSortField[] = ['nom', 'prenom', 'classe', 'ine']
 
+const TABLE_WRAPPER_CLASSES =
+  'data-table w-full bg-card border border-border rounded overflow-hidden shadow-[var(--shadow)]'
+const SORT_ICON_CLASSES = 'sort-icon text-sm align-middle ml-0.5'
+const FOOTER_CLASSES =
+  'table-footer flex items-center justify-between px-4 py-3 border-t border-border text-xs text-text-dim'
+const CHECKBOX_CELL_WIDTH = 40
+const ACTIONS_CELL_WIDTH = 80
+const CHECKBOX_CELL_STYLE = { width: CHECKBOX_CELL_WIDTH } as const
+const ACTIONS_CELL_STYLE = { width: ACTIONS_CELL_WIDTH } as const
+
 export function StudentTable({
   students,
   selectedIds,
@@ -37,26 +37,30 @@ export function StudentTable({
 }: StudentTableProps) {
   const { t } = useTranslation('student')
 
+  function handleSort(field: StudentSortField) {
+    onSort(buildNextSortConfig(sortConfig, field))
+  }
+
   return (
-    <TableContainer component={Paper} sx={tableContainerStyles}>
-      <Table size="medium">
-        <TableHead>
-          <TableRow>
-            <TableCell padding="checkbox" />
+    <div className={TABLE_WRAPPER_CLASSES}>
+      <table className="w-full border-collapse">
+        <thead>
+          <tr>
+            <th style={CHECKBOX_CELL_STYLE} />
             {SORT_COLUMNS.map((field) => (
-              <TableCell
-                key={field}
-                sx={headerCellStyles}
-                onClick={() => onSort(buildNextSortConfig(sortConfig, field))}
-              >
+              <th key={field} onClick={() => handleSort(field)}>
                 {t(`fields.${field}`)}
-                <span>{renderSortIndicator(sortConfig, field)}</span>
-              </TableCell>
+                <Icon name="unfold_more" className={SORT_ICON_CLASSES} />
+              </th>
             ))}
-            <TableCell align="right">{t('fields.actions')}</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+            <th>
+              {t('fields.visits')}
+              <Icon name="unfold_more" className={SORT_ICON_CLASSES} />
+            </th>
+            <th style={ACTIONS_CELL_STYLE}>{t('fields.actions')}</th>
+          </tr>
+        </thead>
+        <tbody>
           {students.map((student) => (
             <StudentTableRow
               key={student.id}
@@ -67,8 +71,11 @@ export function StudentTable({
               onDelete={onDelete}
             />
           ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        </tbody>
+      </table>
+      <div className={FOOTER_CLASSES}>
+        <span>{t('count', { count: students.length })}</span>
+      </div>
+    </div>
   )
 }

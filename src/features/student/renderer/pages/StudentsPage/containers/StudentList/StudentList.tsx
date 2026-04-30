@@ -9,24 +9,17 @@ import type { StudentListProps } from './types/StudentListProps'
 
 export function StudentList({ onEditStudent, onAddStudent }: StudentListProps) {
   const { t } = useTranslation('common')
-  const {
-    filteredStudents,
-    searchTerm,
-    setSearchTerm,
-    clearSearch,
-    sortConfig,
-    setSortConfig,
-    isLoading
-  } = useStudentListData()
+  const { filteredStudents, searchTerm, setSearchTerm, sortConfig, setSortConfig, isLoading } =
+    useStudentListData()
 
   const { selectedIds, selectedCount, toggle, selectAll, clearSelection } = useStudentSelection()
   const { mutate: deleteStudent } = useDeleteStudent()
 
-  const handleSelectAll = () => {
+  function handleSelectAll() {
     selectAll(filteredStudents.map((student) => student.id))
   }
 
-  const handleDelete = (id: number) => {
+  function handleDelete(id: number) {
     deleteStudent({ id })
   }
 
@@ -35,12 +28,21 @@ export function StudentList({ onEditStudent, onAddStudent }: StudentListProps) {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-3">
       <StudentListToolbar
         searchTerm={searchTerm}
+        totalCount={filteredStudents.length}
         onSearchChange={setSearchTerm}
-        onClearSearch={clearSearch}
         onAddStudent={onAddStudent}
+      />
+
+      <StudentBatchActions
+        selectedIds={selectedIds}
+        selectedCount={selectedCount}
+        totalCount={filteredStudents.length}
+        onSelectAll={handleSelectAll}
+        onClearSelection={clearSelection}
+        onAfterDelete={clearSelection}
       />
 
       <StudentTable
@@ -51,15 +53,6 @@ export function StudentList({ onEditStudent, onAddStudent }: StudentListProps) {
         onDelete={handleDelete}
         sortConfig={sortConfig}
         onSort={setSortConfig}
-      />
-
-      <StudentBatchActions
-        selectedIds={selectedIds}
-        selectedCount={selectedCount}
-        totalCount={filteredStudents.length}
-        onSelectAll={handleSelectAll}
-        onClearSelection={clearSelection}
-        onAfterDelete={clearSelection}
       />
     </div>
   )
