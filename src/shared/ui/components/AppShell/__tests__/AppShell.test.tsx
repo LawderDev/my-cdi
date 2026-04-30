@@ -29,35 +29,36 @@ beforeEach(() => {
   })
 })
 
+function renderShell(initialPath: string = ROUTES.STUDENTS) {
+  return render(
+    <I18nextProvider i18n={i18n}>
+      <MemoryRouter initialEntries={[initialPath]}>
+        <Routes>
+          <Route element={<AppShell />}>
+            <Route path={ROUTES.STUDENTS} element={<ProbeStudents />} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    </I18nextProvider>
+  )
+}
+
 describe('AppShell', () => {
-  it('renders the navbar and outlet content', () => {
-    render(
-      <I18nextProvider i18n={i18n}>
-        <MemoryRouter initialEntries={[ROUTES.STUDENTS]}>
-          <Routes>
-            <Route element={<AppShell />}>
-              <Route path={ROUTES.STUDENTS} element={<ProbeStudents />} />
-            </Route>
-          </Routes>
-        </MemoryRouter>
-      </I18nextProvider>
-    )
-    expect(screen.getByRole('button', { name: /Élèves/i })).toBeInTheDocument()
+  it('renders the sidebar, header and outlet content', () => {
+    renderShell()
+    // Sidebar nav buttons (3 + settings)
+    expect(screen.getByRole('button', { name: /Journal/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Statistiques/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Liste des élèves/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Paramètres/i })).toBeInTheDocument()
+    // Header banner
+    expect(screen.getByRole('banner')).toBeInTheDocument()
+    // Outlet content mounted
     expect(screen.getByTestId('students-probe')).toBeInTheDocument()
   })
 
   it('updates document.title via the page title hook', () => {
-    render(
-      <I18nextProvider i18n={i18n}>
-        <MemoryRouter initialEntries={[ROUTES.STUDENTS]}>
-          <Routes>
-            <Route element={<AppShell />}>
-              <Route path={ROUTES.STUDENTS} element={<ProbeStudents />} />
-            </Route>
-          </Routes>
-        </MemoryRouter>
-      </I18nextProvider>
-    )
+    renderShell()
     expect(document.title).toBe('Élèves — Mon CDI')
   })
 })
