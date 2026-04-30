@@ -1,19 +1,16 @@
 import { Suspense } from 'react'
 import { Routes, Route } from 'react-router'
-import { CircularProgress, Box } from '@mui/material'
 import { ROUTES } from '@lib/routes'
 import { AppShell } from '@ui/components/AppShell'
 import JournalPage from './JournalPage'
 import StudentsPage from './StudentsPage'
 import StatisticsPage from './StatisticsPage'
 
-const FALLBACK_PADDING = 4
-
 function RouteSuspenseFallback() {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', p: FALLBACK_PADDING }}>
-      <CircularProgress />
-    </Box>
+    <div className="flex h-full items-center justify-center p-8">
+      <div className="h-10 w-10 animate-spin rounded-full border-2 border-border border-t-accent" />
+    </div>
   )
 }
 
