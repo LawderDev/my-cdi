@@ -1,6 +1,6 @@
-export { studentTable, studentEntitySchema } from '@student/entities/student'
+export { studentTable, studentEntitySchema } from '../../features/student/main/entities/student'
 export type {
   StudentEntity,
   InsertStudentEntity,
   SelectStudentEntity
-} from '@student/entities/student'
+} from '../../features/student/main/entities/student'
