@@ -1,6 +1,7 @@
 import type { IpcMain } from 'electron'
 import { createMainRouter } from '@shared/ipc/router'
 import { STUDENT_CHANNELS } from '@shared/ipc/channels'
+import { unwrap } from '@shared/lib/use-case'
 import type { StudentGateway } from '@student/gateways/student'
 import { createStudent } from '@student/use-cases/createStudent'
 import { updateStudent } from '@student/use-cases/updateStudent'
@@ -8,7 +9,6 @@ import { deleteStudent } from '@student/use-cases/deleteStudent'
 import { getStudent } from '@student/use-cases/getStudent'
 import { listStudents } from '@student/use-cases/listStudents'
 import { importStudentsCsv } from '@student/use-cases/importStudentsCsv'
-import type { UseCaseResult } from '@student/use-cases/types/UseCaseResult'
 
 interface CreateStudentInput {
   nom: string
@@ -42,13 +42,6 @@ interface ImportStudentsCsvInput {
 }
 
 export type IpcMainHandle = Pick<IpcMain, 'handle'>
-
-function unwrap<T>(result: UseCaseResult<T>): T {
-  if (!result.success) {
-    throw new Error(result.error)
-  }
-  return result.data
-}
 
 export function registerStudentController(ipcMain: IpcMainHandle, gateway: StudentGateway): void {
   const router = createMainRouter(ipcMain)

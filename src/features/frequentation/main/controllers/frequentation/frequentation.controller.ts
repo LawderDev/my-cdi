@@ -21,7 +21,7 @@ import { createFrequentationBatch } from '@frequentation/use-cases/createFrequen
 import type { BatchResult } from '@frequentation/use-cases/createFrequentationBatch'
 import { formatFrequentationResponse } from '@frequentation/use-cases/helpers/formatFrequentationResponse'
 import type { FrequentationEntity } from '@frequentation/entities/frequentation'
-import type { UseCaseResult } from '@frequentation/use-cases/types/UseCaseResult'
+import { unwrap } from '@shared/lib/use-case'
 
 interface GetFrequentationInput {
   id: number
@@ -41,13 +41,6 @@ interface DeleteFrequentationInput {
 }
 
 export type IpcMainHandle = Pick<IpcMain, 'handle'>
-
-function unwrap<T>(result: UseCaseResult<T>): T {
-  if (!result.success) {
-    throw new Error(result.error)
-  }
-  return result.data
-}
 
 export function registerFrequentationController(
   ipcMain: IpcMainHandle,
