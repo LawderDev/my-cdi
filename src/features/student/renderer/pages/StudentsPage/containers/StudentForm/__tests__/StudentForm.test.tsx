@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { I18nextProvider } from 'react-i18next'
+import i18n from '@shared/i18n/config'
 import type { ReactNode } from 'react'
 import { StudentForm } from '../StudentForm'
 import type { StudentViewModel } from '@student/types'
@@ -25,7 +27,11 @@ function createWrapper() {
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } }
   })
   return function Wrapper({ children }: { children: ReactNode }) {
-    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    return (
+      <I18nextProvider i18n={i18n}>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </I18nextProvider>
+    )
   }
 }
 

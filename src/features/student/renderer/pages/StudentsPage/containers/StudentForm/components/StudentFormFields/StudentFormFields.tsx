@@ -1,6 +1,7 @@
 import { TextField, Stack } from '@mui/material'
 import type { SxProps, Theme } from '@mui/material'
 import type { UseFormRegister, FieldErrors } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import type { StudentFormData } from '../../types/StudentFormData'
 
 interface StudentFormFieldsProps {
@@ -8,17 +9,7 @@ interface StudentFormFieldsProps {
   errors: FieldErrors<StudentFormData>
 }
 
-interface FieldConfig {
-  key: keyof StudentFormData
-  label: string
-}
-
-const FIELD_CONFIGS: readonly FieldConfig[] = [
-  { key: 'nom', label: 'Nom' },
-  { key: 'prenom', label: 'Prénom' },
-  { key: 'classe', label: 'Classe' },
-  { key: 'ine', label: 'INE' }
-]
+const FIELD_KEYS: readonly (keyof StudentFormData)[] = ['nom', 'prenom', 'classe', 'ine']
 
 const STACK_TOP_MARGIN = 1
 const STACK_SPACING = 2
@@ -28,12 +19,13 @@ const stackStyles: SxProps<Theme> = {
 }
 
 export function StudentFormFields({ register, errors }: StudentFormFieldsProps) {
+  const { t } = useTranslation('student')
   return (
     <Stack spacing={STACK_SPACING} sx={stackStyles}>
-      {FIELD_CONFIGS.map(({ key, label }) => (
+      {FIELD_KEYS.map((key) => (
         <TextField
           key={key}
-          label={label}
+          label={t(`fields.${key}`)}
           {...register(key)}
           fullWidth
           required

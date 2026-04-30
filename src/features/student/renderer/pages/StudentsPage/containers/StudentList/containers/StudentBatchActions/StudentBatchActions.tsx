@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 import type { SxProps, Theme } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { useBatchDelete } from './hooks/useBatchDelete'
 import { formatBatchMessage } from './helpers/formatBatchMessage'
 
@@ -13,12 +14,6 @@ interface StudentBatchActionsProps {
   onDeleteSelected: () => void
 }
 
-const CONFIRM_TITLE = 'Confirmer la suppression'
-const SELECT_ALL_LABEL = 'Tout sélectionner'
-const DESELECT_ALL_LABEL = 'Tout désélectionner'
-const DELETE_SELECTION_LABEL = 'Supprimer la sélection'
-const CANCEL_LABEL = 'Annuler'
-const CONFIRM_DELETE_LABEL = 'Supprimer'
 const NO_SELECTION = 0
 const TOOLBAR_GAP = 1
 const TOOLBAR_TOP_MARGIN = 1
@@ -38,13 +33,15 @@ export function StudentBatchActions({
   onClearSelection,
   onDeleteSelected
 }: StudentBatchActionsProps) {
+  const { t: tCommon } = useTranslation('common')
+  const { t: tStudent } = useTranslation('student')
   const [showConfirm, setShowConfirm] = useState(false)
 
   const closeConfirm = () => {
     setShowConfirm(false)
   }
 
-  const deleteMutation = useBatchDelete({
+  const { mutate: batchDelete, isPending } = useBatchDelete({
     onSuccess: () => {
       onDeleteSelected()
       closeConfirm()
@@ -68,10 +65,8 @@ export function StudentBatchActions({
   }
 
   const handleConfirmDelete = () => {
-    deleteMutation.mutate(selectedIds)
+    batchDelete(selectedIds)
   }
-
-  const confirmMessage = `Voulez-vous vraiment supprimer ${selectedCount} élève(s) ?`
 
   return (
     <>
@@ -81,7 +76,7 @@ export function StudentBatchActions({
           onClick={handleSelectToggle}
           disabled={totalCount === NO_SELECTION}
         >
-          {isAllSelected ? DESELECT_ALL_LABEL : SELECT_ALL_LABEL}
+          {isAllSelected ? tCommon('app.deselectAll') : tCommon('app.selectAll')}
         </Button>
         <Button
           variant="outlined"
@@ -89,25 +84,25 @@ export function StudentBatchActions({
           disabled={selectedCount === NO_SELECTION}
           onClick={handleDeleteClick}
         >
-          {DELETE_SELECTION_LABEL}
+          {tCommon('app.batchDelete')}
         </Button>
         {selectedCount > NO_SELECTION && <span>{formatBatchMessage(selectedCount)}</span>}
       </Box>
 
       <Dialog open={showConfirm} onClose={closeConfirm}>
-        <DialogTitle>{CONFIRM_TITLE}</DialogTitle>
-        <DialogContent>{confirmMessage}</DialogContent>
+        <DialogTitle>{tCommon('app.confirmDelete')}</DialogTitle>
+        <DialogContent>{tStudent('deleteConfirm', { count: selectedCount })}</DialogContent>
         <DialogActions>
-          <Button onClick={closeConfirm} disabled={deleteMutation.isPending}>
-            {CANCEL_LABEL}
+          <Button onClick={closeConfirm} disabled={isPending}>
+            {tCommon('app.cancel')}
           </Button>
           <Button
             color="error"
             variant="contained"
             onClick={handleConfirmDelete}
-            disabled={deleteMutation.isPending}
+            disabled={isPending}
           >
-            {CONFIRM_DELETE_LABEL}
+            {tCommon('app.delete')}
           </Button>
         </DialogActions>
       </Dialog>

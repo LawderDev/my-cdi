@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { useForm } from 'react-hook-form'
+import { I18nextProvider } from 'react-i18next'
+import i18n from '@shared/i18n/config'
 import type { ReactNode } from 'react'
 import { StudentFormFields } from '../StudentFormFields'
 import type { FieldErrors } from 'react-hook-form'
@@ -17,9 +19,11 @@ function FormHarness({
 
 function renderFields(errors: FieldErrors<StudentFormData> = {}) {
   return render(
-    <FormHarness>
-      {(register) => <StudentFormFields register={register} errors={errors} />}
-    </FormHarness>
+    <I18nextProvider i18n={i18n}>
+      <FormHarness>
+        {(register) => <StudentFormFields register={register} errors={errors} />}
+      </FormHarness>
+    </I18nextProvider>
   )
 }
 

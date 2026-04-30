@@ -1,6 +1,7 @@
 import { Dialog, DialogTitle, DialogContent } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 import { useCreateStudent, useUpdateStudent } from '@student/api/useStudentMutations'
 import { studentFormSchema } from './validations/studentFormSchema'
 import { mapFormToCreateDto, mapFormToUpdateDto } from './helpers/mapFormToCreateDto'
@@ -8,11 +9,6 @@ import { StudentFormFields } from './components/StudentFormFields'
 import { StudentFormActions } from './components/StudentFormActions'
 import type { StudentViewModel } from '@student/types'
 import type { StudentFormData } from './types/StudentFormData'
-
-const CREATE_TITLE = 'Ajouter un élève'
-const EDIT_TITLE = "Modifier l'élève"
-const CREATE_SUBMIT_LABEL = 'Ajouter'
-const EDIT_SUBMIT_LABEL = 'Enregistrer'
 
 const EMPTY_FORM_VALUES: StudentFormData = {
   nom: '',
@@ -43,6 +39,8 @@ function buildFormValues(student: StudentViewModel | null): StudentFormData {
 }
 
 export function StudentForm({ mode, student, open, onClose }: StudentFormProps) {
+  const { t } = useTranslation('student')
+  const { t: tCommon } = useTranslation('common')
   const { mutate: createStudent } = useCreateStudent()
   const { mutate: updateStudent } = useUpdateStudent()
 
@@ -83,8 +81,8 @@ export function StudentForm({ mode, student, open, onClose }: StudentFormProps) 
     }
   }
 
-  const title = mode === 'create' ? CREATE_TITLE : EDIT_TITLE
-  const submitLabel = mode === 'create' ? CREATE_SUBMIT_LABEL : EDIT_SUBMIT_LABEL
+  const title = mode === 'create' ? t('add') : t('edit')
+  const submitLabel = mode === 'create' ? tCommon('app.add') : tCommon('app.save')
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">

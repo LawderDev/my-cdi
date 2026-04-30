@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { I18nextProvider } from 'react-i18next'
+import i18n from '@shared/i18n/config'
 import type { ReactNode } from 'react'
 import { StudentBatchActions } from '../StudentBatchActions'
 
@@ -18,7 +20,11 @@ function renderWithClient(node: ReactNode) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } }
   })
-  return render(<QueryClientProvider client={queryClient}>{node}</QueryClientProvider>)
+  return render(
+    <I18nextProvider i18n={i18n}>
+      <QueryClientProvider client={queryClient}>{node}</QueryClientProvider>
+    </I18nextProvider>
+  )
 }
 
 describe('StudentBatchActions', () => {

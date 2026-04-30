@@ -13,8 +13,10 @@
     "search": "Rechercher",
     "noResults": "Aucun résultat",
     "selectAll": "Tout sélectionner",
+    "deselectAll": "Tout désélectionner",
     "selected": "{{count}} sélectionné(s)",
-    "batchDelete": "Supprimer la sélection"
+    "batchDelete": "Supprimer la sélection",
+    "confirmDelete": "Confirmer la suppression"
   },
   "nav": {
     "journal": "Journal",
