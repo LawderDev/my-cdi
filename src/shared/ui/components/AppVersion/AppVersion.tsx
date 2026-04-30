@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-
-const CLASSES = 'font-mono text-xs text-text-dim'
+import Typography from '@mui/material/Typography'
+import { MONO_FONT_FAMILY } from '@ui/theme'
 
 export function AppVersion() {
   const [version, setVersion] = useState<string>('')
@@ -22,5 +22,12 @@ export function AppVersion() {
   if (!version) {
     return null
   }
-  return <span className={CLASSES}>{`v${version}`}</span>
+  return (
+    <Typography
+      component="span"
+      sx={{ fontFamily: MONO_FONT_FAMILY, fontSize: '12px', color: 'var(--text-dim)' }}
+    >
+      {`v${version}`}
+    </Typography>
+  )
 }

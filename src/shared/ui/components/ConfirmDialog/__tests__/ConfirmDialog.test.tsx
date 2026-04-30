@@ -55,6 +55,6 @@ describe('ConfirmDialog', () => {
   it('renders the confirm button with the danger variant when destructive', () => {
     renderDialog({ destructive: true, confirmLabel: 'Supprimer' })
     const confirmBtn = screen.getByRole('button', { name: 'Supprimer' })
-    expect(confirmBtn.className).toContain('bg-danger-bg')
+    expect(confirmBtn.getAttribute('data-variant')).toBe('danger')
   })
 })

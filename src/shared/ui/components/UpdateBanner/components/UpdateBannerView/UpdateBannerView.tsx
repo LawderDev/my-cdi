@@ -1,4 +1,6 @@
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
+import LinearProgress from '@mui/material/LinearProgress'
 import { Button } from '@ui/components/Button'
 import { IconButton } from '@ui/components/IconButton'
 import type { UpdateBannerViewProps } from './types/UpdateBannerViewProps'
@@ -7,15 +9,39 @@ const PROGRESS_PERCENT_DECIMAL_DIGITS = 0
 const FALLBACK_PROGRESS_PERCENT = 0
 const PERCENT_MAX = 100
 
-const BANNER_BASE_CLASSES = 'flex items-start gap-3 px-4 py-3 mb-4 mx-7 mt-4 rounded border'
-const BANNER_INFO_CLASSES = 'bg-accent-bg text-accent border-accent-border'
-const BANNER_SUCCESS_CLASSES = 'bg-success-bg text-success border-success/25'
-const BANNER_ERROR_CLASSES = 'bg-danger-bg text-danger border-danger/25'
+const BASE_BANNER_SX = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  gap: 1.5,
+  px: 2,
+  py: 1.5,
+  mt: 2,
+  mx: 3.5,
+  mb: 2,
+  borderRadius: 'var(--radius-sm)',
+  border: '1px solid'
+}
 
-const CONTENT_CLASSES = 'flex-1 text-[13px]'
-const ACTIONS_CLASSES = 'flex items-center gap-2'
-const PROGRESS_TRACK_CLASSES = 'h-1 mt-2 rounded bg-accent/15 overflow-hidden'
-const PROGRESS_FILL_CLASSES = 'h-full bg-accent transition-all duration-200'
+const INFO_SX = {
+  backgroundColor: 'var(--accent-bg)',
+  color: 'var(--accent)',
+  borderColor: 'var(--accent-border)'
+}
+
+const SUCCESS_SX = {
+  backgroundColor: 'var(--success-bg)',
+  color: 'var(--success)',
+  borderColor: 'rgba(74, 222, 128, 0.25)'
+}
+
+const ERROR_SX = {
+  backgroundColor: 'var(--danger-bg)',
+  color: 'var(--danger)',
+  borderColor: 'rgba(248, 113, 113, 0.25)'
+}
+
+const CONTENT_SX = { flex: 1, fontSize: '13px' }
+const ACTIONS_SX = { display: 'flex', alignItems: 'center', gap: 1 }
 
 export function UpdateBannerView({
   status,
@@ -34,12 +60,10 @@ export function UpdateBannerView({
 
   if (status === 'available') {
     return (
-      <div role="status" className={`${BANNER_BASE_CLASSES} ${BANNER_INFO_CLASSES}`}>
-        <div className={CONTENT_CLASSES}>
-          {t('updater.available', { version: versionAvailable ?? '' })}
-        </div>
+      <Box role="status" sx={[BASE_BANNER_SX, INFO_SX]}>
+        <Box sx={CONTENT_SX}>{t('updater.available', { version: versionAvailable ?? '' })}</Box>
         <IconButton iconName="close" aria-label={t('app.close')} onClick={onDismiss} />
-      </div>
+      </Box>
     )
   }
 
@@ -49,39 +73,39 @@ export function UpdateBannerView({
       PROGRESS_PERCENT_DECIMAL_DIGITS
     )
     return (
-      <div role="status" className={`${BANNER_BASE_CLASSES} ${BANNER_INFO_CLASSES}`}>
-        <div className={CONTENT_CLASSES}>
+      <Box role="status" sx={[BASE_BANNER_SX, INFO_SX]}>
+        <Box sx={CONTENT_SX}>
           {t('updater.downloading', { percent: percentDisplay })}
-          <div className={PROGRESS_TRACK_CLASSES}>
-            <div className={PROGRESS_FILL_CLASSES} style={{ width: `${fillPercent}%` }} />
-          </div>
-        </div>
-      </div>
+          <LinearProgress
+            variant="determinate"
+            value={fillPercent}
+            sx={{ mt: 1, height: '4px', borderRadius: 'var(--radius-xs)' }}
+          />
+        </Box>
+      </Box>
     )
   }
 
   if (status === 'downloaded') {
     return (
-      <div role="status" className={`${BANNER_BASE_CLASSES} ${BANNER_SUCCESS_CLASSES}`}>
-        <div className={CONTENT_CLASSES}>
-          {t('updater.downloaded', { version: versionDownloaded ?? '' })}
-        </div>
-        <div className={ACTIONS_CLASSES}>
+      <Box role="status" sx={[BASE_BANNER_SX, SUCCESS_SX]}>
+        <Box sx={CONTENT_SX}>{t('updater.downloaded', { version: versionDownloaded ?? '' })}</Box>
+        <Box sx={ACTIONS_SX}>
           <Button variant="primary" onClick={onInstall}>
             {t('updater.installNow')}
           </Button>
           <Button variant="secondary" onClick={onDismiss}>
             {t('updater.dismiss')}
           </Button>
-        </div>
-      </div>
+        </Box>
+      </Box>
     )
   }
 
   return (
-    <div role="alert" className={`${BANNER_BASE_CLASSES} ${BANNER_ERROR_CLASSES}`}>
-      <div className={CONTENT_CLASSES}>{t('updater.error', { message: errorMessage ?? '' })}</div>
+    <Box role="alert" sx={[BASE_BANNER_SX, ERROR_SX]}>
+      <Box sx={CONTENT_SX}>{t('updater.error', { message: errorMessage ?? '' })}</Box>
       <IconButton iconName="close" aria-label={t('app.close')} onClick={onDismiss} />
-    </div>
+    </Box>
   )
 }

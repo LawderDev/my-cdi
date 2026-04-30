@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { Modal } from '@ui/components/Modal'
 import { Button } from '@ui/components/Button'
 import type { ConfirmDialogProps } from './types/ConfirmDialogProps'
@@ -33,7 +34,7 @@ export function ConfirmDialog({
         </>
       }
     >
-      <div className="text-text">{message}</div>
+      <Box sx={{ color: 'var(--text)' }}>{message}</Box>
     </Modal>
   )
 }

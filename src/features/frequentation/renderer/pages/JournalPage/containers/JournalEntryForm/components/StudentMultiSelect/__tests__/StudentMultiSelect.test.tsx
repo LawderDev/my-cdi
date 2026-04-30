@@ -43,7 +43,7 @@ describe('StudentMultiSelect', () => {
     fireEvent.focus(input)
     fireEvent.change(input, { target: { value: 'Jean' } })
     const option = screen.getByRole('option', { name: /Jean Dupont/ })
-    fireEvent.mouseDown(option)
+    fireEvent.click(option)
     expect(onChange).toHaveBeenCalledWith([FIRST_ID])
   })
 
@@ -52,7 +52,11 @@ describe('StudentMultiSelect', () => {
     renderWithProvider({ selectedIds: [FIRST_ID, SECOND_ID], onChange })
     expect(screen.getByText('Jean Dupont')).toBeInTheDocument()
     expect(screen.getByText('Marie Martin')).toBeInTheDocument()
-    const [firstRemove] = screen.getAllByRole('button', { name: '×' })
+    const removeButtons = document.querySelectorAll('.MuiChip-deleteIcon')
+    if (removeButtons.length === 0) {
+      throw new Error('Expected at least one remove button')
+    }
+    const [firstRemove] = removeButtons
     if (!firstRemove) {
       throw new Error('Expected at least one remove button')
     }
