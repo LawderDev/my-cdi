@@ -36,7 +36,7 @@ export function StudentFormFields({ register, errors }: StudentFormFieldsProps) 
                 fontWeight: LABEL_FONT_WEIGHT,
                 color: 'var(--text-dim)',
                 textTransform: 'uppercase',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.8px',
                 mb: 0.75
               }}
             >
