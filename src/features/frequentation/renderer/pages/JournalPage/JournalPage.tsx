@@ -39,11 +39,9 @@ export function JournalPage() {
         onEditEntry={startEditing}
       />
 
-      <JournalEntryForm
-        open={isAddDialogOpen}
-        selectedDate={selectedDate}
-        onClose={closeAddDialog}
-      />
+      {isAddDialogOpen ? (
+        <JournalEntryForm selectedDate={selectedDate} onSubmitted={closeAddDialog} />
+      ) : null}
 
       {editingEntry && editingActivity && (
         <JournalEntryEditDialog

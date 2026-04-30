@@ -1,16 +1,22 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { I18nextProvider } from 'react-i18next'
+import i18n from '@shared/i18n/config'
 import type { ReactNode } from 'react'
 import { JournalEntryForm } from '../JournalEntryForm'
 
 const FIRST_ID = 1
 
-function withQuery(ui: ReactNode) {
+function withProviders(ui: ReactNode) {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } }
   })
-  return <QueryClientProvider client={client}>{ui}</QueryClientProvider>
+  return (
+    <I18nextProvider i18n={i18n}>
+      <QueryClientProvider client={client}>{ui}</QueryClientProvider>
+    </I18nextProvider>
+  )
 }
 
 describe('JournalEntryForm', () => {
@@ -40,8 +46,8 @@ describe('JournalEntryForm', () => {
     })
   })
 
-  it('renders multi-select and activity group when open', () => {
-    render(withQuery(<JournalEntryForm open selectedDate="2026-04-01" onClose={vi.fn()} />))
+  it('renders the autocomplete combobox and the activity grid in the in-place card', () => {
+    render(withProviders(<JournalEntryForm selectedDate="2026-04-01" />))
     expect(screen.getByRole('combobox')).toBeInTheDocument()
   })
 })

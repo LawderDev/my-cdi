@@ -23,12 +23,19 @@
     "other": "Autre"
   },
   "form": {
-    "selectStudents": "Sélectionner des élèves",
+    "newEntry": "Nouvelle entrée",
+    "selectStudents": "Élève(s)",
+    "searchStudent": "Rechercher un élève…",
     "selectActivity": "Choisir une activité",
     "submit": "Enregistrer",
     "cancel": "Annuler",
     "noStudentsSelected": "Sélectionnez au moins un élève",
     "noActivitySelected": "Sélectionnez une activité"
+  },
+  "loading": "Chargement…",
+  "period": {
+    "matin": "Matin",
+    "aprem": "Après-midi"
   },
   "batchActions": {
     "selectAll": "Tout sélectionner",

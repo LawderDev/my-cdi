@@ -1,2 +1,2 @@
 export { useClock } from './useClock'
-export type { UseClockReturn } from './useClock'
+export type { UseClockReturn, ClockPeriod } from './useClock'
