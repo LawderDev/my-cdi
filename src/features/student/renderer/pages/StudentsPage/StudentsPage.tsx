@@ -14,19 +14,14 @@ export function StudentsPage() {
     closeAddDialog,
     editingStudent,
     setEditingStudent,
-    closeEditDialog,
-    openCsvImport
+    closeEditDialog
   } = useStudentsPage()
 
   return (
     <Container sx={{ mt: CONTAINER_TOP_MARGIN }}>
       <StudentsPageHeader title={title} />
 
-      <StudentList
-        onEditStudent={setEditingStudent}
-        onAddStudent={openAddDialog}
-        onImportCsv={openCsvImport}
-      />
+      <StudentList onEditStudent={setEditingStudent} onAddStudent={openAddDialog} />
 
       <StudentForm mode="create" student={null} open={isAddDialogOpen} onClose={closeAddDialog} />
 

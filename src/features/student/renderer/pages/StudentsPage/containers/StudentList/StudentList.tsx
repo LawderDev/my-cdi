@@ -7,7 +7,7 @@ import { StudentListToolbar } from './components/StudentListToolbar'
 import { StudentBatchActions } from './containers/StudentBatchActions'
 import type { StudentListProps } from './types/StudentListProps'
 
-export function StudentList({ onEditStudent, onAddStudent, onImportCsv }: StudentListProps) {
+export function StudentList({ onEditStudent, onAddStudent }: StudentListProps) {
   const { t } = useTranslation('common')
   const {
     filteredStudents,
@@ -41,7 +41,6 @@ export function StudentList({ onEditStudent, onAddStudent, onImportCsv }: Studen
         onSearchChange={setSearchTerm}
         onClearSearch={clearSearch}
         onAddStudent={onAddStudent}
-        onImportCsv={onImportCsv}
       />
 
       <StudentTable

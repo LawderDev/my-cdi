@@ -5,13 +5,9 @@ import { useImportStudentsCsv } from '@student/api/useStudentMutations'
 
 const CSV_ACCEPT = '.csv'
 
-interface StudentCsvImportButtonProps {
-  onImported?: () => void
-}
-
 const hiddenInputStyle = { display: 'none' }
 
-export function StudentCsvImportButton({ onImported }: StudentCsvImportButtonProps) {
+export function StudentCsvImportButton() {
   const { t } = useTranslation('student')
   const inputRef = useRef<HTMLInputElement>(null)
   const { mutate: importStudents, isPending } = useImportStudentsCsv()
@@ -22,14 +18,7 @@ export function StudentCsvImportButton({ onImported }: StudentCsvImportButtonPro
       return
     }
     const csv = await file.text()
-    importStudents(
-      { csv },
-      {
-        onSuccess: () => {
-          onImported?.()
-        }
-      }
-    )
+    importStudents({ csv })
     event.target.value = ''
   }
 

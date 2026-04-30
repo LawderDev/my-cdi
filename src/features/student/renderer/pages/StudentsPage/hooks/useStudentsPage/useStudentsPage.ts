@@ -12,7 +12,6 @@ export function useStudentsPage() {
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingStudent, setEditingStudentState] = useState<StudentViewModel | null>(null)
-  const [isCsvImportOpen, setIsCsvImportOpen] = useState(false)
 
   const studentCount = data?.length ?? EMPTY_COUNT
   const title = getStudentsPageTitle(t('title'), studentCount)
@@ -33,14 +32,6 @@ export function useStudentsPage() {
     setEditingStudentState(null)
   }
 
-  function openCsvImport() {
-    setIsCsvImportOpen(true)
-  }
-
-  function closeCsvImport() {
-    setIsCsvImportOpen(false)
-  }
-
   return {
     title,
     isAddDialogOpen,
@@ -48,9 +39,6 @@ export function useStudentsPage() {
     closeAddDialog,
     editingStudent,
     setEditingStudent,
-    closeEditDialog,
-    isCsvImportOpen,
-    openCsvImport,
-    closeCsvImport
+    closeEditDialog
   }
 }

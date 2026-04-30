@@ -46,7 +46,7 @@ describe('StudentList', () => {
   })
 
   it('renders the toolbar with the add button', async () => {
-    render(<StudentList onEditStudent={vi.fn()} onAddStudent={vi.fn()} onImportCsv={vi.fn()} />, {
+    render(<StudentList onEditStudent={vi.fn()} onAddStudent={vi.fn()} />, {
       wrapper: createWrapper()
     })
 

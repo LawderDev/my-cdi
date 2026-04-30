@@ -52,7 +52,6 @@ describe('useStudentsPage', () => {
     const { result } = renderHook(() => useStudentsPage(), { wrapper: Wrapper })
     expect(result.current.isAddDialogOpen).toBe(false)
     expect(result.current.editingStudent).toBeNull()
-    expect(result.current.isCsvImportOpen).toBe(false)
   })
 
   it('toggles add dialog', () => {
@@ -69,13 +68,5 @@ describe('useStudentsPage', () => {
     expect(result.current.editingStudent).toEqual(sampleStudent)
     act(() => result.current.closeEditDialog())
     expect(result.current.editingStudent).toBeNull()
-  })
-
-  it('toggles csv import dialog', () => {
-    const { result } = renderHook(() => useStudentsPage(), { wrapper: Wrapper })
-    act(() => result.current.openCsvImport())
-    expect(result.current.isCsvImportOpen).toBe(true)
-    act(() => result.current.closeCsvImport())
-    expect(result.current.isCsvImportOpen).toBe(false)
   })
 })
