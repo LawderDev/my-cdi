@@ -20,8 +20,23 @@
   },
   "nav": {
     "journal": "Journal",
-    "students": "Élèves",
-    "statistics": "Statistiques"
+    "statistics": "Statistiques",
+    "students": "Liste des élèves",
+    "settings": "Paramètres"
+  },
+  "page": {
+    "journal": {
+      "title": "Journal",
+      "subtitle": "Enregistrement des fréquentations du jour"
+    },
+    "statistics": {
+      "title": "Statistiques",
+      "subtitle": "Analyse des fréquentations du CDI"
+    },
+    "students": {
+      "title": "Liste des élèves",
+      "subtitle": "Gestion de la base élèves"
+    }
   },
   "statistics": {
     "title": "Statistiques",
