@@ -1,20 +1,9 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useStudentList } from '@student/api/useStudentQueries'
-import { getStudentsPageTitle } from '../../helpers/getStudentsPageTitle'
 import type { StudentViewModel } from '@student/types'
 
-const EMPTY_COUNT = 0
-
 export function useStudentsPage() {
-  const { t } = useTranslation('student')
-  const { data } = useStudentList()
-
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingStudent, setEditingStudentState] = useState<StudentViewModel | null>(null)
-
-  const studentCount = data?.length ?? EMPTY_COUNT
-  const title = getStudentsPageTitle(t('title'), studentCount)
 
   function openAddDialog() {
     setIsAddDialogOpen(true)
@@ -33,7 +22,6 @@ export function useStudentsPage() {
   }
 
   return {
-    title,
     isAddDialogOpen,
     openAddDialog,
     closeAddDialog,

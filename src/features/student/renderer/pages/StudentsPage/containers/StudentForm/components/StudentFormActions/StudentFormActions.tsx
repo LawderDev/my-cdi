@@ -1,27 +1,29 @@
-import { DialogActions, Button } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { Button } from '@ui/components/Button'
 
 interface StudentFormActionsProps {
   isSubmitting: boolean
-  onCancel: () => void
   submitLabel: string
+  onCancel: () => void
+  onSubmit: () => void
 }
 
 export function StudentFormActions({
   isSubmitting,
+  submitLabel,
   onCancel,
-  submitLabel
+  onSubmit
 }: StudentFormActionsProps) {
   const { t } = useTranslation('common')
 
   return (
-    <DialogActions>
-      <Button onClick={onCancel} disabled={isSubmitting}>
+    <>
+      <Button type="button" variant="secondary" onClick={onCancel} disabled={isSubmitting}>
         {t('app.cancel')}
       </Button>
-      <Button type="submit" variant="contained" disabled={isSubmitting}>
+      <Button type="button" variant="primary" onClick={onSubmit} disabled={isSubmitting}>
         {submitLabel}
       </Button>
-    </DialogActions>
+    </>
   )
 }

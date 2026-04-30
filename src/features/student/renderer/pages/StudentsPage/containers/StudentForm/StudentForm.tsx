@@ -1,7 +1,7 @@
-import { Dialog, DialogTitle, DialogContent } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
+import { Modal } from '@ui/components/Modal'
 import { useCreateStudent, useUpdateStudent } from '@student/api/useStudentMutations'
 import { studentFormSchema } from './validations/studentFormSchema'
 import { mapFormToCreateDto, mapFormToUpdateDto } from './helpers/mapFormToCreateDto'
@@ -84,19 +84,25 @@ export function StudentForm({ mode, student, open, onClose }: StudentFormProps) 
   const title = mode === 'create' ? t('add') : t('edit')
   const submitLabel = mode === 'create' ? tCommon('app.add') : tCommon('app.save')
 
+  const onSubmit = handleSubmit(handleFormSubmit)
+
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>{title}</DialogTitle>
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <DialogContent>
-          <StudentFormFields register={register} errors={errors} />
-        </DialogContent>
+    <Modal
+      open={open}
+      onClose={handleClose}
+      title={title}
+      footer={
         <StudentFormActions
           isSubmitting={isSubmitting}
-          onCancel={handleClose}
           submitLabel={submitLabel}
+          onCancel={handleClose}
+          onSubmit={onSubmit}
         />
+      }
+    >
+      <form onSubmit={onSubmit}>
+        <StudentFormFields register={register} errors={errors} />
       </form>
-    </Dialog>
+    </Modal>
   )
 }

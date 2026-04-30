@@ -1,14 +1,9 @@
-import { Container } from '@mui/material'
 import { useStudentsPage } from './hooks/useStudentsPage'
-import { StudentsPageHeader } from './components/StudentsPageHeader'
 import { StudentList } from './containers/StudentList'
 import { StudentForm } from './containers/StudentForm'
 
-const CONTAINER_TOP_MARGIN = 3
-
 export function StudentsPage() {
   const {
-    title,
     isAddDialogOpen,
     openAddDialog,
     closeAddDialog,
@@ -18,9 +13,7 @@ export function StudentsPage() {
   } = useStudentsPage()
 
   return (
-    <Container sx={{ mt: CONTAINER_TOP_MARGIN }}>
-      <StudentsPageHeader title={title} />
-
+    <div className="flex flex-col gap-5">
       <StudentList onEditStudent={setEditingStudent} onAddStudent={openAddDialog} />
 
       <StudentForm mode="create" student={null} open={isAddDialogOpen} onClose={closeAddDialog} />
@@ -31,6 +24,6 @@ export function StudentsPage() {
         open={editingStudent !== null}
         onClose={closeEditDialog}
       />
-    </Container>
+    </div>
   )
 }

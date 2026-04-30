@@ -47,17 +47,19 @@ describe('StudentsPage', () => {
     })
   })
 
-  it('renders the page title', () => {
-    render(<StudentsPage />, { wrapper: createWrapper() })
-
-    expect(screen.getByText('Gestion des élèves')).toBeInTheDocument()
-  })
-
   it('renders the add student button', async () => {
     render(<StudentsPage />, { wrapper: createWrapper() })
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Ajouter un élève' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /ajouter un élève/i })).toBeInTheDocument()
+    })
+  })
+
+  it('renders the student list', async () => {
+    render(<StudentsPage />, { wrapper: createWrapper() })
+
+    await waitFor(() => {
+      expect(screen.getByText('Dupont')).toBeInTheDocument()
     })
   })
 })
