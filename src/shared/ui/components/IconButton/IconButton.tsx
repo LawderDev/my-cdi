@@ -1,19 +1,22 @@
+import MuiIconButton from '@mui/material/IconButton'
 import { Icon } from '../Icon'
-import type { IconButtonProps } from './types/IconButtonProps'
+import type { IconButtonProps, IconButtonTone } from './types/IconButtonProps'
 
-const BASE_CLASSES =
-  'w-9 h-9 rounded-xs inline-flex items-center justify-center transition-all duration-150'
-
-const TONE_CLASSES = {
-  default: 'text-text-dim hover:bg-card hover:text-title',
-  danger: 'text-danger hover:bg-danger-bg'
-} as const
+const TONE_TO_COLOR: Record<IconButtonTone, 'default' | 'error'> = {
+  default: 'default',
+  danger: 'error'
+}
 
 export function IconButton({ iconName, tone = 'default', className, ...rest }: IconButtonProps) {
-  const finalClass = [BASE_CLASSES, TONE_CLASSES[tone], className].filter(Boolean).join(' ')
   return (
-    <button {...rest} className={finalClass}>
+    <MuiIconButton
+      {...rest}
+      className={className}
+      color={TONE_TO_COLOR[tone]}
+      size="small"
+      data-tone={tone}
+    >
       <Icon name={iconName} />
-    </button>
+    </MuiIconButton>
   )
 }

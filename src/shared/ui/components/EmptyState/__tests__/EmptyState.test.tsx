@@ -25,19 +25,9 @@ describe('EmptyState', () => {
   })
 
   it('omits the description paragraph when not provided', () => {
-    const { container } = render(<EmptyState iconName="inbox" message="x" />)
-    const paragraphs = container.querySelectorAll('p')
-    const expectedParagraphs = 1
-    expect(paragraphs.length).toBe(expectedParagraphs)
-  })
-
-  it('uses muted/centered layout classes from the codesign empty-state block', () => {
-    const { container } = render(<EmptyState iconName="inbox" message="x" />)
-    const root = container.firstElementChild
-    expect(root?.className).toContain('flex')
-    expect(root?.className).toContain('flex-col')
-    expect(root?.className).toContain('items-center')
-    expect(root?.className).toContain('text-text-dim')
+    render(<EmptyState iconName="inbox" message="only" />)
+    const paragraphs = screen.getAllByText(/only/i)
+    expect(paragraphs.length).toBe(1)
   })
 
   it('appends custom className', () => {

@@ -33,7 +33,7 @@ describe('Modal', () => {
     expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
   })
 
-  it('mounts to a portal at document.body', () => {
+  it('mounts to a portal outside the host container', () => {
     const { container } = render(
       <Modal open={true} onClose={() => {}} title="t">
         <p>body</p>
@@ -43,29 +43,30 @@ describe('Modal', () => {
     expect(document.body.querySelector('p')?.textContent).toBe('body')
   })
 
-  it('calls onClose when Escape is pressed', () => {
+  it('calls onClose when Escape is pressed inside the dialog', () => {
     const onClose = vi.fn()
     render(
       <Modal open={true} onClose={onClose} title="t">
         <p>body</p>
       </Modal>
     )
-    fireEvent.keyDown(document, { key: 'Escape' })
+    const dialog = screen.getByRole('dialog')
+    fireEvent.keyDown(dialog, { key: 'Escape' })
     expect(onClose).toHaveBeenCalledTimes(1)
   })
 
-  it('calls onClose when the overlay backdrop is clicked', async () => {
+  it('calls onClose when the backdrop is clicked', async () => {
     const onClose = vi.fn()
     render(
       <Modal open={true} onClose={onClose} title="t">
         <p>body</p>
       </Modal>
     )
-    const overlay = document.querySelector('[data-modal-overlay="true"]')
-    if (!(overlay instanceof HTMLElement)) {
-      throw new Error('overlay not found')
+    const backdrop = document.querySelector('.MuiBackdrop-root')
+    if (!(backdrop instanceof HTMLElement)) {
+      throw new Error('backdrop not found')
     }
-    await userEvent.click(overlay)
+    await userEvent.click(backdrop)
     expect(onClose).toHaveBeenCalledTimes(1)
   })
 

@@ -1,26 +1,38 @@
-import type { ChipProps } from './types/ChipProps'
+import MuiChip from '@mui/material/Chip'
+import type { ChipProps, ChipTone } from './types/ChipProps'
 
-const BASE_CLASSES =
-  'inline-flex items-center gap-1 h-7 pl-[10px] pr-1 rounded-[14px] text-xs font-medium transition-all duration-150'
+const TONE_SX: Record<ChipTone, Record<string, string | number>> = {
+  accent: {
+    backgroundColor: 'var(--accent-bg)',
+    border: '1px solid var(--accent-border)',
+    color: 'var(--accent)'
+  },
+  neutral: {
+    backgroundColor: 'var(--surface)',
+    border: '1px solid var(--border)',
+    color: 'var(--text)'
+  }
+}
 
-const TONE_CLASSES = {
-  accent: 'bg-accent-bg border border-accent-border text-accent',
-  neutral: 'bg-surface border border-border text-text'
-} as const
-
-const REMOVE_BTN_CLASSES =
-  'w-5 h-5 rounded-full inline-flex items-center justify-center text-sm cursor-pointer ml-0.5 transition-colors duration-150 hover:bg-accent/25'
+const CHIP_HEIGHT_PX = 28
+const CHIP_BORDER_RADIUS_PX = 14
+const FONT_WEIGHT_MEDIUM = 500
+const CHIP_FONT_SIZE_PX = 12
 
 export function Chip({ label, onRemove, tone = 'accent', className }: ChipProps) {
-  const finalClass = [BASE_CLASSES, TONE_CLASSES[tone], className].filter(Boolean).join(' ')
   return (
-    <span className={finalClass}>
-      {label}
-      {onRemove ? (
-        <button type="button" className={REMOVE_BTN_CLASSES} onClick={onRemove}>
-          ×
-        </button>
-      ) : null}
-    </span>
+    <MuiChip
+      className={className}
+      label={label}
+      onDelete={onRemove}
+      data-tone={tone}
+      sx={{
+        height: `${CHIP_HEIGHT_PX}px`,
+        borderRadius: `${CHIP_BORDER_RADIUS_PX}px`,
+        fontWeight: FONT_WEIGHT_MEDIUM,
+        fontSize: `${CHIP_FONT_SIZE_PX}px`,
+        ...TONE_SX[tone]
+      }}
+    />
   )
 }

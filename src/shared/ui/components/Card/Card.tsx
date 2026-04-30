@@ -1,18 +1,36 @@
-import type { CardProps } from './types/CardProps'
+import Paper from '@mui/material/Paper'
+import type { CardPadding, CardProps } from './types/CardProps'
 
-const BASE_CLASSES = 'bg-card border border-border rounded shadow'
+const PADDING_NONE_PX = 0
+const PADDING_COMPACT_PX = 16
+const PADDING_DEFAULT_PX = 20
 
-const PADDING_CLASSES = {
-  none: '',
-  compact: 'p-4',
-  default: 'p-5'
-} as const
+const PADDING_PX: Record<CardPadding, number> = {
+  none: PADDING_NONE_PX,
+  compact: PADDING_COMPACT_PX,
+  default: PADDING_DEFAULT_PX
+}
 
-export function Card({ padding = 'default', className, children, ...rest }: CardProps) {
-  const finalClass = [BASE_CLASSES, PADDING_CLASSES[padding], className].filter(Boolean).join(' ')
+const SHADOW = 'var(--shadow)'
+
+export function Card({ padding = 'default', className, children, sx, ...rest }: CardProps) {
   return (
-    <div {...rest} className={finalClass}>
+    <Paper
+      {...rest}
+      className={className}
+      elevation={0}
+      sx={[
+        {
+          backgroundColor: 'var(--card)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius)',
+          padding: `${PADDING_PX[padding]}px`,
+          boxShadow: SHADOW
+        },
+        ...(Array.isArray(sx) ? sx : [sx])
+      ]}
+    >
       {children}
-    </div>
+    </Paper>
   )
 }

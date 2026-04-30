@@ -9,37 +9,38 @@ describe('Chip', () => {
     expect(screen.getByText('Math 101')).toBeInTheDocument()
   })
 
-  it('uses the accent tone classes by default', () => {
+  it('exposes data-tone="accent" by default', () => {
     const { container } = render(<Chip label="x" />)
     const chip = container.firstElementChild
-    expect(chip?.className).toContain('bg-accent-bg')
-    expect(chip?.className).toContain('text-accent')
+    expect(chip?.getAttribute('data-tone')).toBe('accent')
   })
 
-  it('uses the neutral tone classes when tone="neutral"', () => {
+  it('exposes data-tone="neutral" when tone="neutral"', () => {
     const { container } = render(<Chip label="x" tone="neutral" />)
     const chip = container.firstElementChild
-    expect(chip?.className).toContain('bg-surface')
-    expect(chip?.className).toContain('text-text')
+    expect(chip?.getAttribute('data-tone')).toBe('neutral')
   })
 
-  it('does not render a remove button when onRemove is omitted', () => {
-    render(<Chip label="x" />)
-    expect(screen.queryByRole('button', { name: /remove|retirer|supprimer/i })).toBeNull()
+  it('does not render a delete affordance when onRemove is omitted', () => {
+    const { container } = render(<Chip label="x" />)
+    const deleteIcon = container.querySelector('[class*="MuiChip-deleteIcon"]')
+    expect(deleteIcon).toBeNull()
   })
 
-  it('renders a remove button and triggers onRemove when clicked', async () => {
+  it('renders a delete affordance and triggers onRemove when clicked', async () => {
     const onRemove = vi.fn()
-    render(<Chip label="x" onRemove={onRemove} />)
-    const btn = screen.getByRole('button')
-    await userEvent.click(btn)
+    const { container } = render(<Chip label="x" onRemove={onRemove} />)
+    const deleteIcon = container.querySelector('[class*="MuiChip-deleteIcon"]')
+    if (!(deleteIcon instanceof HTMLElement) && !(deleteIcon instanceof SVGElement)) {
+      throw new Error('delete icon not rendered')
+    }
+    await userEvent.click(deleteIcon)
     expect(onRemove).toHaveBeenCalledTimes(1)
   })
 
-  it('applies custom className alongside tone classes', () => {
+  it('applies custom className', () => {
     const { container } = render(<Chip label="x" className="my-extra" />)
     const chip = container.firstElementChild
     expect(chip?.className).toContain('my-extra')
-    expect(chip?.className).toContain('bg-accent-bg')
   })
 })

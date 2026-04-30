@@ -11,23 +11,16 @@ describe('IconButton', () => {
     expect(btn.textContent).toContain('close')
   })
 
-  it('applies the size and base classes for a 36x36 icon button', () => {
+  it('exposes data-tone="default" by default', () => {
     render(<IconButton iconName="edit" aria-label="edit" />)
     const btn = screen.getByRole('button', { name: /edit/i })
-    expect(btn.className).toContain('w-9')
-    expect(btn.className).toContain('h-9')
+    expect(btn.getAttribute('data-tone')).toBe('default')
   })
 
-  it('applies default tone classes', () => {
-    render(<IconButton iconName="edit" aria-label="edit" />)
-    const btn = screen.getByRole('button', { name: /edit/i })
-    expect(btn.className).toContain('text-text-dim')
-  })
-
-  it('applies danger tone classes', () => {
+  it('exposes data-tone="danger" when tone="danger"', () => {
     render(<IconButton iconName="delete" tone="danger" aria-label="delete" />)
     const btn = screen.getByRole('button', { name: /delete/i })
-    expect(btn.className).toContain('text-danger')
+    expect(btn.getAttribute('data-tone')).toBe('danger')
   })
 
   it('forwards onClick handler', async () => {
@@ -37,10 +30,9 @@ describe('IconButton', () => {
     expect(onClick).toHaveBeenCalledTimes(1)
   })
 
-  it('appends custom className alongside the base classes', () => {
+  it('appends custom className to the rendered button', () => {
     render(<IconButton iconName="edit" aria-label="edit" className="custom-extra" />)
     const btn = screen.getByRole('button', { name: /edit/i })
     expect(btn.className).toContain('custom-extra')
-    expect(btn.className).toContain('text-text-dim')
   })
 })
