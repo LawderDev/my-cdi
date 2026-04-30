@@ -33,7 +33,14 @@
     "noActivitySelected": "Sélectionnez une activité"
   },
   "loading": "Chargement…",
+  "present": "Présents",
+  "emptyHint": "Sélectionnez des élèves et enregistrez leur présence",
+  "row": {
+    "edit": "Modifier",
+    "delete": "Supprimer"
+  },
   "period": {
+    "all": "Toute la journée",
     "matin": "Matin",
     "aprem": "Après-midi"
   },

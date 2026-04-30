@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Table, TableBody } from '@mui/material'
+import { I18nextProvider } from 'react-i18next'
+import i18n from '@shared/i18n/config'
 import { JournalEntryRow } from '../JournalEntryRow'
 import { ActivityType } from '@types'
 import type { JournalEntryViewModel } from '@frequentation/types'
@@ -10,7 +11,7 @@ const STUDENT_ID = 7
 
 const entry: JournalEntryViewModel = {
   id: ENTRY_ID,
-  startsAt: '2026-04-01T09:00:00.000Z',
+  startsAt: '2026-04-01T09:00:00.000',
   activity: ActivityType.WORK,
   student: {
     id: STUDENT_ID,
@@ -26,32 +27,53 @@ const entry: JournalEntryViewModel = {
 
 function renderRow(props: Partial<Parameters<typeof JournalEntryRow>[0]> = {}) {
   return render(
-    <Table>
-      <TableBody>
-        <JournalEntryRow
-          entry={entry}
-          selected={false}
-          onToggleSelection={vi.fn()}
-          onEdit={vi.fn()}
-          onDelete={vi.fn()}
-          {...props}
-        />
-      </TableBody>
-    </Table>
+    <I18nextProvider i18n={i18n}>
+      <JournalEntryRow
+        entry={entry}
+        selected={false}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+        {...props}
+      />
+    </I18nextProvider>
   )
 }
 
 describe('JournalEntryRow', () => {
-  it('renders student name and activity label', () => {
+  it('renders student name, class, time, and activity label', () => {
     renderRow()
     expect(screen.getByText('Jean Dupont')).toBeInTheDocument()
+    expect(screen.getByText('3ème A')).toBeInTheDocument()
     expect(screen.getByText('Travail')).toBeInTheDocument()
+    expect(screen.getByText('09:00')).toBeInTheDocument()
   })
 
-  it('forwards selection toggle', () => {
-    const onToggleSelection = vi.fn()
-    renderRow({ onToggleSelection })
-    fireEvent.click(screen.getByRole('checkbox'))
-    expect(onToggleSelection).toHaveBeenCalledWith(ENTRY_ID)
+  it('clicking the row triggers onEdit', () => {
+    const onEdit = vi.fn()
+    const { container } = renderRow({ onEdit })
+    const row = container.querySelector('[role="row"]')
+    if (!row) {
+      throw new Error('Row not found')
+    }
+    fireEvent.click(row)
+    expect(onEdit).toHaveBeenCalled()
+  })
+
+  it('clicking the delete IconButton triggers onDelete and stops propagation', () => {
+    const onEdit = vi.fn()
+    const onDelete = vi.fn()
+    renderRow({ onEdit, onDelete })
+    fireEvent.click(screen.getByRole('button', { name: /supprimer/i }))
+    expect(onDelete).toHaveBeenCalledTimes(1)
+    expect(onEdit).not.toHaveBeenCalled()
+  })
+
+  it('clicking the edit IconButton triggers onEdit and stops propagation', () => {
+    const onEdit = vi.fn()
+    renderRow({ onEdit })
+    fireEvent.click(screen.getByRole('button', { name: /modifier/i }))
+    // It is called once via the button click; the row click handler is also onEdit but
+    // stopPropagation prevents double-firing.
+    expect(onEdit).toHaveBeenCalledTimes(1)
   })
 })

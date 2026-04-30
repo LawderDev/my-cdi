@@ -1,18 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { I18nextProvider } from 'react-i18next'
+import i18n from '@shared/i18n/config'
 import type { ReactNode } from 'react'
 import { JournalEntryList } from '../JournalEntryList'
 import { ActivityType } from '@types'
-import '@shared/i18n/config'
 
 const STUDENT_ID = 7
 
-function withQuery(ui: ReactNode) {
+function withProviders(ui: ReactNode) {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } }
   })
-  return <QueryClientProvider client={client}>{ui}</QueryClientProvider>
+  return (
+    <I18nextProvider i18n={i18n}>
+      <QueryClientProvider client={client}>{ui}</QueryClientProvider>
+    </I18nextProvider>
+  )
 }
 
 describe('JournalEntryList', () => {
@@ -48,12 +53,8 @@ describe('JournalEntryList', () => {
     })
   })
 
-  it('renders entries for the selected date', async () => {
-    render(
-      withQuery(
-        <JournalEntryList selectedDate="2026-04-01" onAddClick={vi.fn()} onEditEntry={vi.fn()} />
-      )
-    )
+  it('renders attendance rows for the selected date', async () => {
+    render(withProviders(<JournalEntryList selectedDate="2026-04-01" onEditEntry={vi.fn()} />))
     await waitFor(() => expect(screen.getByText('Jean Dupont')).toBeInTheDocument())
   })
 })

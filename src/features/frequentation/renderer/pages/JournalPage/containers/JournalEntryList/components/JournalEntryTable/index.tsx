@@ -1,1 +1,0 @@
-export { JournalEntryTable } from './JournalEntryTable'

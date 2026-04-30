@@ -13,7 +13,6 @@ export function JournalPage() {
     selectedDate,
     setSelectedDate,
     isAddDialogOpen,
-    openAddDialog,
     closeAddDialog,
     editingEntry,
     editingActivity,
@@ -33,11 +32,7 @@ export function JournalPage() {
 
       <JournalDateNavigator selectedDate={selectedDate} onSelectedDateChange={setSelectedDate} />
 
-      <JournalEntryList
-        selectedDate={selectedDate}
-        onAddClick={openAddDialog}
-        onEditEntry={startEditing}
-      />
+      <JournalEntryList selectedDate={selectedDate} onEditEntry={startEditing} />
 
       {isAddDialogOpen ? (
         <JournalEntryForm selectedDate={selectedDate} onSubmitted={closeAddDialog} />
