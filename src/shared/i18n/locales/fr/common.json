@@ -20,5 +20,10 @@
     "journal": "Journal",
     "students": "Élèves",
     "statistics": "Statistiques"
+  },
+  "statistics": {
+    "title": "Statistiques",
+    "comingSoon": "Cette fonctionnalité est en cours de développement",
+    "description": "Les statistiques d'utilisation du CDI seront bientôt disponibles ici."
   }
 }

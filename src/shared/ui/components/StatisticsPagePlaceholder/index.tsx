@@ -1,0 +1,1 @@
+export { StatisticsPagePlaceholder } from './StatisticsPagePlaceholder'
