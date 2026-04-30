@@ -1,51 +1,24 @@
-import { Box, Paper, Typography } from '@mui/material'
-import BarChartIcon from '@mui/icons-material/BarChart'
 import { useTranslation } from 'react-i18next'
+import { Card } from '@ui/components/Card'
+import { Icon } from '@ui/components/Icon'
 
-const PLACEHOLDER_ICON_FONT_SIZE_PX = 64
-const PLACEHOLDER_PAPER_MAX_WIDTH_PX = 560
-const PLACEHOLDER_ICON_OPACITY = 0.6
-const PLACEHOLDER_PAPER_PADDING = 6
-const PLACEHOLDER_OUTER_PADDING = 4
-const PLACEHOLDER_ICON_MARGIN_BOTTOM = 2
+const WRAPPER_CLASSES = 'flex justify-center items-center p-6'
+const CARD_CLASSES = 'max-w-[560px] w-full text-center p-12'
+const ICON_CLASSES = 'text-6xl mb-4 opacity-60'
+const TITLE_CLASSES = 'text-2xl font-semibold mb-2'
+const SUBTITLE_CLASSES = 'text-text-dim mb-2'
+const DESCRIPTION_CLASSES = 'text-sm text-text-dim'
 
 export function StatisticsPagePlaceholder() {
   const { t } = useTranslation('common')
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        p: PLACEHOLDER_OUTER_PADDING
-      }}
-    >
-      <Paper
-        elevation={2}
-        sx={{
-          p: PLACEHOLDER_PAPER_PADDING,
-          textAlign: 'center',
-          maxWidth: PLACEHOLDER_PAPER_MAX_WIDTH_PX,
-          width: '100%'
-        }}
-      >
-        <BarChartIcon
-          sx={{
-            fontSize: PLACEHOLDER_ICON_FONT_SIZE_PX,
-            mb: PLACEHOLDER_ICON_MARGIN_BOTTOM,
-            opacity: PLACEHOLDER_ICON_OPACITY
-          }}
-        />
-        <Typography variant="h4" component="h1" gutterBottom>
-          {t('statistics.title')}
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-          {t('statistics.comingSoon')}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {t('statistics.description')}
-        </Typography>
-      </Paper>
-    </Box>
+    <div className={WRAPPER_CLASSES}>
+      <Card padding="none" className={CARD_CLASSES}>
+        <Icon name="bar_chart" className={ICON_CLASSES} />
+        <h1 className={TITLE_CLASSES}>{t('statistics.title')}</h1>
+        <p className={SUBTITLE_CLASSES}>{t('statistics.comingSoon')}</p>
+        <p className={DESCRIPTION_CLASSES}>{t('statistics.description')}</p>
+      </Card>
+    </div>
   )
 }

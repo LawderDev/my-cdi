@@ -52,8 +52,9 @@ describe('ConfirmDialog', () => {
     expect(screen.getByRole('button', { name: 'Garder' })).toBeInTheDocument()
   })
 
-  it('renders the confirm button with error color when destructive', () => {
+  it('renders the confirm button with the danger variant when destructive', () => {
     renderDialog({ destructive: true, confirmLabel: 'Supprimer' })
-    expect(screen.getByRole('button', { name: 'Supprimer' })).toHaveClass(/MuiButton-colorError/)
+    const confirmBtn = screen.getByRole('button', { name: 'Supprimer' })
+    expect(confirmBtn.className).toContain('bg-danger-bg')
   })
 })

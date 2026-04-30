@@ -1,12 +1,6 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle
-} from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { Modal } from '@ui/components/Modal'
+import { Button } from '@ui/components/Button'
 import type { ConfirmDialogProps } from './types/ConfirmDialogProps'
 
 export function ConfirmDialog({
@@ -20,24 +14,26 @@ export function ConfirmDialog({
   onClose
 }: ConfirmDialogProps) {
   const { t } = useTranslation('common')
-  const resolvedConfirmLabel = confirmLabel ?? t('app.confirm')
-  const resolvedCancelLabel = cancelLabel ?? t('app.cancel')
-  const confirmColor = destructive ? 'error' : 'primary'
-
+  const resolvedConfirm = confirmLabel ?? t('app.confirm')
+  const resolvedCancel = cancelLabel ?? t('app.cancel')
+  const confirmVariant = destructive ? 'danger' : 'primary'
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText component="div">{message}</DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="inherit">
-          {resolvedCancelLabel}
-        </Button>
-        <Button onClick={onConfirm} color={confirmColor} variant="contained" autoFocus>
-          {resolvedConfirmLabel}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={title}
+      footer={
+        <>
+          <Button variant="secondary" onClick={onClose}>
+            {resolvedCancel}
+          </Button>
+          <Button variant={confirmVariant} onClick={onConfirm} autoFocus>
+            {resolvedConfirm}
+          </Button>
+        </>
+      }
+    >
+      <div className="text-text">{message}</div>
+    </Modal>
   )
 }

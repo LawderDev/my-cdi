@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Typography } from '@mui/material'
 
-const VERSION_OPACITY = 0.7
+const CLASSES = 'font-mono text-xs text-text-dim'
 
 export function AppVersion() {
   const [version, setVersion] = useState<string>('')
@@ -23,9 +22,5 @@ export function AppVersion() {
   if (!version) {
     return null
   }
-  return (
-    <Typography variant="caption" color="text.secondary" sx={{ opacity: VERSION_OPACITY }}>
-      {`v${version}`}
-    </Typography>
-  )
+  return <span className={CLASSES}>{`v${version}`}</span>
 }

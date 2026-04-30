@@ -1,74 +1,36 @@
-import { Box, Button, Paper, Typography } from '@mui/material'
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import { useTranslation } from 'react-i18next'
+import { Button } from '@ui/components/Button'
+import { Card } from '@ui/components/Card'
+import { Icon } from '@ui/components/Icon'
 import type { ErrorFallbackProps } from './types/ErrorFallbackProps'
 
-const ERROR_ICON_FONT_SIZE_PX = 48
-const FALLBACK_PAPER_MAX_WIDTH_PX = 600
-const FALLBACK_PAPER_PADDING = 4
-const FALLBACK_BOX_PADDING = 3
-const FALLBACK_HEADER_GAP = 2
-const FALLBACK_HEADER_MARGIN_BOTTOM = 2
-const FALLBACK_DESCRIPTION_MARGIN_BOTTOM = 3
-const FALLBACK_DETAILS_MARGIN_BOTTOM = 3
-const FALLBACK_PRE_MARGIN_TOP = 1
-const FALLBACK_DETAILS_FONT_SIZE_REM = 0.85
-const FALLBACK_MIN_HEIGHT_VH = 60
+const WRAPPER_CLASSES = 'flex justify-center items-center min-h-[60vh] p-6'
+const CARD_CLASSES = 'max-w-[600px] w-full'
+const HEADER_CLASSES = 'flex items-center gap-3 mb-4'
+const ICON_CLASSES = 'text-danger text-5xl'
+const TITLE_CLASSES = 'text-xl font-semibold'
+const DESCRIPTION_CLASSES = 'text-text mb-5'
+const DETAILS_CLASSES = 'mb-5 font-mono text-xs text-text-dim'
+const PRE_CLASSES = 'whitespace-pre-wrap mt-1'
 
 export function ErrorFallback({ error, onReload }: ErrorFallbackProps) {
   const { t } = useTranslation('common')
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: `${FALLBACK_MIN_HEIGHT_VH}vh`,
-        p: FALLBACK_BOX_PADDING
-      }}
-    >
-      <Paper
-        elevation={3}
-        sx={{ p: FALLBACK_PAPER_PADDING, maxWidth: FALLBACK_PAPER_MAX_WIDTH_PX, width: '100%' }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: FALLBACK_HEADER_GAP,
-            mb: FALLBACK_HEADER_MARGIN_BOTTOM
-          }}
-        >
-          <ErrorOutlineIcon color="error" sx={{ fontSize: ERROR_ICON_FONT_SIZE_PX }} />
-          <Typography variant="h5" component="h1">
-            {t('errorBoundary.title')}
-          </Typography>
-        </Box>
-        <Typography
-          variant="body1"
-          color="text.secondary"
-          sx={{ mb: FALLBACK_DESCRIPTION_MARGIN_BOTTOM }}
-        >
-          {t('errorBoundary.description')}
-        </Typography>
-        <Box
-          component="details"
-          sx={{
-            mb: FALLBACK_DETAILS_MARGIN_BOTTOM,
-            fontFamily: 'monospace',
-            fontSize: `${FALLBACK_DETAILS_FONT_SIZE_REM}rem`,
-            color: 'text.secondary'
-          }}
-        >
+    <div className={WRAPPER_CLASSES}>
+      <Card className={CARD_CLASSES}>
+        <div className={HEADER_CLASSES}>
+          <Icon name="error_outline" className={ICON_CLASSES} />
+          <h1 className={TITLE_CLASSES}>{t('errorBoundary.title')}</h1>
+        </div>
+        <p className={DESCRIPTION_CLASSES}>{t('errorBoundary.description')}</p>
+        <details className={DETAILS_CLASSES}>
           <summary>{t('errorBoundary.details')}</summary>
-          <Box component="pre" sx={{ whiteSpace: 'pre-wrap', mt: FALLBACK_PRE_MARGIN_TOP }}>
-            {error.message}
-          </Box>
-        </Box>
-        <Button onClick={onReload} variant="contained" color="primary">
+          <pre className={PRE_CLASSES}>{error.message}</pre>
+        </details>
+        <Button variant="primary" onClick={onReload}>
           {t('errorBoundary.reload')}
         </Button>
-      </Paper>
-    </Box>
+      </Card>
+    </div>
   )
 }
