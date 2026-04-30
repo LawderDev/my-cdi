@@ -1,6 +1,7 @@
-import type { ChangeEvent, MouseEvent } from 'react'
+import type { MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
+import Checkbox from '@mui/material/Checkbox'
 import { IconButton } from '@ui/components/IconButton'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 import { StudentAvatar } from '@student/components/StudentAvatar'
@@ -16,7 +17,6 @@ interface StudentTableRowProps {
 
 const NUMERIC_FONT_SIZE_PX = 12
 const NUMERIC_FONT_WEIGHT = 600
-const CHECKBOX_STYLE = { accentColor: 'var(--accent)' } as const
 const VISITS_PLACEHOLDER = '—'
 
 export function StudentTableRow({
@@ -28,12 +28,11 @@ export function StudentTableRow({
 }: StudentTableRowProps) {
   const { t } = useTranslation('common')
 
-  function handleCheckboxChange(event: ChangeEvent<HTMLInputElement>) {
-    event.stopPropagation()
+  function handleCheckboxChange() {
     onToggleSelection(student.id)
   }
 
-  function handleCheckboxClick(event: MouseEvent<HTMLInputElement>) {
+  function handleCheckboxClick(event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation()
   }
 
@@ -50,12 +49,17 @@ export function StudentTableRow({
   return (
     <tr data-selected={selected}>
       <td>
-        <input
-          type="checkbox"
+        <Checkbox
           checked={selected}
           onChange={handleCheckboxChange}
           onClick={handleCheckboxClick}
-          style={CHECKBOX_STYLE}
+          size="small"
+          aria-label={t('app.select')}
+          sx={{
+            color: 'var(--border-light)',
+            p: 0.5,
+            '&.Mui-checked': { color: 'var(--accent)' }
+          }}
         />
       </td>
       <td>

@@ -12,6 +12,7 @@
     "close": "Fermer",
     "search": "Rechercher",
     "noResults": "Aucun résultat",
+    "select": "Sélectionner",
     "selectAll": "Tout sélectionner",
     "deselectAll": "Tout désélectionner",
     "selected": "{{count}} sélectionné(s)",
