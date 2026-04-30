@@ -10,6 +10,8 @@ import {
 import { useTranslation } from 'react-i18next'
 import { StudentTableRow } from '../StudentTableRow'
 import { tableContainerStyles, headerCellStyles } from './StudentTable.styles'
+import { buildNextSortConfig } from './helpers/buildNextSortConfig'
+import { renderSortIndicator } from './helpers/renderSortIndicator'
 import type { StudentViewModel, StudentSortConfig, StudentSortField } from '@student/types'
 
 interface StudentTableProps {
@@ -23,24 +25,6 @@ interface StudentTableProps {
 }
 
 const SORT_COLUMNS: readonly StudentSortField[] = ['nom', 'prenom', 'classe', 'ine']
-const SORT_INDICATOR_ASC = ' ↑'
-const SORT_INDICATOR_DESC = ' ↓'
-
-function buildNextSortConfig(
-  current: StudentSortConfig,
-  field: StudentSortField
-): StudentSortConfig {
-  const isCurrentField = current.field === field
-  const direction = isCurrentField && current.direction === 'asc' ? 'desc' : 'asc'
-  return { field, direction }
-}
-
-function renderSortIndicator(current: StudentSortConfig, field: StudentSortField): string {
-  if (current.field !== field) {
-    return ''
-  }
-  return current.direction === 'asc' ? SORT_INDICATOR_ASC : SORT_INDICATOR_DESC
-}
 
 export function StudentTable({
   students,
