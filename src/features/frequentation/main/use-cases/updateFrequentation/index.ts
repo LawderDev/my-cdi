@@ -1,0 +1,1 @@
+export { updateFrequentation } from './updateFrequentation'
