@@ -6,6 +6,7 @@ import { FrequentationGatewayDrizzle } from '../frequentation.gateway.drizzle'
 
 const NONEXISTENT_ID = 999
 const EXPECTED_TWO = 2
+const SECOND_STUDENT_ID = 2
 
 function createTestDb(): { sqlite: Database.Database; db: ReturnType<typeof drizzle> } {
   const sqlite = new Database(':memory:')
@@ -102,7 +103,7 @@ describe('FrequentationGatewayDrizzle', () => {
       await gateway.create({
         startsAt: '2026-01-15T10:00:00.000Z',
         activity: ActivityType.READING,
-        studentId: 2
+        studentId: SECOND_STUDENT_ID
       })
       const results = await gateway.getAll()
       expect(results).toHaveLength(EXPECTED_TWO)
@@ -120,7 +121,7 @@ describe('FrequentationGatewayDrizzle', () => {
       await gateway.create({
         startsAt: '2026-01-15T10:00:00.000Z',
         activity: ActivityType.READING,
-        studentId: 2
+        studentId: SECOND_STUDENT_ID
       })
       const results = await gateway.getByStudentId(1)
       expect(results).toHaveLength(1)
@@ -138,7 +139,7 @@ describe('FrequentationGatewayDrizzle', () => {
       await gateway.create({
         startsAt: '2026-01-20T10:00:00.000Z',
         activity: ActivityType.READING,
-        studentId: 2
+        studentId: SECOND_STUDENT_ID
       })
       const results = await gateway.getByDateRange('2026-01-15', '2026-01-15')
       expect(results).toHaveLength(1)
@@ -197,7 +198,7 @@ describe('FrequentationGatewayDrizzle', () => {
       await gateway.create({
         startsAt: '2026-01-15T11:00:00.000Z',
         activity: ActivityType.COMPUTER,
-        studentId: 2
+        studentId: SECOND_STUDENT_ID
       })
       const count = await gateway.deleteByStudentId(1)
       expect(count).toBe(EXPECTED_TWO)
@@ -214,7 +215,7 @@ describe('FrequentationGatewayDrizzle', () => {
       await gateway.create({
         startsAt: '2026-01-15T10:00:00.000Z',
         activity: ActivityType.READING,
-        studentId: 2
+        studentId: SECOND_STUDENT_ID
       })
       const result = await gateway.count()
       expect(result).toBe(EXPECTED_TWO)

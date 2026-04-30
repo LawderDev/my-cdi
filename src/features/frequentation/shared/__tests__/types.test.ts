@@ -11,6 +11,7 @@ import type {
 const STUDENT_ID_1 = 1
 const STUDENT_ID_2 = 2
 const FREQUENTATION_ID_1 = 1
+const EXPECTED_BATCH_LENGTH = 2
 
 describe('Frequentation shared types', () => {
   it('CreateFrequentationDto has required fields', () => {
@@ -39,7 +40,7 @@ describe('Frequentation shared types', () => {
         }
       ]
     }
-    expect(batch.frequentations).toHaveLength(2)
+    expect(batch.frequentations).toHaveLength(EXPECTED_BATCH_LENGTH)
   })
 
   it('FrequentationResponseDto has all fields', () => {

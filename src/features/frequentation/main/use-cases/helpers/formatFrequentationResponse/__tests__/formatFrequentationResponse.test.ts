@@ -3,6 +3,8 @@ import { ActivityType } from '@types'
 import { formatFrequentationResponse } from '../formatFrequentationResponse'
 import type { FrequentationWithStudentEntity } from '@frequentation/entities/frequentation'
 
+const SECOND_ID = 2
+
 describe('formatFrequentationResponse', () => {
   it('maps FrequentationWithStudentEntity to FrequentationResponseDto', () => {
     const entity: FrequentationWithStudentEntity = {
@@ -35,10 +37,10 @@ describe('formatFrequentationResponse', () => {
 
   it('formats studentName as "prenom nom"', () => {
     const entity: FrequentationWithStudentEntity = {
-      id: 2,
+      id: SECOND_ID,
       startsAt: '2026-01-15T09:00:00.000Z',
       activity: ActivityType.READING,
-      studentId: 2,
+      studentId: SECOND_ID,
       studentNom: 'Martin',
       studentPrenom: 'Marie',
       studentClasse: '5ème B',

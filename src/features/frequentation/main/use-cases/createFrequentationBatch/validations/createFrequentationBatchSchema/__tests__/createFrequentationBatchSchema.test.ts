@@ -1,17 +1,19 @@
 import { describe, it, expect } from 'vitest'
-import {
-  createFrequentationBatchSchema,
-  MAX_BATCH_SIZE
-} from '../createFrequentationBatchSchema'
+import { createFrequentationBatchSchema, MAX_BATCH_SIZE } from '../createFrequentationBatchSchema'
 
 const OVER_MAX_SIZE = MAX_BATCH_SIZE + 1
+const SECOND_STUDENT_ID = 2
 
 describe('createFrequentationBatchSchema', () => {
   it('validates a valid batch', () => {
     const input = {
       frequentations: [
         { startsAt: '2026-01-15T09:00:00.000Z', activity: 'work', studentId: 1 },
-        { startsAt: '2026-01-15T10:00:00.000Z', activity: 'reading', studentId: 2 }
+        {
+          startsAt: '2026-01-15T10:00:00.000Z',
+          activity: 'reading',
+          studentId: SECOND_STUDENT_ID
+        }
       ]
     }
     const result = createFrequentationBatchSchema.safeParse(input)

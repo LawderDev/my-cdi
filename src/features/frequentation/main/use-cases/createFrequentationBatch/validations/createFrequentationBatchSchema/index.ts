@@ -1,4 +1,1 @@
-export {
-  createFrequentationBatchSchema,
-  MAX_BATCH_SIZE
-} from './createFrequentationBatchSchema'
+export { createFrequentationBatchSchema, MAX_BATCH_SIZE } from './createFrequentationBatchSchema'

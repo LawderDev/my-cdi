@@ -6,6 +6,7 @@ import type { FrequentationWithStudentEntity } from '@frequentation/entities/fre
 import type { DateRangeDto } from '@frequentation-shared'
 
 const EXPECTED_TWO = 2
+const SECOND_ID = 2
 
 const ENTITY_ONE: FrequentationWithStudentEntity = {
   id: 1,
@@ -21,10 +22,10 @@ const ENTITY_ONE: FrequentationWithStudentEntity = {
 }
 
 const ENTITY_TWO: FrequentationWithStudentEntity = {
-  id: 2,
+  id: SECOND_ID,
   startsAt: '2026-01-15T10:00:00.000Z',
   activity: ActivityType.READING,
-  studentId: 2,
+  studentId: SECOND_ID,
   studentNom: 'Martin',
   studentPrenom: 'Marie',
   studentClasse: '5ème B',

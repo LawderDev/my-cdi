@@ -4,6 +4,9 @@ import { createFrequentationBatch } from '../createFrequentationBatch'
 import type { FrequentationGateway } from '@frequentation/gateways/frequentation'
 import type { FrequentationEntity } from '@frequentation/entities/frequentation'
 
+const SECOND_STUDENT_ID = 2
+const EXPECTED_TWO = 2
+
 const VALID_ENTITY: FrequentationEntity = {
   id: 1,
   startsAt: '2026-01-15T09:00:00.000Z',
@@ -34,12 +37,16 @@ describe('createFrequentationBatch', () => {
     const result = await createFrequentationBatch(gateway, {
       frequentations: [
         { startsAt: '2026-01-15T09:00:00.000Z', activity: ActivityType.WORK, studentId: 1 },
-        { startsAt: '2026-01-15T10:00:00.000Z', activity: ActivityType.READING, studentId: 2 }
+        {
+          startsAt: '2026-01-15T10:00:00.000Z',
+          activity: ActivityType.READING,
+          studentId: SECOND_STUDENT_ID
+        }
       ]
     })
     expect(result.success).toBe(true)
     if (result.success) {
-      expect(result.data.created).toHaveLength(2)
+      expect(result.data.created).toHaveLength(EXPECTED_TWO)
       expect(result.data.errors).toHaveLength(0)
     }
   })
@@ -69,7 +76,11 @@ describe('createFrequentationBatch', () => {
     const result = await createFrequentationBatch(gateway, {
       frequentations: [
         { startsAt: '2026-01-15T09:00:00.000Z', activity: ActivityType.WORK, studentId: 1 },
-        { startsAt: '2026-01-15T10:00:00.000Z', activity: ActivityType.WORK, studentId: 2 }
+        {
+          startsAt: '2026-01-15T10:00:00.000Z',
+          activity: ActivityType.WORK,
+          studentId: SECOND_STUDENT_ID
+        }
       ]
     })
     expect(result.success).toBe(true)
