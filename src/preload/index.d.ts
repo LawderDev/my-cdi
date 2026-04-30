@@ -13,6 +13,14 @@ import type {
   FrequentationResponseDto,
   JournalEntryDto
 } from '@frequentation-shared'
+import type {
+  UpdateAvailableInfo,
+  DownloadProgressInfo,
+  UpdateDownloadedInfo,
+  UpdateErrorInfo
+} from '@shared/types/updater'
+
+export type Unsubscribe = () => void
 
 export interface StudentApi {
   create: (input: CreateStudentDto) => Promise<IpcResult<StudentResponseDto>>
@@ -38,10 +46,21 @@ export interface FrequentationApi {
   }) => Promise<IpcResult<JournalEntryDto[]>>
 }
 
+export interface UpdaterAPI {
+  onUpdateAvailable: (listener: (info: UpdateAvailableInfo) => void) => Unsubscribe
+  onUpdateNotAvailable: (listener: () => void) => Unsubscribe
+  onDownloadProgress: (listener: (progress: DownloadProgressInfo) => void) => Unsubscribe
+  onUpdateDownloaded: (listener: (info: UpdateDownloadedInfo) => void) => Unsubscribe
+  onUpdateError: (listener: (error: UpdateErrorInfo) => void) => Unsubscribe
+  checkForUpdates: () => Promise<unknown>
+  quitAndInstall: () => Promise<void>
+}
+
 export interface ElectronAPI {
   student: StudentApi
   frequentation: FrequentationApi
   getAppVersion: () => Promise<string>
+  updater: UpdaterAPI
 }
 
 declare global {
