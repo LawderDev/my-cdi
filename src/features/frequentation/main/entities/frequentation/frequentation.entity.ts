@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core'
 import { z } from 'zod'
 import { ActivityType } from '../../../../../shared/types'
-import { studentTable } from '../../../../student/main/entities/student'
+import { studentTable } from '@student/entities/student'
 
 export const frequentationTable = sqliteTable(
   'frequentation',
