@@ -1,0 +1,1 @@
+export { useBatchUpdateActivity } from './useBatchUpdateActivity'
