@@ -1,6 +1,7 @@
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core'
 import { z } from 'zod'
 import { ActivityType } from '../../../../../shared/types'
+import { studentTable } from '../../../../student/main/entities/student'
 
 export const frequentationTable = sqliteTable(
   'frequentation',
@@ -16,7 +17,9 @@ export const frequentationTable = sqliteTable(
         ActivityType.OTHER
       ]
     }).notNull(),
-    studentId: integer('student_id').notNull(),
+    studentId: integer('student_id')
+      .notNull()
+      .references(() => studentTable.id, { onDelete: 'cascade' }),
     createdAt: text('created_at')
       .notNull()
       .$defaultFn(() => new Date().toISOString()),
