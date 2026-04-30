@@ -58,11 +58,27 @@ export default tseslint.config(
       curly: ['error', 'all'],
       'nonblock-statement-body-position': ['error', 'below'],
       'import/no-cycle': 'error',
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@mui/icons-material',
+              message:
+                'Import per-icon (e.g. `import EditIcon from "@mui/icons-material/Edit"`) — barrel imports break tree-shaking.'
+            }
+          ]
+        }
+      ],
       'no-restricted-syntax': [
         'error',
         {
           selector: "TSAsExpression > TSTypeReference[typeName.name!='const']",
           message: 'Type assertions (as Type) are forbidden. Use type guards or proper typing.'
+        },
+        {
+          selector: 'TSAsExpression > TSArrayType',
+          message: 'Type assertions to array types are forbidden. Type the source instead.'
         },
         {
           selector: 'TSAsExpression > TSUnknownKeyword',

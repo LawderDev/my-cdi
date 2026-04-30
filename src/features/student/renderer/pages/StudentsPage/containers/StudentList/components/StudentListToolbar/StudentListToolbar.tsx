@@ -1,5 +1,7 @@
 import { Box, TextField, InputAdornment, IconButton, Button } from '@mui/material'
-import { Search, Clear, Add } from '@mui/icons-material'
+import Search from '@mui/icons-material/Search'
+import Clear from '@mui/icons-material/Clear'
+import Add from '@mui/icons-material/Add'
 import { useTranslation } from 'react-i18next'
 import type { ChangeEvent } from 'react'
 import type { SxProps, Theme } from '@mui/material'
@@ -10,7 +12,6 @@ interface StudentListToolbarProps {
   onSearchChange: (value: string) => void
   onClearSearch: () => void
   onAddStudent: () => void
-  onImportCsv?: () => void
 }
 
 const TOOLBAR_BOTTOM_MARGIN = 2
@@ -38,8 +39,7 @@ export function StudentListToolbar({
   searchTerm,
   onSearchChange,
   onClearSearch,
-  onAddStudent,
-  onImportCsv
+  onAddStudent
 }: StudentListToolbarProps) {
   const { t } = useTranslation('student')
 
@@ -75,7 +75,7 @@ export function StudentListToolbar({
         <Button variant="contained" startIcon={<Add />} onClick={onAddStudent}>
           {t('add')}
         </Button>
-        <StudentCsvImportButton onImported={onImportCsv} />
+        <StudentCsvImportButton />
       </Box>
     </Box>
   )

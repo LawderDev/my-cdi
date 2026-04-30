@@ -1,5 +1,6 @@
 import { TableCell, TableRow, Checkbox, IconButton } from '@mui/material'
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 import type { MouseEvent } from 'react'
 import type { StudentViewModel } from '@student/types'
 
