@@ -10,6 +10,7 @@
     "src/features/*/renderer/**/*.ts",
     "src/features/*/renderer/**/*.tsx"
   ],
+  "exclude": ["src/shared/db/**/*"],
   "compilerOptions": {
     "strict": true,
     "noUncheckedIndexedAccess": true,

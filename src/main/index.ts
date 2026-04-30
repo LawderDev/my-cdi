@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { createDbConnection, closeDbConnection } from '@shared/db/connection'
@@ -44,8 +44,8 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  createDbConnection()
-  initializeModules(DATABASE_PATH)
+  createDbConnection(DATABASE_PATH)
+  initializeModules(ipcMain)
 
   createWindow()
 })

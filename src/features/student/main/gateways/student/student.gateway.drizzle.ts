@@ -7,7 +7,7 @@ import type { CreateStudentDto, UpdateStudentDto } from '@student-shared'
 import { mapStudentRow } from './helpers/mapStudentRow'
 
 export class StudentGatewayDrizzle implements StudentGateway {
-  constructor(private db: BetterSQLite3Database) {}
+  constructor(private db: BetterSQLite3Database<Record<string, unknown>>) {}
 
   async create(studentData: CreateStudentDto): Promise<StudentEntity> {
     const now = new Date().toISOString()
