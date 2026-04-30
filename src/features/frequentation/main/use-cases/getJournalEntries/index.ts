@@ -1,0 +1,1 @@
+export { getJournalEntries } from './getJournalEntries'
