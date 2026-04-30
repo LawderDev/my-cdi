@@ -5,7 +5,14 @@ import { ActivityType } from '@types'
 
 describe('ActivityChip', () => {
   it('renders the activity label', () => {
-    render(<ActivityChip activity={ActivityType.WORK} label="Travail" color="#1976d2" />)
+    render(<ActivityChip activity={ActivityType.WORK} label="Travail" />)
     expect(screen.getByText('Travail')).toBeInTheDocument()
+  })
+
+  it('applies the activity CSS class for color tone', () => {
+    const { container } = render(<ActivityChip activity={ActivityType.WORK} label="Travail" />)
+    const span = container.querySelector('.att-activity')
+    expect(span).not.toBeNull()
+    expect(span?.classList.contains('act-travail')).toBe(true)
   })
 })

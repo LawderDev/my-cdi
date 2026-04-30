@@ -27,11 +27,7 @@ export function JournalEntryRow({
       <TableCell>{entry.student.displayName}</TableCell>
       <TableCell>{entry.student.classe}</TableCell>
       <TableCell>
-        <ActivityChip
-          activity={entry.activity}
-          label={entry.activityLabel}
-          color={entry.activityColor}
-        />
+        <ActivityChip activity={entry.activity} label={entry.activityLabel} />
       </TableCell>
       <TableCell align="right">
         <IconButton onClick={() => onEdit(entry)} aria-label="edit">
