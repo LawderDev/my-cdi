@@ -1,0 +1,1 @@
+export { getJournalPageTitle } from './getJournalPageTitle'
