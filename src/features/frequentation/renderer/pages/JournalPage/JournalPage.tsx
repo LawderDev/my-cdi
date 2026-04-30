@@ -16,6 +16,8 @@ export function JournalPage() {
     openAddDialog,
     closeAddDialog,
     editingEntry,
+    editingActivity,
+    setEditingActivity,
     setEditingEntry,
     closeEditDialog,
     title,
@@ -43,11 +45,12 @@ export function JournalPage() {
         onClose={closeAddDialog}
       />
 
-      {editingEntry && (
+      {editingEntry && editingActivity && (
         <JournalEntryEditDialog
           open
-          currentActivity={editingEntry.activity}
+          activity={editingActivity}
           activities={activityOptions}
+          onActivityChange={setEditingActivity}
           onSubmit={submitEdit}
           onClose={closeEditDialog}
         />

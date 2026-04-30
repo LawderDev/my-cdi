@@ -11,21 +11,39 @@ const ACTIVITIES = [
 ]
 
 describe('JournalEntryEditDialog', () => {
-  it('renders the activity options and submits the new value', () => {
-    const onSubmit = vi.fn()
+  it('forwards radio selection to onActivityChange', () => {
+    const onActivityChange = vi.fn()
     render(
       <I18nextProvider i18n={i18n}>
         <JournalEntryEditDialog
           open
-          currentActivity={ActivityType.WORK}
+          activity={ActivityType.WORK}
           activities={ACTIVITIES}
-          onSubmit={onSubmit}
+          onActivityChange={onActivityChange}
+          onSubmit={vi.fn()}
           onClose={vi.fn()}
         />
       </I18nextProvider>
     )
     fireEvent.click(screen.getByLabelText('Lecture'))
+    expect(onActivityChange).toHaveBeenCalledWith(ActivityType.READING)
+  })
+
+  it('calls onSubmit when the save button is clicked', () => {
+    const onSubmit = vi.fn()
+    render(
+      <I18nextProvider i18n={i18n}>
+        <JournalEntryEditDialog
+          open
+          activity={ActivityType.WORK}
+          activities={ACTIVITIES}
+          onActivityChange={vi.fn()}
+          onSubmit={onSubmit}
+          onClose={vi.fn()}
+        />
+      </I18nextProvider>
+    )
     fireEvent.click(screen.getByRole('button', { name: /enregistrer/i }))
-    expect(onSubmit).toHaveBeenCalledWith(ActivityType.READING)
+    expect(onSubmit).toHaveBeenCalledTimes(1)
   })
 })

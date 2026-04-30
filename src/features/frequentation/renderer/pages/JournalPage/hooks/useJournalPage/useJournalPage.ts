@@ -16,6 +16,7 @@ export function useJournalPage() {
   const [selectedDate, setSelectedDate] = useState<string>(todayIso)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingEntry, setEditingEntryState] = useState<JournalEntryViewModel | null>(null)
+  const [editingActivity, setEditingActivity] = useState<ActivityType | null>(null)
 
   const { allActivities, getLabel } = useActivityLabels()
   const { data: entries } = useJournalEntries({
@@ -38,21 +39,24 @@ export function useJournalPage() {
 
   function setEditingEntry(entry: JournalEntryViewModel) {
     setEditingEntryState(entry)
+    setEditingActivity(entry.activity)
   }
 
   function closeEditDialog() {
     setEditingEntryState(null)
+    setEditingActivity(null)
   }
 
-  function submitEdit(activity: ActivityType) {
-    if (!editingEntry) {
+  function submitEdit() {
+    if (!editingEntry || !editingActivity) {
       return
     }
     updateMutate(
-      { id: editingEntry.id, activity },
+      { id: editingEntry.id, activity: editingActivity },
       {
         onSuccess: () => {
           setEditingEntryState(null)
+          setEditingActivity(null)
         }
       }
     )
@@ -65,6 +69,8 @@ export function useJournalPage() {
     openAddDialog,
     closeAddDialog,
     editingEntry,
+    editingActivity,
+    setEditingActivity,
     setEditingEntry,
     closeEditDialog,
     title,

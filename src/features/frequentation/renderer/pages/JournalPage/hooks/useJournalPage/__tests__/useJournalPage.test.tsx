@@ -79,16 +79,18 @@ describe('useJournalPage', () => {
     expect(result.current.isAddDialogOpen).toBe(false)
   })
 
-  it('manages editing entry', () => {
+  it('manages editing entry and seeds editingActivity from the entry', () => {
     const { result } = renderHook(() => useJournalPage(), { wrapper })
     act(() => {
       result.current.setEditingEntry(sampleEntry)
     })
     expect(result.current.editingEntry).toEqual(sampleEntry)
+    expect(result.current.editingActivity).toBe(ActivityType.WORK)
     act(() => {
       result.current.closeEditDialog()
     })
     expect(result.current.editingEntry).toBeNull()
+    expect(result.current.editingActivity).toBeNull()
   })
 
   it('submitEdit dispatches an update + closes the dialog on success', async () => {
@@ -97,7 +99,10 @@ describe('useJournalPage', () => {
       result.current.setEditingEntry(sampleEntry)
     })
     act(() => {
-      result.current.submitEdit(ActivityType.READING)
+      result.current.setEditingActivity(ActivityType.READING)
+    })
+    act(() => {
+      result.current.submitEdit()
     })
     await waitFor(() => {
       expect(result.current.editingEntry).toBeNull()
@@ -111,7 +116,7 @@ describe('useJournalPage', () => {
   it('submitEdit is a no-op when no entry is being edited', () => {
     const { result } = renderHook(() => useJournalPage(), { wrapper })
     act(() => {
-      result.current.submitEdit(ActivityType.WORK)
+      result.current.submitEdit()
     })
     expect(window.electronAPI.frequentation.update).not.toHaveBeenCalled()
   })
