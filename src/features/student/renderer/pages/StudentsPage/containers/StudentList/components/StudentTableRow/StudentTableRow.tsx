@@ -1,6 +1,8 @@
 import type { ChangeEvent, MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { IconButton } from '@ui/components/IconButton'
+import { MONO_FONT_FAMILY } from '@ui/theme'
 import { StudentAvatar } from '@student/components/StudentAvatar'
 import type { StudentViewModel } from '@student/types'
 
@@ -12,11 +14,8 @@ interface StudentTableRowProps {
   onDelete: (id: number) => void
 }
 
-const NAME_CELL_CLASSES = 'flex items-center gap-2.5'
-const NAME_TEXT_CLASSES = 'td-name'
-const INE_CELL_CLASSES = 'font-mono text-xs text-text-dim'
-const VISITS_CELL_CLASSES = 'font-mono text-xs font-semibold text-text-dim'
-const ACTIONS_WRAPPER_CLASSES = 'td-actions'
+const NUMERIC_FONT_SIZE_PX = 12
+const NUMERIC_FONT_WEIGHT = 600
 const CHECKBOX_STYLE = { accentColor: 'var(--accent)' } as const
 const VISITS_PLACEHOLDER = '—'
 
@@ -49,7 +48,7 @@ export function StudentTableRow({
   }
 
   return (
-    <tr>
+    <tr data-selected={selected}>
       <td>
         <input
           type="checkbox"
@@ -60,19 +59,42 @@ export function StudentTableRow({
         />
       </td>
       <td>
-        <div className={NAME_CELL_CLASSES}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
           <StudentAvatar id={student.id} prenom={student.prenom} nom={student.nom} size="sm" />
-          <span className={NAME_TEXT_CLASSES}>{student.nom}</span>
-        </div>
+          <Box component="span" className="td-name">
+            {student.nom}
+          </Box>
+        </Box>
       </td>
       <td>{student.prenom}</td>
       <td>
-        <span className="td-class">{student.classe}</span>
+        <Box component="span" className="td-class">
+          {student.classe}
+        </Box>
       </td>
-      <td className={INE_CELL_CLASSES}>{student.ine}</td>
-      <td className={VISITS_CELL_CLASSES}>{VISITS_PLACEHOLDER}</td>
+      <Box
+        component="td"
+        sx={{
+          fontFamily: MONO_FONT_FAMILY,
+          fontSize: `${NUMERIC_FONT_SIZE_PX}px`,
+          color: 'var(--text-dim)'
+        }}
+      >
+        {student.ine}
+      </Box>
+      <Box
+        component="td"
+        sx={{
+          fontFamily: MONO_FONT_FAMILY,
+          fontSize: `${NUMERIC_FONT_SIZE_PX}px`,
+          fontWeight: NUMERIC_FONT_WEIGHT,
+          color: 'var(--text-dim)'
+        }}
+      >
+        {VISITS_PLACEHOLDER}
+      </Box>
       <td>
-        <div className={ACTIONS_WRAPPER_CLASSES}>
+        <Box className="td-actions">
           <IconButton iconName="edit" aria-label={t('app.edit')} onClick={handleEditClick} />
           <IconButton
             iconName="delete"
@@ -80,7 +102,7 @@ export function StudentTableRow({
             aria-label={t('app.delete')}
             onClick={handleDeleteClick}
           />
-        </div>
+        </Box>
       </td>
     </tr>
   )

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { useStudentListData } from './hooks/useStudentListData'
 import { useStudentSelection } from './hooks/useStudentSelection'
 import { useDeleteStudent } from '@student/api/useStudentMutations'
@@ -24,11 +25,11 @@ export function StudentList({ onEditStudent, onAddStudent }: StudentListProps) {
   }
 
   if (isLoading) {
-    return <div>{t('app.loading')}</div>
+    return <Box>{t('app.loading')}</Box>
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
       <StudentListToolbar
         searchTerm={searchTerm}
         totalCount={filteredStudents.length}
@@ -54,6 +55,6 @@ export function StudentList({ onEditStudent, onAddStudent }: StudentListProps) {
         sortConfig={sortConfig}
         onSort={setSortConfig}
       />
-    </div>
+    </Box>
   )
 }

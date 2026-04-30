@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { Button } from '@ui/components/Button'
 import { Icon } from '@ui/components/Icon'
 import { StudentCsvImportButton } from '../../containers/StudentCsvImportButton'
@@ -11,15 +12,18 @@ interface StudentListToolbarProps {
   onAddStudent: () => void
 }
 
-const TOOLBAR_CLASSES = 'students-toolbar flex items-center gap-3 mb-5'
-const SEARCH_WRAPPER_CLASSES = 'students-search relative flex-1 max-w-[380px]'
-const SEARCH_INPUT_CLASSES =
-  'w-full h-10 bg-surface border border-border rounded-sm pl-[38px] pr-[14px] text-[13px] outline-none transition-[border] duration-200 focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-bg)]'
-const SEARCH_ICON_CLASSES = 'absolute left-[10px] top-1/2 -translate-y-1/2 text-text-dim text-lg'
-const COUNT_CLASSES = 'students-count text-xs text-text-dim font-medium'
-const SPACER_CLASSES = 'flex-1'
-const SMALL_ICON_FONT_SIZE = 16
-const SMALL_ICON_STYLE = { fontSize: SMALL_ICON_FONT_SIZE } as const
+const SMALL_ICON_FONT_SIZE_PX = 16
+const SMALL_ICON_STYLE = { fontSize: SMALL_ICON_FONT_SIZE_PX } as const
+
+const SEARCH_WRAPPER_MAX_WIDTH_PX = 380
+const SEARCH_INPUT_HEIGHT_PX = 40
+const SEARCH_INPUT_FONT_SIZE_PX = 13
+const SEARCH_INPUT_PADDING_LEFT_PX = 38
+const SEARCH_INPUT_PADDING_RIGHT_PX = 14
+const SEARCH_ICON_LEFT_PX = 10
+const SEARCH_ICON_FONT_SIZE_PX = 18
+const COUNT_FONT_SIZE_PX = 12
+const COUNT_FONT_WEIGHT = 500
 
 export function StudentListToolbar({
   searchTerm,
@@ -34,20 +38,62 @@ export function StudentListToolbar({
   }
 
   return (
-    <div className={TOOLBAR_CLASSES}>
-      <div className={SEARCH_WRAPPER_CLASSES}>
-        <Icon name="search" className={SEARCH_ICON_CLASSES} />
-        <input
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2.5 }}>
+      <Box
+        sx={{
+          position: 'relative',
+          flex: 1,
+          maxWidth: `${SEARCH_WRAPPER_MAX_WIDTH_PX}px`
+        }}
+      >
+        <Icon
+          name="search"
+          style={{
+            position: 'absolute',
+            left: `${SEARCH_ICON_LEFT_PX}px`,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            color: 'var(--text-dim)',
+            fontSize: `${SEARCH_ICON_FONT_SIZE_PX}px`
+          }}
+        />
+        <Box
+          component="input"
           type="text"
           aria-label={t('searchPlaceholder')}
           placeholder={t('searchPlaceholder')}
           value={searchTerm}
           onChange={handleSearchChange}
-          className={SEARCH_INPUT_CLASSES}
+          sx={{
+            width: '100%',
+            height: `${SEARCH_INPUT_HEIGHT_PX}px`,
+            bgcolor: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-sm)',
+            pl: `${SEARCH_INPUT_PADDING_LEFT_PX}px`,
+            pr: `${SEARCH_INPUT_PADDING_RIGHT_PX}px`,
+            fontSize: `${SEARCH_INPUT_FONT_SIZE_PX}px`,
+            outline: 'none',
+            transition: 'border 0.2s',
+            color: 'var(--title)',
+            '&:focus': {
+              borderColor: 'var(--accent)',
+              boxShadow: '0 0 0 3px var(--accent-bg)'
+            }
+          }}
         />
-      </div>
-      <span className={COUNT_CLASSES}>{t('count', { count: totalCount })}</span>
-      <div className={SPACER_CLASSES} />
+      </Box>
+      <Box
+        component="span"
+        sx={{
+          fontSize: `${COUNT_FONT_SIZE_PX}px`,
+          color: 'var(--text-dim)',
+          fontWeight: COUNT_FONT_WEIGHT
+        }}
+      >
+        {t('count', { count: totalCount })}
+      </Box>
+      <Box sx={{ flex: 1 }} />
       <StudentCsvImportButton />
       <Button
         variant="primary"
@@ -56,6 +102,6 @@ export function StudentListToolbar({
       >
         {t('add')}
       </Button>
-    </div>
+    </Box>
   )
 }

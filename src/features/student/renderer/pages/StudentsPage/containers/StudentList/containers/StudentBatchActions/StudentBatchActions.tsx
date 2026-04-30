@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { Button } from '@ui/components/Button'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useBatchDelete } from './hooks/useBatchDelete'
@@ -15,10 +16,8 @@ interface StudentBatchActionsProps {
 }
 
 const NO_SELECTION = 0
-
-const STRIP_CLASSES =
-  'flex items-center gap-3 px-3 py-2 bg-surface border border-border rounded-sm text-xs text-text-dim'
-const COUNT_CLASSES = 'font-medium'
+const STRIP_FONT_SIZE_PX = 12
+const COUNT_FONT_WEIGHT = 500
 
 export function StudentBatchActions({
   selectedIds,
@@ -66,7 +65,20 @@ export function StudentBatchActions({
 
   return (
     <>
-      <div className={STRIP_CLASSES}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1.5,
+          px: 1.5,
+          py: 1,
+          bgcolor: 'var(--surface)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-sm)',
+          fontSize: `${STRIP_FONT_SIZE_PX}px`,
+          color: 'var(--text-dim)'
+        }}
+      >
         <Button
           variant="secondary"
           onClick={handleSelectToggle}
@@ -78,9 +90,11 @@ export function StudentBatchActions({
           {tCommon('app.batchDelete')}
         </Button>
         {hasSelection ? (
-          <span className={COUNT_CLASSES}>{formatBatchMessage(selectedCount)}</span>
+          <Box component="span" sx={{ fontWeight: COUNT_FONT_WEIGHT }}>
+            {formatBatchMessage(selectedCount)}
+          </Box>
         ) : null}
-      </div>
+      </Box>
 
       <ConfirmDialog
         open={showConfirm}
