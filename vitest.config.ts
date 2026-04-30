@@ -13,11 +13,11 @@ export default defineConfig({
       { find: '@student-shared', replacement: resolve('src/features/student/shared') },
       { find: '@frequentation-shared', replacement: resolve('src/features/frequentation/shared') },
       {
-        find: /^@student\/(types|helpers|api|validations|pages|components|hooks)(.*)$/,
+        find: /^@student\/(types|helpers|api|validations|pages|components|hooks|containers|routes)(.*)$/,
         replacement: resolve('src/features/student/renderer') + '/$1$2'
       },
       {
-        find: /^@frequentation\/(types|helpers|api|validations|pages|components|hooks)(.*)$/,
+        find: /^@frequentation\/(types|helpers|api|validations|pages|components|hooks|containers|routes)(.*)$/,
         replacement: resolve('src/features/frequentation/renderer') + '/$1$2'
       },
       { find: /^@student(\/.*)?$/, replacement: resolve('src/features/student/main') + '$1' },
