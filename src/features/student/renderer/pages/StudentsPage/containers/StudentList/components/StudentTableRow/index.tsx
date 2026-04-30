@@ -1,0 +1,1 @@
+export { StudentTableRow } from './StudentTableRow'
