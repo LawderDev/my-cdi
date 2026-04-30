@@ -1,21 +1,51 @@
+import { Suspense } from 'react'
 import { Routes, Route } from 'react-router'
-import { ROUTES } from '@shared/lib/routes'
-import { StudentsPage } from '@student/pages/StudentsPage'
-import { JournalPage } from '@frequentation/pages/JournalPage'
-import { Layout } from './Layout'
+import { CircularProgress, Box } from '@mui/material'
+import { ROUTES } from '@lib/routes'
+import { AppShell } from '@ui/components/AppShell'
+import JournalPage from './JournalPage'
+import StudentsPage from './StudentsPage'
+import StatisticsPage from './StatisticsPage'
+
+const FALLBACK_PADDING = 4
+
+function RouteSuspenseFallback() {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', p: FALLBACK_PADDING }}>
+      <CircularProgress />
+    </Box>
+  )
+}
 
 export function AppRoutes() {
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route path={ROUTES.JOURNAL} element={<JournalPage />} />
-        <Route path={ROUTES.STUDENTS} element={<StudentsPage />} />
-        <Route path={ROUTES.STATISTICS} element={<StatisticsPlaceholder />} />
+      <Route element={<AppShell />}>
+        <Route
+          path={ROUTES.JOURNAL}
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <JournalPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.STUDENTS}
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <StudentsPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.STATISTICS}
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <StatisticsPage />
+            </Suspense>
+          }
+        />
       </Route>
     </Routes>
   )
-}
-
-function StatisticsPlaceholder() {
-  return <div>Statistiques — en cours de développement</div>
 }
