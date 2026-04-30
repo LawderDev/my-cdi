@@ -1,4 +1,5 @@
 import { Outlet, useNavigate } from 'react-router'
+import Box from '@mui/material/Box'
 import { ROUTES } from '@lib/routes'
 import { Sidebar } from '../Sidebar'
 import { Header } from '../Header'
@@ -10,6 +11,9 @@ import type { KeyboardShortcut } from '../../hooks/useKeyboardShortcuts'
 const SHORTCUT_KEY_JOURNAL = '1'
 const SHORTCUT_KEY_STATISTICS = '2'
 const SHORTCUT_KEY_STUDENTS = '3'
+
+const MAIN_PADDING_X = 3.5
+const MAIN_PADDING_Y = 3
 
 export function AppShell() {
   const navigate = useNavigate()
@@ -23,15 +27,18 @@ export function AppShell() {
   useKeyboardShortcuts(shortcuts)
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', overflow: 'hidden' }}>
         <Header />
         <UpdateBanner />
-        <main className="flex-1 overflow-y-auto px-7 py-6">
+        <Box
+          component="main"
+          sx={{ flex: 1, overflowY: 'auto', px: MAIN_PADDING_X, py: MAIN_PADDING_Y }}
+        >
           <Outlet />
-        </main>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   )
 }
