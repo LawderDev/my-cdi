@@ -40,6 +40,7 @@
     "delete": "Supprimer"
   },
   "period": {
+    "label": "Filtrer par période",
     "all": "Toute la journée",
     "matin": "Matin",
     "aprem": "Après-midi"

@@ -1,5 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import type { SelectChangeEvent } from '@mui/material/Select'
 import { Icon } from '@ui/components/Icon'
 import type { EntryPeriodFilter } from '../../helpers/filterEntriesByPeriod'
 
@@ -29,7 +32,7 @@ export function JournalEntryToolbar({
 }: JournalEntryToolbarProps) {
   const { t } = useTranslation('frequentation')
 
-  function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
+  function handleChange(event: SelectChangeEvent<EntryPeriodFilter>) {
     const next = event.target.value
     if (isPeriodFilter(next)) {
       onPeriodChange(next)
@@ -79,28 +82,41 @@ export function JournalEntryToolbar({
         </Box>
       </Box>
       <Box sx={{ display: 'flex', gap: 1 }}>
-        <Box
-          component="select"
+        <Select
           value={period}
           onChange={handleChange}
+          size="small"
+          inputProps={{ 'aria-label': t('period.label') }}
           sx={{
             height: `${SELECT_HEIGHT_PX}px`,
-            pr: 3,
-            pl: 1,
-            bgcolor: 'var(--surface)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-xs)',
             fontSize: `${SELECT_FONT_SIZE_PX}px`,
             color: 'var(--text)',
-            cursor: 'pointer',
-            outline: 'none',
-            appearance: 'none'
+            bgcolor: 'var(--surface)',
+            borderRadius: 'var(--radius-xs)',
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'var(--border)'
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'var(--border-light)'
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'var(--accent)'
+            },
+            '& .MuiSelect-select': {
+              py: 0,
+              pl: 1.25,
+              pr: 3,
+              display: 'flex',
+              alignItems: 'center',
+              minHeight: 0,
+              height: `${SELECT_HEIGHT_PX}px`
+            }
           }}
         >
-          <option value="all">{t('period.all')}</option>
-          <option value="matin">{t('period.matin')}</option>
-          <option value="aprem">{t('period.aprem')}</option>
-        </Box>
+          <MenuItem value="all">{t('period.all')}</MenuItem>
+          <MenuItem value="matin">{t('period.matin')}</MenuItem>
+          <MenuItem value="aprem">{t('period.aprem')}</MenuItem>
+        </Select>
       </Box>
     </Box>
   )
