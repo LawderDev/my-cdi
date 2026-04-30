@@ -1,0 +1,1 @@
+export { getStudentsPageTitle } from './getStudentsPageTitle'
