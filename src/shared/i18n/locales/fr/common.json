@@ -31,5 +31,11 @@
     "students": "Élèves — Mon CDI",
     "statistics": "Statistiques — Mon CDI",
     "default": "Mon CDI"
+  },
+  "errorBoundary": {
+    "title": "Une erreur est survenue",
+    "description": "L'application a rencontré un problème inattendu. Vous pouvez essayer de recharger la page.",
+    "reload": "Recharger l'application",
+    "details": "Détails techniques"
   }
 }
