@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { ChartCard } from '@statistics/components/ChartCard'
 import {
   buildTrendPath,
@@ -7,8 +8,7 @@ import {
 } from './helpers/buildTrendPath'
 import type { MonthlyTrendChartProps } from './types/MonthlyTrendChartProps'
 
-const CHART_WRAPPER_CLASSES = 'relative h-[200px]'
-const SVG_CLASSES = 'w-full h-full'
+const CHART_HEIGHT_PX = 200
 const ACCENT_COLOR = '#7C4DFF'
 const DOT_RADIUS = 3
 const STROKE_WIDTH = 2
@@ -25,9 +25,10 @@ export function MonthlyTrendChart({ dailyCounts }: MonthlyTrendChartProps) {
 
   return (
     <ChartCard titleIcon="show_chart" title={t('charts.trend')}>
-      <div className={CHART_WRAPPER_CLASSES}>
-        <svg
-          className={SVG_CLASSES}
+      <Box sx={{ position: 'relative', height: `${CHART_HEIGHT_PX}px` }}>
+        <Box
+          component="svg"
+          sx={{ width: '100%', height: '100%' }}
           viewBox={trend.viewBox}
           preserveAspectRatio="none"
           aria-label={t('charts.trend')}
@@ -53,7 +54,6 @@ export function MonthlyTrendChart({ dailyCounts }: MonthlyTrendChartProps) {
                 x={paddingLeft - Y_LABEL_OFFSET_X}
                 y={label.y + Y_LABEL_TEXT_OFFSET}
                 textAnchor="end"
-                className="trend-axis-label"
                 fill="var(--text-dim)"
                 fontFamily="var(--mono)"
                 fontSize={Y_LABEL_FONT_SIZE}
@@ -84,8 +84,8 @@ export function MonthlyTrendChart({ dailyCounts }: MonthlyTrendChartProps) {
               strokeWidth={STROKE_WIDTH}
             />
           ))}
-        </svg>
-      </div>
+        </Box>
+      </Box>
     </ChartCard>
   )
 }

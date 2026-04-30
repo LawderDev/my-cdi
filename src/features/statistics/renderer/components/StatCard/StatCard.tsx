@@ -1,34 +1,75 @@
+import Box from '@mui/material/Box'
 import { Card } from '@ui/components/Card'
 import { Icon } from '@ui/components/Icon'
+import { MONO_FONT_FAMILY } from '@ui/theme'
 import type { StatCardProps } from './types/StatCardProps'
 
-const ICON_BASE = 'w-10 h-10 rounded-sm flex items-center justify-center mb-3 text-[20px] shrink-0'
-const LABEL_CLASSES = 'text-[11px] font-semibold text-text-dim uppercase tracking-[0.8px] mb-2'
-const VALUE_CLASSES = 'font-mono text-[28px] font-bold tracking-[-1px] leading-none'
-const DELTA_BASE = 'text-xs mt-1.5 font-medium'
-const DELTA_UP = 'text-success'
-const DELTA_DOWN = 'text-danger'
+const ICON_SIZE_PX = 40
+const ICON_FONT_SIZE_PX = 20
+const LABEL_FONT_SIZE_PX = 11
+const LABEL_FONT_WEIGHT = 600
+const VALUE_FONT_SIZE_PX = 28
+const VALUE_FONT_WEIGHT = 700
+const DELTA_FONT_SIZE_PX = 12
+const DELTA_FONT_WEIGHT = 500
 
-export function StatCard({
-  iconName,
-  iconBgClass,
-  iconColorClass,
-  label,
-  value,
-  delta
-}: StatCardProps) {
-  const deltaClass = delta
-    ? `${DELTA_BASE} ${delta.sign === 'up' ? DELTA_UP : DELTA_DOWN}`
-    : DELTA_BASE
-  const iconClasses = `${ICON_BASE} ${iconBgClass} ${iconColorClass}`
+export function StatCard({ iconName, iconBg, iconColor, label, value, delta }: StatCardProps) {
+  const deltaColor = delta?.sign === 'up' ? 'var(--success)' : 'var(--danger)'
   return (
     <Card>
-      <div className={iconClasses}>
+      <Box
+        sx={{
+          width: `${ICON_SIZE_PX}px`,
+          height: `${ICON_SIZE_PX}px`,
+          borderRadius: 'var(--radius-sm)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          mb: 1.5,
+          fontSize: `${ICON_FONT_SIZE_PX}px`,
+          flexShrink: 0,
+          bgcolor: iconBg,
+          color: iconColor
+        }}
+      >
         <Icon name={iconName} />
-      </div>
-      <div className={LABEL_CLASSES}>{label}</div>
-      <div className={VALUE_CLASSES}>{value}</div>
-      {delta ? <div className={deltaClass}>{delta.text}</div> : null}
+      </Box>
+      <Box
+        sx={{
+          fontSize: `${LABEL_FONT_SIZE_PX}px`,
+          fontWeight: LABEL_FONT_WEIGHT,
+          color: 'var(--text-dim)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em',
+          mb: 1
+        }}
+      >
+        {label}
+      </Box>
+      <Box
+        sx={{
+          fontFamily: MONO_FONT_FAMILY,
+          fontSize: `${VALUE_FONT_SIZE_PX}px`,
+          fontWeight: VALUE_FONT_WEIGHT,
+          letterSpacing: '-1px',
+          lineHeight: 1
+        }}
+      >
+        {value}
+      </Box>
+      {delta ? (
+        <Box
+          data-sign={delta.sign}
+          sx={{
+            fontSize: `${DELTA_FONT_SIZE_PX}px`,
+            mt: 0.75,
+            fontWeight: DELTA_FONT_WEIGHT,
+            color: deltaColor
+          }}
+        >
+          {delta.text}
+        </Box>
+      ) : null}
     </Card>
   )
 }

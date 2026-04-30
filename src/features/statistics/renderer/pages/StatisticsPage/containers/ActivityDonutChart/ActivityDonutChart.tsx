@@ -1,11 +1,10 @@
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { ChartCard } from '@statistics/components/ChartCard'
 import { ChartLegend } from '@statistics/components/ChartLegend'
 import { buildDonutSlices } from './helpers/buildDonutSlices'
 import type { ActivityDonutChartProps } from './types/ActivityDonutChartProps'
 
-const WRAP_CLASSES = 'flex items-center gap-6'
-const SVG_CLASSES = 'shrink-0'
 const CX = 70
 const CY = 70
 const SIZE = 140
@@ -29,9 +28,10 @@ export function ActivityDonutChart({ activityCounts }: ActivityDonutChartProps) 
   }))
   return (
     <ChartCard titleIcon="donut_small" title={t('charts.activities')}>
-      <div className={WRAP_CLASSES}>
-        <svg
-          className={SVG_CLASSES}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+        <Box
+          component="svg"
+          sx={{ flexShrink: 0 }}
           width={SIZE}
           height={SIZE}
           viewBox={`0 0 ${SIZE} ${SIZE}`}
@@ -62,9 +62,9 @@ export function ActivityDonutChart({ activityCounts }: ActivityDonutChartProps) 
           >
             {t('charts.visits')}
           </text>
-        </svg>
+        </Box>
         <ChartLegend items={legendItems} />
-      </div>
+      </Box>
     </ChartCard>
   )
 }

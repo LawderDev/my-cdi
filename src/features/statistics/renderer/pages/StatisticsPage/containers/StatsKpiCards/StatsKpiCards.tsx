@@ -1,8 +1,18 @@
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { StatCard } from '@statistics/components/StatCard'
 import type { StatsKpiCardsProps } from './types/StatsKpiCardsProps'
 
-const GRID_CLASSES = 'grid grid-cols-4 gap-4 max-[1100px]:grid-cols-2'
+const ACCENT_BG = 'var(--accent-bg)'
+const ACCENT_COLOR = 'var(--accent)'
+const SUCCESS_BG = 'var(--success-bg)'
+const SUCCESS_COLOR = 'var(--success)'
+const WARNING_BG = 'var(--warning-bg)'
+const WARNING_COLOR = 'var(--warning)'
+const INFO_BG = 'rgba(96,165,250,0.12)'
+const INFO_COLOR = '#60a5fa'
+
+const RESPONSIVE_BREAKPOINT_PX = 1100
 
 export function StatsKpiCards({ stats }: StatsKpiCardsProps) {
   const { t } = useTranslation('statistics')
@@ -11,35 +21,44 @@ export function StatsKpiCards({ stats }: StatsKpiCardsProps) {
   const morningDisplay = `${stats.morningRate}%`
   const afternoonDisplay = `${stats.afternoonRate}%`
   return (
-    <div className={GRID_CLASSES}>
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: 2,
+        [`@media (max-width: ${RESPONSIVE_BREAKPOINT_PX}px)`]: {
+          gridTemplateColumns: 'repeat(2, 1fr)'
+        }
+      }}
+    >
       <StatCard
         iconName="people"
-        iconBgClass="bg-accent-bg"
-        iconColorClass="text-accent"
+        iconBg={ACCENT_BG}
+        iconColor={ACCENT_COLOR}
         label={t('kpi.totalVisits')}
         value={totalDisplay}
       />
       <StatCard
         iconName="trending_up"
-        iconBgClass="bg-success-bg"
-        iconColorClass="text-success"
+        iconBg={SUCCESS_BG}
+        iconColor={SUCCESS_COLOR}
         label={t('kpi.averagePerDay')}
         value={averageDisplay}
       />
       <StatCard
         iconName="wb_sunny"
-        iconBgClass="bg-warning-bg"
-        iconColorClass="text-warning"
+        iconBg={WARNING_BG}
+        iconColor={WARNING_COLOR}
         label={t('kpi.morningRate')}
         value={morningDisplay}
       />
       <StatCard
         iconName="nights_stay"
-        iconBgClass="bg-[rgba(96,165,250,0.12)]"
-        iconColorClass="text-[#60a5fa]"
+        iconBg={INFO_BG}
+        iconColor={INFO_COLOR}
         label={t('kpi.afternoonRate')}
         value={afternoonDisplay}
       />
-    </div>
+    </Box>
   )
 }

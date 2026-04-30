@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import Box from '@mui/material/Box'
 import { Icon } from '@ui/components/Icon'
 import type { PeriodKey } from '@statistics/types'
 import type { PeriodFilterProps } from './types/PeriodFilterProps'
@@ -19,37 +20,63 @@ const BUTTONS: PeriodButtonConfig[] = [
   { key: 'custom', labelKey: 'period.custom', iconName: 'date_range', disabled: true }
 ]
 
-const WRAPPER_CLASSES = 'flex gap-2 flex-wrap'
-const BTN_BASE =
-  'h-8 px-3.5 rounded-xs text-xs font-medium border transition-all inline-flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed'
-const BTN_INACTIVE = 'border-border text-text-dim hover:border-border-light hover:text-title'
-const BTN_ACTIVE = 'bg-accent-bg border-accent-border text-accent font-semibold'
-const ICON_CLASSES = 'text-[14px]'
+const BTN_HEIGHT_PX = 32
+const BTN_FONT_SIZE_PX = 12
+const BTN_FONT_WEIGHT = 500
+const ACTIVE_FONT_WEIGHT = 600
+const ICON_FONT_SIZE_PX = 14
 
 export function PeriodFilter({ value, onChange }: PeriodFilterProps) {
   const { t } = useTranslation('statistics')
+
   return (
-    <div className={WRAPPER_CLASSES}>
+    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
       {BUTTONS.map((button) => {
         const isActive = button.key === value
-        const className = `${BTN_BASE} ${isActive ? BTN_ACTIVE : BTN_INACTIVE}`
         return (
-          <button
+          <Box
+            component="button"
             key={button.key}
             type="button"
             disabled={button.disabled}
-            className={className}
+            data-active={isActive}
             onClick={() => {
               if (!button.disabled) {
                 onChange(button.key)
               }
             }}
+            sx={{
+              height: `${BTN_HEIGHT_PX}px`,
+              px: 1.75,
+              borderRadius: 'var(--radius-xs)',
+              fontSize: `${BTN_FONT_SIZE_PX}px`,
+              fontWeight: isActive ? ACTIVE_FONT_WEIGHT : BTN_FONT_WEIGHT,
+              border: '1px solid',
+              borderColor: isActive ? 'var(--accent-border)' : 'var(--border)',
+              transition: 'all 0.2s',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 0.5,
+              cursor: 'pointer',
+              bgcolor: isActive ? 'var(--accent-bg)' : 'transparent',
+              color: isActive ? 'var(--accent)' : 'var(--text-dim)',
+              '&:hover': {
+                borderColor: isActive ? 'var(--accent-border)' : 'var(--border-light)',
+                color: isActive ? 'var(--accent)' : 'var(--title)'
+              },
+              '&:disabled': {
+                opacity: 0.5,
+                cursor: 'not-allowed'
+              }
+            }}
           >
-            {button.iconName ? <Icon name={button.iconName} className={ICON_CLASSES} /> : null}
+            {button.iconName ? (
+              <Icon name={button.iconName} style={{ fontSize: `${ICON_FONT_SIZE_PX}px` }} />
+            ) : null}
             {t(button.labelKey)}
-          </button>
+          </Box>
         )
       })}
-    </div>
+    </Box>
   )
 }

@@ -17,7 +17,7 @@ describe('PeriodFilter', () => {
   it('marks the selected button with the active style', () => {
     render(<PeriodFilter value="quarter" onChange={vi.fn()} />)
     const button = screen.getByText('Ce trimestre').closest('button')
-    expect(button?.className).toContain('text-accent')
+    expect(button?.getAttribute('data-active')).toBe('true')
   })
 
   it('calls onChange with the new key when a button is clicked', () => {

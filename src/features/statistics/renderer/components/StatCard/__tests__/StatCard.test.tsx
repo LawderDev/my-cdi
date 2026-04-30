@@ -7,8 +7,8 @@ describe('StatCard', () => {
     render(
       <StatCard
         iconName="people"
-        iconBgClass="bg-accent-bg"
-        iconColorClass="text-accent"
+        iconBg="var(--accent-bg)"
+        iconColor="var(--accent)"
         label="Visites totales"
         value="1,247"
       />
@@ -17,47 +17,46 @@ describe('StatCard', () => {
     expect(screen.getByText('1,247')).toBeInTheDocument()
   })
 
-  it('renders the delta with success style when sign is up', () => {
+  it('renders the delta with up sign when sign is up', () => {
     render(
       <StatCard
         iconName="people"
-        iconBgClass="bg-accent-bg"
-        iconColorClass="text-accent"
+        iconBg="var(--accent-bg)"
+        iconColor="var(--accent)"
         label="Visites totales"
         value="1,247"
         delta={{ sign: 'up', text: '↑ 12%' }}
       />
     )
     const deltaNode = screen.getByText('↑ 12%')
-    expect(deltaNode.className).toContain('text-success')
+    expect(deltaNode.getAttribute('data-sign')).toBe('up')
   })
 
-  it('renders the delta with danger style when sign is down', () => {
+  it('renders the delta with down sign when sign is down', () => {
     render(
       <StatCard
         iconName="nights_stay"
-        iconBgClass="bg-accent-bg"
-        iconColorClass="text-accent"
+        iconBg="var(--accent-bg)"
+        iconColor="var(--accent)"
         label="Taux après-midi"
         value="43%"
         delta={{ sign: 'down', text: '↓ 4 points' }}
       />
     )
     const deltaNode = screen.getByText('↓ 4 points')
-    expect(deltaNode.className).toContain('text-danger')
+    expect(deltaNode.getAttribute('data-sign')).toBe('down')
   })
 
   it('omits the delta block when delta is not provided', () => {
     const { container } = render(
       <StatCard
         iconName="people"
-        iconBgClass="bg-accent-bg"
-        iconColorClass="text-accent"
+        iconBg="var(--accent-bg)"
+        iconColor="var(--accent)"
         label="Visites"
         value="1"
       />
     )
-    expect(container.querySelectorAll('.text-success').length).toBe(0)
-    expect(container.querySelectorAll('.text-danger').length).toBe(0)
+    expect(container.querySelectorAll('[data-sign]').length).toBe(0)
   })
 })
