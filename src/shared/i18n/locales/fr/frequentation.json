@@ -1,6 +1,17 @@
 {
-  "title": "Journal des fréquentations",
+  "title": "Journal de fréquentation",
   "add": "Marquer la présence",
+  "addEntries": "Ajouter des entrées",
+  "noEntries": "Aucune entrée pour cette date",
+  "today": "Aujourd'hui",
+  "previousDay": "Jour précédent",
+  "nextDay": "Jour suivant",
+  "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{count}} fréquentation(s) ?",
+  "fields": {
+    "student": "Élève",
+    "activity": "Activité",
+    "actions": "Actions"
+  },
   "activity": {
     "work": "Travail",
     "reading": "Lecture",
@@ -8,6 +19,27 @@
     "relaxation": "Détente",
     "other": "Autre"
   },
-  "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{count}} fréquentation(s) ?",
-  "noEntries": "Aucune fréquentation pour cette date"
+  "form": {
+    "selectStudents": "Sélectionner des élèves",
+    "selectActivity": "Choisir une activité",
+    "submit": "Enregistrer",
+    "cancel": "Annuler",
+    "noStudentsSelected": "Sélectionnez au moins un élève",
+    "noActivitySelected": "Sélectionnez une activité"
+  },
+  "batchActions": {
+    "selectAll": "Tout sélectionner",
+    "deselectAll": "Tout désélectionner",
+    "deleteSelection": "Supprimer la sélection",
+    "changeActivity": "Modifier l'activité",
+    "selectedCount_one": "{{count}} entrée sélectionnée",
+    "selectedCount_other": "{{count}} entrées sélectionnées",
+    "confirmDeleteTitle": "Confirmer la suppression",
+    "confirmDeleteMessage_one": "Voulez-vous vraiment supprimer {{count}} entrée ?",
+    "confirmDeleteMessage_other": "Voulez-vous vraiment supprimer {{count}} entrées ?"
+  },
+  "edit": {
+    "title": "Modifier l'entrée",
+    "save": "Enregistrer"
+  }
 }
