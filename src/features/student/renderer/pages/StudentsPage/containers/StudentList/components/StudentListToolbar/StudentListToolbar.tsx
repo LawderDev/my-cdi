@@ -5,7 +5,7 @@ import Add from '@mui/icons-material/Add'
 import { useTranslation } from 'react-i18next'
 import type { ChangeEvent } from 'react'
 import type { SxProps, Theme } from '@mui/material'
-import { StudentCsvImportButton } from '../StudentCsvImportButton'
+import { StudentCsvImportButton } from '../../containers/StudentCsvImportButton'
 
 interface StudentListToolbarProps {
   searchTerm: string
