@@ -4,3 +4,14 @@ export type {
   InsertStudentEntity,
   SelectStudentEntity
 } from '../../features/student/main/entities/student'
+
+export {
+  frequentationTable,
+  FrequentationEntitySchema
+} from '../../features/frequentation/main/entities/frequentation'
+export type {
+  FrequentationEntity,
+  FrequentationWithStudentEntity,
+  InsertFrequentationEntity,
+  SelectFrequentationEntity
+} from '../../features/frequentation/main/entities/frequentation'

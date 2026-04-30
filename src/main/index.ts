@@ -45,7 +45,10 @@ app.whenReady().then(() => {
   })
 
   createDbConnection(DATABASE_PATH)
-  initializeModules(ipcMain)
+  initializeModules(ipcMain).catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    console.error(`Failed to initialize modules: ${message}`)
+  })
 
   createWindow()
 })

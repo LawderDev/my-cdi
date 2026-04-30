@@ -6,7 +6,10 @@ import { registerStudentController } from './controllers/student'
 export function initializeStudentModule(
   db: BetterSQLite3Database<Record<string, unknown>>,
   ipcMain: IpcMain
-): void {
+): StudentGatewayDrizzle {
   const studentGateway = new StudentGatewayDrizzle(db)
   registerStudentController(ipcMain, studentGateway)
+  return studentGateway
 }
+
+export { StudentGatewayDrizzle }

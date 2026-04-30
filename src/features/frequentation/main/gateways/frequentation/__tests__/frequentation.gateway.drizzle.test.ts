@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import Database from 'better-sqlite3'
 import { drizzle } from 'drizzle-orm/better-sqlite3'
+import { ActivityType } from '@types'
 import { FrequentationGatewayDrizzle } from '../frequentation.gateway.drizzle'
 
 const NONEXISTENT_ID = 999
@@ -63,7 +64,7 @@ describe('FrequentationGatewayDrizzle', () => {
     it('creates a frequentation and returns entity', async () => {
       const result = await gateway.create({
         startsAt: '2026-01-15T09:00:00.000Z',
-        activity: 'work',
+        activity: ActivityType.WORK,
         studentId: 1
       })
       expect(result.id).toBe(1)
@@ -77,7 +78,7 @@ describe('FrequentationGatewayDrizzle', () => {
     it('returns frequentation by id', async () => {
       await gateway.create({
         startsAt: '2026-01-15T09:00:00.000Z',
-        activity: 'work',
+        activity: ActivityType.WORK,
         studentId: 1
       })
       const result = await gateway.getById(1)
@@ -95,12 +96,12 @@ describe('FrequentationGatewayDrizzle', () => {
     it('returns all frequentations with student data', async () => {
       await gateway.create({
         startsAt: '2026-01-15T09:00:00.000Z',
-        activity: 'work',
+        activity: ActivityType.WORK,
         studentId: 1
       })
       await gateway.create({
         startsAt: '2026-01-15T10:00:00.000Z',
-        activity: 'reading',
+        activity: ActivityType.READING,
         studentId: 2
       })
       const results = await gateway.getAll()
@@ -113,12 +114,12 @@ describe('FrequentationGatewayDrizzle', () => {
     it('returns frequentations for a specific student', async () => {
       await gateway.create({
         startsAt: '2026-01-15T09:00:00.000Z',
-        activity: 'work',
+        activity: ActivityType.WORK,
         studentId: 1
       })
       await gateway.create({
         startsAt: '2026-01-15T10:00:00.000Z',
-        activity: 'reading',
+        activity: ActivityType.READING,
         studentId: 2
       })
       const results = await gateway.getByStudentId(1)
@@ -131,12 +132,12 @@ describe('FrequentationGatewayDrizzle', () => {
     it('returns frequentations within date range', async () => {
       await gateway.create({
         startsAt: '2026-01-15T09:00:00.000Z',
-        activity: 'work',
+        activity: ActivityType.WORK,
         studentId: 1
       })
       await gateway.create({
         startsAt: '2026-01-20T10:00:00.000Z',
-        activity: 'reading',
+        activity: ActivityType.READING,
         studentId: 2
       })
       const results = await gateway.getByDateRange('2026-01-15', '2026-01-15')
@@ -148,16 +149,16 @@ describe('FrequentationGatewayDrizzle', () => {
     it('updates activity field', async () => {
       await gateway.create({
         startsAt: '2026-01-15T09:00:00.000Z',
-        activity: 'work',
+        activity: ActivityType.WORK,
         studentId: 1
       })
-      const result = await gateway.update(1, { activity: 'reading' })
+      const result = await gateway.update(1, { activity: ActivityType.READING })
       expect(result).not.toBeNull()
       expect(result?.activity).toBe('reading')
     })
 
     it('returns null for non-existent id', async () => {
-      const result = await gateway.update(NONEXISTENT_ID, { activity: 'reading' })
+      const result = await gateway.update(NONEXISTENT_ID, { activity: ActivityType.READING })
       expect(result).toBeNull()
     })
   })
@@ -166,7 +167,7 @@ describe('FrequentationGatewayDrizzle', () => {
     it('deletes a frequentation', async () => {
       await gateway.create({
         startsAt: '2026-01-15T09:00:00.000Z',
-        activity: 'work',
+        activity: ActivityType.WORK,
         studentId: 1
       })
       const deleted = await gateway.delete(1)
@@ -185,17 +186,17 @@ describe('FrequentationGatewayDrizzle', () => {
     it('deletes all frequentations for a student', async () => {
       await gateway.create({
         startsAt: '2026-01-15T09:00:00.000Z',
-        activity: 'work',
+        activity: ActivityType.WORK,
         studentId: 1
       })
       await gateway.create({
         startsAt: '2026-01-15T10:00:00.000Z',
-        activity: 'reading',
+        activity: ActivityType.READING,
         studentId: 1
       })
       await gateway.create({
         startsAt: '2026-01-15T11:00:00.000Z',
-        activity: 'computer',
+        activity: ActivityType.COMPUTER,
         studentId: 2
       })
       const count = await gateway.deleteByStudentId(1)
@@ -207,12 +208,12 @@ describe('FrequentationGatewayDrizzle', () => {
     it('returns total frequentation count', async () => {
       await gateway.create({
         startsAt: '2026-01-15T09:00:00.000Z',
-        activity: 'work',
+        activity: ActivityType.WORK,
         studentId: 1
       })
       await gateway.create({
         startsAt: '2026-01-15T10:00:00.000Z',
-        activity: 'reading',
+        activity: ActivityType.READING,
         studentId: 2
       })
       const result = await gateway.count()
