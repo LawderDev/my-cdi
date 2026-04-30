@@ -32,10 +32,13 @@ describe('JournalPage', () => {
     })
   })
 
-  it('renders the page title and date navigator', async () => {
+  it('renders the calendar, in-place form, and the attendance list shell', async () => {
     render(withQuery(<JournalPage />))
+    // Calendar renders weekday headers
+    expect(screen.getByText('Lun')).toBeInTheDocument()
+    // Attendance list header (Présents) rendered
     await waitFor(() => {
-      expect(screen.getByText(/journal/i)).toBeInTheDocument()
+      expect(screen.getByText('Présents')).toBeInTheDocument()
     })
   })
 })

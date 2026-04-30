@@ -49,34 +49,15 @@ describe('useJournalPage', () => {
     })
   })
 
-  it('initializes with today and dialogs closed', () => {
+  it('initializes with today and no entry being edited', () => {
     const { result } = renderHook(() => useJournalPage(), { wrapper })
     expect(result.current.selectedDate).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-    expect(result.current.isAddDialogOpen).toBe(false)
     expect(result.current.editingEntry).toBeNull()
-  })
-
-  it('exposes a translated title', () => {
-    const { result } = renderHook(() => useJournalPage(), { wrapper })
-    expect(result.current.title).toBeTypeOf('string')
-    expect(result.current.title.length).toBeGreaterThan(0)
   })
 
   it('exposes activityOptions covering every ActivityType', () => {
     const { result } = renderHook(() => useJournalPage(), { wrapper })
     expect(result.current.activityOptions).toHaveLength(Object.values(ActivityType).length)
-  })
-
-  it('toggles add dialog', () => {
-    const { result } = renderHook(() => useJournalPage(), { wrapper })
-    act(() => {
-      result.current.openAddDialog()
-    })
-    expect(result.current.isAddDialogOpen).toBe(true)
-    act(() => {
-      result.current.closeAddDialog()
-    })
-    expect(result.current.isAddDialogOpen).toBe(false)
   })
 
   it('manages editing entry and seeds editingActivity from the entry', () => {
