@@ -17,6 +17,11 @@ export const FREQUENTATION_CHANNELS = {
   GET_JOURNAL_ENTRIES: 'frequentation.getJournalEntries'
 } as const
 
+export const STATISTICS_CHANNELS = {
+  GET_STATS: 'statistics.getStats'
+} as const
+
 export type StudentChannel = (typeof STUDENT_CHANNELS)[keyof typeof STUDENT_CHANNELS]
 export type FrequentationChannel =
   (typeof FREQUENTATION_CHANNELS)[keyof typeof FREQUENTATION_CHANNELS]
+export type StatisticsChannel = (typeof STATISTICS_CHANNELS)[keyof typeof STATISTICS_CHANNELS]

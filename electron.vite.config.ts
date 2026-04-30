@@ -10,8 +10,10 @@ export default defineConfig({
       alias: {
         '@student': resolve('src/features/student/main'),
         '@frequentation': resolve('src/features/frequentation/main'),
+        '@statistics': resolve('src/features/statistics/main'),
         '@student-shared': resolve('src/features/student/shared'),
         '@frequentation-shared': resolve('src/features/frequentation/shared'),
+        '@statistics-shared': resolve('src/features/statistics/shared'),
         '@shared': resolve('src/shared'),
         '@lib': resolve('src/shared/lib'),
         '@types': resolve('src/shared/types')
@@ -33,8 +35,10 @@ export default defineConfig({
       alias: {
         '@student': resolve('src/features/student/renderer'),
         '@frequentation': resolve('src/features/frequentation/renderer'),
+        '@statistics': resolve('src/features/statistics/renderer'),
         '@student-shared': resolve('src/features/student/shared'),
         '@frequentation-shared': resolve('src/features/frequentation/shared'),
+        '@statistics-shared': resolve('src/features/statistics/shared'),
         '@shared': resolve('src/shared'),
         '@ui': resolve('src/shared/ui'),
         '@lib': resolve('src/shared/lib'),

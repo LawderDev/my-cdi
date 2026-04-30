@@ -12,6 +12,7 @@ export default defineConfig({
     alias: [
       { find: '@student-shared', replacement: resolve('src/features/student/shared') },
       { find: '@frequentation-shared', replacement: resolve('src/features/frequentation/shared') },
+      { find: '@statistics-shared', replacement: resolve('src/features/statistics/shared') },
       {
         find: /^@student\/(types|helpers|api|validations|pages|components|hooks|containers|routes)(.*)$/,
         replacement: resolve('src/features/student/renderer') + '/$1$2'
@@ -20,10 +21,18 @@ export default defineConfig({
         find: /^@frequentation\/(types|helpers|api|validations|pages|components|hooks|containers|routes)(.*)$/,
         replacement: resolve('src/features/frequentation/renderer') + '/$1$2'
       },
+      {
+        find: /^@statistics\/(types|helpers|api|validations|pages|components|hooks|containers|routes)(.*)$/,
+        replacement: resolve('src/features/statistics/renderer') + '/$1$2'
+      },
       { find: /^@student(\/.*)?$/, replacement: resolve('src/features/student/main') + '$1' },
       {
         find: /^@frequentation(\/.*)?$/,
         replacement: resolve('src/features/frequentation/main') + '$1'
+      },
+      {
+        find: /^@statistics(\/.*)?$/,
+        replacement: resolve('src/features/statistics/main') + '$1'
       },
       { find: '@ui', replacement: resolve('src/shared/ui') },
       { find: '@lib', replacement: resolve('src/shared/lib') },

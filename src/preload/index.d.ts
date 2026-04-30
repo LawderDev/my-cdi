@@ -13,6 +13,7 @@ import type {
   FrequentationResponseDto,
   JournalEntryDto
 } from '@frequentation-shared'
+import type { PeriodRangeDto, StatsForPeriodDto } from '@statistics-shared'
 import type {
   UpdateAvailableInfo,
   DownloadProgressInfo,
@@ -46,6 +47,10 @@ export interface FrequentationApi {
   }) => Promise<IpcResult<JournalEntryDto[]>>
 }
 
+export interface StatisticsApi {
+  getStats: (input: PeriodRangeDto) => Promise<IpcResult<StatsForPeriodDto>>
+}
+
 export interface UpdaterAPI {
   onUpdateAvailable: (listener: (info: UpdateAvailableInfo) => void) => Unsubscribe
   onUpdateNotAvailable: (listener: () => void) => Unsubscribe
@@ -59,6 +64,7 @@ export interface UpdaterAPI {
 export interface ElectronAPI {
   student: StudentApi
   frequentation: FrequentationApi
+  statistics: StatisticsApi
   getAppVersion: () => Promise<string>
   updater: UpdaterAPI
 }
