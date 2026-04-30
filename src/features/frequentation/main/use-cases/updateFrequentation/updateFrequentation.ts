@@ -10,25 +10,25 @@ export async function updateFrequentation(
 ): Promise<UseCaseResult<FrequentationEntity>> {
   const existingFrequentation = await gateway.getById(id)
   if (!existingFrequentation) {
-    return { success: false, error: `Frequentation with id ${id} not found` }
+    return { success: false, error: 'Fréquentation introuvable' }
   }
 
   if (dto.studentId !== undefined && dto.studentId < 1) {
-    return { success: false, error: 'studentId must be a positive integer' }
+    return { success: false, error: "L'identifiant de l'élève est invalide" }
   }
 
   if (dto.startsAt !== undefined && dto.startsAt.trim().length === 0) {
-    return { success: false, error: 'startsAt must not be empty' }
+    return { success: false, error: 'La date de début ne peut pas être vide' }
   }
 
   if (dto.activity !== undefined && dto.activity.trim().length === 0) {
-    return { success: false, error: 'activity must not be empty' }
+    return { success: false, error: "L'activité ne peut pas être vide" }
   }
 
   try {
     const updated = await gateway.update(id, dto)
     if (!updated) {
-      return { success: false, error: 'Update returned null' }
+      return { success: false, error: 'Erreur lors de la mise à jour' }
     }
     return { success: true, data: updated }
   } catch (error) {

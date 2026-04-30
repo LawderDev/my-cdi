@@ -7,7 +7,7 @@ export async function deleteFrequentation(
 ): Promise<UseCaseResult<boolean>> {
   const existingFrequentation = await gateway.getById(id)
   if (!existingFrequentation) {
-    return { success: false, error: `Frequentation with id ${id} not found` }
+    return { success: false, error: 'Fréquentation introuvable' }
   }
 
   try {

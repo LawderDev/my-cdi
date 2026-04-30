@@ -52,7 +52,7 @@ describe('createFrequentation', () => {
     })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('startsAt')
+      expect(result.error).toContain('date de début')
     }
   })
 
@@ -68,7 +68,7 @@ describe('createFrequentation', () => {
     const result = await createFrequentation(gateway, invalidDto)
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('activity')
+      expect(result.error).toContain('activité')
     }
   })
 
@@ -81,7 +81,7 @@ describe('createFrequentation', () => {
     })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('studentId')
+      expect(result.error).toContain('élève')
     }
   })
 

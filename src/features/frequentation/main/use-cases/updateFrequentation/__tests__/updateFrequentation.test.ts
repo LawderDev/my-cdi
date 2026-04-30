@@ -55,7 +55,7 @@ describe('updateFrequentation', () => {
     })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('not found')
+      expect(result.error).toContain('introuvable')
     }
   })
 
@@ -64,7 +64,7 @@ describe('updateFrequentation', () => {
     const result = await updateFrequentation(gateway, 1, { studentId: 0 })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('studentId')
+      expect(result.error).toContain('élève')
     }
   })
 

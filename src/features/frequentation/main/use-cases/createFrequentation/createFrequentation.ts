@@ -8,15 +8,15 @@ export async function createFrequentation(
   dto: CreateFrequentationDto
 ): Promise<UseCaseResult<FrequentationEntity>> {
   if (!dto.startsAt || dto.startsAt.trim().length === 0) {
-    return { success: false, error: 'startsAt is required' }
+    return { success: false, error: 'La date de début est obligatoire' }
   }
 
   if (!dto.activity || dto.activity.trim().length === 0) {
-    return { success: false, error: 'activity is required' }
+    return { success: false, error: "L'activité est obligatoire" }
   }
 
   if (!dto.studentId || dto.studentId < 1) {
-    return { success: false, error: 'studentId must be a positive integer' }
+    return { success: false, error: "L'identifiant de l'élève est invalide" }
   }
 
   try {

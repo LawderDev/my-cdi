@@ -47,7 +47,7 @@ describe('deleteFrequentation', () => {
     const result = await deleteFrequentation(gateway, NONEXISTENT_ID)
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('not found')
+      expect(result.error).toContain('introuvable')
     }
   })
 

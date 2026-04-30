@@ -48,7 +48,7 @@ export async function importStudentsCsv(
       created += 1
       seenInes.add(normalisedIne)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Erreur inconnue'
+      const message = err instanceof Error ? err.message : 'Unknown error'
       errorMessages.push(`${row.prenom} ${row.nom}: ${message}`)
     }
   }

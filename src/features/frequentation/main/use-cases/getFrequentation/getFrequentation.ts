@@ -9,7 +9,7 @@ export async function getFrequentation(
   try {
     const entity = await gateway.getById(id)
     if (!entity) {
-      return { success: false, error: `Frequentation with id ${id} not found` }
+      return { success: false, error: 'Fréquentation introuvable' }
     }
     return { success: true, data: entity }
   } catch (error) {
