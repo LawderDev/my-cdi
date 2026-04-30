@@ -18,7 +18,7 @@ export function JournalPage() {
     editingEntry,
     editingActivity,
     setEditingActivity,
-    setEditingEntry,
+    startEditing,
     closeEditDialog,
     title,
     activityOptions,
@@ -36,7 +36,7 @@ export function JournalPage() {
       <JournalEntryList
         selectedDate={selectedDate}
         onAddClick={openAddDialog}
-        onEditEntry={setEditingEntry}
+        onEditEntry={startEditing}
       />
 
       <JournalEntryForm

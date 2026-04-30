@@ -82,7 +82,7 @@ describe('useJournalPage', () => {
   it('manages editing entry and seeds editingActivity from the entry', () => {
     const { result } = renderHook(() => useJournalPage(), { wrapper })
     act(() => {
-      result.current.setEditingEntry(sampleEntry)
+      result.current.startEditing(sampleEntry)
     })
     expect(result.current.editingEntry).toEqual(sampleEntry)
     expect(result.current.editingActivity).toBe(ActivityType.WORK)
@@ -96,7 +96,7 @@ describe('useJournalPage', () => {
   it('submitEdit dispatches an update + closes the dialog on success', async () => {
     const { result } = renderHook(() => useJournalPage(), { wrapper })
     act(() => {
-      result.current.setEditingEntry(sampleEntry)
+      result.current.startEditing(sampleEntry)
     })
     act(() => {
       result.current.setEditingActivity(ActivityType.READING)

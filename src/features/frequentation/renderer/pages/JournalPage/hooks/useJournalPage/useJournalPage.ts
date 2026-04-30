@@ -15,7 +15,7 @@ export function useJournalPage() {
   const { t } = useTranslation('frequentation')
   const [selectedDate, setSelectedDate] = useState<string>(todayIso)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [editingEntry, setEditingEntryState] = useState<JournalEntryViewModel | null>(null)
+  const [editingEntry, startEditingState] = useState<JournalEntryViewModel | null>(null)
   const [editingActivity, setEditingActivity] = useState<ActivityType | null>(null)
 
   const { allActivities, getLabel } = useActivityLabels()
@@ -37,13 +37,13 @@ export function useJournalPage() {
     setIsAddDialogOpen(false)
   }
 
-  function setEditingEntry(entry: JournalEntryViewModel) {
-    setEditingEntryState(entry)
+  function startEditing(entry: JournalEntryViewModel) {
+    startEditingState(entry)
     setEditingActivity(entry.activity)
   }
 
   function closeEditDialog() {
-    setEditingEntryState(null)
+    startEditingState(null)
     setEditingActivity(null)
   }
 
@@ -55,7 +55,7 @@ export function useJournalPage() {
       { id: editingEntry.id, activity: editingActivity },
       {
         onSuccess: () => {
-          setEditingEntryState(null)
+          startEditingState(null)
           setEditingActivity(null)
         }
       }
@@ -71,7 +71,7 @@ export function useJournalPage() {
     editingEntry,
     editingActivity,
     setEditingActivity,
-    setEditingEntry,
+    startEditing,
     closeEditDialog,
     title,
     activityOptions,
