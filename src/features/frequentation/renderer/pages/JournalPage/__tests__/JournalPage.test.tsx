@@ -1,0 +1,41 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { I18nextProvider } from 'react-i18next'
+import type { ReactNode } from 'react'
+import i18n from '@shared/i18n/config'
+import { JournalPage } from '../JournalPage'
+
+function withQuery(ui: ReactNode) {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } }
+  })
+  return (
+    <QueryClientProvider client={client}>
+      <I18nextProvider i18n={i18n}>{ui}</I18nextProvider>
+    </QueryClientProvider>
+  )
+}
+
+describe('JournalPage', () => {
+  beforeEach(() => {
+    vi.stubGlobal('electronAPI', {
+      student: {
+        list: vi.fn().mockResolvedValue({ success: true, data: { students: [] } })
+      },
+      frequentation: {
+        getJournalEntries: vi.fn().mockResolvedValue({ success: true, data: [] }),
+        createBatch: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn()
+      }
+    })
+  })
+
+  it('renders the page title and date navigator', async () => {
+    render(withQuery(<JournalPage />))
+    await waitFor(() => {
+      expect(screen.getByText(/journal/i)).toBeInTheDocument()
+    })
+  })
+})
