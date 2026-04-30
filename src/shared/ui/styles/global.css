@@ -1,47 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons+Round');
-@import 'tailwindcss';
-
-@source '../../../**/*.{ts,tsx,html}';
-@source '../../../../renderer/**/*.{ts,tsx,html}';
-@source '../../../../features/**/renderer/**/*.{ts,tsx}';
-
-@theme {
-  --color-bg: #0f172a;
-  --color-bg-nav: #080f1e;
-  --color-card: #1e293b;
-  --color-card-hover: #263348;
-  --color-surface: #172033;
-  --color-title: #e2e8f0;
-  --color-text: #94a3b8;
-  --color-text-dim: #64748b;
-  --color-accent: #7c4dff;
-  --color-accent-hover: #916fff;
-  --color-accent-bg: rgba(124, 77, 255, 0.1);
-  --color-accent-border: rgba(124, 77, 255, 0.3);
-  --color-success: #4ade80;
-  --color-success-bg: rgba(74, 222, 128, 0.1);
-  --color-warning: #fbbf24;
-  --color-warning-bg: rgba(251, 191, 36, 0.1);
-  --color-danger: #f87171;
-  --color-danger-bg: rgba(248, 113, 113, 0.1);
-  --color-border: #334155;
-  --color-border-light: #475569;
-
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-xs: 6px;
-  --radius-lg: 16px;
-
-  --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-
-  --spacing-sidebar: 68px;
-  --spacing-header: 56px;
-}
 
 :root {
   --bg: #0f172a;

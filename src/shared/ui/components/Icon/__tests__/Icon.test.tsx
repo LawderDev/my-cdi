@@ -17,10 +17,11 @@ describe('Icon', () => {
   })
 
   it('merges the provided className alongside the icon class', () => {
-    const { container } = render(<Icon name="edit" className="text-accent" />)
+    const customClass = 'custom-test-class'
+    const { container } = render(<Icon name="edit" className={customClass} />)
     const span = container.querySelector('span')
     expect(span?.className).toContain('material-icons-round')
-    expect(span?.className).toContain('text-accent')
+    expect(span?.className).toContain(customClass)
   })
 
   it('passes through inline style', () => {
