@@ -1,0 +1,1 @@
+export { matchShortcut } from './matchShortcut'
