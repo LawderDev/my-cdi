@@ -1,6 +1,6 @@
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core'
 import { z } from 'zod'
-import { ActivityType } from '@types'
+import { ActivityType } from '../../../../../shared/types'
 
 export const frequentationTable = sqliteTable(
   'frequentation',
