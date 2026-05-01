@@ -38,7 +38,7 @@ export function JournalEntryForm({ selectedDate, onSubmitted }: JournalEntryForm
     dismissFeedback
   } = useJournalEntryForm({ selectedDate, onSubmitted })
 
-  const isDisabled = isSubmitting || !form.formState.isValid
+  const isDisabled = isSubmitting
   const showSuccess = submitSuccess && submitError === null
 
   return (
