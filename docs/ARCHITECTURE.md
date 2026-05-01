@@ -81,7 +81,7 @@ src/
 │   ├── student/
 │   │   ├── main/        # Backend clean arch
 │   │   ├── renderer/    # Frontend
-│   │   └── shared/      # Types shared main ↔ renderer
+│   │   └── shared/      # IPC contract types (main ↔ renderer)
 │   ├── frequentation/
 │   └── statistics/
 ├── shared/              # Cross-cutting concerns
@@ -95,6 +95,18 @@ src/
 ├── preload/             # Context bridge
 └── renderer/            # React root + routes
 ```
+
+### Shared Types (IPC Contract)
+
+Every feature's `shared/types.ts` defines the DTOs that cross the main/renderer boundary:
+
+| Suffix            | Purpose                           | Example                  |
+| ----------------- | --------------------------------- | ------------------------ |
+| `CreateXxxDto`    | Input for create operations       | `CreateStudentDto`       |
+| `UpdateXxxDto`    | Input for update operations         | `UpdateStudentDto`       |
+| `XxxResponseDto`  | Output from read operations         | `StudentResponseDto`     |
+| `XxxListResponseDto` | Paginated list response        | `StudentListResponseDto` |
+| `BulkXxxResponseDto` | Batch operation result         | `BulkStudentResponseDto` |
 
 ---
 
