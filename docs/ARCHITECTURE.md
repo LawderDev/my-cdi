@@ -64,6 +64,11 @@ Renderer ──► Preload (contextBridge) ──► Main (ipcMain.handle)
 3. Inject `frequentationGateway` into `statisticsModule`
 4. Invoke `cleanupOldFrequentations()` after all modules initialize
 
+### Auto-Updater
+`main/index.ts` registers `registerAutoUpdater(targetWindow)` which wires `electron-updater` events to `webContents.send` via `UPDATER_CHANNELS`. On the renderer side, `window.electronAPI.updater` exposes `onUpdateAvailable`, `onDownloadProgress`, etc., using `subscribeToChannel` (pub/sub, not `invoke`).
+
+`useAutoUpdater` tracks a state machine (`'idle' | 'available' | 'downloading' | 'downloaded' | 'error'`) and is the only allowed `useEffect` hook for updater sync. `UpdateBanner` mounts globally inside `AppShell`.
+
 ---
 
 ## 3. Feature-Vertical Architecture
@@ -485,9 +490,21 @@ const CACHE_TTL_MS = 5 * 60 * 1000 // SQLite WAL mode plan cache invalidates aft
 ### No Abbreviations
 Use full words. `v` → `version`, `num` → `number`, `msg` → `message`.
 
+### Utilities (`shared/lib/utils.ts`)
+- **`generateId()`** — counter + random-segment ID generator for client-side keys
+- **`assertNever(value: never)`** — runtime exhaustiveness check for switch/match arms; pairs with the No Type Casting rule
+
 ---
 
 ## 19. Design System Wrappers
+
+### Enum-to-Display Metadata
+Presentation metadata for enum values is stored as parallel `Record<Enum, X>` maps (color, icon, CSS class) in `renderer/helpers/`. This keeps domain types clean while allowing presenters to resolve visual attributes:
+
+```ts
+const activityColors: Record<ActivityType, string> = { ... }
+const activityIcons: Record<ActivityType, string> = { ... }
+```
 
 The design system in `shared/ui/components/` wraps MUI primitives with application-specific behavior:
 
@@ -606,6 +623,9 @@ Gateway tests create `new Database(':memory:')` and execute raw `CREATE TABLE ..
 [Drizzle → SQLite] (shared/db/)
 ```
 
+### Read-Side DTO-to-ViewModel Transform
+Backend DTOs are enriched before reaching presenters. Example: `toJournalEntryViewModel` combines `student.prenom + nom` into `displayName`, looks up the activity label via an injected translator, and attaches `activityColor`. This keeps presenters free of lookup logic.
+
 ---
 
 ## 25. i18n Strategy
@@ -631,8 +651,15 @@ shared/i18n/
 
 The following patterns are explicitly allowed as exceptions to the rules above:
 
-### `as const` Readonly Narrowing
-Allowed for literal type narrowing. All other `as` assertions are forbidden.
+### `as const` Readonly Narrowing + Indexed Type Extraction
+Allowed for literal type narrowing. The pattern is also used to derive strict union types from constant objects:
+
+```ts
+export const ROUTES = { ... } as const
+export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES]
+```
+
+All other `as` assertions are forbidden.
 
 ### `useTranslation` in Presenters
 `useTranslation('namespace')` is allowed in presenter components. It is a read-only context hook and does not introduce logic or state.
