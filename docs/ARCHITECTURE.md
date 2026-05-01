@@ -23,7 +23,28 @@ My-CDI is a French school library (CDI) attendance tracking Electron desktop app
 
 ---
 
-## 2. Feature-Vertical Architecture
+## 2. Electron Process Architecture
+
+Three-process model:
+
+| Process   | Entry               | Role                                    |
+| --------- | ------------------- | --------------------------------------- |
+| **Main**    | `src/main/index.ts`   | Electron app lifecycle, window creation |
+| **Preload** | `src/preload/index.ts`| Secure bridge between main ↔ renderer   |
+| **Renderer**| `src/renderer/main.tsx`| React root, providers, routes           |
+
+Communication flows:
+
+```
+Renderer ──► Preload (contextBridge) ──► Main (ipcMain.handle)
+     ▲                                          │
+     └──────────────────────────────────────────┘
+                              (ipcRenderer.invoke)
+```
+
+---
+
+## 3. Feature-Vertical Architecture
 
 Each feature is a self-contained vertical slice spanning both Electron processes.
 
@@ -37,6 +58,12 @@ src/
 │   ├── frequentation/
 │   └── statistics/
 ├── shared/              # Cross-cutting concerns
+│   ├── ipc/             # Type-safe router + client
+│   ├── db/              # Drizzle connection + schema
+│   ├── ui/              # Design system + global helpers
+│   ├── lib/             # Generic utilities + errors
+│   ├── types/           # Cross-feature domain types
+│   └── i18n/            # i18next config + locales
 ├── main/                # Electron entry + module wiring
 ├── preload/             # Context bridge
 └── renderer/            # React root + routes
@@ -44,7 +71,46 @@ src/
 
 ---
 
-## 3. Backend Clean Architecture
+## 4. Type-Safe IPC
+
+No raw channel strings. The IPC system is type-safe end-to-end.
+
+**Main side** — `shared/ipc/router.ts`
+```ts
+createMainRouter(ipcMain).procedure(STUDENT_CHANNELS.CREATE, async (input) => {
+  return unwrap(await createStudent(deps, input))
+})
+```
+
+**Renderer side** — `preload/index.ts` exposes `window.electronAPI`
+```ts
+window.electronAPI.student.create(input)
+window.electronAPI.frequentation.list(input)
+```
+
+**Channels** — Named constants in `shared/ipc/channels.ts`. Never use raw strings.
+
+---
+
+## 5. Database Layer
+
+- **Drizzle ORM** with `better-sqlite3`
+- **Schema** co-located in feature entities: `features/X/main/entities/X/`
+- **Zod schemas** live alongside Drizzle schema for validation
+- **Migrations** managed by Drizzle Kit, output in `drizzle/`
+- **Schema registry** at `shared/db/schema.ts` re-exports all feature schemas
+- **Auto-cleanup**: frequentations older than 2 years are deleted on startup
+
+```
+shared/db/
+├── connection.ts     # better-sqlite3 singleton
+├── schema.ts       # Re-exports all feature schemas
+└── migrate.ts      # Run migrations on startup
+```
+
+---
+
+## 6. Backend Clean Architecture
 
 Dependency direction:
 
@@ -70,7 +136,7 @@ features/student/main/
 
 ---
 
-## 4. Frontend Container/Presenter Pattern
+## 7. Frontend Container/Presenter Pattern
 
 ### Containers
 - Import hooks, manage state, pass data to presenters via props
@@ -83,6 +149,11 @@ features/student/main/
 - **Zero state, zero logic, zero inline functions**
 - Every presenter has a dedicated `.styles.ts` file
 
+### Naming
+- Containers and presenters share the same base name
+- **Location** determines the role, not a suffix
+- Optional `View` suffix when a container needs a dedicated display component
+
 ```tsx
 // ✅ Container — hooks, state, logic
 export function JournalEntryForm() {
@@ -94,11 +165,57 @@ export function JournalEntryForm() {
 export function JournalEntryFormView({ form }: JournalEntryFormViewProps) {
   return <Box>...</Box>
 }
+
+// ✅ Also valid — container composes presenters directly
+export function StudentList() {
+  const { students } = useStudentListData()
+  return <StudentTable rows={students} />
+}
 ```
 
 ---
 
-## 5. React Quality Rules
+## 8. Error Handling
+
+### Use-Case Results
+Every use-case returns a discriminated union:
+
+```ts
+type UseCaseResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: string }
+```
+
+Controllers `unwrap()` the result before sending it over IPC. The renderer receives `{ success, data }` or `{ success, error }`.
+
+### AppError
+```ts
+throw new AppError(ErrorCode.STUDENT_NOT_FOUND, 'Student not found')
+```
+
+- Always use `ErrorCode` enum, never raw strings
+- `isAppError()` for type narrowing at boundaries
+
+---
+
+## 9. Route Lazy Loading
+
+Pages are lazy-loaded via `React.lazy()` to keep the initial bundle small.
+
+```tsx
+// src/renderer/routes/JournalPage.tsx
+const JournalPageImpl = lazy(async () => {
+  const mod = await import('@frequentation/pages/JournalPage')
+  return { default: mod.JournalPage }
+})
+export default JournalPageImpl
+```
+
+**Exception**: Route files use `export default` because React Router's `React.lazy()` requires a default export.
+
+---
+
+## 10. React Quality Rules
 
 ### No Manual Memoization
 React Compiler handles automatic memoization. **Zero** `useMemo` / `useCallback` in the codebase.
@@ -130,7 +247,7 @@ Never define a component inside another component. Extract to its own folder wit
 
 ---
 
-## 6. Code Quality Rules
+## 11. Code Quality Rules
 
 ### No Type Casting
 No `as Type`, no `as unknown`, no `as never`, no non-null assertions (`!.`).
@@ -228,18 +345,18 @@ Use full words. `v` → `version`, `num` → `number`, `msg` → `message`.
 
 ---
 
-## 7. File Structure Rules
+## 12. File Structure Rules
 
 1. **Every named unit is a folder** with `moduleName.ts`/`moduleName.tsx` + `index.ts` re-export
 2. **Every folder with logic has `__tests__/`** co-located
 3. **Types and query key factories are flat files** — no subfolders, no tests
-4. **`.tsx` for JSX, `.ts` for everything else** — applies to `index` files too
+4. **`.tsx` for JSX, `.ts` for everything else** — applies to `index` files too. `index.ts` for re-export-only files.
 5. **Gateway exception**: two coordinated files (`*.gateway.ts` + `*.gateway.drizzle.ts`) + `index.ts`
 6. **No barrel files**: `index.ts` only re-exports from its single sibling implementation
 
 ---
 
-## 8. Co-Location Rules
+## 13. Co-Location Rules
 
 Every artifact lives as close as possible to its consumer. Only hoist when shared by 2+ consumers at the same level.
 
@@ -254,7 +371,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 9. Import Rules & Path Aliases
+## 14. Import Rules & Path Aliases
 
 | Scenario                      | Style    | Example                                                              |
 | ----------------------------- | -------- | -------------------------------------------------------------------- |
@@ -282,7 +399,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 10. Testing Strategy
+## 15. Testing Strategy
 
 | File type                  | Test type     | Location                          | What it tests                          |
 | -------------------------- | ------------- | --------------------------------- | -------------------------------------- |
@@ -301,7 +418,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 11. Data Flow
+## 16. Data Flow
 
 ```
 [User Action]
@@ -329,7 +446,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 12. i18n Strategy
+## 17. i18n Strategy
 
 Namespaced JSON files at `shared/i18n/locales/fr/`:
 
@@ -348,7 +465,7 @@ shared/i18n/
 
 ---
 
-## 13. Exceptions
+## 18. Exceptions
 
 The following patterns are explicitly allowed as exceptions to the rules above:
 
@@ -361,9 +478,15 @@ Allowed for literal type narrowing. All other `as` assertions are forbidden.
 ### MUI Spacing Values
 MUI `sx` prop spacing values (`mt`, `mb`, `gap`, `p`, etc.) in the range `0–12` are theme-relative and do not need named constants. Values outside this range and all other numeric values must still be named constants.
 
+### `export default` in Route Files
+Route files (`src/renderer/routes/*.tsx`) and `shared/i18n/config.ts` use `export default` because React Router's `React.lazy()` and i18next require it. All other files use named exports only.
+
+### `useWatch`
+Forbidden by default. Exception only if a deeply nested child component in a very large form genuinely cannot access the value any other way and React Compiler does not cover the case. Must be justified in a PR description.
+
 ---
 
-## 14. Compliance Checklist
+## 19. Compliance Checklist
 
 When adding or modifying code, verify:
 
