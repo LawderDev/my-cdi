@@ -1,12 +1,7 @@
 import Box from '@mui/material/Box'
 import { Icon } from '@ui/components/Icon'
 import type { ActivityGridOption, ActivityGridProps } from './types/ActivityGridProps'
-
-const GRID_COLUMNS = 3
-const ICON_FONT_SIZE_PX = 22
-const TILE_FONT_SIZE_PX = 12
-const TILE_FONT_WEIGHT = 500
-const TILE_TRANSITION = 'all 0.15s'
+import { GRID_COLUMNS, ICON_FONT_SIZE_PX, TILE_FONT_SIZE_PX, TILE_FONT_WEIGHT, TILE_TRANSITION } from './ActivityGrid.styles'
 
 export function ActivityGrid({ options, value, onChange }: ActivityGridProps) {
   function renderTile(option: ActivityGridOption) {

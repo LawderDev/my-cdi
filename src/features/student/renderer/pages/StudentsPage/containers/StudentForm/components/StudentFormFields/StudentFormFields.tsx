@@ -3,6 +3,13 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import type { StudentFormData } from '../../types/StudentFormData'
+import {
+  LABEL_FONT_SIZE_PX,
+  LABEL_FONT_WEIGHT,
+  INPUT_HEIGHT_PX,
+  INPUT_FONT_SIZE_PX,
+  ERROR_FONT_SIZE_PX
+} from './StudentFormFields.styles'
 
 interface StudentFormFieldsProps {
   register: UseFormRegister<StudentFormData>
@@ -10,12 +17,6 @@ interface StudentFormFieldsProps {
 }
 
 const FIELD_KEYS: readonly (keyof StudentFormData)[] = ['nom', 'prenom', 'classe', 'ine']
-
-const LABEL_FONT_SIZE_PX = 11
-const LABEL_FONT_WEIGHT = 600
-const INPUT_HEIGHT_PX = 40
-const INPUT_FONT_SIZE_PX = 13
-const ERROR_FONT_SIZE_PX = 11
 
 export function StudentFormFields({ register, errors }: StudentFormFieldsProps) {
   const { t } = useTranslation('student')

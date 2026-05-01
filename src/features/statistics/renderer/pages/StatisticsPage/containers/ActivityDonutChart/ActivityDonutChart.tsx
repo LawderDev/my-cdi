@@ -2,19 +2,20 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { ChartCard } from '@statistics/components/ChartCard'
 import { ChartLegend } from '@statistics/components/ChartLegend'
+import {
+  CX,
+  CY,
+  FILL_OPACITY,
+  LABEL_FONT_SIZE,
+  LABEL_FONT_WEIGHT,
+  LABEL_OFFSET,
+  SIZE,
+  VALUE_FONT_SIZE,
+  VALUE_FONT_WEIGHT,
+  VALUE_OFFSET
+} from './ActivityDonutChart.styles'
 import { buildDonutSlices } from './helpers/buildDonutSlices'
 import type { ActivityDonutChartProps } from './types/ActivityDonutChartProps'
-
-const CX = 70
-const CY = 70
-const SIZE = 140
-const VALUE_OFFSET = -4
-const LABEL_OFFSET = 12
-const VALUE_FONT_SIZE = 18
-const VALUE_FONT_WEIGHT = 700
-const LABEL_FONT_SIZE = 9
-const LABEL_FONT_WEIGHT = 500
-const FILL_OPACITY = 0.9
 
 export function ActivityDonutChart({ activityCounts }: ActivityDonutChartProps) {
   const { t } = useTranslation('statistics')

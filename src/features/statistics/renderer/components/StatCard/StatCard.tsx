@@ -2,16 +2,17 @@ import Box from '@mui/material/Box'
 import { Card } from '@ui/components/Card'
 import { Icon } from '@ui/components/Icon'
 import { MONO_FONT_FAMILY } from '@ui/theme'
+import {
+  DELTA_FONT_SIZE_PX,
+  DELTA_FONT_WEIGHT,
+  ICON_FONT_SIZE_PX,
+  ICON_SIZE_PX,
+  LABEL_FONT_SIZE_PX,
+  LABEL_FONT_WEIGHT,
+  VALUE_FONT_SIZE_PX,
+  VALUE_FONT_WEIGHT
+} from './StatCard.styles'
 import type { StatCardProps } from './types/StatCardProps'
-
-const ICON_SIZE_PX = 40
-const ICON_FONT_SIZE_PX = 20
-const LABEL_FONT_SIZE_PX = 11
-const LABEL_FONT_WEIGHT = 600
-const VALUE_FONT_SIZE_PX = 28
-const VALUE_FONT_WEIGHT = 700
-const DELTA_FONT_SIZE_PX = 12
-const DELTA_FONT_WEIGHT = 500
 
 export function StatCard({ iconName, iconBg, iconColor, label, value, delta }: StatCardProps) {
   const deltaColor = delta?.sign === 'up' ? 'var(--success)' : 'var(--danger)'

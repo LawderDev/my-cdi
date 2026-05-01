@@ -7,6 +7,17 @@ import { MONO_FONT_FAMILY } from '@ui/theme'
 import { ActivityChip } from '@frequentation/components/ActivityChip'
 import { getEntryPeriod } from '../../helpers/getEntryPeriod'
 import type { JournalEntryViewModel } from '@frequentation/types'
+import {
+  ACTIONS_CLASS,
+  CLASSE_FONT_SIZE_PX,
+  CLASSE_FONT_WEIGHT,
+  NAME_FONT_SIZE_PX,
+  NAME_FONT_WEIGHT,
+  PERIOD_FONT_SIZE_PX,
+  PERIOD_FONT_WEIGHT,
+  TIME_FONT_SIZE_PX,
+  TIME_FORMAT
+} from './JournalEntryRow.styles'
 
 interface JournalEntryRowProps {
   entry: JournalEntryViewModel
@@ -15,18 +26,6 @@ interface JournalEntryRowProps {
   onEdit: () => void
   onDelete: () => void
 }
-
-const TIME_FORMAT = 'HH:mm'
-
-const NAME_FONT_SIZE_PX = 13
-const NAME_FONT_WEIGHT = 500
-const CLASSE_FONT_SIZE_PX = 11
-const CLASSE_FONT_WEIGHT = 500
-const TIME_FONT_SIZE_PX = 11
-const PERIOD_FONT_SIZE_PX = 10
-const PERIOD_FONT_WEIGHT = 600
-
-const ACTIONS_CLASS = 'att-actions'
 
 function buildInitials(prenom: string, nom: string): string {
   return `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase()

@@ -1,13 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
+import { RESPONSIVE_BREAKPOINT_PX } from './StatisticsPage.styles'
 import { useStatisticsPage } from './hooks/useStatisticsPage'
 import { StatsKpiCards } from './containers/StatsKpiCards'
 import { PeriodFilter } from './containers/PeriodFilter'
 import { WeeklyBarChart } from './containers/WeeklyBarChart'
 import { ActivityDonutChart } from './containers/ActivityDonutChart'
 import { MonthlyTrendChart } from './containers/MonthlyTrendChart'
-
-const RESPONSIVE_BREAKPOINT_PX = 1100
 
 export function StatisticsPage() {
   const { period, setPeriod, stats, isLoading } = useStatisticsPage()

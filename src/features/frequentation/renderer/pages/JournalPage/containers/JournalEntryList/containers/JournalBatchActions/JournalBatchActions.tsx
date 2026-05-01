@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { Button } from '@ui/components/Button'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useJournalBatchActions } from './hooks/useJournalBatchActions'
+import { COUNT_FONT_SIZE_PX, COUNT_FONT_WEIGHT, MENU_MIN_WIDTH_PX } from './JournalBatchActions.styles'
 import type { ActivityType } from '@types'
 
 interface JournalBatchActionsProps {
@@ -16,10 +16,6 @@ interface JournalBatchActionsProps {
   onAfterUpdate: () => void
 }
 
-const COUNT_FONT_SIZE_PX = 12
-const COUNT_FONT_WEIGHT = 500
-const MENU_MIN_WIDTH_PX = 180
-
 export function JournalBatchActions(props: JournalBatchActionsProps) {
   const {
     hasSelection,
@@ -27,6 +23,8 @@ export function JournalBatchActions(props: JournalBatchActionsProps) {
     activityOptions,
     confirmOpen,
     activityMenuOpen,
+    anchorEl,
+    setAnchorEl,
     selectToggleLabel,
     changeActivityLabel,
     deleteSelectionLabel,
@@ -41,8 +39,6 @@ export function JournalBatchActions(props: JournalBatchActionsProps) {
     closeActivityMenu,
     selectActivity
   } = useJournalBatchActions(props)
-
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
   function handleActivityClick(value: ActivityType) {
     selectActivity(value)

@@ -6,6 +6,7 @@ import { IconButton } from '@ui/components/IconButton'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 import { StudentAvatar } from '@student/components/StudentAvatar'
 import type { StudentViewModel } from '@student/types'
+import { NUMERIC_FONT_SIZE_PX, NUMERIC_FONT_WEIGHT } from './StudentTableRow.styles'
 
 interface StudentTableRowProps {
   student: StudentViewModel
@@ -15,8 +16,6 @@ interface StudentTableRowProps {
   onDelete: (id: number) => void
 }
 
-const NUMERIC_FONT_SIZE_PX = 12
-const NUMERIC_FONT_WEIGHT = 600
 const VISITS_PLACEHOLDER = '—'
 
 export function StudentTableRow({

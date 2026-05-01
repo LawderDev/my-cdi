@@ -1,10 +1,9 @@
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { Button } from '@ui/components/Button'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
-import { useBatchDelete } from './hooks/useBatchDelete'
+import { useStudentBatchActions } from './hooks/useStudentBatchActions'
 import { formatBatchMessage } from './helpers/formatBatchMessage'
+import { NO_SELECTION, STRIP_FONT_SIZE_PX, COUNT_FONT_WEIGHT } from './StudentBatchActions.styles'
 
 interface StudentBatchActionsProps {
   selectedIds: number[]
@@ -15,10 +14,6 @@ interface StudentBatchActionsProps {
   onAfterDelete: () => void
 }
 
-const NO_SELECTION = 0
-const STRIP_FONT_SIZE_PX = 12
-const COUNT_FONT_WEIGHT = 500
-
 export function StudentBatchActions({
   selectedIds,
   selectedCount,
@@ -27,41 +22,27 @@ export function StudentBatchActions({
   onClearSelection,
   onAfterDelete
 }: StudentBatchActionsProps) {
-  const { t: tCommon } = useTranslation('common')
-  const { t: tStudent } = useTranslation('student')
-  const [showConfirm, setShowConfirm] = useState(false)
-
-  function closeConfirm() {
-    setShowConfirm(false)
-  }
-
-  const { mutate: batchDelete, isPending } = useBatchDelete({
-    onSuccess: () => {
-      onAfterDelete()
-      closeConfirm()
-    }
+  const {
+    showConfirm,
+    isPending,
+    hasSelection,
+    selectToggleLabel,
+    batchDeleteLabel,
+    confirmTitle,
+    confirmMessage,
+    confirmButtonLabel,
+    handleSelectToggle,
+    handleDeleteClick,
+    handleConfirmDelete,
+    closeConfirm
+  } = useStudentBatchActions({
+    selectedIds,
+    selectedCount,
+    totalCount,
+    onSelectAll,
+    onClearSelection,
+    onAfterDelete
   })
-
-  const isAllSelected = selectedCount === totalCount && totalCount > NO_SELECTION
-  const hasSelection = selectedCount > NO_SELECTION
-
-  function handleSelectToggle() {
-    if (isAllSelected) {
-      onClearSelection()
-      return
-    }
-    onSelectAll()
-  }
-
-  function handleDeleteClick() {
-    if (hasSelection) {
-      setShowConfirm(true)
-    }
-  }
-
-  function handleConfirmDelete() {
-    batchDelete(selectedIds)
-  }
 
   return (
     <>
@@ -84,10 +65,10 @@ export function StudentBatchActions({
           onClick={handleSelectToggle}
           disabled={totalCount === NO_SELECTION || isPending}
         >
-          {isAllSelected ? tCommon('app.deselectAll') : tCommon('app.selectAll')}
+          {selectToggleLabel}
         </Button>
         <Button variant="danger" disabled={!hasSelection || isPending} onClick={handleDeleteClick}>
-          {tCommon('app.batchDelete')}
+          {batchDeleteLabel}
         </Button>
         {hasSelection ? (
           <Box component="span" sx={{ fontWeight: COUNT_FONT_WEIGHT }}>
@@ -98,9 +79,9 @@ export function StudentBatchActions({
 
       <ConfirmDialog
         open={showConfirm}
-        title={tCommon('app.confirmDelete')}
-        message={tStudent('deleteConfirm', { count: selectedCount })}
-        confirmLabel={tCommon('app.delete')}
+        title={confirmTitle}
+        message={confirmMessage}
+        confirmLabel={confirmButtonLabel}
         destructive
         onConfirm={handleConfirmDelete}
         onClose={closeConfirm}

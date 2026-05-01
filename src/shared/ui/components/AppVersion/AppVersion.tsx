@@ -1,24 +1,11 @@
-import { useEffect, useState } from 'react'
 import Typography from '@mui/material/Typography'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 
-export function AppVersion() {
-  const [version, setVersion] = useState<string>('')
+interface AppVersionProps {
+  version: string
+}
 
-  useEffect(() => {
-    let cancelled = false
-    async function loadVersion() {
-      const value = await window.electronAPI.getAppVersion()
-      if (!cancelled) {
-        setVersion(value)
-      }
-    }
-    void loadVersion()
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
+export function AppVersion({ version }: AppVersionProps) {
   if (!version) {
     return null
   }
@@ -27,7 +14,7 @@ export function AppVersion() {
       component="span"
       sx={{ fontFamily: MONO_FONT_FAMILY, fontSize: '12px', color: 'var(--text-dim)' }}
     >
-      {`v${version}`}
+      {`version ${version}`}
     </Typography>
   )
 }

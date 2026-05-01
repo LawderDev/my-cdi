@@ -1,0 +1,8 @@
+export const TITLE_FONT_SIZE_PX = 15
+export const TITLE_FONT_WEIGHT = 600
+export const TITLE_ICON_FONT_SIZE_PX = 18
+export const COUNT_FONT_SIZE_PX = 12
+export const COUNT_FONT_WEIGHT = 600
+export const COUNT_BORDER_RADIUS_PX = 10
+export const SELECT_HEIGHT_PX = 30
+export const SELECT_FONT_SIZE_PX = 12

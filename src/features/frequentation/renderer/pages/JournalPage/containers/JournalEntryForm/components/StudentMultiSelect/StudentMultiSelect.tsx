@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { Autocomplete } from '@ui/components/Autocomplete'
@@ -11,26 +10,33 @@ interface StudentOption {
   classe: string
 }
 
+import {
+  LABEL_FONT_SIZE_PX,
+  LABEL_FONT_WEIGHT,
+  LOADING_FONT_SIZE_PX,
+  CHIPS_MIN_HEIGHT_PX
+} from './StudentMultiSelect.styles'
+
 interface StudentMultiSelectProps {
   students: StudentOption[]
   selectedIds: number[]
-  onChange: (ids: number[]) => void
+  inputValue: string
+  onInputChange: (value: string) => void
+  onSelect: (option: AutocompleteOption<number>) => void
+  onRemove: (id: number) => void
   loading: boolean
 }
-
-const LABEL_FONT_SIZE_PX = 11
-const LABEL_FONT_WEIGHT = 600
-const LOADING_FONT_SIZE_PX = 12
-const CHIPS_MIN_HEIGHT_PX = 28
 
 export function StudentMultiSelect({
   students,
   selectedIds,
-  onChange,
+  inputValue,
+  onInputChange,
+  onSelect,
+  onRemove,
   loading
 }: StudentMultiSelectProps) {
   const { t } = useTranslation('frequentation')
-  const [inputValue, setInputValue] = useState<string>('')
 
   const options: AutocompleteOption<number>[] = students.map((student) => ({
     value: student.id,
@@ -39,18 +45,6 @@ export function StudentMultiSelect({
   }))
 
   const selectedStudents = students.filter((student) => selectedIds.includes(student.id))
-
-  function handleSelect(option: AutocompleteOption<number>) {
-    if (selectedIds.includes(option.value)) {
-      return
-    }
-    onChange([...selectedIds, option.value])
-    setInputValue('')
-  }
-
-  function handleRemove(id: number) {
-    onChange(selectedIds.filter((existing) => existing !== id))
-  }
 
   return (
     <Box>
@@ -76,9 +70,9 @@ export function StudentMultiSelect({
       <Autocomplete<number>
         placeholder={t('form.searchStudent')}
         options={options}
-        onSelect={handleSelect}
+        onSelect={onSelect}
         inputValue={inputValue}
-        onInputChange={setInputValue}
+        onInputChange={onInputChange}
         excludedValues={selectedIds}
       />
       <Box
@@ -94,7 +88,7 @@ export function StudentMultiSelect({
           <Chip
             key={student.id}
             label={student.displayName}
-            onRemove={() => handleRemove(student.id)}
+            onRemove={() => onRemove(student.id)}
           />
         ))}
       </Box>

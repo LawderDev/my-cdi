@@ -770,6 +770,198 @@ Configuration:
 }
 ```
 
+### No Bracketless One-Line If
+
+Every `if`, `else if`, `else` must use curly braces `{ }`, even for single-statement bodies.
+
+```ts
+// ❌ BAD
+if (!student) return null
+if (count > 0) doSomething()
+
+// ✅ GOOD
+if (!student) {
+  return null
+}
+if (count > 0) {
+  doSomething()
+}
+```
+
+**ESLint enforcement:**
+
+| Rule                               | Setting | Package  |
+| ---------------------------------- | ------- | -------- |
+| `curly`                            | `error` | Built-in |
+| `nonblock-statement-body-position` | `error` | Built-in |
+
+Configuration:
+
+```js
+{
+  "curly": ["error", "all"],
+  "nonblock-statement-body-position": ["error", "below"]
+}
+```
+
+### Prefer Early Return Over Nesting
+
+Use guard clauses to flatten code. Avoid deep `if/else` nesting. Return early for error cases, edge cases, and preconditions.
+
+```ts
+// ❌ BAD — nested
+function processEntry(entry: Entry | null) {
+  if (entry) {
+    if (entry.isValid) {
+      if (entry.hasPermission) {
+        doWork(entry)
+      } else {
+        handleError('no permission')
+      }
+    } else {
+      handleError('invalid')
+    }
+  } else {
+    handleError('missing')
+  }
+}
+
+// ✅ GOOD — early returns, flat
+function processEntry(entry: Entry | null) {
+  if (!entry) {
+    return handleError('missing')
+  }
+  if (!entry.isValid) {
+    return handleError('invalid')
+  }
+  if (!entry.hasPermission) {
+    return handleError('no permission')
+  }
+  doWork(entry)
+}
+```
+
+### Single Responsibility Per Function
+
+Each function does exactly one thing. If a function's body contains "and" or "then" in its description, split it. Each function should be nameable by a single verb-phrase.
+
+```ts
+// ❌ BAD — validate AND create AND format response
+async function createAndFormatStudent(gateway: StudentGateway, dto: CreateStudentDto) {
+  if (!dto.nom) return { success: false, error: 'nom required' }
+  const entity = await gateway.create(dto)
+  return { success: true, data: { ...entity, displayName: `${entity.prenom} ${entity.nom}` } }
+}
+
+// ✅ GOOD — each function has one responsibility
+function validateCreateStudentDto(dto: CreateStudentDto): UseCaseResult<void> {
+  if (!dto.nom) {
+    return { success: false, error: 'nom required' }
+  }
+  return { success: true, data: undefined }
+}
+
+async function createStudent(
+  gateway: StudentGateway,
+  dto: CreateStudentDto
+): Promise<UseCaseResult<StudentEntity>> {
+  const validation = validateCreateStudentDto(dto)
+  if (!validation.success) {
+    return validation
+  }
+  try {
+    const entity = await gateway.create(dto)
+    return { success: true, data: entity }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    return { success: false, error: message }
+  }
+}
+```
+
+### Self-Documented Code — No Comments
+
+Code must be self-documenting through clear names. Comments are only acceptable when explaining **why** something is done, never **what** or **how**.
+
+```ts
+// ❌ BAD — comment explains what the code already says
+const MAX_RETRIES = 3 // maximum number of retries
+function calculateTotal(items: Item[]) {
+  // calculates total price
+  return items.reduce((sum, item) => sum + item.price, 0) // sum all prices
+}
+
+// ✅ GOOD — names are self-documenting
+const MAX_RETRIES = 3
+function calculateTotalPrice(items: Item[]) {
+  return items.reduce((sum, item) => sum + item.price, 0)
+}
+
+// ✅ ACCEPTABLE — comment explains WHY (non-obvious reason)
+const CACHE_TTL_MS = 5 * 60 * 1000 // SQLite query plan cache invalidates after 5min in WAL mode
+if (process.platform === 'darwin') {
+  app.dock.hide() // macOS dock icon suppresses auto-hide on subsequent shows
+}
+```
+
+**ESLint enforcement:**
+
+| Rule                          | Setting | Package   |
+| ----------------------------- | ------- | --------- |
+| `no-commented-out-code`       | `error` | Built-in  |
+| `eslint-plugin-clean-comment` | `error` | Community |
+
+Custom rule: In code review, reject any comment that restates the code. Only approve comments that explain non-obvious constraints, external system behaviors, or historical decisions.
+
+### Exceptions to Code Quality Rules
+
+The following patterns are explicitly allowed as exceptions to the rules above:
+
+#### `as const` Readonly Narrowing
+
+The `as const` assertion is allowed — it is TypeScript's readonly literal narrowing, not an unsafe type cast. It makes objects/arrays deeply readonly and narrows strings/numbers to literal types. All other `as` assertions (`as Type`, `as unknown`, `as never`) are forbidden.
+
+```ts
+// ✅ ALLOWED — as const is readonly narrowing
+export const ROUTES = {
+  JOURNAL: '/',
+  STUDENTS: '/students'
+} as const
+```
+
+#### `useTranslation` in Presenters
+
+`useTranslation('namespace')` is allowed in presenter components. It is a read-only context hook (like a provider consumer) and does not introduce logic or state. All other React hooks (`useState`, `useEffect`, `useMutation`, `useForm`, `useRef`, custom hooks) are forbidden in presenters and must remain in containers.
+
+```ts
+// ✅ ALLOWED in presenter
+export function StudentTableRow({ student }: StudentTableRowProps) {
+  const { t } = useTranslation('student')
+  return <TableCell>{t(`fields.${student.field}`)}</TableCell>
+}
+
+// ❌ NOT ALLOWED in presenter
+export function StudentTableRow() {
+  const [selected, setSelected] = useState(false) // useState belongs in container
+  const mutation = useMutation(...)               // TanStack Query belongs in container
+  return ...
+}
+```
+
+##### MUI Spacing Values
+
+MUI `sx` prop values for spacing (`mt`, `mb`, `ml`, `mr`, `mx`, `my`, `p`, `px`, `py`, `gap`, etc.) in the range 0–12 are theme-relative and do not need named constants. Values outside this range, absolute pixel values, and all other numeric values must still be named constants.
+
+```ts
+// ✅ ALLOWED — MUI spacing theme values
+sx={{ mt: 2, mb: 1, gap: 1, p: 2 }}
+
+// ❌ STILL FORBIDDEN — needs named constant
+sx={{ mt: 14 }}          // outside MUI default spacing scale
+const width = 300         // needs: const DIALOG_WIDTH = 300
+const fontSize = 48       // needs: const ERROR_ICON_SIZE = 48
+```
+
 ### Shared Constants Structure
 
 Constants follow the same co-location rules as other artifacts:

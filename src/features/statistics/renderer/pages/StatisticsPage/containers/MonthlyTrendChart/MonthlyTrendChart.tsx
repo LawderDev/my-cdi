@@ -2,20 +2,21 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { ChartCard } from '@statistics/components/ChartCard'
 import {
+  ACCENT_COLOR,
+  CHART_HEIGHT_PX,
+  DASH_PATTERN,
+  DOT_RADIUS,
+  GRADIENT_OPACITY_TOP,
+  STROKE_WIDTH,
+  Y_LABEL_FONT_SIZE,
+  Y_LABEL_TEXT_OFFSET
+} from './MonthlyTrendChart.styles'
+import {
   buildTrendPath,
   DEFAULT_TREND_DIMENSIONS,
   Y_LABEL_OFFSET_X
 } from './helpers/buildTrendPath'
 import type { MonthlyTrendChartProps } from './types/MonthlyTrendChartProps'
-
-const CHART_HEIGHT_PX = 200
-const ACCENT_COLOR = '#7C4DFF'
-const DOT_RADIUS = 3
-const STROKE_WIDTH = 2
-const Y_LABEL_TEXT_OFFSET = 4
-const GRADIENT_OPACITY_TOP = 0.3
-const Y_LABEL_FONT_SIZE = 10
-const DASH_PATTERN = '4,4'
 
 export function MonthlyTrendChart({ dailyCounts }: MonthlyTrendChartProps) {
   const { t } = useTranslation('statistics')

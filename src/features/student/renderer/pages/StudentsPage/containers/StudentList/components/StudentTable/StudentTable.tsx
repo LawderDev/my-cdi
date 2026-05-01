@@ -4,6 +4,12 @@ import { Icon } from '@ui/components/Icon'
 import { StudentTableRow } from '../StudentTableRow'
 import { buildNextSortConfig } from './helpers/buildNextSortConfig'
 import type { StudentViewModel, StudentSortConfig, StudentSortField } from '@student/types'
+import {
+  FOOTER_FONT_SIZE_PX,
+  CHECKBOX_CELL_STYLE,
+  ACTIONS_CELL_STYLE,
+  SORT_ICON_STYLE
+} from './StudentTable.styles'
 
 interface StudentTableProps {
   students: StudentViewModel[]
@@ -16,14 +22,6 @@ interface StudentTableProps {
 }
 
 const SORT_COLUMNS: readonly StudentSortField[] = ['nom', 'prenom', 'classe', 'ine']
-
-const SORT_ICON_FONT_SIZE_PX = 13
-const FOOTER_FONT_SIZE_PX = 12
-const CHECKBOX_CELL_WIDTH_PX = 40
-const ACTIONS_CELL_WIDTH_PX = 80
-const CHECKBOX_CELL_STYLE = { width: CHECKBOX_CELL_WIDTH_PX } as const
-const ACTIONS_CELL_STYLE = { width: ACTIONS_CELL_WIDTH_PX } as const
-const SORT_ICON_STYLE = { fontSize: `${SORT_ICON_FONT_SIZE_PX}px`, marginLeft: '2px' } as const
 
 export function StudentTable({
   students,

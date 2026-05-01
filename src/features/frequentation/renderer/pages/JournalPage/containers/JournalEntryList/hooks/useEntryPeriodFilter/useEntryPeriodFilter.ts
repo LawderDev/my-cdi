@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import type { EntryPeriodFilter } from '../../helpers/filterEntriesByPeriod'
 
 interface UseEntryPeriodFilterReturn {
@@ -7,11 +7,7 @@ interface UseEntryPeriodFilterReturn {
 }
 
 export function useEntryPeriodFilter(): UseEntryPeriodFilterReturn {
-  const [period, setPeriodState] = useState<EntryPeriodFilter>('all')
-
-  const setPeriod = useCallback((next: EntryPeriodFilter) => {
-    setPeriodState(next)
-  }, [])
+  const [period, setPeriod] = useState<EntryPeriodFilter>('all')
 
   return { period, setPeriod }
 }

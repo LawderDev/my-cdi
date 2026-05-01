@@ -1,18 +1,18 @@
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { StatCard } from '@statistics/components/StatCard'
+import {
+  ACCENT_BG,
+  ACCENT_COLOR,
+  INFO_BG,
+  INFO_COLOR,
+  RESPONSIVE_BREAKPOINT_PX,
+  SUCCESS_BG,
+  SUCCESS_COLOR,
+  WARNING_BG,
+  WARNING_COLOR
+} from './StatsKpiCards.styles'
 import type { StatsKpiCardsProps } from './types/StatsKpiCardsProps'
-
-const ACCENT_BG = 'var(--accent-bg)'
-const ACCENT_COLOR = 'var(--accent)'
-const SUCCESS_BG = 'var(--success-bg)'
-const SUCCESS_COLOR = 'var(--success)'
-const WARNING_BG = 'var(--warning-bg)'
-const WARNING_COLOR = 'var(--warning)'
-const INFO_BG = 'rgba(96,165,250,0.12)'
-const INFO_COLOR = '#60a5fa'
-
-const RESPONSIVE_BREAKPOINT_PX = 1100
 
 export function StatsKpiCards({ stats }: StatsKpiCardsProps) {
   const { t } = useTranslation('statistics')

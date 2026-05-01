@@ -7,6 +7,7 @@ import { ActivityGrid } from '@frequentation/components/ActivityGrid'
 import type { ActivityGridOption } from '@frequentation/components/ActivityGrid'
 import type { JournalEntryViewModel } from '@frequentation/types'
 import type { ActivityType } from '@types'
+import { CLASSE_FONT_SIZE_PX, NAME_FONT_SIZE_PX, NAME_FONT_WEIGHT } from './JournalEntryEditDialog.styles'
 
 interface JournalEntryEditDialogProps {
   open: boolean
@@ -17,10 +18,6 @@ interface JournalEntryEditDialogProps {
   onClose: () => void
   entry?: JournalEntryViewModel
 }
-
-const NAME_FONT_SIZE_PX = 13
-const CLASSE_FONT_SIZE_PX = 11
-const NAME_FONT_WEIGHT = 500
 
 function buildInitials(prenom: string, nom: string): string {
   return `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase()

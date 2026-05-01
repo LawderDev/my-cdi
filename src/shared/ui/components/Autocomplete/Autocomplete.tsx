@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import MuiAutocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
@@ -22,12 +21,8 @@ export function Autocomplete<T>({
   excludedValues,
   maxResults = DEFAULT_MAX_RESULTS
 }: AutocompleteProps<T>) {
-  const excludedSet = useMemo(() => new Set(excludedValues ?? []), [excludedValues])
-
-  const filteredOptions = useMemo(
-    () => options.filter((option) => !excludedSet.has(option.value)),
-    [options, excludedSet]
-  )
+  const excludedSet = new Set(excludedValues ?? [])
+  const filteredOptions = options.filter((option) => !excludedSet.has(option.value))
 
   function getOptionLabel(option: AutocompleteOption<T>): string {
     return option.label

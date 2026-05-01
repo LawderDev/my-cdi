@@ -1,0 +1,3 @@
+export const SECTION_LABEL_FONT_SIZE_PX = 11
+export const SECTION_LABEL_FONT_WEIGHT = 600
+export const FEEDBACK_AUTO_HIDE_MS = 4000

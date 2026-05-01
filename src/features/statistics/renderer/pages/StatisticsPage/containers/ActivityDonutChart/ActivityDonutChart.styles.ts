@@ -1,0 +1,10 @@
+export const CX = 70
+export const CY = 70
+export const SIZE = 140
+export const VALUE_OFFSET = -4
+export const LABEL_OFFSET = 12
+export const VALUE_FONT_SIZE = 18
+export const VALUE_FONT_WEIGHT = 700
+export const LABEL_FONT_SIZE = 9
+export const LABEL_FONT_WEIGHT = 500
+export const FILL_OPACITY = 0.9

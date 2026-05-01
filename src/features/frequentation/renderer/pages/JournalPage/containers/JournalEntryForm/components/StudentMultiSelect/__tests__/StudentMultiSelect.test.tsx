@@ -16,7 +16,10 @@ function renderWithProvider(props: Partial<Parameters<typeof StudentMultiSelect>
   const merged = {
     students: STUDENTS,
     selectedIds: [],
-    onChange: vi.fn(),
+    inputValue: '',
+    onInputChange: vi.fn(),
+    onSelect: vi.fn(),
+    onRemove: vi.fn(),
     loading: false,
     ...props
   }
@@ -36,20 +39,20 @@ describe('StudentMultiSelect', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument()
   })
 
-  it('typing filters and selecting a student calls onChange with the appended id', () => {
-    const onChange = vi.fn()
-    renderWithProvider({ onChange })
+  it('typing filters and selecting a student calls onSelect with the option', () => {
+    const onSelect = vi.fn()
+    renderWithProvider({ onSelect })
     const input = screen.getByRole('combobox')
     fireEvent.focus(input)
     fireEvent.change(input, { target: { value: 'Jean' } })
     const option = screen.getByRole('option', { name: /Jean Dupont/ })
     fireEvent.click(option)
-    expect(onChange).toHaveBeenCalledWith([FIRST_ID])
+    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ value: FIRST_ID }))
   })
 
-  it('renders one chip per selected student and clicking the × removes it', () => {
-    const onChange = vi.fn()
-    renderWithProvider({ selectedIds: [FIRST_ID, SECOND_ID], onChange })
+  it('renders one chip per selected student and clicking the × calls onRemove', () => {
+    const onRemove = vi.fn()
+    renderWithProvider({ selectedIds: [FIRST_ID, SECOND_ID], onRemove })
     expect(screen.getByText('Jean Dupont')).toBeInTheDocument()
     expect(screen.getByText('Marie Martin')).toBeInTheDocument()
     const removeButtons = document.querySelectorAll('.MuiChip-deleteIcon')
@@ -61,6 +64,6 @@ describe('StudentMultiSelect', () => {
       throw new Error('Expected at least one remove button')
     }
     fireEvent.click(firstRemove)
-    expect(onChange).toHaveBeenCalledWith([SECOND_ID])
+    expect(onRemove).toHaveBeenCalledWith(FIRST_ID)
   })
 })

@@ -6,33 +6,21 @@ import { Button } from '@ui/components/Button'
 import { Modal } from '@ui/components/Modal'
 import { Icon } from '@ui/components/Icon'
 import { useImportStudentsCsv } from '@student/api/useStudentMutations'
+import {
+  VISUALLY_HIDDEN_STYLE,
+  TRIGGER_ICON_STYLE,
+  DROPZONE_ICON_STYLE,
+  DROPZONE_PADDING_PX,
+  DROPZONE_TITLE_FONT_SIZE_PX,
+  DROPZONE_TITLE_FONT_WEIGHT,
+  DROPZONE_SUBTITLE_FONT_SIZE_PX,
+  HINT_TITLE_FONT_WEIGHT,
+  HINT_FONT_SIZE_PX,
+  SELECTED_FILE_FONT_SIZE_PX,
+  SELECTED_FILE_FONT_WEIGHT
+} from './StudentCsvImportButton.styles'
 
 const CSV_ACCEPT = '.csv'
-
-const VISUALLY_HIDDEN_STYLE: React.CSSProperties = {
-  position: 'absolute',
-  width: 1,
-  height: 1,
-  padding: 0,
-  margin: -1,
-  overflow: 'hidden',
-  clip: 'rect(0, 0, 0, 0)',
-  whiteSpace: 'nowrap',
-  border: 0
-}
-const TRIGGER_ICON_FONT_SIZE_PX = 16
-const TRIGGER_ICON_STYLE = { fontSize: TRIGGER_ICON_FONT_SIZE_PX } as const
-const DROPZONE_ICON_FONT_SIZE_PX = 40
-const DROPZONE_ICON_STYLE = { fontSize: DROPZONE_ICON_FONT_SIZE_PX } as const
-
-const DROPZONE_PADDING_PX = 40
-const DROPZONE_TITLE_FONT_SIZE_PX = 13
-const DROPZONE_TITLE_FONT_WEIGHT = 500
-const DROPZONE_SUBTITLE_FONT_SIZE_PX = 12
-const HINT_TITLE_FONT_WEIGHT = 600
-const HINT_FONT_SIZE_PX = 12
-const SELECTED_FILE_FONT_SIZE_PX = 12
-const SELECTED_FILE_FONT_WEIGHT = 500
 
 export function StudentCsvImportButton() {
   const { t } = useTranslation('student')

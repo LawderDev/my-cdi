@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState } from 'react'
 import dayjs from 'dayjs'
 import 'dayjs/locale/fr'
 
@@ -30,31 +30,26 @@ function capitalizeFirstChar(value: string): string {
 export function useCalendar({ selectedDate, onSelectDate }: UseCalendarOptions): UseCalendarReturn {
   const [viewMonth, setViewMonth] = useState<dayjs.Dayjs>(() => dayjs(selectedDate))
 
-  const monthLabel = useMemo(() => {
-    const raw = viewMonth.locale(FRENCH_LOCALE).format(MONTH_LABEL_FORMAT)
-    return capitalizeFirstChar(raw)
-  }, [viewMonth])
+  const rawMonthLabel = viewMonth.locale(FRENCH_LOCALE).format(MONTH_LABEL_FORMAT)
+  const monthLabel = capitalizeFirstChar(rawMonthLabel)
 
-  const goToPrevMonth = useCallback(() => {
+  function goToPrevMonth() {
     setViewMonth((current) => current.subtract(1, 'month'))
-  }, [])
+  }
 
-  const goToNextMonth = useCallback(() => {
+  function goToNextMonth() {
     setViewMonth((current) => current.add(1, 'month'))
-  }, [])
+  }
 
-  const goToToday = useCallback(() => {
+  function goToToday() {
     const today = dayjs()
     setViewMonth(today)
     onSelectDate(today.format(ISO_DATE_FORMAT))
-  }, [onSelectDate])
+  }
 
-  const selectDay = useCallback(
-    (iso: string) => {
-      onSelectDate(iso)
-    },
-    [onSelectDate]
-  )
+  function selectDay(iso: string) {
+    onSelectDate(iso)
+  }
 
   return {
     viewMonth,

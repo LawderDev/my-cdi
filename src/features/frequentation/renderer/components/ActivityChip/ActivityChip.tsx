@@ -1,15 +1,12 @@
 import Box from '@mui/material/Box'
 import { getActivityCssClass } from '@frequentation/helpers/activityFormatters'
 import type { ActivityType } from '@types'
+import { DOT_SIZE_PX, FONT_SIZE_PX, FONT_WEIGHT } from './ActivityChip.styles'
 
 interface ActivityChipProps {
   activity: ActivityType
   label: string
 }
-
-const FONT_SIZE_PX = 11
-const FONT_WEIGHT = 500
-const DOT_SIZE_PX = 6
 
 export function ActivityChip({ activity, label }: ActivityChipProps) {
   const cssClass = getActivityCssClass(activity)

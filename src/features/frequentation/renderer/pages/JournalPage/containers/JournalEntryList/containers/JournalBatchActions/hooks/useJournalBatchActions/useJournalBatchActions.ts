@@ -24,6 +24,7 @@ export function useJournalBatchActions(options: UseJournalBatchActionsOptions) {
   const { getLabel, allActivities } = useActivityLabels()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [activityMenuOpen, setActivityMenuOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
   const { mutate: mutateDelete } = useBatchDelete({
     onSuccess: () => {
@@ -101,6 +102,8 @@ export function useJournalBatchActions(options: UseJournalBatchActionsOptions) {
     activityOptions,
     confirmOpen,
     activityMenuOpen,
+    anchorEl,
+    setAnchorEl,
     selectToggleLabel,
     changeActivityLabel,
     deleteSelectionLabel,

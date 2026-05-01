@@ -1,0 +1,1 @@
+export const RESPONSIVE_BREAKPOINT_PX = 1100

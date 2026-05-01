@@ -5,21 +5,22 @@ import Select from '@mui/material/Select'
 import type { SelectChangeEvent } from '@mui/material/Select'
 import { Icon } from '@ui/components/Icon'
 import type { EntryPeriodFilter } from '../../helpers/filterEntriesByPeriod'
+import {
+  COUNT_BORDER_RADIUS_PX,
+  COUNT_FONT_SIZE_PX,
+  COUNT_FONT_WEIGHT,
+  SELECT_FONT_SIZE_PX,
+  SELECT_HEIGHT_PX,
+  TITLE_FONT_SIZE_PX,
+  TITLE_FONT_WEIGHT,
+  TITLE_ICON_FONT_SIZE_PX
+} from './JournalEntryToolbar.styles'
 
 interface JournalEntryToolbarProps {
   entryCount: number
   period: EntryPeriodFilter
   onPeriodChange: (next: EntryPeriodFilter) => void
 }
-
-const TITLE_FONT_SIZE_PX = 15
-const TITLE_FONT_WEIGHT = 600
-const TITLE_ICON_FONT_SIZE_PX = 18
-const COUNT_FONT_SIZE_PX = 12
-const COUNT_FONT_WEIGHT = 600
-const COUNT_BORDER_RADIUS_PX = 10
-const SELECT_HEIGHT_PX = 30
-const SELECT_FONT_SIZE_PX = 12
 
 function isPeriodFilter(value: string): value is EntryPeriodFilter {
   return value === 'all' || value === 'matin' || value === 'aprem'

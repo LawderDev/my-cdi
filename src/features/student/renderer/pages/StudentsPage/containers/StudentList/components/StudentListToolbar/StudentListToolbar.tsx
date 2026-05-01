@@ -6,6 +6,15 @@ import InputAdornment from '@mui/material/InputAdornment'
 import { Button } from '@ui/components/Button'
 import { Icon } from '@ui/components/Icon'
 import { StudentCsvImportButton } from '../../containers/StudentCsvImportButton'
+import {
+  SMALL_ICON_STYLE,
+  SEARCH_WRAPPER_MAX_WIDTH_PX,
+  SEARCH_INPUT_HEIGHT_PX,
+  SEARCH_INPUT_FONT_SIZE_PX,
+  SEARCH_ICON_FONT_SIZE_PX,
+  COUNT_FONT_SIZE_PX,
+  COUNT_FONT_WEIGHT
+} from './StudentListToolbar.styles'
 
 interface StudentListToolbarProps {
   searchTerm: string
@@ -13,16 +22,6 @@ interface StudentListToolbarProps {
   onSearchChange: (value: string) => void
   onAddStudent: () => void
 }
-
-const SMALL_ICON_FONT_SIZE_PX = 16
-const SMALL_ICON_STYLE = { fontSize: SMALL_ICON_FONT_SIZE_PX } as const
-
-const SEARCH_WRAPPER_MAX_WIDTH_PX = 380
-const SEARCH_INPUT_HEIGHT_PX = 40
-const SEARCH_INPUT_FONT_SIZE_PX = 13
-const SEARCH_ICON_FONT_SIZE_PX = 18
-const COUNT_FONT_SIZE_PX = 12
-const COUNT_FONT_WEIGHT = 500
 
 export function StudentListToolbar({
   searchTerm,

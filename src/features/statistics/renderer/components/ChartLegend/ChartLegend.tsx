@@ -1,12 +1,13 @@
 import Box from '@mui/material/Box'
 import { MONO_FONT_FAMILY } from '@ui/theme'
+import {
+  DOT_BORDER_RADIUS_PX,
+  DOT_SIZE_PX,
+  ITEM_FONT_SIZE_PX,
+  VALUE_FONT_SIZE_PX,
+  VALUE_FONT_WEIGHT
+} from './ChartLegend.styles'
 import type { ChartLegendProps } from './types/ChartLegendProps'
-
-const ITEM_FONT_SIZE_PX = 12
-const VALUE_FONT_SIZE_PX = 12
-const VALUE_FONT_WEIGHT = 600
-const DOT_SIZE_PX = 8
-const DOT_BORDER_RADIUS_PX = 2
 
 export function ChartLegend({ items }: ChartLegendProps) {
   return (

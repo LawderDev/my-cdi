@@ -2,17 +2,18 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { ChartCard } from '@statistics/components/ChartCard'
 import { MONO_FONT_FAMILY } from '@ui/theme'
+import {
+  BAR_BORDER_RADIUS_PX,
+  BAR_MAX_WIDTH_PX,
+  BAR_MIN_HEIGHT_PX,
+  CHART_HEIGHT_PX,
+  LABEL_FONT_SIZE_PX,
+  LABEL_FONT_WEIGHT,
+  VALUE_FONT_SIZE_PX,
+  VALUE_FONT_WEIGHT
+} from './WeeklyBarChart.styles'
 import { buildWeeklyBars } from './helpers/buildWeeklyBars'
 import type { WeeklyBarChartProps } from './types/WeeklyBarChartProps'
-
-const CHART_HEIGHT_PX = 180
-const VALUE_FONT_SIZE_PX = 10
-const VALUE_FONT_WEIGHT = 600
-const LABEL_FONT_SIZE_PX = 10
-const LABEL_FONT_WEIGHT = 500
-const BAR_MAX_WIDTH_PX = 36
-const BAR_MIN_HEIGHT_PX = 4
-const BAR_BORDER_RADIUS_PX = 6
 
 export function WeeklyBarChart({ dailyCounts }: WeeklyBarChartProps) {
   const { t } = useTranslation('statistics')

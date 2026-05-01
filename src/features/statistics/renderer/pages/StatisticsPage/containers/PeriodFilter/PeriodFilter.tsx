@@ -2,6 +2,13 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { Icon } from '@ui/components/Icon'
 import type { PeriodKey } from '@statistics/types'
+import {
+  ACTIVE_FONT_WEIGHT,
+  BTN_FONT_SIZE_PX,
+  BTN_FONT_WEIGHT,
+  BTN_HEIGHT_PX,
+  ICON_FONT_SIZE_PX
+} from './PeriodFilter.styles'
 import type { PeriodFilterProps } from './types/PeriodFilterProps'
 
 interface PeriodButtonConfig {
@@ -19,12 +26,6 @@ const BUTTONS: PeriodButtonConfig[] = [
   { key: 'year', labelKey: 'period.year' },
   { key: 'custom', labelKey: 'period.custom', iconName: 'date_range', disabled: true }
 ]
-
-const BTN_HEIGHT_PX = 32
-const BTN_FONT_SIZE_PX = 12
-const BTN_FONT_WEIGHT = 500
-const ACTIVE_FONT_WEIGHT = 600
-const ICON_FONT_SIZE_PX = 14
 
 export function PeriodFilter({ value, onChange }: PeriodFilterProps) {
   const { t } = useTranslation('statistics')

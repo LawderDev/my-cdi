@@ -1,11 +1,12 @@
 import Box from '@mui/material/Box'
 import { Card } from '@ui/components/Card'
 import { Icon } from '@ui/components/Icon'
+import {
+  TITLE_FONT_SIZE_PX,
+  TITLE_FONT_WEIGHT,
+  TITLE_ICON_FONT_SIZE_PX
+} from './ChartCard.styles'
 import type { ChartCardProps } from './types/ChartCardProps'
-
-const TITLE_FONT_SIZE_PX = 13
-const TITLE_FONT_WEIGHT = 600
-const TITLE_ICON_FONT_SIZE_PX = 18
 
 export function ChartCard({ titleIcon, title, children }: ChartCardProps) {
   return (

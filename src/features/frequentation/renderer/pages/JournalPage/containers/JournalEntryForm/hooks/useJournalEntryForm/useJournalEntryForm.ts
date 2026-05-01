@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import { useCreateFrequentationBatch } from '@frequentation/api/useFrequentationMutations'
 import { useActivityLabels } from '@frequentation/hooks/useActivityLabels'
@@ -18,7 +17,6 @@ interface UseJournalEntryFormOptions {
 }
 
 const TIME_FORMAT = 'HH:mm'
-const NOON_HOUR = 12
 
 function buildDefaultTime(): string {
   return dayjs().format(TIME_FORMAT)
@@ -32,32 +30,18 @@ function buildDefaultValues(): JournalEntryFormData {
   }
 }
 
-function periodFromTime(time: string): 'matin' | 'aprem' {
-  const [hourPart] = time.split(':')
-  const hour = Number.parseInt(hourPart ?? '', 10)
-  if (!Number.isFinite(hour) || hour < NOON_HOUR) {
-    return 'matin'
-  }
-  return 'aprem'
-}
-
 export function useJournalEntryForm({ selectedDate, onSubmitted }: UseJournalEntryFormOptions) {
-  const { t } = useTranslation('frequentation')
   const { mutate, isPending } = useCreateFrequentationBatch()
   const { allActivities, getLabel } = useActivityLabels()
   const { data: students, isLoading: isStudentLoading } = useStudentList()
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitSuccess, setSubmitSuccess] = useState<boolean>(false)
+  const [studentInputValue, setStudentInputValue] = useState('')
 
   const form = useForm<JournalEntryFormData>({
     resolver: zodResolver(journalEntryFormSchema),
     defaultValues: buildDefaultValues()
   })
-
-  const studentIds = useWatch({ control: form.control, name: 'studentIds' })
-  const time = useWatch({ control: form.control, name: 'time' })
-  const period = periodFromTime(time)
-  const periodLabel = period === 'matin' ? t('period.matin') : t('period.aprem')
 
   const activityOptions = buildActivityOptions(allActivities, getLabel)
 
@@ -89,16 +73,29 @@ export function useJournalEntryForm({ selectedDate, onSubmitted }: UseJournalEnt
     })
   }
 
+  function handleStudentSelect(currentIds: number[], nextId: number) {
+    if (currentIds.includes(nextId)) {
+      return
+    }
+    setStudentInputValue('')
+    form.setValue('studentIds', [...currentIds, nextId])
+  }
+
+  function handleStudentRemove(currentIds: number[], idToRemove: number) {
+    form.setValue('studentIds', currentIds.filter((id) => id !== idToRemove))
+  }
+
   return {
     form,
     handleSubmit,
     activityOptions,
     studentOptions,
-    studentIds,
+    studentInputValue,
+    setStudentInputValue,
+    handleStudentSelect,
+    handleStudentRemove,
     isStudentLoading,
     isSubmitting: isPending,
-    time,
-    periodLabel,
     submitError,
     submitSuccess,
     dismissFeedback
