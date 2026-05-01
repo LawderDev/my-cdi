@@ -137,6 +137,7 @@ window.electronAPI.frequentation.list(input)
 
 - **Drizzle ORM** with `better-sqlite3`
 - **Schema** co-located in feature entities: `features/X/main/entities/X/`
+- **Entity helpers** for computed fields live in `entities/X/helpers/` (e.g., `computeStudentFields` for `fullName`)
 - **Zod schemas** live alongside Drizzle schema for validation
 - **Migrations** managed by Drizzle Kit, output in `drizzle/`
 - **Schema registry** at `shared/db/schema.ts` re-exports all feature schemas
@@ -169,8 +170,10 @@ Rules:
 
 ```
 features/student/main/
-├── entities/student/           # Drizzle schema + Zod schemas
+├── entities/student/           # Drizzle schema + Zod schemas + computed-field helpers
 ├── use-cases/createStudent/      # Business logic
+├── use-cases/helpers/            # Response formatting (entity → DTO)
+├── use-cases/types/            # Use-case-specific types (UseCaseResult)
 ├── gateways/student/             # Interface + Drizzle implementation
 └── controllers/student/         # IPC wiring
 ```
