@@ -2,6 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { I18nextProvider } from 'react-i18next'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import i18n from '@shared/i18n/config'
 import type { ReactNode } from 'react'
 import { JournalEntryForm } from '../JournalEntryForm'
@@ -14,7 +16,11 @@ function withProviders(ui: ReactNode) {
   })
   return (
     <I18nextProvider i18n={i18n}>
-      <QueryClientProvider client={client}>{ui}</QueryClientProvider>
+      <QueryClientProvider client={client}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+          {ui}
+        </LocalizationProvider>
+      </QueryClientProvider>
     </I18nextProvider>
   )
 }

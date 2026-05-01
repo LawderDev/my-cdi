@@ -2,6 +2,9 @@ import { BrowserRouter } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import 'dayjs/locale/fr'
 import { ErrorBoundary } from '@ui/components/ErrorBoundary'
 import { theme } from '@ui/theme'
 import { AppRoutes } from './routes'
@@ -23,11 +26,13 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <ErrorBoundary>
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
-        </ErrorBoundary>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+          <ErrorBoundary>
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          </ErrorBoundary>
+        </LocalizationProvider>
       </ThemeProvider>
     </QueryClientProvider>
   )
