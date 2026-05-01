@@ -203,6 +203,9 @@ Query client defaults: `staleTime: 60s`, `retry: 1`.
 
 Global keyboard shortcuts (Ctrl/Cmd + 1/2/3) are registered here for instant navigation between main routes.
 
+### Error Boundary
+A single class-component `ErrorBoundary` wraps the route tree below `BrowserRouter`. It catches render errors, renders `ErrorFallback` (localized title + description + collapsible stack trace + reload button), and is the only error boundary in the app.
+
 ---
 
 ## 8. Frontend Container/Presenter Pattern
@@ -251,6 +254,46 @@ export function StudentList() {
   return <StudentTable rows={students} />
 }
 ```
+
+### List & Table Patterns
+
+**No shared `DataTable` abstraction.** Each feature builds its own list:
+- Student list: raw HTML `<table>` (`StudentTable` + `StudentTableRow`)
+- Journal list: flex `Box` rows (`JournalEntryRow`)
+
+**Sorting** is client-side via pure helpers:
+- `buildNextSortConfig(sortConfig, field)` toggles `asc` / `desc`
+- `sortStudentRows(rows, config)` uses `Intl.Collator('fr')` for locale-aware sorting
+
+**No pagination.** All lists load the full dataset and filter/sort client-side.
+
+### Filtering & Search
+
+All filtering happens in the renderer on the full fetched dataset. Pattern:
+
+1. `useState` for filter terms (`useStudentFilters`, `useEntryPeriodFilter`)
+2. Pure helper filters the rows (`filterStudentRows`, `filterEntriesByPeriod`)
+3. Data hook composes fetch → filter → sort → pass to presenter
+
+Search is case-insensitive multi-field match (`nom`, `prenom`, `classe`, `ine`).
+
+### Batch Operations
+
+Consistent 3-layer architecture for any list with multi-select:
+
+1. **Selection hook** (`useStudentSelection` / `useJournalEntrySelection`)
+   - `useState<number[]>` for `selectedIds`
+   - `toggle(id)`, `selectAll(ids)`, `clearSelection()`, `isSelected(id)`
+
+2. **Batch actions container** (`StudentBatchActions` / `JournalBatchActions`)
+   - Renders a strip with "Select All / Deselect All", "Delete", "Change Activity"
+   - Uses `ConfirmDialog` for destructive confirmation
+   - Calls `onAfterDelete` / `onAfterUpdate` to clear selection after mutation
+
+3. **Orchestration hook** (`useStudentBatchActions` / `useJournalBatchActions`)
+   - Manages `ConfirmDialog` open/close state
+   - Computes `isAllSelected` (selectedCount === totalCount)
+   - Derives toggle label ("Select All" vs "Deselect All")
 
 ---
 
@@ -422,7 +465,42 @@ No `findByXxx` or `listXxx`. Every gateway returns `Entity | null` for single re
 
 ---
 
-## 18. Code Quality Rules
+## 18. CSV Import Flow
+
+**Renderer side:**
+- `StudentCsvImportButton` opens a `Modal` with a click-to-browse dropzone
+- Hidden `<input type="file" accept=".csv">` triggered by dropzone click
+- `File.text()` reads the file, passes raw CSV string to `useImportStudentsCsv` mutation
+
+**Main side:**
+- `importStudentsCsv` use-case receives the raw CSV string
+- `parseStudentCsv` (PapaParse) parses with `header: true`, validates required columns, caps rows at `MAX_CSV_IMPORT_ROWS`
+- `csvRowSchema` (Zod) validates each row
+- Deduplicates against existing DB rows (`ine` match) and within-file duplicates
+- Gateway creates each student
+- Returns `CsvImportResult` `{ created, errors, errorMessages }`
+
+**Key decision:** File contents are read in the renderer and passed as a string over IPC; the main process never touches the filesystem directly.
+
+---
+
+## 19. Statistics & Custom SVG Visualization
+
+**No charting library** (no Recharts, no Chart.js). All charts are custom SVG rendered by pure geometry helpers.
+
+**Backend:** `getStatsForPeriod` computes aggregates from raw frequentation rows and returns a flat DTO with `dailyCounts`, `activityCounts`, `classCounts`, `morningRate` / `afternoonRate`, and `averagePerDay`.
+
+**Frontend pure helpers transform DTOs into SVG primitives:**
+- `buildDonutSlices(activityCounts)` → SVG path `d` strings + colors
+- `buildTrendPath(dailyCounts, dimensions)` → SVG path `M...L...`, area path, dot coordinates, Y-axis labels
+- `buildWeeklyBars(dailyCounts)` → bar heights in px, weekday labels, weekend vs weekday colors
+- `svgArc()` computes SVG arc paths for donut slices
+
+Presenters (`ActivityDonutChart`, `MonthlyTrendChart`, `WeeklyBarChart`) render raw `<svg>` elements from these helpers.
+
+---
+
+## 20. Code Quality Rules
 
 ### No Type Casting
 No `as Type`, no `as unknown`, no `as never`, no non-null assertions (`!.`).
@@ -524,7 +602,7 @@ Use full words. `v` → `version`, `num` → `number`, `msg` → `message`.
 
 ---
 
-## 19. Design System Wrappers
+## 21. Design System Wrappers
 
 ### Enum-to-Display Metadata
 Presentation metadata for enum values is stored as parallel `Record<Enum, X>` maps (color, icon, CSS class) in `renderer/helpers/`. This keeps domain types clean while allowing presenters to resolve visual attributes:
@@ -538,18 +616,23 @@ The design system in `shared/ui/components/` wraps MUI primitives with applicati
 
 | Component    | Purpose                                         |
 | ------------ | ----------------------------------------------- |
-| `Button`     | Custom `primary`/`secondary`/`danger` variants  |
-| `Icon`       | Material Icons Round with size aliases          |
-| `Card`       | Styled surface for content blocks               |
-| `Chip`       | Status / category indicators                    |
-| `EmptyState` | Illustration + message for empty lists            |
-| `Modal`      | Dialog wrapper with custom width mapping        |
+| `Button`       | Custom `primary`/`secondary`/`danger` variants    |
+| `Icon`         | Material Icons Round with size aliases            |
+| `IconButton`   | Icon-only button with `tone="danger"` support     |
+| `Avatar`       | Deterministic color from seed string              |
+| `Card`         | Styled surface for content blocks                 |
+| `Chip`         | Status / category indicators                      |
+| `EmptyState`   | Illustration + message for empty lists              |
+| `Autocomplete` | MUI Autocomplete with custom filtering helpers    |
+| `Modal`        | Dialog wrapper with custom width mapping          |
+| `ErrorBoundary`| Global render-error catch + fallback UI           |
+| `AppVersion`   | App version string display                          |
 
 `.styles.ts` files export named constants (spacing, colors, sizes) used alongside MUI `sx`. CSS custom properties in `shared/ui/styles/global.css` (`--bg`, `--card`, `--accent`, `--radius`) coexist with the MUI theme.
 
 ---
 
-## 20. File Structure Rules
+## 22. File Structure Rules
 
 1. **Every named unit is a folder** with `moduleName.ts`/`moduleName.tsx` + `index.ts` re-export
 2. **Every folder with logic has `__tests__/`** co-located
@@ -560,7 +643,7 @@ The design system in `shared/ui/components/` wraps MUI primitives with applicati
 
 ---
 
-## 21. Co-Location Rules
+## 23. Co-Location Rules
 
 Every artifact lives as close as possible to its consumer. Only hoist when shared by 2+ consumers at the same level.
 
@@ -575,7 +658,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 22. Import Rules & Path Aliases
+## 24. Import Rules & Path Aliases
 
 | Scenario                      | Style    | Example                                                              |
 | ----------------------------- | -------- | -------------------------------------------------------------------- |
@@ -603,7 +686,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 23. Testing Strategy
+## 25. Testing Strategy
 
 | File type                  | Test type     | Location                          | What it tests                          |
 | -------------------------- | ------------- | --------------------------------- | -------------------------------------- |
@@ -637,7 +720,7 @@ Gateway tests create `new Database(':memory:')` and execute raw `CREATE TABLE ..
 
 ---
 
-## 24. Data Flow
+## 26. Data Flow
 
 ```
 [User Action]
@@ -666,7 +749,7 @@ Backend DTOs are enriched before reaching presenters. Example: `toJournalEntryVi
 
 ---
 
-## 25. i18n Strategy
+## 27. i18n Strategy
 
 Namespaced JSON files at `shared/i18n/locales/fr/`:
 
@@ -685,7 +768,7 @@ shared/i18n/
 
 ---
 
-## 26. Exceptions
+## 28. Exceptions
 
 The following patterns are explicitly allowed as exceptions to the rules above:
 
@@ -713,7 +796,7 @@ Forbidden by default. Exception only if a deeply nested child component in a ver
 
 ---
 
-## 27. Compliance Checklist
+## 29. Compliance Checklist
 
 When adding or modifying code, verify:
 
