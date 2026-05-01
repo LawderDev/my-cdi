@@ -1,7 +1,11 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 import { Card } from '@ui/components/Card'
 import { EmptyState } from '@ui/components/EmptyState'
+import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useJournalEntries } from '@frequentation/api/useFrequentationQueries'
 import { useActivityLabels } from '@frequentation/hooks/useActivityLabels'
 import { toJournalEntryViewModel } from '@frequentation/helpers/journalEntryTransformers'
@@ -21,13 +25,21 @@ interface JournalEntryListProps {
   onEditEntry: (entry: JournalEntryViewModel) => void
 }
 
+const FEEDBACK_AUTO_HIDE_MS = 4000
+
 export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryListProps) {
   const { t } = useTranslation('frequentation')
   const { selectedIds, toggle, selectAll, clearSelection } = useJournalEntrySelection()
   const { period, setPeriod } = useEntryPeriodFilter()
   const { searchTerm, setSearchTerm } = useSearchFilter()
   const { data } = useJournalEntries({ startDate: selectedDate, endDate: selectedDate })
-  const { mutate: deleteOne } = useDeleteFrequentation()
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null)
+  const [deleteSuccess, setDeleteSuccess] = useState(false)
+  const { mutate: deleteOne } = useDeleteFrequentation({
+    onSuccess: () => {
+      setDeleteSuccess(true)
+    }
+  })
   const { getLabel } = useActivityLabels()
 
   const dtos = data ?? []
@@ -39,8 +51,23 @@ export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryList
     selectAll(entries.map((entry) => entry.id))
   }
 
-  function handleDelete(entry: JournalEntryViewModel) {
-    deleteOne({ id: entry.id })
+  function handleDeleteClick(entry: JournalEntryViewModel) {
+    setPendingDeleteId(entry.id)
+  }
+
+  function handleConfirmDelete() {
+    if (pendingDeleteId !== null) {
+      deleteOne({ id: pendingDeleteId })
+      setPendingDeleteId(null)
+    }
+  }
+
+  function closeConfirmDelete() {
+    setPendingDeleteId(null)
+  }
+
+  function dismissDeleteSuccess() {
+    setDeleteSuccess(false)
   }
 
   return (
@@ -84,11 +111,29 @@ export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryList
               selected={selectedIds.includes(entry.id)}
               onToggleSelect={() => toggle(entry.id)}
               onEdit={() => onEditEntry(entry)}
-              onDelete={() => handleDelete(entry)}
+              onDelete={() => handleDeleteClick(entry)}
             />
           ))
         )}
       </Box>
+      <ConfirmDialog
+        open={pendingDeleteId !== null}
+        title={t('batchActions.confirmDeleteTitle')}
+        message={t('row.confirmDelete')}
+        destructive
+        onConfirm={handleConfirmDelete}
+        onClose={closeConfirmDelete}
+      />
+      <Snackbar
+        open={deleteSuccess}
+        autoHideDuration={FEEDBACK_AUTO_HIDE_MS}
+        onClose={dismissDeleteSuccess}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="success" onClose={dismissDeleteSuccess} variant="filled">
+          {t('deleteSuccess')}
+        </Alert>
+      </Snackbar>
     </Card>
   )
 }

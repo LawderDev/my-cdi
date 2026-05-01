@@ -16,6 +16,8 @@
     "search": "Rechercher des élèves..."
   },
   "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{count}} élève(s) ?",
+  "row.confirmDelete": "Voulez-vous vraiment supprimer cet élève ?",
+  "deleteSuccess": "Élève supprimé",
   "duplicateIne": "Un élève avec cet INE existe déjà",
   "csvImport": {
     "title": "Importer la base élèves",

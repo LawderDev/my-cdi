@@ -16,6 +16,8 @@
     "search": "Search students..."
   },
   "deleteConfirm": "Are you sure you want to delete {{count}} student(s)?",
+  "row.confirmDelete": "Are you sure you want to delete this student?",
+  "deleteSuccess": "Student deleted",
   "duplicateIne": "A student with this INE already exists",
   "csvImport": {
     "title": "Import student database",

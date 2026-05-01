@@ -34,7 +34,11 @@ export function useUpdateFrequentation() {
   })
 }
 
-export function useDeleteFrequentation() {
+interface UseDeleteFrequentationOptions {
+  onSuccess?: () => void
+}
+
+export function useDeleteFrequentation(options: UseDeleteFrequentationOptions = {}) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (input: { id: number }) => {
@@ -46,6 +50,7 @@ export function useDeleteFrequentation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: frequentationKeys.all })
+      options.onSuccess?.()
     }
   })
 }

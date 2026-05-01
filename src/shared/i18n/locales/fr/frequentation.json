@@ -40,8 +40,10 @@
   "emptyHint": "Sélectionnez des élèves et enregistrez leur présence",
   "row": {
     "edit": "Modifier",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "confirmDelete": "Voulez-vous vraiment supprimer cette fréquentation ?"
   },
+  "deleteSuccess": "Fréquentation supprimée",
   "period": {
     "label": "Filtrer par période",
     "all": "Toute la journée",

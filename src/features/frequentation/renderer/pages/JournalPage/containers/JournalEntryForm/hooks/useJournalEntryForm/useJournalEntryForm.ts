@@ -79,13 +79,14 @@ export function useJournalEntryForm({ selectedDate, onSubmitted }: UseJournalEnt
       return
     }
     setStudentInputValue('')
-    form.setValue('studentIds', [...currentIds, nextId])
+    form.setValue('studentIds', [...currentIds, nextId], { shouldValidate: true })
   }
 
   function handleStudentRemove(currentIds: number[], idToRemove: number) {
     form.setValue(
       'studentIds',
-      currentIds.filter((id) => id !== idToRemove)
+      currentIds.filter((id) => id !== idToRemove),
+      { shouldValidate: true }
     )
   }
 

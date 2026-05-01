@@ -67,12 +67,17 @@ export function useUpdateStudent() {
   })
 }
 
-export function useDeleteStudent() {
+interface UseDeleteStudentOptions {
+  onSuccess?: () => void
+}
+
+export function useDeleteStudent(options: UseDeleteStudentOptions = {}) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: deleteStudent,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: studentKeys.all })
+      options.onSuccess?.()
     }
   })
 }
