@@ -42,6 +42,15 @@ Renderer ──► Preload (contextBridge) ──► Main (ipcMain.handle)
                               (ipcRenderer.invoke)
 ```
 
+### Module Wiring (Main)
+
+`src/main/modules.ts` orchestrates cross-feature dependency injection:
+
+1. Instantiate gateways
+2. Inject `studentGateway` into `frequentationModule`
+3. Inject `frequentationGateway` into `statisticsModule`
+4. Invoke `cleanupOldFrequentations()` after all modules initialize
+
 ---
 
 ## 3. Feature-Vertical Architecture
@@ -136,7 +145,24 @@ features/student/main/
 
 ---
 
-## 7. Frontend Container/Presenter Pattern
+## 7. Renderer Entry & Provider Nesting
+
+Provider stack order in `App.tsx`:
+
+```
+QueryClientProvider
+  └── ThemeProvider
+        └── CssBaseline
+              └── LocalizationProvider (dayjs/fr)
+                    └── ErrorBoundary
+                          └── BrowserRouter
+```
+
+Query client defaults: `staleTime: 60s`, `retry: 1`.
+
+---
+
+## 8. Frontend Container/Presenter Pattern
 
 ### Containers
 - Import hooks, manage state, pass data to presenters via props
@@ -175,7 +201,7 @@ export function StudentList() {
 
 ---
 
-## 8. Error Handling
+## 9. Error Handling
 
 ### Use-Case Results
 Every use-case returns a discriminated union:
@@ -188,6 +214,8 @@ type UseCaseResult<T> =
 
 Controllers `unwrap()` the result before sending it over IPC. The renderer receives `{ success, data }` or `{ success, error }`.
 
+**IPC errors** also carry an optional `code` field: `{ success: false; error: string; code?: string }`.
+
 ### AppError
 ```ts
 throw new AppError(ErrorCode.STUDENT_NOT_FOUND, 'Student not found')
@@ -198,7 +226,7 @@ throw new AppError(ErrorCode.STUDENT_NOT_FOUND, 'Student not found')
 
 ---
 
-## 9. Route Lazy Loading
+## 10. Route Lazy Loading
 
 Pages are lazy-loaded via `React.lazy()` to keep the initial bundle small.
 
@@ -215,7 +243,33 @@ export default JournalPageImpl
 
 ---
 
-## 10. React Quality Rules
+## 11. Hook Naming Conventions
+
+| Pattern             | Example                      | Purpose                              |
+| ------------------- | ---------------------------- | ------------------------------------ |
+| `useXxxPage`        | `useJournalPage`             | Page-level orchestration             |
+| `useXxxData`        | `useStudentListData`         | Data filtering/sorting over React Query|
+| `useXxxForm`        | `useJournalEntryForm`        | Form logic (RHF + Zod)               |
+| `useXxxSelection`   | `useStudentSelection`        | Selection state (checkboxes, etc.)   |
+| `useXxxQueries`     | `useStudentQueries`          | React Query read hooks               |
+| `useXxxMutations`   | `useCreateStudent`           | React Query mutation hooks           |
+
+---
+
+## 12. Form Patterns
+
+### RHF + Zod Integration
+- Form schemas live in `validations/` folders (e.g., `studentFormSchema`, `journalEntryFormSchema`).
+- DTO mapping helpers live in `helpers/` (e.g., `mapFormToCreateDto`, `mapFormToBatchDto`).
+- Edit forms use `values:` (not `defaultValues:`) to populate from a view model.
+
+### Two Input Patterns
+1. **`register` pattern** — simple text inputs (`StudentFormFields` receives `UseFormRegister` + `FieldErrors`).
+2. **`Controller` pattern** — custom/complex inputs (`TimeRow`, `StudentMultiSelect`, `ActivityGrid` wrapped in `<Controller>`).
+
+---
+
+## 13. React Quality Rules
 
 ### No Manual Memoization
 React Compiler handles automatic memoization. **Zero** `useMemo` / `useCallback` in the codebase.
@@ -247,7 +301,47 @@ Never define a component inside another component. Extract to its own folder wit
 
 ---
 
-## 11. Code Quality Rules
+## 14. Dialog / Modal Pattern
+
+Shared primitives in `shared/ui/components/`:
+
+- **Modal** — wrapper around MUI Dialog with custom `maxWidth` mapping (`sm`→`xs`, `md`→`sm`, `lg`→`md`). Accepts a `footer` prop for action buttons.
+- **ConfirmDialog** — pre-built confirmation with a `destructive` prop for danger styling.
+- **useDialog** — `{ isOpen, open, close }` hook for local dialog state.
+
+Feature dialogs (e.g., `JournalEntryEditDialog`) use `Modal` directly. Forms inside modals embed a `<form>` and pass actions via the `footer` prop.
+
+---
+
+## 15. Gateway Naming Conventions
+
+Gateway methods follow a strict naming convention:
+
+| Action     | Pattern     | Example              |
+| ---------- | ----------- | -------------------- |
+| Create     | `create`    | `create(student)`    |
+| Read one   | `getById`   | `getById(id)`      |
+| Read by    | `getByXxx`  | `getByClass(class)`  |
+| Read all   | `getAll`    | `getAll()`         |
+| Update     | `update`    | `update(id, data)` |
+| Delete     | `delete`    | `delete(id)`       |
+| Delete by  | `deleteByXxx`| `deleteByStudentId(id)`|
+| Count      | `count`     | `count()`          |
+
+No `findByXxx` or `listXxx`. Every gateway returns `Entity | null` for single reads, never throws for missing rows.
+
+---
+
+## 16. Date / Time Handling
+
+- **Storage**: dates stored as ISO strings in SQLite; time-of-day stored as `HH:mm` strings.
+- **Display**: `formatDate` (`DD/MM/YYYY`) and `formatDateTime` (`DD/MM/YYYY HH:mm`) via `dayjs` with French locale.
+- **UI**: MUI X Date Pickers wrapped in `LocalizationProvider` with `AdapterDayjs` and `adapterLocale="fr"`.
+- **Cleanup**: `CLEANUP_RETENTION_YEARS = 2` — old frequentations deleted on startup.
+
+---
+
+## 17. Code Quality Rules
 
 ### No Type Casting
 No `as Type`, no `as unknown`, no `as never`, no non-null assertions (`!.`).
@@ -345,7 +439,24 @@ Use full words. `v` → `version`, `num` → `number`, `msg` → `message`.
 
 ---
 
-## 12. File Structure Rules
+## 18. Design System Wrappers
+
+The design system in `shared/ui/components/` wraps MUI primitives with application-specific behavior:
+
+| Component    | Purpose                                         |
+| ------------ | ----------------------------------------------- |
+| `Button`     | Custom `primary`/`secondary`/`danger` variants  |
+| `Icon`       | Material Icons Round with size aliases          |
+| `Card`       | Styled surface for content blocks               |
+| `Chip`       | Status / category indicators                    |
+| `EmptyState` | Illustration + message for empty lists            |
+| `Modal`      | Dialog wrapper with custom width mapping        |
+
+`.styles.ts` files export named constants (spacing, colors, sizes) used alongside MUI `sx`. CSS custom properties in `shared/ui/styles/global.css` (`--bg`, `--card`, `--accent`, `--radius`) coexist with the MUI theme.
+
+---
+
+## 19. File Structure Rules
 
 1. **Every named unit is a folder** with `moduleName.ts`/`moduleName.tsx` + `index.ts` re-export
 2. **Every folder with logic has `__tests__/`** co-located
@@ -356,7 +467,7 @@ Use full words. `v` → `version`, `num` → `number`, `msg` → `message`.
 
 ---
 
-## 13. Co-Location Rules
+## 20. Co-Location Rules
 
 Every artifact lives as close as possible to its consumer. Only hoist when shared by 2+ consumers at the same level.
 
@@ -371,7 +482,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 14. Import Rules & Path Aliases
+## 21. Import Rules & Path Aliases
 
 | Scenario                      | Style    | Example                                                              |
 | ----------------------------- | -------- | -------------------------------------------------------------------- |
@@ -399,7 +510,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 15. Testing Strategy
+## 22. Testing Strategy
 
 | File type                  | Test type     | Location                          | What it tests                          |
 | -------------------------- | ------------- | --------------------------------- | -------------------------------------- |
@@ -418,7 +529,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 16. Data Flow
+## 23. Data Flow
 
 ```
 [User Action]
@@ -446,7 +557,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 17. i18n Strategy
+## 24. i18n Strategy
 
 Namespaced JSON files at `shared/i18n/locales/fr/`:
 
@@ -465,7 +576,7 @@ shared/i18n/
 
 ---
 
-## 18. Exceptions
+## 25. Exceptions
 
 The following patterns are explicitly allowed as exceptions to the rules above:
 
@@ -486,7 +597,7 @@ Forbidden by default. Exception only if a deeply nested child component in a ver
 
 ---
 
-## 19. Compliance Checklist
+## 26. Compliance Checklist
 
 When adding or modifying code, verify:
 
