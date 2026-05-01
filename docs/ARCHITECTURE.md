@@ -180,6 +180,17 @@ QueryClientProvider
 
 Query client defaults: `staleTime: 60s`, `retry: 1`.
 
+### Global Layout (`AppShell`)
+
+`AppShell` is the root layout for all pages. It wraps the route tree with:
+
+- **Sidebar** — navigation rail with route icons
+- **Header** — page title + context actions
+- **UpdateBanner** — global auto-updater status (mounts inside the layout, not as a dialog)
+- **Main content area** — renders `<Outlet />` for the active route
+
+Global keyboard shortcuts (Ctrl/Cmd + 1/2/3) are registered here for instant navigation between main routes.
+
 ---
 
 ## 8. Frontend Container/Presenter Pattern
@@ -271,6 +282,9 @@ export default JournalPageImpl
 ```
 
 **Exception**: Route files use `export default` because React Router's `React.lazy()` requires a default export.
+
+### Suspense Fallback
+Lazy-loaded pages are wrapped in `Suspense` with a `RouteSuspenseFallback` spinner inside `AppRoutes`.
 
 ---
 
