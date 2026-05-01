@@ -11,20 +11,38 @@ describe('journalEntryFormSchema', () => {
       journalEntryFormSchema.safeParse({
         studentIds: [FIRST_ID, SECOND_ID],
         activity: ActivityType.WORK,
-        startsAt: '2026-04-01T10:30'
+        time: '10:30'
       }).success
     ).toBe(true)
   })
 
   it('rejects empty studentIds', () => {
     expect(
-      journalEntryFormSchema.safeParse({ studentIds: [], activity: ActivityType.WORK }).success
+      journalEntryFormSchema.safeParse({
+        studentIds: [],
+        activity: ActivityType.WORK,
+        time: '10:30'
+      }).success
     ).toBe(false)
   })
 
   it('rejects unknown activity', () => {
     expect(
-      journalEntryFormSchema.safeParse({ studentIds: [FIRST_ID], activity: 'BOGUS' }).success
+      journalEntryFormSchema.safeParse({
+        studentIds: [FIRST_ID],
+        activity: 'BOGUS',
+        time: '10:30'
+      }).success
+    ).toBe(false)
+  })
+
+  it('rejects malformed time', () => {
+    expect(
+      journalEntryFormSchema.safeParse({
+        studentIds: [FIRST_ID],
+        activity: ActivityType.WORK,
+        time: '10h30'
+      }).success
     ).toBe(false)
   })
 })

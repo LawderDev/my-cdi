@@ -40,7 +40,7 @@ describe('useJournalEntryForm', () => {
       result.current.handleSubmit({
         studentIds: [FIRST_ID, SECOND_ID],
         activity: ActivityType.WORK,
-        startsAt: '2026-04-01T10:30'
+        time: '10:30'
       })
     })
     await waitFor(() => {
