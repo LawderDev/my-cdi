@@ -274,9 +274,11 @@ Controllers `unwrap()` the result before sending it over IPC. The renderer recei
 throw new AppError(ErrorCode.STUDENT_NOT_FOUND, 'Student not found')
 ```
 
-- `AppError` exposes `readonly code: ErrorCode` and a `toJSON()` method for IPC serialization
+- `AppError` exposes `readonly code: ErrorCode`
 - Always use `ErrorCode` enum, never raw strings
 - `isAppError()` for type narrowing at boundaries
+
+**IPC serialization** — the router extracts `error.message` and `error.code` manually; it does not call `toJSON()`.
 
 ---
 
@@ -551,7 +553,7 @@ The design system in `shared/ui/components/` wraps MUI primitives with applicati
 
 1. **Every named unit is a folder** with `moduleName.ts`/`moduleName.tsx` + `index.ts` re-export
 2. **Every folder with logic has `__tests__/`** co-located
-3. **Types and query key factories are flat files** — no subfolders, no tests
+3. **Types and query key factories are flat files** — no subfolders, no tests. Exception: component prop types live in `types/XxxProps.ts` subfolders alongside the component.
 4. **`.tsx` for JSX, `.ts` for everything else** — applies to `index` files too. `index.ts` for re-export-only files.
 5. **Gateway exception**: two coordinated files (`*.gateway.ts` + `*.gateway.drizzle.ts`) + `index.ts`
 6. **No barrel files**: `index.ts` only re-exports from its single sibling implementation
@@ -618,6 +620,18 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 **Rule:** Every folder with logic has `__tests__/` co-located. No empty test directories.
 
+### Test Bootstrapping
+`vitest.config.ts` loads `shared/test/setup.ts` which imports `@testing-library/jest-dom/vitest` matchers.
+
+### Renderer Test Mocking
+Renderer tests mock the IPC bridge by stubbing the global:
+
+```ts
+vi.stubGlobal('electronAPI', {
+  student: { list: vi.fn().mockResolvedValue({ success: true, data: [] }) }
+})
+```
+
 ### In-Memory DB Testing (Gateways)
 Gateway tests create `new Database(':memory:')` and execute raw `CREATE TABLE ...` SQL (plus `PRAGMA` statements) to build the schema by hand, then instantiate the Drizzle gateway directly against the in-memory connection.
 
@@ -631,8 +645,6 @@ Gateway tests create `new Database(':memory:')` and execute raw `CREATE TABLE ..
 [Container Component (hooks + state)]
     ↓
 [React Query Mutation Hook] (renderer/api/)
-    ↓
-[IPC Client] (shared/ipc/client.ts)
     ↓
 [Preload Bridge] (preload/index.ts — thin pass-through)
     ↓
