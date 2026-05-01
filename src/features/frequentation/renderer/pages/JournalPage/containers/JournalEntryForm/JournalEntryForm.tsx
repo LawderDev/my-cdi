@@ -145,7 +145,7 @@ function TimeRow({ value, onChange, ariaLabel, periodLabel }: TimeRowProps) {
   const [open, setOpen] = useState<boolean>(false)
   const dateValue = dayjs(`2000-01-01T${value}`)
 
-  function handleAccept(next: Dayjs | null): void {
+  function commit(next: Dayjs | null): void {
     if (next === null) {
       return
     }
@@ -211,7 +211,8 @@ function TimeRow({ value, onChange, ariaLabel, periodLabel }: TimeRowProps) {
       <MobileTimePicker
         open={open}
         value={dateValue}
-        onAccept={handleAccept}
+        onChange={commit}
+        onAccept={commit}
         onClose={handleClose}
         ampm={false}
         slotProps={{
