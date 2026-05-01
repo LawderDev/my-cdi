@@ -1,5 +1,8 @@
+import type { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import type { SelectChangeEvent } from '@mui/material/Select'
@@ -13,31 +16,43 @@ import {
   SELECT_HEIGHT_PX,
   TITLE_FONT_SIZE_PX,
   TITLE_FONT_WEIGHT,
-  TITLE_ICON_FONT_SIZE_PX
+  TITLE_ICON_FONT_SIZE_PX,
+  SEARCH_WRAPPER_MAX_WIDTH_PX,
+  SEARCH_INPUT_HEIGHT_PX,
+  SEARCH_INPUT_FONT_SIZE_PX,
+  SEARCH_ICON_FONT_SIZE_PX
 } from './JournalEntryToolbar.styles'
 
 interface JournalEntryToolbarProps {
   entryCount: number
   period: EntryPeriodFilter
   onPeriodChange: (next: EntryPeriodFilter) => void
+  searchTerm: string
+  onSearchChange: (value: string) => void
 }
 
 function isPeriodFilter(value: string): value is EntryPeriodFilter {
-  return value === 'all' || value === 'matin' || value === 'aprem'
+  return value === 'all' || value === 'morning' || value === 'afternoon'
 }
 
 export function JournalEntryToolbar({
   entryCount,
   period,
-  onPeriodChange
+  onPeriodChange,
+  searchTerm,
+  onSearchChange
 }: JournalEntryToolbarProps) {
   const { t } = useTranslation('frequentation')
 
-  function handleChange(event: SelectChangeEvent<EntryPeriodFilter>) {
+  function handlePeriodChange(event: SelectChangeEvent<EntryPeriodFilter>) {
     const next = event.target.value
     if (isPeriodFilter(next)) {
       onPeriodChange(next)
     }
+  }
+
+  function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
+    onSearchChange(event.target.value)
   }
 
   return (
@@ -82,10 +97,55 @@ export function JournalEntryToolbar({
           {entryCount}
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', gap: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <TextField
+          type="search"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder={t('searchPlaceholder')}
+          size="small"
+          variant="outlined"
+          slotProps={{
+            input: {
+              'aria-label': t('searchPlaceholder'),
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Icon
+                    name="search"
+                    style={{
+                      color: 'var(--text-dim)',
+                      fontSize: `${SEARCH_ICON_FONT_SIZE_PX}px`
+                    }}
+                  />
+                </InputAdornment>
+              )
+            }
+          }}
+          sx={{
+            maxWidth: `${SEARCH_WRAPPER_MAX_WIDTH_PX}px`,
+            '& .MuiOutlinedInput-root': {
+              height: `${SEARCH_INPUT_HEIGHT_PX}px`,
+              fontSize: `${SEARCH_INPUT_FONT_SIZE_PX}px`,
+              bgcolor: 'var(--surface)',
+              color: 'var(--title)',
+              borderRadius: 'var(--radius-sm)',
+              transition: 'border-color 0.2s'
+            },
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'var(--border)'
+            },
+            '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'var(--border-light)'
+            },
+            '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'var(--accent)',
+              boxShadow: '0 0 0 3px var(--accent-bg)'
+            }
+          }}
+        />
         <Select
           value={period}
-          onChange={handleChange}
+          onChange={handlePeriodChange}
           size="small"
           inputProps={{ 'aria-label': t('period.label') }}
           sx={{
@@ -115,8 +175,8 @@ export function JournalEntryToolbar({
           }}
         >
           <MenuItem value="all">{t('period.all')}</MenuItem>
-          <MenuItem value="matin">{t('period.matin')}</MenuItem>
-          <MenuItem value="aprem">{t('period.aprem')}</MenuItem>
+          <MenuItem value="morning">{t('period.morning')}</MenuItem>
+          <MenuItem value="afternoon">{t('period.afternoon')}</MenuItem>
         </Select>
       </Box>
     </Box>

@@ -56,4 +56,10 @@ describe('JournalEntryForm', () => {
     render(withProviders(<JournalEntryForm selectedDate="2026-04-01" />))
     expect(screen.getByRole('combobox')).toBeInTheDocument()
   })
+
+  it('disables the submit button when no students are selected', () => {
+    render(withProviders(<JournalEntryForm selectedDate="2026-04-01" />))
+    const submitButton = screen.getByRole('button', { name: /enregistrer/i })
+    expect(submitButton).toBeDisabled()
+  })
 })

@@ -19,19 +19,18 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "composite": true,
-    "baseUrl": ".",
     "paths": {
-      "@student/*": ["src/features/student/renderer/*"],
-      "@frequentation/*": ["src/features/frequentation/renderer/*"],
-      "@statistics/*": ["src/features/statistics/renderer/*"],
-      "@student-shared": ["src/features/student/shared"],
-      "@frequentation-shared": ["src/features/frequentation/shared"],
-      "@statistics-shared": ["src/features/statistics/shared"],
-      "@shared/*": ["src/shared/*"],
-      "@ui/*": ["src/shared/ui/*"],
-      "@lib/*": ["src/shared/lib/*"],
-      "@lib": ["src/shared/lib"],
-      "@types": ["src/shared/types"]
+      "@student/*": ["./src/features/student/renderer/*"],
+      "@frequentation/*": ["./src/features/frequentation/renderer/*"],
+      "@statistics/*": ["./src/features/statistics/renderer/*"],
+      "@student-shared": ["./src/features/student/shared"],
+      "@frequentation-shared": ["./src/features/frequentation/shared"],
+      "@statistics-shared": ["./src/features/statistics/shared"],
+      "@shared/*": ["./src/shared/*"],
+      "@ui/*": ["./src/shared/ui/*"],
+      "@lib/*": ["./src/shared/lib/*"],
+      "@lib": ["./src/shared/lib"],
+      "@types": ["./src/shared/types"]
     }
   }
 }

@@ -1,0 +1,71 @@
+{
+  "title": "Attendance journal",
+  "add": "Mark attendance",
+  "addEntries": "Add entries",
+  "noEntries": "No entries for this date",
+  "today": "Today",
+  "previousDay": "Previous day",
+  "nextDay": "Next day",
+  "deleteConfirm": "Are you sure you want to delete {{count}} attendance(s)?",
+  "fields": {
+    "student": "Student",
+    "classe": "Class",
+    "activity": "Activity",
+    "actions": "Actions",
+    "date": "Date"
+  },
+  "activity": {
+    "work": "Work",
+    "reading": "Reading",
+    "computer": "Computer",
+    "relaxation": "Relaxation",
+    "game": "Board game",
+    "other": "Other"
+  },
+  "form": {
+    "newEntry": "New entry",
+    "startsAt": "Date and time",
+    "selectStudents": "Student(s)",
+    "searchStudent": "Search for a student…",
+    "selectActivity": "Choose an activity",
+    "submit": "Save",
+    "cancel": "Cancel",
+    "noStudentsSelected": "Select at least one student",
+    "noActivitySelected": "Select an activity",
+    "successMessage": "Attendance(s) saved"
+  },
+  "loading": "Loading…",
+  "present": "Present",
+  "searchPlaceholder": "Search…",
+  "emptyHint": "Select students and save their attendance",
+  "row": {
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "period": {
+    "label": "Filter by period",
+    "all": "All day",
+    "morning": "Morning",
+    "afternoon": "Afternoon"
+  },
+  "batchActions": {
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all",
+    "deleteSelection": "Delete selection",
+    "changeActivity": "Change activity",
+    "selectedCount_one": "{{count}} entry selected",
+    "selectedCount_other": "{{count}} entries selected",
+    "confirmDeleteTitle": "Confirm deletion",
+    "confirmDeleteMessage_one": "Are you sure you want to delete {{count}} entry?",
+    "confirmDeleteMessage_other": "Are you sure you want to delete {{count}} entries?"
+  },
+  "edit": {
+    "title": "Edit entry",
+    "save": "Save"
+  },
+  "calendar": {
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "today": "Today"
+  }
+}

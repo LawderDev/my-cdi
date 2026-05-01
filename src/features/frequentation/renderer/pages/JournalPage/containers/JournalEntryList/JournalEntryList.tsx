@@ -8,7 +8,9 @@ import { toJournalEntryViewModel } from '@frequentation/helpers/journalEntryTran
 import { useDeleteFrequentation } from '@frequentation/api/useFrequentationMutations'
 import { useJournalEntrySelection } from './hooks/useJournalEntrySelection'
 import { useEntryPeriodFilter } from './hooks/useEntryPeriodFilter'
+import { useSearchFilter } from './hooks/useSearchFilter'
 import { filterEntriesByPeriod } from './helpers/filterEntriesByPeriod'
+import { filterJournalEntriesBySearchTerm } from './helpers/filterJournalEntriesBySearchTerm'
 import { JournalEntryToolbar } from './components/JournalEntryToolbar'
 import { JournalEntryRow } from './components/JournalEntryRow'
 import { JournalBatchActions } from './containers/JournalBatchActions'
@@ -23,13 +25,15 @@ export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryList
   const { t } = useTranslation('frequentation')
   const { selectedIds, toggle, selectAll, clearSelection } = useJournalEntrySelection()
   const { period, setPeriod } = useEntryPeriodFilter()
+  const { searchTerm, setSearchTerm } = useSearchFilter()
   const { data } = useJournalEntries({ startDate: selectedDate, endDate: selectedDate })
   const { mutate: deleteOne } = useDeleteFrequentation()
   const { getLabel } = useActivityLabels()
 
   const dtos = data ?? []
   const entries = dtos.map((dto) => toJournalEntryViewModel(dto, getLabel))
-  const filtered = filterEntriesByPeriod(entries, period)
+  const filteredByPeriod = filterEntriesByPeriod(entries, period)
+  const filtered = filterJournalEntriesBySearchTerm(filteredByPeriod, searchTerm)
 
   function handleSelectAll() {
     selectAll(entries.map((entry) => entry.id))
@@ -54,6 +58,8 @@ export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryList
         entryCount={filtered.length}
         period={period}
         onPeriodChange={setPeriod}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
       />
       <JournalBatchActions
         selectedIds={selectedIds}

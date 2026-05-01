@@ -25,7 +25,8 @@ export function Autocomplete<T>({
   inputValue,
   onInputChange,
   excludedValues,
-  maxResults = DEFAULT_MAX_RESULTS
+  maxResults = DEFAULT_MAX_RESULTS,
+  disableCloseOnSelect = false
 }: AutocompleteProps<T>) {
   const filteredOptions = filterExcludedOptions(options, excludedValues)
 
@@ -34,7 +35,9 @@ export function Autocomplete<T>({
       options={filteredOptions}
       getOptionLabel={getOptionLabel}
       isOptionEqualToValue={isOptionEqualToValue}
-      filterOptions={(candidates, state) => filterAutocompleteOptions(candidates, state, maxResults)}
+      filterOptions={(candidates, state) =>
+        filterAutocompleteOptions(candidates, state, maxResults)
+      }
       inputValue={inputValue}
       onInputChange={(_event, value) => {
         if (onInputChange) {
@@ -49,15 +52,12 @@ export function Autocomplete<T>({
           }
         }
       }}
-      blurOnSelect
+      blurOnSelect={!disableCloseOnSelect}
+      disableCloseOnSelect={disableCloseOnSelect}
       clearOnBlur={false}
       value={null}
-      renderOption={(props, option) => (
-        <AutocompleteOptionItem {...props} option={option} />
-      )}
-      renderInput={(params) => (
-        <AutocompleteInput placeholder={placeholder} params={params} />
-      )}
+      renderOption={(props, option) => <AutocompleteOptionItem {...props} option={option} />}
+      renderInput={(params) => <AutocompleteInput placeholder={placeholder} params={params} />}
     />
   )
 }

@@ -12,7 +12,11 @@ import { useJournalEntryForm } from './hooks/useJournalEntryForm'
 import { StudentMultiSelect } from './components/StudentMultiSelect'
 import { TimeRow } from './components/TimeRow'
 
-import { SECTION_LABEL_FONT_SIZE_PX, SECTION_LABEL_FONT_WEIGHT, FEEDBACK_AUTO_HIDE_MS } from './JournalEntryForm.styles'
+import {
+  SECTION_LABEL_FONT_SIZE_PX,
+  SECTION_LABEL_FONT_WEIGHT,
+  FEEDBACK_AUTO_HIDE_MS
+} from './JournalEntryForm.styles'
 
 interface JournalEntryFormProps {
   selectedDate: string
@@ -38,7 +42,7 @@ export function JournalEntryForm({ selectedDate, onSubmitted }: JournalEntryForm
     dismissFeedback
   } = useJournalEntryForm({ selectedDate, onSubmitted })
 
-  const isDisabled = isSubmitting
+  const isDisabled = isSubmitting || !form.formState.isValid
   const showSuccess = submitSuccess && submitError === null
 
   return (

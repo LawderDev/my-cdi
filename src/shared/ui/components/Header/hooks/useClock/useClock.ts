@@ -9,7 +9,7 @@ const CLOCK_FORMAT_OPTIONS: Intl.DateTimeFormatOptions = {
   minute: '2-digit'
 }
 
-export type ClockPeriod = 'matin' | 'aprem'
+export type ClockPeriod = 'morning' | 'afternoon'
 
 export interface UseClockReturn {
   time: string
@@ -21,7 +21,7 @@ function formatNow(): string {
 }
 
 function currentPeriod(): ClockPeriod {
-  return new Date().getHours() < NOON_HOUR ? 'matin' : 'aprem'
+  return new Date().getHours() < NOON_HOUR ? 'morning' : 'afternoon'
 }
 
 export function useClock(): UseClockReturn {

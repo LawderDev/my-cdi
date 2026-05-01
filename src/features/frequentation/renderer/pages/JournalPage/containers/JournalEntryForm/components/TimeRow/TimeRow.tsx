@@ -26,20 +26,20 @@ interface TimeRowProps {
   onClose: () => void
 }
 
-function periodFromTime(time: string): 'matin' | 'aprem' {
+function periodFromTime(time: string): 'morning' | 'afternoon' {
   const [hourPart] = time.split(':')
   const hour = Number.parseInt(hourPart ?? '', 10)
   if (!Number.isFinite(hour) || hour < NOON_HOUR) {
-    return 'matin'
+    return 'morning'
   }
-  return 'aprem'
+  return 'afternoon'
 }
 
 export function TimeRow({ value, onChange, ariaLabel, open, onOpen, onClose }: TimeRowProps) {
   const { t } = useTranslation('frequentation')
   const dateValue = dayjs(`2000-01-01T${value}`)
   const period = periodFromTime(value)
-  const periodLabel = period === 'matin' ? t('period.matin') : t('period.aprem')
+  const periodLabel = period === 'morning' ? t('period.morning') : t('period.afternoon')
 
   function commit(next: Dayjs | null): void {
     if (next === null) {

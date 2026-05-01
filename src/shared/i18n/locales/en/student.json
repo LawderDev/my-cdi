@@ -1,0 +1,29 @@
+{
+  "title": "Student management",
+  "add": "Add a student",
+  "edit": "Edit student",
+  "delete": "Delete student",
+  "import": "Import CSV",
+  "count": "{{count}} students",
+  "searchPlaceholder": "Search by name, first name, class…",
+  "fields": {
+    "nom": "Last name",
+    "prenom": "First name",
+    "classe": "Class",
+    "ine": "INE",
+    "visits": "Visits",
+    "actions": "Actions",
+    "search": "Search students..."
+  },
+  "deleteConfirm": "Are you sure you want to delete {{count}} student(s)?",
+  "duplicateIne": "A student with this INE already exists",
+  "csvImport": {
+    "title": "Import student database",
+    "dropzoneTitle": "Drag and drop the CSV file here",
+    "dropzoneSubtitle": "or click to browse",
+    "expectedColumns": "Expected columns:",
+    "expectedColumnsList": "Last name, First name, INE, Division (class)",
+    "expectedColumnsHint": "Address, City, ZIP, Phone, Email columns are imported but optional",
+    "submit": "Import"
+  }
+}

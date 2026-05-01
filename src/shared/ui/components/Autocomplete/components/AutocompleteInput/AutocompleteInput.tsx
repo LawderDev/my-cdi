@@ -2,7 +2,11 @@ import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import { Icon } from '../../../Icon'
 import type { AutocompleteInputProps } from './types/AutocompleteInputProps'
-import { INPUT_FONT_SIZE_PX, INPUT_HEIGHT_PX, SEARCH_ICON_FONT_SIZE_PX } from './AutocompleteInput.styles'
+import {
+  INPUT_FONT_SIZE_PX,
+  INPUT_HEIGHT_PX,
+  SEARCH_ICON_FONT_SIZE_PX
+} from './AutocompleteInput.styles'
 
 export function AutocompleteInput({ placeholder, params }: AutocompleteInputProps) {
   return (

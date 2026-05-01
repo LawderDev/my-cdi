@@ -33,20 +33,20 @@ describe('useClock', () => {
     expect(result.current.time).not.toBe(initial)
   })
 
-  it('returns matin period when before noon (local time)', () => {
+  it('returns morning period when before noon (local time)', () => {
     const morning = new Date()
     morning.setHours(MORNING_HOUR, 0, 0, 0)
     vi.setSystemTime(morning)
     const { result } = renderHook(() => useClock())
-    expect(result.current.period).toBe('matin')
+    expect(result.current.period).toBe('morning')
   })
 
-  it('returns aprem period at or after noon (local time)', () => {
+  it('returns afternoon period at or after noon (local time)', () => {
     const afternoon = new Date()
     afternoon.setHours(AFTERNOON_HOUR, 0, 0, 0)
     vi.setSystemTime(afternoon)
     const { result } = renderHook(() => useClock())
-    expect(result.current.period).toBe('aprem')
+    expect(result.current.period).toBe('afternoon')
   })
 
   it('cleans up the interval on unmount', () => {

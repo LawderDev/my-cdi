@@ -8,29 +8,29 @@
 
 My-CDI is a French school library (CDI) attendance tracking Electron desktop application.
 
-| Layer     | Technology                           |
-| --------- | ------------------------------------ |
-| Framework | React 19 + Electron 40               |
-| Build     | electron-vite 5 + Vite 7             |
-| Language  | TypeScript 5.9                       |
-| Database  | better-sqlite3 + Drizzle ORM         |
-| State     | TanStack Query 5 + React Compiler    |
-| Routing   | React Router 7                       |
-| Forms     | React Hook Form + Zod                |
-| UI        | MUI 7                                |
-| i18n      | i18next + react-i18next              |
-| Testing   | Vitest + React Testing Library       |
+| Layer     | Technology                        |
+| --------- | --------------------------------- |
+| Framework | React 19 + Electron 40            |
+| Build     | electron-vite 5 + Vite 7          |
+| Language  | TypeScript 5.9                    |
+| Database  | better-sqlite3 + Drizzle ORM      |
+| State     | TanStack Query 5 + React Compiler |
+| Routing   | React Router 7                    |
+| Forms     | React Hook Form + Zod             |
+| UI        | MUI 7                             |
+| i18n      | i18next + react-i18next           |
+| Testing   | Vitest + React Testing Library    |
 
 ### Build & Tooling
 
-| Script            | Purpose                                    |
-| ----------------- | ------------------------------------------ |
-| `typecheck:node`  | Type-check main + preload (`tsconfig.node.json`) |
-| `typecheck:web`   | Type-check renderer (`tsconfig.web.json`)  |
-| `build:win`       | Windows installer (`electron-builder`)     |
-| `build:mac`       | macOS DMG                                  |
-| `build:linux`     | Linux AppImage / deb                       |
-| `postinstall`     | `electron-builder install-app-deps`        |
+| Script           | Purpose                                          |
+| ---------------- | ------------------------------------------------ |
+| `typecheck:node` | Type-check main + preload (`tsconfig.node.json`) |
+| `typecheck:web`  | Type-check renderer (`tsconfig.web.json`)        |
+| `build:win`      | Windows installer (`electron-builder`)           |
+| `build:mac`      | macOS DMG                                        |
+| `build:linux`    | Linux AppImage / deb                             |
+| `postinstall`    | `electron-builder install-app-deps`              |
 
 **electron-vite** configures three separate build blocks (main, preload, renderer) with divergent path aliases. The renderer block injects `babel-plugin-react-compiler` with `target: '19'`. **Drizzle Kit** runs migrations and generates schema metadata.
 
@@ -40,11 +40,11 @@ My-CDI is a French school library (CDI) attendance tracking Electron desktop app
 
 Three-process model:
 
-| Process   | Entry               | Role                                    |
-| --------- | ------------------- | --------------------------------------- |
-| **Main**    | `src/main/index.ts`   | Electron app lifecycle, window creation |
-| **Preload** | `src/preload/index.ts`| Secure bridge between main ↔ renderer   |
-| **Renderer**| `src/renderer/main.tsx`| React root, providers, routes           |
+| Process      | Entry                   | Role                                    |
+| ------------ | ----------------------- | --------------------------------------- |
+| **Main**     | `src/main/index.ts`     | Electron app lifecycle, window creation |
+| **Preload**  | `src/preload/index.ts`  | Secure bridge between main ↔ renderer   |
+| **Renderer** | `src/renderer/main.tsx` | React root, providers, routes           |
 
 Communication flows:
 
@@ -65,6 +65,7 @@ Renderer ──► Preload (contextBridge) ──► Main (ipcMain.handle)
 4. Invoke `cleanupOldFrequentations()` after all modules initialize
 
 ### Auto-Updater
+
 `main/index.ts` registers `registerAutoUpdater(targetWindow)` which wires `electron-updater` events to `webContents.send` via `UPDATER_CHANNELS`. On the renderer side, `window.electronAPI.updater` exposes `onUpdateAvailable`, `onDownloadProgress`, etc., using `subscribeToChannel` (pub/sub, not `invoke`).
 
 `useAutoUpdater` tracks a state machine (`'idle' | 'available' | 'downloading' | 'downloaded' | 'error'`) and is the only allowed `useEffect` hook for updater sync. `UpdateBanner` mounts globally inside `AppShell`.
@@ -100,13 +101,13 @@ src/
 
 Every feature's `shared/types.ts` defines the DTOs that cross the main/renderer boundary:
 
-| Suffix            | Purpose                           | Example                  |
-| ----------------- | --------------------------------- | ------------------------ |
-| `CreateXxxDto`    | Input for create operations       | `CreateStudentDto`       |
-| `UpdateXxxDto`    | Input for update operations         | `UpdateStudentDto`       |
-| `XxxResponseDto`  | Output from read operations         | `StudentResponseDto`     |
-| `XxxListResponseDto` | Paginated list response        | `StudentListResponseDto` |
-| `BulkXxxResponseDto` | Batch operation result         | `BulkStudentResponseDto` |
+| Suffix               | Purpose                     | Example                  |
+| -------------------- | --------------------------- | ------------------------ |
+| `CreateXxxDto`       | Input for create operations | `CreateStudentDto`       |
+| `UpdateXxxDto`       | Input for update operations | `UpdateStudentDto`       |
+| `XxxResponseDto`     | Output from read operations | `StudentResponseDto`     |
+| `XxxListResponseDto` | Paginated list response     | `StudentListResponseDto` |
+| `BulkXxxResponseDto` | Batch operation result      | `BulkStudentResponseDto` |
 
 ---
 
@@ -115,6 +116,7 @@ Every feature's `shared/types.ts` defines the DTOs that cross the main/renderer 
 No raw channel strings. The IPC system is type-safe end-to-end.
 
 **Main side** — `shared/ipc/router.ts`
+
 ```ts
 createMainRouter(ipcMain).procedure(STUDENT_CHANNELS.CREATE, async (input) => {
   return unwrap(await createStudent(deps, input))
@@ -122,6 +124,7 @@ createMainRouter(ipcMain).procedure(STUDENT_CHANNELS.CREATE, async (input) => {
 ```
 
 **Renderer side** — `preload/index.ts` exposes `window.electronAPI`
+
 ```ts
 window.electronAPI.student.create(input)
 window.electronAPI.frequentation.list(input)
@@ -163,6 +166,7 @@ controllers → use-cases → entities ← gateways (interface)
 ```
 
 Rules:
+
 - **Use-cases depend on gateway interfaces only** — never implementations
 - **Gateway implementations are injected** in `features/X/main/index.ts`
 - **Controllers are thin IPC orchestration** — no business logic
@@ -207,6 +211,7 @@ Query client defaults: `staleTime: 60s`, `retry: 1`.
 Global keyboard shortcuts (Ctrl/Cmd + 1/2/3) are registered here for instant navigation between main routes.
 
 ### Error Boundary
+
 A single class-component `ErrorBoundary` wraps the route tree below `BrowserRouter`. It catches render errors, renders `ErrorFallback` (localized title + description + collapsible stack trace + reload button), and is the only error boundary in the app.
 
 ---
@@ -214,11 +219,13 @@ A single class-component `ErrorBoundary` wraps the route tree below `BrowserRout
 ## 8. Frontend Container/Presenter Pattern
 
 ### Containers
+
 - Import hooks, manage state, pass data to presenters via props
 - May nest other containers
 - **All logic lives here**
 
 ### Presenters
+
 - Pure `props → JSX` components
 - **Zero hooks** except `useTranslation` (read-only context consumer)
 - **Zero state, zero logic, zero inline functions**
@@ -235,6 +242,7 @@ Page (pages/XPage/XPage.tsx)
 Pages orchestrate dialog state and compose containers. Containers manage data, selection, and batch actions, then pass props to presenters. Presenters are pure `props → JSX`.
 
 ### Naming
+
 - Containers and presenters share the same base name
 - **Location** determines the role, not a suffix
 - Optional `View` suffix when a container needs a dedicated display component
@@ -261,10 +269,12 @@ export function StudentList() {
 ### List & Table Patterns
 
 **No shared `DataTable` abstraction.** Each feature builds its own list:
+
 - Student list: raw HTML `<table>` (`StudentTable` + `StudentTableRow`)
 - Journal list: flex `Box` rows (`JournalEntryRow`)
 
 **Sorting** is client-side via pure helpers:
+
 - `buildNextSortConfig(sortConfig, field)` toggles `asc` / `desc`
 - `sortStudentRows(rows, config)` uses `Intl.Collator('fr')` for locale-aware sorting
 
@@ -303,12 +313,11 @@ Consistent 3-layer architecture for any list with multi-select:
 ## 9. Error Handling
 
 ### Use-Case Results
+
 Every use-case returns a discriminated union:
 
 ```ts
-type UseCaseResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: string }
+type UseCaseResult<T> = { success: true; data: T } | { success: false; error: string }
 ```
 
 Controllers `unwrap()` the result before sending it over IPC. The renderer receives `{ success, data }` or `{ success, error }`.
@@ -316,6 +325,7 @@ Controllers `unwrap()` the result before sending it over IPC. The renderer recei
 **IPC errors** also carry an optional `code` field: `{ success: false; error: string; code?: string }`.
 
 ### AppError
+
 ```ts
 throw new AppError(ErrorCode.STUDENT_NOT_FOUND, 'Student not found')
 ```
@@ -344,6 +354,7 @@ export default JournalPageImpl
 **Exception**: Route files use `export default` because React Router's `React.lazy()` requires a default export.
 
 ### Suspense Fallback
+
 Lazy-loaded pages are wrapped in `Suspense` with a `RouteSuspenseFallback` spinner inside `AppRoutes`.
 
 ---
@@ -351,6 +362,7 @@ Lazy-loaded pages are wrapped in `Suspense` with a `RouteSuspenseFallback` spinn
 ## 11. React Query API Patterns
 
 ### Fetchers
+
 Every IPC fetcher checks the discriminated result and throws on failure:
 
 ```ts
@@ -362,6 +374,7 @@ return result.data
 ```
 
 ### Mutations
+
 After a successful mutation, invalidate the feature's query key factory:
 
 ```ts
@@ -372,25 +385,27 @@ queryClient.invalidateQueries({ queryKey: studentKeys.all })
 
 ## 12. Hook Naming Conventions
 
-| Pattern             | Example                      | Purpose                              |
-| ------------------- | ---------------------------- | ------------------------------------ |
-| `useXxxPage`        | `useJournalPage`             | Page-level orchestration             |
-| `useXxxData`        | `useStudentListData`         | Data filtering/sorting over React Query|
-| `useXxxForm`        | `useJournalEntryForm`        | Form logic (RHF + Zod)               |
-| `useXxxSelection`   | `useStudentSelection`        | Selection state (checkboxes, etc.)   |
-| `useXxxQueries`     | `useStudentQueries`          | React Query read hooks               |
-| `useXxxMutations`   | `useCreateStudent`           | React Query mutation hooks           |
+| Pattern           | Example               | Purpose                                 |
+| ----------------- | --------------------- | --------------------------------------- |
+| `useXxxPage`      | `useJournalPage`      | Page-level orchestration                |
+| `useXxxData`      | `useStudentListData`  | Data filtering/sorting over React Query |
+| `useXxxForm`      | `useJournalEntryForm` | Form logic (RHF + Zod)                  |
+| `useXxxSelection` | `useStudentSelection` | Selection state (checkboxes, etc.)      |
+| `useXxxQueries`   | `useStudentQueries`   | React Query read hooks                  |
+| `useXxxMutations` | `useCreateStudent`    | React Query mutation hooks              |
 
 ---
 
 ## 13. Form Patterns
 
 ### RHF + Zod Integration
+
 - Form schemas live in `validations/` folders (e.g., `studentFormSchema`, `journalEntryFormSchema`).
 - DTO mapping helpers live in `helpers/` (e.g., `mapFormToCreateDto`, `mapFormToBatchDto`).
 - Edit forms use `values:` (not `defaultValues:`) to populate from a view model.
 
 ### Two Input Patterns
+
 1. **`register` pattern** — simple text inputs (`StudentFormFields` receives `UseFormRegister` + `FieldErrors`).
 2. **`Controller` pattern** — custom/complex inputs (`TimeRow`, `StudentMultiSelect`, `ActivityGrid` wrapped in `<Controller>`).
 
@@ -399,9 +414,11 @@ queryClient.invalidateQueries({ queryKey: studentKeys.all })
 ## 14. React Quality Rules
 
 ### No Manual Memoization
+
 React Compiler handles automatic memoization. **Zero** `useMemo` / `useCallback` in the codebase.
 
 ### No `useWatch` (Default)
+
 Prefer deriving values during render (`form.formState.isValid`, `form.getValues()`, direct prop reads) over subscribing to field changes.
 
 Because this project runs **React Compiler in strict mode**, automatic memoization already isolates re-renders. Therefore `useWatch` is **never strictly necessary** here.
@@ -409,6 +426,7 @@ Because this project runs **React Compiler in strict mode**, automatic memoizati
 Exception — only if a deeply nested child component in a very large form genuinely cannot access the value any other way and React Compiler does not cover the case. The usage must be justified in a PR description.
 
 ### `useEffect` Only for External System Sync
+
 Per [React docs](https://react.dev/learn/you-might-not-need-an-effect), `useEffect` is **only** allowed for synchronizing with external systems:
 
 - `useClock` — syncs with browser `setInterval`
@@ -419,11 +437,13 @@ Per [React docs](https://react.dev/learn/you-might-not-need-an-effect), `useEffe
 **Forbidden in all other cases** — derive state during render, not in effects.
 
 ### Hooks Location
+
 - **Containers** and **hooks/** folders only
 - **Presenters** must have zero hooks (except `useTranslation`)
 - **Helpers** must have zero React imports
 
 ### No Inline Components
+
 Never define a component inside another component. Extract to its own folder with `index.ts` + `.styles.ts`.
 
 ---
@@ -444,16 +464,16 @@ Feature dialogs (e.g., `JournalEntryEditDialog`) use `Modal` directly. Forms ins
 
 Gateway methods follow a strict naming convention:
 
-| Action     | Pattern     | Example              |
-| ---------- | ----------- | -------------------- |
-| Create     | `create`    | `create(student)`    |
-| Read one   | `getById`   | `getById(id)`      |
-| Read by    | `getByXxx`  | `getByClass(class)`  |
-| Read all   | `getAll`    | `getAll()`         |
-| Update     | `update`    | `update(id, data)` |
-| Delete     | `delete`    | `delete(id)`       |
-| Delete by  | `deleteByXxx`| `deleteByStudentId(id)`|
-| Count      | `count`     | `count()`          |
+| Action    | Pattern       | Example                 |
+| --------- | ------------- | ----------------------- |
+| Create    | `create`      | `create(student)`       |
+| Read one  | `getById`     | `getById(id)`           |
+| Read by   | `getByXxx`    | `getByClass(class)`     |
+| Read all  | `getAll`      | `getAll()`              |
+| Update    | `update`      | `update(id, data)`      |
+| Delete    | `delete`      | `delete(id)`            |
+| Delete by | `deleteByXxx` | `deleteByStudentId(id)` |
+| Count     | `count`       | `count()`               |
 
 No `findByXxx` or `listXxx`. Every gateway returns `Entity | null` for single reads, never throws for missing rows.
 
@@ -471,11 +491,13 @@ No `findByXxx` or `listXxx`. Every gateway returns `Entity | null` for single re
 ## 18. CSV Import Flow
 
 **Renderer side:**
+
 - `StudentCsvImportButton` opens a `Modal` with a click-to-browse dropzone
 - Hidden `<input type="file" accept=".csv">` triggered by dropzone click
 - `File.text()` reads the file, passes raw CSV string to `useImportStudentsCsv` mutation
 
 **Main side:**
+
 - `importStudentsCsv` use-case receives the raw CSV string
 - `parseStudentCsv` (PapaParse) parses with `header: true`, validates required columns, caps rows at `MAX_CSV_IMPORT_ROWS`
 - `csvRowSchema` (Zod) validates each row
@@ -494,6 +516,7 @@ No `findByXxx` or `listXxx`. Every gateway returns `Entity | null` for single re
 **Backend:** `getStatsForPeriod` computes aggregates from raw frequentation rows and returns a flat DTO with `dailyCounts`, `activityCounts`, `classCounts`, `morningRate` / `afternoonRate`, and `averagePerDay`.
 
 **Frontend pure helpers transform DTOs into SVG primitives:**
+
 - `buildDonutSlices(activityCounts)` → SVG path `d` strings + colors
 - `buildTrendPath(dailyCounts, dimensions)` → SVG path `M...L...`, area path, dot coordinates, Y-axis labels
 - `buildWeeklyBars(dailyCounts)` → bar heights in px, weekday labels, weekend vs weekday colors
@@ -506,6 +529,7 @@ Presenters (`ActivityDonutChart`, `MonthlyTrendChart`, `WeeklyBarChart`) render 
 ## 20. Code Quality Rules
 
 ### No Type Casting
+
 No `as Type`, no `as unknown`, no `as never`, no non-null assertions (`!.`).
 
 Allowed: `as const` (readonly literal narrowing).
@@ -521,17 +545,19 @@ const result = studentGateway.getById(id) // returns StudentEntity | null
 ```
 
 ### No Magic Strings
+
 Every concept-string is a named constant:
 
-| String type    | Mechanism              | Location                   |
-| -------------- | ---------------------- | -------------------------- |
-| Query keys     | Query key factory      | `features/X/api/XKeys.ts`  |
-| Activity types | `ActivityType` enum    | `shared/types/index.ts`    |
-| Route paths    | `ROUTES` constants     | `shared/lib/routes/`       |
-| Error codes    | `ErrorCode` enum       | `shared/lib/errors/`       |
-| i18n keys      | Type-safe `Resources`  | `shared/i18n/config.ts`    |
+| String type    | Mechanism             | Location                  |
+| -------------- | --------------------- | ------------------------- |
+| Query keys     | Query key factory     | `features/X/api/XKeys.ts` |
+| Activity types | `ActivityType` enum   | `shared/types/index.ts`   |
+| Route paths    | `ROUTES` constants    | `shared/lib/routes/`      |
+| Error codes    | `ErrorCode` enum      | `shared/lib/errors/`      |
+| i18n keys      | Type-safe `Resources` | `shared/i18n/config.ts`   |
 
 ### No Magic Numbers
+
 Every numeric value is a named `const`:
 
 ```ts
@@ -546,6 +572,7 @@ if (students.length > MAX_CSV_IMPORT_ROWS) { ... }
 Exception: MUI spacing values `0–12` are theme-relative and don't need constants.
 
 ### No Bracketless One-Line If
+
 Every `if`, `else if`, `else` uses curly braces:
 
 ```ts
@@ -559,6 +586,7 @@ if (!student) {
 ```
 
 ### Prefer Early Return
+
 Flatten nested conditionals with guard clauses:
 
 ```ts
@@ -580,9 +608,11 @@ doWork(entry)
 ```
 
 ### Single Responsibility Per Function
+
 Each function does exactly one thing. If you need "and" to describe it, split it.
 
 ### Self-Documented Code — No Comments
+
 Code must explain itself through clear names. Comments are **only** for explaining **why**, never **what** or **how**.
 
 ```ts
@@ -597,9 +627,11 @@ const CACHE_TTL_MS = 5 * 60 * 1000 // SQLite WAL mode plan cache invalidates aft
 ```
 
 ### No Abbreviations
+
 Use full words. `v` → `version`, `num` → `number`, `msg` → `message`.
 
 ### Utilities (`shared/lib/utils.ts`)
+
 - **`generateId()`** — counter + random-segment ID generator for client-side keys
 - **`assertNever(value: never)`** — runtime exhaustiveness check for switch/match arms; pairs with the No Type Casting rule
 
@@ -608,6 +640,7 @@ Use full words. `v` → `version`, `num` → `number`, `msg` → `message`.
 ## 21. Design System Wrappers
 
 ### Enum-to-Display Metadata
+
 Presentation metadata for enum values is stored as parallel `Record<Enum, X>` maps (color, icon, CSS class) in `renderer/helpers/`. This keeps domain types clean while allowing presenters to resolve visual attributes:
 
 ```ts
@@ -617,19 +650,19 @@ const activityIcons: Record<ActivityType, string> = { ... }
 
 The design system in `shared/ui/components/` wraps MUI primitives with application-specific behavior:
 
-| Component    | Purpose                                         |
-| ------------ | ----------------------------------------------- |
-| `Button`       | Custom `primary`/`secondary`/`danger` variants    |
-| `Icon`         | Material Icons Round with size aliases            |
-| `IconButton`   | Icon-only button with `tone="danger"` support     |
-| `Avatar`       | Deterministic color from seed string              |
-| `Card`         | Styled surface for content blocks                 |
-| `Chip`         | Status / category indicators                      |
-| `EmptyState`   | Illustration + message for empty lists              |
-| `Autocomplete` | MUI Autocomplete with custom filtering helpers    |
-| `Modal`        | Dialog wrapper with custom width mapping          |
-| `ErrorBoundary`| Global render-error catch + fallback UI           |
-| `AppVersion`   | App version string display                          |
+| Component       | Purpose                                        |
+| --------------- | ---------------------------------------------- |
+| `Button`        | Custom `primary`/`secondary`/`danger` variants |
+| `Icon`          | Material Icons Round with size aliases         |
+| `IconButton`    | Icon-only button with `tone="danger"` support  |
+| `Avatar`        | Deterministic color from seed string           |
+| `Card`          | Styled surface for content blocks              |
+| `Chip`          | Status / category indicators                   |
+| `EmptyState`    | Illustration + message for empty lists         |
+| `Autocomplete`  | MUI Autocomplete with custom filtering helpers |
+| `Modal`         | Dialog wrapper with custom width mapping       |
+| `ErrorBoundary` | Global render-error catch + fallback UI        |
+| `AppVersion`    | App version string display                     |
 
 `.styles.ts` files export named constants (spacing, colors, sizes) used alongside MUI `sx`. CSS custom properties in `shared/ui/styles/global.css` (`--bg`, `--card`, `--accent`, `--radius`) coexist with the MUI theme.
 
@@ -650,14 +683,14 @@ The design system in `shared/ui/components/` wraps MUI primitives with applicati
 
 Every artifact lives as close as possible to its consumer. Only hoist when shared by 2+ consumers at the same level.
 
-| Artifact   | 1 consumer                   | Multiple at same level   | Cross-feature             |
-| ---------- | ---------------------------- | ------------------------ | ------------------------- |
-| Component  | `containers/X/components/Y/` | `renderer/components/`     | `shared/ui/components/`   |
-| Container  | `pages/X/containers/Y/`      | N/A (nest deeper)        | N/A                       |
-| Hook       | `containers/X/hooks/`        | `renderer/hooks/`          | `shared/ui/hooks/`        |
-| Helper     | `containers/X/helpers/`        | `renderer/helpers/`        | `shared/ui/helpers/`      |
-| Validation | `containers/X/validations/`    | `renderer/validations/`    | `shared/ui/validations/`  |
-| Type       | `containers/X/types/`          | `renderer/types/`          | `shared/types/`           |
+| Artifact   | 1 consumer                   | Multiple at same level  | Cross-feature            |
+| ---------- | ---------------------------- | ----------------------- | ------------------------ |
+| Component  | `containers/X/components/Y/` | `renderer/components/`  | `shared/ui/components/`  |
+| Container  | `pages/X/containers/Y/`      | N/A (nest deeper)       | N/A                      |
+| Hook       | `containers/X/hooks/`        | `renderer/hooks/`       | `shared/ui/hooks/`       |
+| Helper     | `containers/X/helpers/`      | `renderer/helpers/`     | `shared/ui/helpers/`     |
+| Validation | `containers/X/validations/`  | `renderer/validations/` | `shared/ui/validations/` |
+| Type       | `containers/X/types/`        | `renderer/types/`       | `shared/types/`          |
 
 ---
 
@@ -665,51 +698,53 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 | Scenario                      | Style    | Example                                                              |
 | ----------------------------- | -------- | -------------------------------------------------------------------- |
-| Same folder or subfolders       | Relative | `import { useBatchDelete } from './hooks/useBatchDelete'`            |
-| Same feature, different level   | Alias    | `import { useStudentQueries } from '@student/api/useStudentQueries'`   |
-| Different feature               | Shared   | `import type { StudentGateway } from '@student-shared'`                |
-| Cross-cutting shared            | Alias    | `import { useDialog } from '@shared/ui/hooks/useDialog'`             |
-| Design system                   | Short    | `import { Button } from '@ui/components/Button'`                       |
-| Utilities                       | Short    | `import { AppError } from '@lib/errors'`                             |
+| Same folder or subfolders     | Relative | `import { useBatchDelete } from './hooks/useBatchDelete'`            |
+| Same feature, different level | Alias    | `import { useStudentQueries } from '@student/api/useStudentQueries'` |
+| Different feature             | Shared   | `import type { StudentGateway } from '@student-shared'`              |
+| Cross-cutting shared          | Alias    | `import { useDialog } from '@shared/ui/hooks/useDialog'`             |
+| Design system                 | Short    | `import { Button } from '@ui/components/Button'`                     |
+| Utilities                     | Short    | `import { AppError } from '@lib/errors'`                             |
 
 ### Path Aliases
 
-| Alias                   | Resolves to (Renderer)                  | Resolves to (Main)              |
-| ----------------------- | --------------------------------------- | ------------------------------- |
-| `@student/*`            | `src/features/student/renderer/*`       | `src/features/student/main/*`   |
+| Alias                   | Resolves to (Renderer)                  | Resolves to (Main)                  |
+| ----------------------- | --------------------------------------- | ----------------------------------- |
+| `@student/*`            | `src/features/student/renderer/*`       | `src/features/student/main/*`       |
 | `@frequentation/*`      | `src/features/frequentation/renderer/*` | `src/features/frequentation/main/*` |
-| `@statistics/*`         | `src/features/statistics/renderer/*`    | `src/features/statistics/main/*` |
-| `@student-shared`       | `src/features/student/shared`           | `src/features/student/shared` |
+| `@statistics/*`         | `src/features/statistics/renderer/*`    | `src/features/statistics/main/*`    |
+| `@student-shared`       | `src/features/student/shared`           | `src/features/student/shared`       |
 | `@frequentation-shared` | `src/features/frequentation/shared`     | `src/features/frequentation/shared` |
-| `@statistics-shared`    | `src/features/statistics/shared`        | `src/features/statistics/shared` |
-| `@shared/*`             | `src/shared/*`                          | `src/shared/*`                |
-| `@ui/*`                 | `src/shared/ui/*`                       | N/A                             |
-| `@lib`                  | `src/shared/lib`                        | `src/shared/lib`                |
-| `@types`                | `src/shared/types`                      | `src/shared/types`              |
+| `@statistics-shared`    | `src/features/statistics/shared`        | `src/features/statistics/shared`    |
+| `@shared/*`             | `src/shared/*`                          | `src/shared/*`                      |
+| `@ui/*`                 | `src/shared/ui/*`                       | N/A                                 |
+| `@lib`                  | `src/shared/lib`                        | `src/shared/lib`                    |
+| `@types`                | `src/shared/types`                      | `src/shared/types`                  |
 
 ---
 
 ## 25. Testing Strategy
 
-| File type                  | Test type     | Location                          | What it tests                          |
-| -------------------------- | ------------- | --------------------------------- | -------------------------------------- |
-| `hooks/`                   | Unit          | `hooks/unitName/__tests__/`       | Hook logic in isolation                |
-| `helpers/`                 | Unit          | `helpers/unitName/__tests__/`     | Pure function I/O                      |
-| `validations/`             | Unit          | `validations/unitName/__tests__/` | Zod schema pass/fail                   |
-| Use-case `index.ts`        | Unit          | `use-cases/unitName/__tests__/`   | Business logic with mock gateway       |
-| Entity `index.ts`          | Unit          | `entities/unitName/__tests__/`    | Drizzle schema + Zod validation        |
-| Gateway implementation     | Unit          | `gateways/unitName/__tests__/`    | Drizzle queries against in-memory DB   |
-| `api/` (React Query hooks) | Unit          | `api/unitName/__tests__/`         | Query keys, mutation calls             |
-| Container components       | Integration   | `containers/X/__tests__/`         | Renders, data flows, callbacks         |
-| Presenter components       | Integration   | `components/X/__tests__/`         | Props render correctly, interactions     |
-| Page components            | Integration   | `pages/X/__tests__/`              | Page renders, routes work                |
+| File type                  | Test type   | Location                          | What it tests                        |
+| -------------------------- | ----------- | --------------------------------- | ------------------------------------ |
+| `hooks/`                   | Unit        | `hooks/unitName/__tests__/`       | Hook logic in isolation              |
+| `helpers/`                 | Unit        | `helpers/unitName/__tests__/`     | Pure function I/O                    |
+| `validations/`             | Unit        | `validations/unitName/__tests__/` | Zod schema pass/fail                 |
+| Use-case `index.ts`        | Unit        | `use-cases/unitName/__tests__/`   | Business logic with mock gateway     |
+| Entity `index.ts`          | Unit        | `entities/unitName/__tests__/`    | Drizzle schema + Zod validation      |
+| Gateway implementation     | Unit        | `gateways/unitName/__tests__/`    | Drizzle queries against in-memory DB |
+| `api/` (React Query hooks) | Unit        | `api/unitName/__tests__/`         | Query keys, mutation calls           |
+| Container components       | Integration | `containers/X/__tests__/`         | Renders, data flows, callbacks       |
+| Presenter components       | Integration | `components/X/__tests__/`         | Props render correctly, interactions |
+| Page components            | Integration | `pages/X/__tests__/`              | Page renders, routes work            |
 
 **Rule:** Every folder with logic has `__tests__/` co-located. No empty test directories.
 
 ### Test Bootstrapping
+
 `vitest.config.ts` loads `shared/test/setup.ts` which imports `@testing-library/jest-dom/vitest` matchers.
 
 ### Renderer Test Mocking
+
 Renderer tests mock the IPC bridge by stubbing the global:
 
 ```ts
@@ -719,6 +754,7 @@ vi.stubGlobal('electronAPI', {
 ```
 
 ### In-Memory DB Testing (Gateways)
+
 Gateway tests create `new Database(':memory:')` and execute raw `CREATE TABLE ...` SQL (plus `PRAGMA` statements) to build the schema by hand, then instantiate the Drizzle gateway directly against the in-memory connection.
 
 ---
@@ -748,6 +784,7 @@ Gateway tests create `new Database(':memory:')` and execute raw `CREATE TABLE ..
 ```
 
 ### Read-Side DTO-to-ViewModel Transform
+
 Backend DTOs are enriched before reaching presenters. Example: `toJournalEntryViewModel` combines `student.prenom + nom` into `displayName`, looks up the activity label via an injected translator, and attaches `activityColor`. This keeps presenters free of lookup logic.
 
 ---
@@ -769,6 +806,20 @@ shared/i18n/
 - French-only for now, but extensible
 - Type-safe via i18next `Resources` interface
 
+### English Keys, French Display
+
+Even though the application UI is in French, **all code-side keys, constants, and type literals must be in English**. The French translation lives exclusively in the JSON locale files.
+
+```ts
+// ✅ English keys in code
+export type EntryPeriod = 'morning' | 'afternoon'
+const periodLabel = period === 'morning' ? t('period.morning') : t('period.afternoon')
+
+// ❌ French keys in code
+export type EntryPeriod = 'matin' | 'aprem'
+const periodLabel = period === 'matin' ? t('period.matin') : t('period.aprem')
+```
+
 ---
 
 ## 28. Exceptions
@@ -776,6 +827,7 @@ shared/i18n/
 The following patterns are explicitly allowed as exceptions to the rules above:
 
 ### `as const` Readonly Narrowing + Indexed Type Extraction
+
 Allowed for literal type narrowing. The pattern is also used to derive strict union types from constant objects:
 
 ```ts
@@ -786,15 +838,19 @@ export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES]
 All other `as` assertions are forbidden.
 
 ### `useTranslation` in Presenters
+
 `useTranslation('namespace')` is allowed in presenter components. It is a read-only context hook and does not introduce logic or state.
 
 ### MUI Spacing Values
+
 MUI `sx` prop spacing values (`mt`, `mb`, `gap`, `p`, etc.) in the range `0–12` are theme-relative and do not need named constants. Values outside this range and all other numeric values must still be named constants.
 
 ### `export default` in Route Files
+
 Route files (`src/renderer/routes/*.tsx`) and `shared/i18n/config.ts` use `export default` because React Router's `React.lazy()` and i18next require it. All other files use named exports only.
 
 ### `useWatch`
+
 Forbidden by default. Exception only if a deeply nested child component in a very large form genuinely cannot access the value any other way and React Compiler does not cover the case. Must be justified in a PR description.
 
 ---

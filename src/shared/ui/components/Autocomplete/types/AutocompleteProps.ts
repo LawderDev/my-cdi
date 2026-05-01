@@ -12,4 +12,5 @@ export interface AutocompleteProps<T> {
   onInputChange?: (next: string) => void
   excludedValues?: T[]
   maxResults?: number
+  disableCloseOnSelect?: boolean
 }

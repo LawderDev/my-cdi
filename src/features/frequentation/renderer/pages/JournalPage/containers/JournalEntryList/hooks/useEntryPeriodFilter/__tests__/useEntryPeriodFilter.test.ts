@@ -11,12 +11,12 @@ describe('useEntryPeriodFilter', () => {
   it('updates when setPeriod is called', () => {
     const { result } = renderHook(() => useEntryPeriodFilter())
     act(() => {
-      result.current.setPeriod('matin')
+      result.current.setPeriod('morning')
     })
-    expect(result.current.period).toBe('matin')
+    expect(result.current.period).toBe('morning')
     act(() => {
-      result.current.setPeriod('aprem')
+      result.current.setPeriod('afternoon')
     })
-    expect(result.current.period).toBe('aprem')
+    expect(result.current.period).toBe('afternoon')
   })
 })

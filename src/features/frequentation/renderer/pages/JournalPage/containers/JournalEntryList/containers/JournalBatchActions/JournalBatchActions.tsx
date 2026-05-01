@@ -4,7 +4,11 @@ import MenuItem from '@mui/material/MenuItem'
 import { Button } from '@ui/components/Button'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useJournalBatchActions } from './hooks/useJournalBatchActions'
-import { COUNT_FONT_SIZE_PX, COUNT_FONT_WEIGHT, MENU_MIN_WIDTH_PX } from './JournalBatchActions.styles'
+import {
+  COUNT_FONT_SIZE_PX,
+  COUNT_FONT_WEIGHT,
+  MENU_MIN_WIDTH_PX
+} from './JournalBatchActions.styles'
 import type { ActivityType } from '@types'
 
 interface JournalBatchActionsProps {

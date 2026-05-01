@@ -2,10 +2,7 @@ import Box from '@mui/material/Box'
 import type { AutocompleteOptionItemProps } from './types/AutocompleteOptionItemProps'
 import { BADGE_PY_SPACING, OPTION_GAP_SPACING } from './AutocompleteOptionItem.styles'
 
-export function AutocompleteOptionItem({
-  option,
-  ...props
-}: AutocompleteOptionItemProps) {
+export function AutocompleteOptionItem({ option, ...props }: AutocompleteOptionItemProps) {
   return (
     <Box
       component="li"

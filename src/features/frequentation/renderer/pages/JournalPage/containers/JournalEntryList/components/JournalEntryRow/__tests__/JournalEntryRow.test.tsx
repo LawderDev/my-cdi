@@ -59,6 +59,32 @@ describe('JournalEntryRow', () => {
     expect(onEdit).toHaveBeenCalled()
   })
 
+  it('ctrl+clicking the row triggers onToggleSelect and prevents onEdit', () => {
+    const onEdit = vi.fn()
+    const onToggleSelect = vi.fn()
+    const { container } = renderRow({ onEdit, onToggleSelect })
+    const row = container.querySelector('[role="row"]')
+    if (!row) {
+      throw new Error('Row not found')
+    }
+    fireEvent.click(row, { ctrlKey: true })
+    expect(onToggleSelect).toHaveBeenCalled()
+    expect(onEdit).not.toHaveBeenCalled()
+  })
+
+  it('meta+clicking the row triggers onToggleSelect and prevents onEdit', () => {
+    const onEdit = vi.fn()
+    const onToggleSelect = vi.fn()
+    const { container } = renderRow({ onEdit, onToggleSelect })
+    const row = container.querySelector('[role="row"]')
+    if (!row) {
+      throw new Error('Row not found')
+    }
+    fireEvent.click(row, { metaKey: true })
+    expect(onToggleSelect).toHaveBeenCalled()
+    expect(onEdit).not.toHaveBeenCalled()
+  })
+
   it('clicking the delete IconButton triggers onDelete and stops propagation', () => {
     const onEdit = vi.fn()
     const onDelete = vi.fn()

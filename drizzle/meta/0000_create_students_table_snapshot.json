@@ -60,17 +60,12 @@
       "indexes": {
         "idx_students_nom": {
           "name": "idx_students_nom",
-          "columns": [
-            "nom",
-            "prenom"
-          ],
+          "columns": ["nom", "prenom"],
           "isUnique": false
         },
         "idx_students_classe": {
           "name": "idx_students_classe",
-          "columns": [
-            "classe"
-          ],
+          "columns": ["classe"],
           "isUnique": false
         }
       },

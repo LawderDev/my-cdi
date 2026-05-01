@@ -31,12 +31,27 @@ function buildInitials(prenom: string, nom: string): string {
   return `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase()
 }
 
-export function JournalEntryRow({ entry, selected, onEdit, onDelete }: JournalEntryRowProps) {
+export function JournalEntryRow({
+  entry,
+  selected,
+  onToggleSelect,
+  onEdit,
+  onDelete
+}: JournalEntryRowProps) {
   const { t } = useTranslation('frequentation')
   const period = getEntryPeriod(entry.startsAt)
-  const periodLabel = period === 'matin' ? t('period.matin') : t('period.aprem')
-  const periodClass = period === 'matin' ? 'period-matin' : 'period-aprem'
+  const periodLabel = period === 'morning' ? t('period.morning') : t('period.afternoon')
+  const periodClass = period === 'morning' ? 'period-morning' : 'period-afternoon'
   const time = dayjs(entry.startsAt).format(TIME_FORMAT)
+
+  function handleClick(event: React.MouseEvent) {
+    if ((event.metaKey || event.ctrlKey) && onToggleSelect) {
+      event.preventDefault()
+      onToggleSelect()
+      return
+    }
+    onEdit()
+  }
 
   function handleEditClick(event: React.MouseEvent) {
     event.stopPropagation()
@@ -51,7 +66,7 @@ export function JournalEntryRow({ entry, selected, onEdit, onDelete }: JournalEn
   return (
     <Box
       role="row"
-      onClick={onEdit}
+      onClick={handleClick}
       sx={{
         position: 'relative',
         display: 'flex',

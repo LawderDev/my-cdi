@@ -34,11 +34,11 @@ describe('filterEntriesByPeriod', () => {
     expect(filterEntriesByPeriod(all, 'all')).toEqual(all)
   })
 
-  it('keeps only morning entries when filter is "matin"', () => {
-    expect(filterEntriesByPeriod(all, 'matin')).toEqual([morning])
+  it('keeps only morning entries when filter is "morning"', () => {
+    expect(filterEntriesByPeriod(all, 'morning')).toEqual([morning])
   })
 
-  it('keeps only afternoon entries when filter is "aprem"', () => {
-    expect(filterEntriesByPeriod(all, 'aprem')).toEqual([afternoon])
+  it('keeps only afternoon entries when filter is "afternoon"', () => {
+    expect(filterEntriesByPeriod(all, 'afternoon')).toEqual([afternoon])
   })
 })

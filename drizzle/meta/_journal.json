@@ -6,21 +6,21 @@
       "idx": 0,
       "version": "6",
       "when": 1777509615550,
-      "tag": "0000_awesome_northstar",
+      "tag": "0000_create_students_table",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "6",
       "when": 1777510399118,
-      "tag": "0001_new_blink",
+      "tag": "0001_create_frequentation_table",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "6",
       "when": 1777528558498,
-      "tag": "0002_simple_lorna_dane",
+      "tag": "0002_add_frequentation_foreign_key",
       "breakpoints": true
     }
   ]

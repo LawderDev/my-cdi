@@ -16,19 +16,18 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "composite": true,
-    "baseUrl": ".",
     "types": ["electron-vite/node"],
     "paths": {
-      "@student/*": ["src/features/student/main/*"],
-      "@frequentation/*": ["src/features/frequentation/main/*"],
-      "@statistics/*": ["src/features/statistics/main/*"],
-      "@student-shared": ["src/features/student/shared"],
-      "@frequentation-shared": ["src/features/frequentation/shared"],
-      "@statistics-shared": ["src/features/statistics/shared"],
-      "@shared/*": ["src/shared/*"],
-      "@lib/*": ["src/shared/lib/*"],
-      "@lib": ["src/shared/lib"],
-      "@types": ["src/shared/types"]
+      "@student/*": ["./src/features/student/main/*"],
+      "@frequentation/*": ["./src/features/frequentation/main/*"],
+      "@statistics/*": ["./src/features/statistics/main/*"],
+      "@student-shared": ["./src/features/student/shared"],
+      "@frequentation-shared": ["./src/features/frequentation/shared"],
+      "@statistics-shared": ["./src/features/statistics/shared"],
+      "@shared/*": ["./src/shared/*"],
+      "@lib/*": ["./src/shared/lib/*"],
+      "@lib": ["./src/shared/lib"],
+      "@types": ["./src/shared/types"]
     }
   }
 }

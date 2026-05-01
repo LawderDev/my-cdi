@@ -74,6 +74,7 @@ export function StudentMultiSelect({
         inputValue={inputValue}
         onInputChange={onInputChange}
         excludedValues={selectedIds}
+        disableCloseOnSelect
       />
       <Box
         sx={{

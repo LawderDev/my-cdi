@@ -53,16 +53,12 @@
       "indexes": {
         "idx_freq_student": {
           "name": "idx_freq_student",
-          "columns": [
-            "student_id"
-          ],
+          "columns": ["student_id"],
           "isUnique": false
         },
         "idx_freq_starts_at": {
           "name": "idx_freq_starts_at",
-          "columns": [
-            "starts_at"
-          ],
+          "columns": ["starts_at"],
           "isUnique": false
         }
       },
@@ -71,12 +67,8 @@
           "name": "frequentation_student_id_students_id_fk",
           "tableFrom": "frequentation",
           "tableTo": "students",
-          "columnsFrom": [
-            "student_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["student_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -141,17 +133,12 @@
       "indexes": {
         "idx_students_nom": {
           "name": "idx_students_nom",
-          "columns": [
-            "nom",
-            "prenom"
-          ],
+          "columns": ["nom", "prenom"],
           "isUnique": false
         },
         "idx_students_classe": {
           "name": "idx_students_classe",
-          "columns": [
-            "classe"
-          ],
+          "columns": ["classe"],
           "isUnique": false
         }
       },

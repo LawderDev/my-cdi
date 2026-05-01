@@ -8,7 +8,11 @@ import type { ActivityGridOption } from '@frequentation/components/ActivityGrid'
 import type { JournalEntryViewModel } from '@frequentation/types'
 import type { ActivityType } from '@types'
 import { buildInitials } from './helpers/buildInitials'
-import { CLASSE_FONT_SIZE_PX, NAME_FONT_SIZE_PX, NAME_FONT_WEIGHT } from './JournalEntryEditDialog.styles'
+import {
+  CLASSE_FONT_SIZE_PX,
+  NAME_FONT_SIZE_PX,
+  NAME_FONT_WEIGHT
+} from './JournalEntryEditDialog.styles'
 
 interface JournalEntryEditDialogProps {
   open: boolean

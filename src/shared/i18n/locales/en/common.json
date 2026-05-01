@@ -1,0 +1,62 @@
+{
+  "app": {
+    "title": "My CDI",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "search": "Search",
+    "noResults": "No results",
+    "select": "Select",
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all",
+    "selected": "{{count}} selected",
+    "batchDelete": "Delete selection",
+    "confirmDelete": "Confirm deletion"
+  },
+  "nav": {
+    "journal": "Journal",
+    "statistics": "Statistics",
+    "students": "Student list",
+    "settings": "Settings"
+  },
+  "page": {
+    "journal": {
+      "title": "Journal",
+      "subtitle": "Daily attendance recording"
+    },
+    "statistics": {
+      "title": "Statistics",
+      "subtitle": "CDI attendance analysis"
+    },
+    "students": {
+      "title": "Student list",
+      "subtitle": "Student database management"
+    }
+  },
+  "pageTitles": {
+    "journal": "Journal — My CDI",
+    "students": "Students — My CDI",
+    "statistics": "Statistics — My CDI",
+    "default": "My CDI"
+  },
+  "errorBoundary": {
+    "title": "An error occurred",
+    "description": "The application encountered an unexpected problem. You can try reloading the page.",
+    "reload": "Reload application",
+    "details": "Technical details"
+  },
+  "updater": {
+    "available": "A new version ({{version}}) is available.",
+    "downloading": "Downloading update ({{percent}}%)...",
+    "downloaded": "Version {{version}} is ready. Restart to install.",
+    "error": "Update error: {{message}}",
+    "installNow": "Restart now",
+    "dismiss": "Later"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "title": "Statistics",
+  "loading": "Loading…",
+  "kpi": {
+    "totalVisits": "Total visits",
+    "averagePerDay": "Average / day",
+    "morningRate": "Morning rate",
+    "afternoonRate": "Afternoon rate"
+  },
+  "period": {
+    "week": "This week",
+    "month": "This month",
+    "quarter": "This quarter",
+    "semester": "This semester",
+    "year": "This year",
+    "custom": "Custom"
+  },
+  "charts": {
+    "weekly": "Attendance by day",
+    "activities": "Activities",
+    "trend": "Trend over period",
+    "visits": "visits"
+  }
+}

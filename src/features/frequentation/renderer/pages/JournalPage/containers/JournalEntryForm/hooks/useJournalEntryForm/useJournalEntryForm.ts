@@ -40,6 +40,7 @@ export function useJournalEntryForm({ selectedDate, onSubmitted }: UseJournalEnt
 
   const form = useForm<JournalEntryFormData>({
     resolver: zodResolver(journalEntryFormSchema),
+    mode: 'onChange',
     defaultValues: buildDefaultValues()
   })
 
@@ -82,7 +83,10 @@ export function useJournalEntryForm({ selectedDate, onSubmitted }: UseJournalEnt
   }
 
   function handleStudentRemove(currentIds: number[], idToRemove: number) {
-    form.setValue('studentIds', currentIds.filter((id) => id !== idToRemove))
+    form.setValue(
+      'studentIds',
+      currentIds.filter((id) => id !== idToRemove)
+    )
   }
 
   return {

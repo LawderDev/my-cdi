@@ -36,6 +36,7 @@
   },
   "loading": "Chargement…",
   "present": "Présents",
+  "searchPlaceholder": "Rechercher…",
   "emptyHint": "Sélectionnez des élèves et enregistrez leur présence",
   "row": {
     "edit": "Modifier",
@@ -44,8 +45,8 @@
   "period": {
     "label": "Filtrer par période",
     "all": "Toute la journée",
-    "matin": "Matin",
-    "aprem": "Après-midi"
+    "morning": "Matin",
+    "afternoon": "Après-midi"
   },
   "batchActions": {
     "selectAll": "Tout sélectionner",
