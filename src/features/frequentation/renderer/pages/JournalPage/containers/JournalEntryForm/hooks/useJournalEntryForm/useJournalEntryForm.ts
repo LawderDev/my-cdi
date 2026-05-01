@@ -1,11 +1,11 @@
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslation } from 'react-i18next'
+import dayjs from 'dayjs'
 import { useCreateFrequentationBatch } from '@frequentation/api/useFrequentationMutations'
 import { useActivityLabels } from '@frequentation/hooks/useActivityLabels'
 import { useStudentList } from '@student/api/useStudentQueries'
 import { buildActivityOptions } from '@frequentation/helpers/buildActivityOptions'
-import { useClock } from '@ui/components/Header/hooks/useClock'
 import { ActivityType } from '@types'
 import { journalEntryFormSchema } from '../../validations/journalEntryFormSchema'
 import { mapFormToBatchDto } from '../../helpers/mapFormToBatchDto'
@@ -16,22 +16,36 @@ interface UseJournalEntryFormOptions {
   onSubmitted?: () => void
 }
 
-const DEFAULT_VALUES: JournalEntryFormData = {
-  studentIds: [],
-  activity: ActivityType.WORK
+const DATETIME_LOCAL_FORMAT = 'YYYY-MM-DDTHH:mm'
+
+function buildDefaultStartsAt(selectedDate: string): string {
+  const now = dayjs()
+  return dayjs(selectedDate).hour(now.hour()).minute(now.minute()).format(DATETIME_LOCAL_FORMAT)
+}
+
+function buildDefaultValues(selectedDate: string): JournalEntryFormData {
+  return {
+    studentIds: [],
+    activity: ActivityType.WORK,
+    startsAt: buildDefaultStartsAt(selectedDate)
+  }
 }
 
 export function useJournalEntryForm({ selectedDate, onSubmitted }: UseJournalEntryFormOptions) {
-  const { t } = useTranslation('frequentation')
   const { mutate, isPending } = useCreateFrequentationBatch()
   const { allActivities, getLabel } = useActivityLabels()
   const { data: students, isLoading: isStudentLoading } = useStudentList()
-  const { time, period } = useClock()
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submitSuccess, setSubmitSuccess] = useState<boolean>(false)
 
   const form = useForm<JournalEntryFormData>({
     resolver: zodResolver(journalEntryFormSchema),
-    defaultValues: DEFAULT_VALUES
+    defaultValues: buildDefaultValues(selectedDate)
   })
+
+  useEffect(() => {
+    form.setValue('startsAt', buildDefaultStartsAt(selectedDate), { shouldDirty: false })
+  }, [selectedDate, form])
 
   const activityOptions = buildActivityOptions(allActivities, getLabel)
 
@@ -41,15 +55,24 @@ export function useJournalEntryForm({ selectedDate, onSubmitted }: UseJournalEnt
     classe: student.classe
   }))
 
-  const periodLabel = period === 'matin' ? t('period.matin') : t('period.aprem')
+  function dismissFeedback() {
+    setSubmitError(null)
+    setSubmitSuccess(false)
+  }
 
   function handleSubmit(values: JournalEntryFormData) {
-    mutate(mapFormToBatchDto(values, selectedDate), {
+    setSubmitError(null)
+    setSubmitSuccess(false)
+    mutate(mapFormToBatchDto(values), {
       onSuccess: () => {
-        form.reset(DEFAULT_VALUES)
+        form.reset(buildDefaultValues(selectedDate))
+        setSubmitSuccess(true)
         if (onSubmitted) {
           onSubmitted()
         }
+      },
+      onError: (error: Error) => {
+        setSubmitError(error.message)
       }
     })
   }
@@ -61,8 +84,8 @@ export function useJournalEntryForm({ selectedDate, onSubmitted }: UseJournalEnt
     studentOptions,
     isStudentLoading,
     isSubmitting: isPending,
-    time,
-    period,
-    periodLabel
+    submitError,
+    submitSuccess,
+    dismissFeedback
   } as const
 }

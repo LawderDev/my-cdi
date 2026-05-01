@@ -10,7 +10,8 @@ describe('journalEntryFormSchema', () => {
     expect(
       journalEntryFormSchema.safeParse({
         studentIds: [FIRST_ID, SECOND_ID],
-        activity: ActivityType.WORK
+        activity: ActivityType.WORK,
+        startsAt: '2026-04-01T10:30'
       }).success
     ).toBe(true)
   })

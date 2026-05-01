@@ -5,7 +5,8 @@ const MIN_STUDENTS = 1
 
 export const journalEntryFormSchema = z.object({
   studentIds: z.array(z.number().int().positive()).min(MIN_STUDENTS),
-  activity: activityTypeSchema
+  activity: activityTypeSchema,
+  startsAt: z.string().min(1)
 })
 
 export type JournalEntryFormValues = z.infer<typeof journalEntryFormSchema>

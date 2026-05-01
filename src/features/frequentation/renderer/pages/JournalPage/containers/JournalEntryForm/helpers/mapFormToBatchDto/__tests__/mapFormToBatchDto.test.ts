@@ -7,11 +7,12 @@ const SECOND_ID = 2
 const EXPECTED_COUNT = 2
 
 describe('mapFormToBatchDto', () => {
-  it('maps form data + selected ISO date to a batch DTO', () => {
-    const result = mapFormToBatchDto(
-      { studentIds: [FIRST_ID, SECOND_ID], activity: ActivityType.WORK },
-      '2026-04-01'
-    )
+  it('maps form data including startsAt to a batch DTO', () => {
+    const result = mapFormToBatchDto({
+      studentIds: [FIRST_ID, SECOND_ID],
+      activity: ActivityType.WORK,
+      startsAt: '2026-04-01T10:30'
+    })
     expect(result.frequentations).toHaveLength(EXPECTED_COUNT)
     const [first] = result.frequentations
     if (!first) {

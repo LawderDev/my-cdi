@@ -24,13 +24,15 @@
   },
   "form": {
     "newEntry": "Nouvelle entrée",
+    "startsAt": "Date et heure",
     "selectStudents": "Élève(s)",
     "searchStudent": "Rechercher un élève…",
     "selectActivity": "Choisir une activité",
     "submit": "Enregistrer",
     "cancel": "Annuler",
     "noStudentsSelected": "Sélectionnez au moins un élève",
-    "noActivitySelected": "Sélectionnez une activité"
+    "noActivitySelected": "Sélectionnez une activité",
+    "successMessage": "Fréquentation(s) enregistrée(s)"
   },
   "loading": "Chargement…",
   "present": "Présents",
