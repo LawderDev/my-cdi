@@ -103,8 +103,12 @@ export function JournalEntryFormView({ form }: JournalEntryFormViewProps) {
 ### No Manual Memoization
 React Compiler handles automatic memoization. **Zero** `useMemo` / `useCallback` in the codebase.
 
-### No `useWatch`
-Use `form.formState.isValid` or derived values during render instead of watching fields.
+### No `useWatch` (Default)
+Prefer deriving values during render (`form.formState.isValid`, `form.getValues()`, direct prop reads) over subscribing to field changes.
+
+Because this project runs **React Compiler in strict mode**, automatic memoization already isolates re-renders. Therefore `useWatch` is **never strictly necessary** here.
+
+Exception — only if a deeply nested child component in a very large form genuinely cannot access the value any other way and React Compiler does not cover the case. The usage must be justified in a PR description.
 
 ### `useEffect` Only for External System Sync
 Per [React docs](https://react.dev/learn/you-might-not-need-an-effect), `useEffect` is **only** allowed for synchronizing with external systems:
