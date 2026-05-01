@@ -7,6 +7,7 @@ import { ActivityGrid } from '@frequentation/components/ActivityGrid'
 import type { ActivityGridOption } from '@frequentation/components/ActivityGrid'
 import type { JournalEntryViewModel } from '@frequentation/types'
 import type { ActivityType } from '@types'
+import { buildInitials } from './helpers/buildInitials'
 import { CLASSE_FONT_SIZE_PX, NAME_FONT_SIZE_PX, NAME_FONT_WEIGHT } from './JournalEntryEditDialog.styles'
 
 interface JournalEntryEditDialogProps {
@@ -17,10 +18,6 @@ interface JournalEntryEditDialogProps {
   onSubmit: () => void
   onClose: () => void
   entry?: JournalEntryViewModel
-}
-
-function buildInitials(prenom: string, nom: string): string {
-  return `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase()
 }
 
 export function JournalEntryEditDialog({

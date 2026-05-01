@@ -1,16 +1,22 @@
 import MuiAutocomplete from '@mui/material/Autocomplete'
-import TextField from '@mui/material/TextField'
-import Box from '@mui/material/Box'
-import InputAdornment from '@mui/material/InputAdornment'
-import { Icon } from '../Icon'
 import type { AutocompleteOption, AutocompleteProps } from './types/AutocompleteProps'
+import { AutocompleteOptionItem } from './components/AutocompleteOptionItem'
+import { AutocompleteInput } from './components/AutocompleteInput'
+import { filterAutocompleteOptions } from './helpers/filterAutocompleteOptions'
+import { filterExcludedOptions } from './helpers/filterExcludedOptions'
 
 const DEFAULT_MAX_RESULTS = 8
-const SEARCH_ICON_FONT_SIZE_PX = 20
-const OPTION_GAP_SPACING = 1.25
-const BADGE_PY_SPACING = 0.25
-const INPUT_HEIGHT_PX = 42
-const INPUT_FONT_SIZE_PX = 13
+
+function getOptionLabel<T>(option: AutocompleteOption<T>): string {
+  return option.label
+}
+
+function isOptionEqualToValue<T>(
+  option: AutocompleteOption<T>,
+  value: AutocompleteOption<T>
+): boolean {
+  return option.value === value.value
+}
 
 export function Autocomplete<T>({
   placeholder,
@@ -21,132 +27,36 @@ export function Autocomplete<T>({
   excludedValues,
   maxResults = DEFAULT_MAX_RESULTS
 }: AutocompleteProps<T>) {
-  const excludedSet = new Set(excludedValues ?? [])
-  const filteredOptions = options.filter((option) => !excludedSet.has(option.value))
-
-  function getOptionLabel(option: AutocompleteOption<T>): string {
-    return option.label
-  }
-
-  function isOptionEqualToValue(
-    option: AutocompleteOption<T>,
-    value: AutocompleteOption<T>
-  ): boolean {
-    return option.value === value.value
-  }
-
-  function handleChange(_event: unknown, value: AutocompleteOption<T> | null): void {
-    if (value !== null) {
-      onSelect(value)
-      if (onInputChange) {
-        onInputChange('')
-      }
-    }
-  }
-
-  function handleInputChange(_event: unknown, value: string): void {
-    if (onInputChange) {
-      onInputChange(value)
-    }
-  }
-
-  function filterOptions(
-    candidates: AutocompleteOption<T>[],
-    state: { inputValue: string }
-  ): AutocompleteOption<T>[] {
-    const term = state.inputValue.trim().toLowerCase()
-    const matches =
-      term.length === 0
-        ? candidates
-        : candidates.filter((option) => option.label.toLowerCase().includes(term))
-    return matches.slice(0, maxResults)
-  }
+  const filteredOptions = filterExcludedOptions(options, excludedValues)
 
   return (
     <MuiAutocomplete<AutocompleteOption<T>, false, false, false>
       options={filteredOptions}
       getOptionLabel={getOptionLabel}
       isOptionEqualToValue={isOptionEqualToValue}
-      filterOptions={filterOptions}
+      filterOptions={(candidates, state) => filterAutocompleteOptions(candidates, state, maxResults)}
       inputValue={inputValue}
-      onInputChange={handleInputChange}
-      onChange={handleChange}
+      onInputChange={(_event, value) => {
+        if (onInputChange) {
+          onInputChange(value)
+        }
+      }}
+      onChange={(_event, value) => {
+        if (value !== null) {
+          onSelect(value)
+          if (onInputChange) {
+            onInputChange('')
+          }
+        }
+      }}
       blurOnSelect
       clearOnBlur={false}
       value={null}
-      renderOption={(props, option) => {
-        const { key, ...rest } = props
-        return (
-          <Box
-            component="li"
-            key={key}
-            {...rest}
-            sx={{ display: 'flex', alignItems: 'center', gap: OPTION_GAP_SPACING }}
-          >
-            <span>{option.label}</span>
-            {option.badge ? (
-              <Box
-                component="span"
-                sx={{
-                  ml: 'auto',
-                  fontSize: '11px',
-                  color: 'var(--text-dim)',
-                  backgroundColor: 'var(--surface)',
-                  px: 1,
-                  py: BADGE_PY_SPACING,
-                  borderRadius: 'var(--radius-xs)'
-                }}
-              >
-                {option.badge}
-              </Box>
-            ) : null}
-          </Box>
-        )
-      }}
+      renderOption={(props, option) => (
+        <AutocompleteOptionItem {...props} option={option} />
+      )}
       renderInput={(params) => (
-        <TextField
-          {...params}
-          placeholder={placeholder}
-          size="small"
-          variant="outlined"
-          slotProps={{
-            input: {
-              ...params.slotProps.input,
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Icon
-                    name="search"
-                    style={{
-                      fontSize: `${SEARCH_ICON_FONT_SIZE_PX}px`,
-                      color: 'var(--text-dim)'
-                    }}
-                  />
-                </InputAdornment>
-              )
-            },
-            htmlInput: params.slotProps.htmlInput
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              height: `${INPUT_HEIGHT_PX}px`,
-              fontSize: `${INPUT_FONT_SIZE_PX}px`,
-              backgroundColor: 'var(--surface)',
-              color: 'var(--title)',
-              borderRadius: 'var(--radius-sm)',
-              transition: 'border-color 0.2s'
-            },
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'var(--border)'
-            },
-            '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'var(--border-light)'
-            },
-            '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'var(--accent)',
-              boxShadow: '0 0 0 3px var(--accent-bg)'
-            }
-          }}
-        />
+        <AutocompleteInput placeholder={placeholder} params={params} />
       )}
     />
   )

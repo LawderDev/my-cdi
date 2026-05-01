@@ -1,0 +1,1 @@
+export { buildInitials } from './buildInitials'

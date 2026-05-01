@@ -1,0 +1,10 @@
+export const SIDEBAR_WIDTH_PX = 68
+export const LOGO_SIZE_PX = 36
+export const LOGO_FONT_SIZE_PX = 13
+export const LOGO_BORDER_RADIUS_PX = 10
+export const LOGO_FONT_WEIGHT = 700
+export const LOGO_BG = 'linear-gradient(135deg, var(--accent), #b388ff)'
+export const LOGO_SHADOW = '0 2px 8px rgba(var(--accent-rgb), 0.4)'
+export const SIDEBAR_Z_INDEX = 10
+export const SETTINGS_ICON_NAME = 'settings'
+export const SETTINGS_LABEL_KEY = 'nav.settings'
