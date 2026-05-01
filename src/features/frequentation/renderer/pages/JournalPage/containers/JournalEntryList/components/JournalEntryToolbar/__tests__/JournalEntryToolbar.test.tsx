@@ -12,6 +12,8 @@ function renderToolbar(overrides: Partial<Parameters<typeof JournalEntryToolbar>
     entryCount: ENTRY_COUNT,
     period: 'all' as const,
     onPeriodChange: vi.fn(),
+    searchTerm: '',
+    onSearchChange: vi.fn(),
     ...overrides
   }
   return {
