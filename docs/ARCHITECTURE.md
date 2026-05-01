@@ -21,6 +21,19 @@ My-CDI is a French school library (CDI) attendance tracking Electron desktop app
 | i18n      | i18next + react-i18next              |
 | Testing   | Vitest + React Testing Library       |
 
+### Build & Tooling
+
+| Script            | Purpose                                    |
+| ----------------- | ------------------------------------------ |
+| `typecheck:node`  | Type-check main + preload (`tsconfig.node.json`) |
+| `typecheck:web`   | Type-check renderer (`tsconfig.web.json`)  |
+| `build:win`       | Windows installer (`electron-builder`)     |
+| `build:mac`       | macOS DMG                                  |
+| `build:linux`     | Linux AppImage / deb                       |
+| `postinstall`     | `electron-builder install-app-deps`        |
+
+**electron-vite** configures three separate build blocks (main, preload, renderer) with divergent path aliases. The renderer block injects `babel-plugin-react-compiler` with `target: '19'`. **Drizzle Kit** runs migrations and generates schema metadata.
+
 ---
 
 ## 2. Electron Process Architecture
@@ -99,6 +112,8 @@ window.electronAPI.frequentation.list(input)
 
 **Channels** — Named constants in `shared/ipc/channels.ts`. Never use raw strings.
 
+**Preload namespace** — `window.electronAPI` exposes nested namespaces (`student`, `frequentation`, `statistics`, `updater`) plus a standalone `getAppVersion()`. The pub/sub pattern (`subscribeToChannel` for updater events) wraps `ipcRenderer.on` / `removeListener`.
+
 ---
 
 ## 5. Database Layer
@@ -175,6 +190,16 @@ Query client defaults: `staleTime: 60s`, `retry: 1`.
 - **Zero state, zero logic, zero inline functions**
 - Every presenter has a dedicated `.styles.ts` file
 
+### Page → Container → Presenter Hierarchy
+
+```
+Page (pages/XPage/XPage.tsx)
+  └── Container (containers/X/X.tsx)
+        └── Presenter (components/X/X.tsx)
+```
+
+Pages orchestrate dialog state and compose containers. Containers manage data, selection, and batch actions, then pass props to presenters. Presenters are pure `props → JSX`.
+
 ### Naming
 - Containers and presenters share the same base name
 - **Location** determines the role, not a suffix
@@ -221,6 +246,7 @@ Controllers `unwrap()` the result before sending it over IPC. The renderer recei
 throw new AppError(ErrorCode.STUDENT_NOT_FOUND, 'Student not found')
 ```
 
+- `AppError` exposes `readonly code: ErrorCode` and a `toJSON()` method for IPC serialization
 - Always use `ErrorCode` enum, never raw strings
 - `isAppError()` for type narrowing at boundaries
 
@@ -243,7 +269,29 @@ export default JournalPageImpl
 
 ---
 
-## 11. Hook Naming Conventions
+## 11. React Query API Patterns
+
+### Fetchers
+Every IPC fetcher checks the discriminated result and throws on failure:
+
+```ts
+const result = await window.electronAPI.student.getById(id)
+if (!result.success) {
+  throw new Error(result.error)
+}
+return result.data
+```
+
+### Mutations
+After a successful mutation, invalidate the feature's query key factory:
+
+```ts
+queryClient.invalidateQueries({ queryKey: studentKeys.all })
+```
+
+---
+
+## 12. Hook Naming Conventions
 
 | Pattern             | Example                      | Purpose                              |
 | ------------------- | ---------------------------- | ------------------------------------ |
@@ -256,7 +304,7 @@ export default JournalPageImpl
 
 ---
 
-## 12. Form Patterns
+## 13. Form Patterns
 
 ### RHF + Zod Integration
 - Form schemas live in `validations/` folders (e.g., `studentFormSchema`, `journalEntryFormSchema`).
@@ -269,7 +317,7 @@ export default JournalPageImpl
 
 ---
 
-## 13. React Quality Rules
+## 14. React Quality Rules
 
 ### No Manual Memoization
 React Compiler handles automatic memoization. **Zero** `useMemo` / `useCallback` in the codebase.
@@ -301,7 +349,7 @@ Never define a component inside another component. Extract to its own folder wit
 
 ---
 
-## 14. Dialog / Modal Pattern
+## 15. Dialog / Modal Pattern
 
 Shared primitives in `shared/ui/components/`:
 
@@ -313,7 +361,7 @@ Feature dialogs (e.g., `JournalEntryEditDialog`) use `Modal` directly. Forms ins
 
 ---
 
-## 15. Gateway Naming Conventions
+## 16. Gateway Naming Conventions
 
 Gateway methods follow a strict naming convention:
 
@@ -332,7 +380,7 @@ No `findByXxx` or `listXxx`. Every gateway returns `Entity | null` for single re
 
 ---
 
-## 16. Date / Time Handling
+## 17. Date / Time Handling
 
 - **Storage**: dates stored as ISO strings in SQLite; time-of-day stored as `HH:mm` strings.
 - **Display**: `formatDate` (`DD/MM/YYYY`) and `formatDateTime` (`DD/MM/YYYY HH:mm`) via `dayjs` with French locale.
@@ -341,7 +389,7 @@ No `findByXxx` or `listXxx`. Every gateway returns `Entity | null` for single re
 
 ---
 
-## 17. Code Quality Rules
+## 18. Code Quality Rules
 
 ### No Type Casting
 No `as Type`, no `as unknown`, no `as never`, no non-null assertions (`!.`).
@@ -439,7 +487,7 @@ Use full words. `v` → `version`, `num` → `number`, `msg` → `message`.
 
 ---
 
-## 18. Design System Wrappers
+## 19. Design System Wrappers
 
 The design system in `shared/ui/components/` wraps MUI primitives with application-specific behavior:
 
@@ -456,7 +504,7 @@ The design system in `shared/ui/components/` wraps MUI primitives with applicati
 
 ---
 
-## 19. File Structure Rules
+## 20. File Structure Rules
 
 1. **Every named unit is a folder** with `moduleName.ts`/`moduleName.tsx` + `index.ts` re-export
 2. **Every folder with logic has `__tests__/`** co-located
@@ -467,7 +515,7 @@ The design system in `shared/ui/components/` wraps MUI primitives with applicati
 
 ---
 
-## 20. Co-Location Rules
+## 21. Co-Location Rules
 
 Every artifact lives as close as possible to its consumer. Only hoist when shared by 2+ consumers at the same level.
 
@@ -482,7 +530,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 21. Import Rules & Path Aliases
+## 22. Import Rules & Path Aliases
 
 | Scenario                      | Style    | Example                                                              |
 | ----------------------------- | -------- | -------------------------------------------------------------------- |
@@ -510,7 +558,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 22. Testing Strategy
+## 23. Testing Strategy
 
 | File type                  | Test type     | Location                          | What it tests                          |
 | -------------------------- | ------------- | --------------------------------- | -------------------------------------- |
@@ -527,9 +575,12 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 **Rule:** Every folder with logic has `__tests__/` co-located. No empty test directories.
 
+### In-Memory DB Testing (Gateways)
+Gateway tests create `new Database(':memory:')` and execute raw `CREATE TABLE ...` SQL (plus `PRAGMA` statements) to build the schema by hand, then instantiate the Drizzle gateway directly against the in-memory connection.
+
 ---
 
-## 23. Data Flow
+## 24. Data Flow
 
 ```
 [User Action]
@@ -557,7 +608,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 ---
 
-## 24. i18n Strategy
+## 25. i18n Strategy
 
 Namespaced JSON files at `shared/i18n/locales/fr/`:
 
@@ -576,7 +627,7 @@ shared/i18n/
 
 ---
 
-## 25. Exceptions
+## 26. Exceptions
 
 The following patterns are explicitly allowed as exceptions to the rules above:
 
@@ -597,7 +648,7 @@ Forbidden by default. Exception only if a deeply nested child component in a ver
 
 ---
 
-## 26. Compliance Checklist
+## 27. Compliance Checklist
 
 When adding or modifying code, verify:
 
