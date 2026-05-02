@@ -18,14 +18,34 @@ type ParseResult = ParseSuccess | ParseFailure
 
 const HEADER_AND_ONE_INDEXED_OFFSET = 2
 
-export function parseStudentCsv(commaSeparatedValuesString: string): ParseResult {
-  const parsed = Papa.parse<Record<string, string>>(commaSeparatedValuesString, {
+function stripBom(text: string): string {
+  if (text.charCodeAt(0) === 0xfeff) {
+    return text.slice(1)
+  }
+  return text
+}
+
+function normaliseHeader(header: string): string {
+  return header
+    .replace(/^﻿/, '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFC')
+}
+
+const NORMALISED_REQUIRED_COLUMNS = CSV_REQUIRED_COLUMNS.map(normaliseHeader)
+
+export function parseStudentCsv(rawCsvText: string): ParseResult {
+  const cleanText = stripBom(rawCsvText)
+
+  const parsed = Papa.parse<Record<string, string>>(cleanText, {
     header: true,
-    skipEmptyLines: true
+    skipEmptyLines: true,
+    transformHeader: (header) => normaliseHeader(header)
   })
 
   const headers = parsed.meta.fields ?? []
-  const missingColumns = CSV_REQUIRED_COLUMNS.filter((col) => !headers.includes(col))
+  const missingColumns = NORMALISED_REQUIRED_COLUMNS.filter((col) => !headers.includes(col))
 
   if (missingColumns.length > 0) {
     return {

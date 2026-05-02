@@ -68,21 +68,32 @@ export function StudentCsvImportButton() {
     if (!pendingFile) {
       return
     }
-    const csv = await pendingFile.text()
-    importStudents(
-      { csv },
-      {
-        onSuccess: (data) => {
-          setResult(data)
-          if (data.errors === 0) {
-            closeModal()
+
+    try {
+      const csv = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(String(reader.result))
+        reader.onerror = () => reject(new Error('Impossible de lire le fichier'))
+        reader.readAsText(pendingFile)
+      })
+
+      importStudents(
+        { csv },
+        {
+          onSuccess: (data) => {
+            setResult(data)
+            if (data.errors === 0) {
+              closeModal()
+            }
+          },
+          onError: (err) => {
+            setError(err instanceof Error ? err.message : tCommon('app.unknownError'))
           }
-        },
-        onError: (err) => {
-          setError(err instanceof Error ? err.message : tCommon('app.unknownError'))
         }
-      }
-    )
+      )
+    } catch (err) {
+      setError(err instanceof Error ? err.message : tCommon('app.unknownError'))
+    }
   }
 
   return (
