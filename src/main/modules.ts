@@ -1,4 +1,5 @@
 import type { IpcMain } from 'electron'
+import log from 'electron-log/main'
 import { getDb } from '@shared/db/connection'
 import { initializeStudentModule } from '@student/index'
 import { initializeFrequentationModule } from '@frequentation/index'
@@ -13,8 +14,8 @@ export async function initializeModules(ipcMain: IpcMain): Promise<void> {
 
   const cleanupResult = await cleanupOldFrequentations(frequentationGateway)
   if (cleanupResult.success && cleanupResult.data.deletedCount > 0) {
-    console.log(`Cleaned up ${cleanupResult.data.deletedCount} old frequentations`)
+    log.info(`Cleaned up ${cleanupResult.data.deletedCount} old frequentations`)
   } else if (!cleanupResult.success) {
-    console.error(`Failed to cleanup old frequentations: ${cleanupResult.error}`)
+    log.error(`Failed to cleanup old frequentations: ${cleanupResult.error}`)
   }
 }

@@ -1,8 +1,11 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { join } from 'path'
+import { mkdirSync } from 'fs'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { autoUpdater } from 'electron-updater'
+import log from 'electron-log/main'
 import { createDbConnection, closeDbConnection } from '@shared/db/connection'
+import { runMigrations } from '@shared/db/migrate'
 import { UPDATER_CHANNELS } from '@shared/ipc/updaterChannels'
 import type {
   UpdateAvailableInfo,
@@ -12,12 +15,30 @@ import type {
 } from '@shared/types/updater'
 import { initializeModules } from './modules'
 
-const DATABASE_PATH = 'data/database.db'
+log.initialize()
+
+const DATABASE_DIR = join(app.getPath('userData'), 'data')
+const DATABASE_PATH = join(DATABASE_DIR, 'database.db')
 const WINDOW_WIDTH_PX = 1200
 const WINDOW_HEIGHT_PX = 800
+const WINDOW_MIN_WIDTH_PX = 800
+const WINDOW_MIN_HEIGHT_PX = 600
 const APP_VERSION_CHANNEL = 'app:getVersion'
 
-function registerAutoUpdater(targetWindow: BrowserWindow): void {
+process.on('uncaughtException', (err) => {
+  log.error('Uncaught exception:', err)
+})
+process.on('unhandledRejection', (reason) => {
+  log.error('Unhandled rejection:', reason)
+})
+
+function sendToAllWindows(channel: string, ...args: unknown[]): void {
+  BrowserWindow.getAllWindows().forEach((win) => {
+    win.webContents.send(channel, ...args)
+  })
+}
+
+function registerAutoUpdater(): void {
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
 
@@ -27,11 +48,11 @@ function registerAutoUpdater(targetWindow: BrowserWindow): void {
       releaseDate: info.releaseDate,
       releaseNotes: typeof info.releaseNotes === 'string' ? info.releaseNotes : undefined
     }
-    targetWindow.webContents.send(UPDATER_CHANNELS.UPDATE_AVAILABLE, payload)
+    sendToAllWindows(UPDATER_CHANNELS.UPDATE_AVAILABLE, payload)
   })
 
   autoUpdater.on('update-not-available', () => {
-    targetWindow.webContents.send(UPDATER_CHANNELS.UPDATE_NOT_AVAILABLE)
+    sendToAllWindows(UPDATER_CHANNELS.UPDATE_NOT_AVAILABLE)
   })
 
   autoUpdater.on('download-progress', (progress) => {
@@ -41,7 +62,7 @@ function registerAutoUpdater(targetWindow: BrowserWindow): void {
       transferred: progress.transferred,
       total: progress.total
     }
-    targetWindow.webContents.send(UPDATER_CHANNELS.DOWNLOAD_PROGRESS, payload)
+    sendToAllWindows(UPDATER_CHANNELS.DOWNLOAD_PROGRESS, payload)
   })
 
   autoUpdater.on('update-downloaded', (info) => {
@@ -49,14 +70,14 @@ function registerAutoUpdater(targetWindow: BrowserWindow): void {
       version: info.version,
       releaseDate: info.releaseDate
     }
-    targetWindow.webContents.send(UPDATER_CHANNELS.UPDATE_DOWNLOADED, payload)
+    sendToAllWindows(UPDATER_CHANNELS.UPDATE_DOWNLOADED, payload)
   })
 
   autoUpdater.on('error', (error) => {
     const payload: UpdateErrorInfo = {
       message: error instanceof Error ? error.message : 'Unknown updater error'
     }
-    targetWindow.webContents.send(UPDATER_CHANNELS.UPDATE_ERROR, payload)
+    sendToAllWindows(UPDATER_CHANNELS.UPDATE_ERROR, payload)
   })
 
   ipcMain.handle(UPDATER_CHANNELS.CHECK_FOR_UPDATES, async () => {
@@ -67,13 +88,17 @@ function registerAutoUpdater(targetWindow: BrowserWindow): void {
     autoUpdater.quitAndInstall()
   })
 
-  void autoUpdater.checkForUpdatesAndNotify()
+  if (process.env.AUTO_UPDATER_URL) {
+    void autoUpdater.checkForUpdatesAndNotify()
+  }
 }
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: WINDOW_WIDTH_PX,
     height: WINDOW_HEIGHT_PX,
+    minWidth: WINDOW_MIN_WIDTH_PX,
+    minHeight: WINDOW_MIN_HEIGHT_PX,
     show: false,
     autoHideMenuBar: true,
     webPreferences: {
@@ -88,6 +113,10 @@ function createWindow(): void {
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
+    const url = new URL(details.url)
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      return { action: 'deny' }
+    }
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
@@ -97,39 +126,80 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
-
-  registerAutoUpdater(mainWindow)
 }
 
-app.whenReady().then(() => {
-  electronApp.setAppUserModelId('com.my-cdi')
-
-  app.on('browser-window-created', (_, window) => {
-    optimizer.watchWindowShortcuts(window)
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    const mainWindow = BrowserWindow.getAllWindows()[0]
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
+    }
   })
 
-  createDbConnection(DATABASE_PATH)
-  initializeModules(ipcMain).catch((error: unknown) => {
-    const message = error instanceof Error ? error.message : 'Unknown error'
-    console.error(`Failed to initialize modules: ${message}`)
-  })
+  app.whenReady().then(() => {
+    if (process.platform === 'win32') {
+      electronApp.setAppUserModelId('com.my-cdi')
+    }
 
-  ipcMain.handle(APP_VERSION_CHANNEL, () => {
-    return { success: true, data: app.getVersion() }
-  })
+    app.on('browser-window-created', (_, window) => {
+      optimizer.watchWindowShortcuts(window)
+    })
 
-  createWindow()
-})
+    let dbInitialized = false
+    try {
+      mkdirSync(DATABASE_DIR, { recursive: true })
+      createDbConnection(DATABASE_PATH)
+      runMigrations()
+      dbInitialized = true
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error'
+      log.error(`Failed to initialize database: ${message}`)
+      log.error(`Database path: ${DATABASE_PATH}`)
+      dialog.showErrorBox(
+        'Database Error',
+        `Failed to initialize the database.\n\nPath: ${DATABASE_PATH}\nError: ${message}\n\nIf the database schema is outdated, delete the file and restart the app.`
+      )
+      closeDbConnection()
+      app.quit()
+      return
+    }
 
-app.on('window-all-closed', () => {
-  closeDbConnection()
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+    if (dbInitialized) {
+      initializeModules(ipcMain).catch((error: unknown) => {
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        log.error(`Failed to initialize modules: ${message}`)
+      })
+    }
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
+    ipcMain.handle(APP_VERSION_CHANNEL, () => {
+      return { success: true, data: app.getVersion() }
+    })
+
     createWindow()
-  }
-})
+
+    if (process.platform === 'darwin' || process.platform === 'win32') {
+      registerAutoUpdater()
+    }
+  })
+
+  app.on('before-quit', () => {
+    closeDbConnection()
+  })
+
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+      closeDbConnection()
+      app.quit()
+    }
+  })
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow()
+    }
+  })
+}

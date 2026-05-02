@@ -4,13 +4,14 @@ import * as schema from './schema'
 
 const DB_PATH = 'data/database.db'
 
+let sqliteInstance: Database.Database | null = null
 let databaseInstance: ReturnType<typeof drizzle> | null = null
 
 export function createDbConnection(databasePath: string = DB_PATH) {
-  const sqlite = new Database(databasePath)
-  sqlite.pragma('journal_mode = WAL')
-  sqlite.pragma('foreign_keys = ON')
-  databaseInstance = drizzle(sqlite, { schema })
+  sqliteInstance = new Database(databasePath)
+  sqliteInstance.pragma('journal_mode = WAL')
+  sqliteInstance.pragma('foreign_keys = ON')
+  databaseInstance = drizzle(sqliteInstance, { schema })
   return databaseInstance
 }
 
@@ -22,5 +23,8 @@ export function getDb() {
 }
 
 export function closeDbConnection() {
+  sqliteInstance?.pragma('wal_checkpoint(TRUNCATE)')
+  sqliteInstance?.close()
+  sqliteInstance = null
   databaseInstance = null
 }

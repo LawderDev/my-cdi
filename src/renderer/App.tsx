@@ -1,4 +1,4 @@
-import { BrowserRouter } from 'react-router'
+import { HashRouter } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -28,9 +28,9 @@ export function App() {
         <CssBaseline />
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
           <ErrorBoundary>
-            <BrowserRouter>
+            <HashRouter>
               <AppRoutes />
-            </BrowserRouter>
+            </HashRouter>
           </ErrorBoundary>
         </LocalizationProvider>
       </ThemeProvider>
