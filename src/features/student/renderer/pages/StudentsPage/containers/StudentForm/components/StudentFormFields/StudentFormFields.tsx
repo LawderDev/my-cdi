@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import type { StudentFormData } from '../../types/StudentFormData'
+import { getValidationErrorMessage } from './helpers/getValidationErrorMessage'
 import {
   LABEL_FONT_SIZE_PX,
   LABEL_FONT_WEIGHT,
@@ -23,11 +24,11 @@ export function StudentFormFields({ register, errors }: StudentFormFieldsProps) 
   return (
     <Box>
       {FIELD_KEYS.map((key) => {
-        const fieldId = `student-field-${key}`
-        const error = errors[key]
-        const errorMessage = error?.message
+        const fieldId = `student-field-${String(key)}`
+        const hasError = Boolean(errors[key])
+        const errorMessage = getValidationErrorMessage(String(key), hasError, t)
         return (
-          <Box key={key} sx={{ mb: 2 }}>
+          <Box key={String(key)} sx={{ mb: 2 }}>
             <Box
               component="label"
               htmlFor={fieldId}
@@ -41,7 +42,7 @@ export function StudentFormFields({ register, errors }: StudentFormFieldsProps) 
                 mb: 0.75
               }}
             >
-              {t(`fields.${key}`)}
+              {t(`fields.${String(key)}`)}
             </Box>
             <TextField
               id={fieldId}
@@ -49,10 +50,10 @@ export function StudentFormFields({ register, errors }: StudentFormFieldsProps) 
               size="small"
               variant="outlined"
               fullWidth
-              error={Boolean(error)}
+              error={hasError}
               slotProps={{
                 input: {
-                  'aria-invalid': Boolean(error)
+                  'aria-invalid': hasError
                 }
               }}
               {...register(key)}
@@ -66,14 +67,14 @@ export function StudentFormFields({ register, errors }: StudentFormFieldsProps) 
                   transition: 'border-color 0.2s'
                 },
                 '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: error ? 'var(--danger)' : 'var(--border)'
+                  borderColor: hasError ? 'var(--danger)' : 'var(--border)'
                 },
                 '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: error ? 'var(--danger)' : 'var(--border-light)'
+                  borderColor: hasError ? 'var(--danger)' : 'var(--border-light)'
                 },
                 '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: error ? 'var(--danger)' : 'var(--accent)',
-                  boxShadow: error ? 'none' : '0 0 0 3px var(--accent-bg)'
+                  borderColor: hasError ? 'var(--danger)' : 'var(--accent)',
+                  boxShadow: hasError ? 'none' : '0 0 0 3px var(--accent-bg)'
                 }
               }}
             />

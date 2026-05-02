@@ -1,7 +1,6 @@
-import { createStudentSchema } from '@student-shared'
 import type { StudentGateway } from '@student/gateways/student'
 import { parseStudentCsv } from './helpers/parseStudentCsv'
-import type { CsvImportResult } from '@student-shared'
+import type { CsvImportError, CsvImportResult } from '@student-shared'
 import type { UseCaseResult } from '../types/UseCaseResult'
 
 interface ImportStudentsCsvDeps {
@@ -16,9 +15,17 @@ export async function importStudentsCsv(
   deps: ImportStudentsCsvDeps,
   input: ImportStudentsCsvInput
 ): Promise<UseCaseResult<CsvImportResult>> {
-  const parseResult = parseStudentCsv(input.csv)
-  if (!parseResult.success) {
-    return { success: false, error: parseResult.error }
+  const { data: rows, errors: parseErrors } = parseStudentCsv(input.csv)
+
+  if (parseErrors.length > 0 && rows.length === 0) {
+    return {
+      success: true,
+      data: {
+        created: 0,
+        errors: parseErrors.length,
+        errorDetails: parseErrors
+      }
+    }
   }
 
   const existingStudents = await deps.gateway.getAll()
@@ -26,30 +33,30 @@ export async function importStudentsCsv(
 
   const seenInes = new Set<string>()
   let created = 0
-  const errorMessages: string[] = [...parseResult.errors]
+  const rowErrors: CsvImportError[] = [...parseErrors]
 
-  for (const row of parseResult.data) {
+  for (const row of rows) {
     const normalisedIne = row.ine.trim().toLowerCase()
 
     if (existingInes.has(normalisedIne) || seenInes.has(normalisedIne)) {
-      errorMessages.push(`${row.prenom} ${row.nom}: INE déjà existant`)
-      continue
-    }
-
-    const validated = createStudentSchema.safeParse(row)
-    if (!validated.success) {
-      const message = validated.error.issues.map((issue) => issue.message).join(', ')
-      errorMessages.push(`${row.prenom} ${row.nom}: ${message}`)
+      rowErrors.push({
+        type: 'DUPLICATE_INE',
+        studentName: `${row.prenom} ${row.nom}`
+      })
       continue
     }
 
     try {
-      await deps.gateway.create(validated.data)
+      await deps.gateway.create(row)
       created += 1
       seenInes.add(normalisedIne)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error'
-      errorMessages.push(`${row.prenom} ${row.nom}: ${message}`)
+      rowErrors.push({
+        type: 'DATABASE_ERROR',
+        studentName: `${row.prenom} ${row.nom}`,
+        message
+      })
     }
   }
 
@@ -57,8 +64,8 @@ export async function importStudentsCsv(
     success: true,
     data: {
       created,
-      errors: errorMessages.length,
-      errorMessages
+      errors: rowErrors.length,
+      errorDetails: rowErrors
     }
   }
 }

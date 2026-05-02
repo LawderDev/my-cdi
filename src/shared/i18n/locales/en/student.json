@@ -26,6 +26,22 @@
     "expectedColumns": "Expected columns:",
     "expectedColumnsList": "Last name, First name, INE, Division (class)",
     "expectedColumnsHint": "Address, City, ZIP, Phone, Email columns are imported but optional",
-    "submit": "Import"
+    "submit": "Import",
+    "success": "{{count}} student(s) imported",
+    "noStudentsCreated": "No students imported",
+    "errors": "error(s)",
+    "fileReadError": "Unable to read file",
+    "error": {
+      "missingColumns": "Missing columns: {{columns}}",
+      "rowValidation": "Row {{rowNumber}}: {{message}}",
+      "duplicateIne": "{{studentName}}: INE already exists",
+      "databaseError": "{{studentName}}: {{message}}"
+    }
+  },
+  "validation": {
+    "required": "{{field}} is required",
+    "too_small": "{{field}} is required",
+    "too_big": "{{field}} is too long",
+    "invalid_type": "{{field}} is not valid"
   }
 }

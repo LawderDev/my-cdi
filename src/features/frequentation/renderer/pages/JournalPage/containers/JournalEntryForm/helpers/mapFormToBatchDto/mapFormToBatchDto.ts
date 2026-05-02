@@ -29,7 +29,7 @@ export function mapFormToBatchDto(
     .minute(minute)
     .second(ZERO)
     .millisecond(ZERO)
-    .toISOString()
+    .format('YYYY-MM-DDTHH:mm:ss')
 
   return {
     frequentations: form.studentIds.map((studentId) => ({

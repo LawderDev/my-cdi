@@ -6,10 +6,10 @@ export const CLASSE_MAX_LENGTH = 50
 export const INE_MAX_LENGTH = 50
 
 export const createStudentSchema = z.object({
-  nom: z.string().trim().min(1, 'Le nom est obligatoire').max(NOM_MAX_LENGTH),
-  prenom: z.string().trim().min(1, 'Le prénom est obligatoire').max(PRENOM_MAX_LENGTH),
-  classe: z.string().trim().min(1, 'La classe est obligatoire').max(CLASSE_MAX_LENGTH),
-  ine: z.string().trim().min(1, "L'INE est obligatoire").max(INE_MAX_LENGTH)
+  nom: z.string().trim().min(1).max(NOM_MAX_LENGTH),
+  prenom: z.string().trim().min(1).max(PRENOM_MAX_LENGTH),
+  classe: z.string().trim().min(1).max(CLASSE_MAX_LENGTH),
+  ine: z.string().trim().min(1).max(INE_MAX_LENGTH)
 })
 
 export const updateStudentSchema = z.object({
@@ -43,8 +43,19 @@ export interface BulkStudentResponseDto {
   errors: number
 }
 
+export interface CsvRowIssue {
+  field: string
+  code: string
+}
+
+export type CsvImportError =
+  | { type: 'MISSING_COLUMNS'; columns: string[] }
+  | { type: 'ROW_VALIDATION'; rowNumber: number; issues: CsvRowIssue[] }
+  | { type: 'DUPLICATE_INE'; studentName: string }
+  | { type: 'DATABASE_ERROR'; studentName: string; message: string }
+
 export interface CsvImportResult {
   created: number
   errors: number
-  errorMessages: string[]
+  errorDetails: CsvImportError[]
 }

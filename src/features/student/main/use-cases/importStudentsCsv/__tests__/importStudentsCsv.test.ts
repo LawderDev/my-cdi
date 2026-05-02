@@ -34,28 +34,29 @@ function createMockGateway(overrides: Partial<StudentGateway> = {}): StudentGate
 describe('importStudentsCsv', () => {
   it('imports valid CSV and returns count', async () => {
     const gateway = createMockGateway()
-    const csv = `nom,prenom,classe,ine
-Dupont,Jean,3B,INE1
-Martin,Pierre,3A,INE2`
+    const csv = `nom;prenom;classe;ine
+Dupont;Jean;3B;INE1
+Martin;Pierre;3A;INE2`
     const result = await importStudentsCsv({ gateway }, { csv })
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.data.created).toBe(EXPECTED_TWO_CREATED)
-      expect(result.data.errorMessages).toHaveLength(0)
+      expect(result.data.errorDetails).toHaveLength(0)
     }
     expect(gateway.create).toHaveBeenCalledTimes(EXPECTED_TWO_CREATED)
   })
 
   it('skips rows with duplicate INE within the CSV', async () => {
     const gateway = createMockGateway()
-    const csv = `nom,prenom,classe,ine
-Dupont,Jean,3B,INE_DUP
-Martin,Pierre,3A,INE_DUP`
+    const csv = `nom;prenom;classe;ine
+Dupont;Jean;3B;INE_DUP
+Martin;Pierre;3A;INE_DUP`
     const result = await importStudentsCsv({ gateway }, { csv })
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.data.created).toBe(EXPECTED_ONE_CREATED)
-      expect(result.data.errorMessages.length).toBeGreaterThanOrEqual(EXPECTED_ONE_CREATED)
+      expect(result.data.errorDetails.length).toBeGreaterThanOrEqual(EXPECTED_ONE_CREATED)
+      expect(result.data.errorDetails[0]?.type).toBe('DUPLICATE_INE')
     }
   })
 
@@ -63,20 +64,25 @@ Martin,Pierre,3A,INE_DUP`
     const gateway = createMockGateway({
       getAll: vi.fn().mockResolvedValue([{ ...CREATED_ENTITY, ine: 'EXISTING_INE' }])
     })
-    const csv = `nom,prenom,classe,ine
-Dupont,Jean,3B,EXISTING_INE`
+    const csv = `nom;prenom;classe;ine
+Dupont;Jean;3B;EXISTING_INE`
     const result = await importStudentsCsv({ gateway }, { csv })
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.data.created).toBe(EXPECTED_ZERO_CREATED)
+      expect(result.data.errorDetails[0]?.type).toBe('DUPLICATE_INE')
     }
   })
 
   it('returns error for malformed CSV', async () => {
     const gateway = createMockGateway()
-    const csv = `nom,prenom
-Dupont,Jean`
+    const csv = `nom;prenom
+Dupont;Jean`
     const result = await importStudentsCsv({ gateway }, { csv })
-    expect(result.success).toBe(false)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.created).toBe(EXPECTED_ZERO_CREATED)
+      expect(result.data.errorDetails[0]?.type).toBe('MISSING_COLUMNS')
+    }
   })
 })

@@ -37,12 +37,12 @@ describe('StudentFormFields', () => {
     expect(screen.getByLabelText(/INE/)).toBeInTheDocument()
   })
 
-  it('shows error messages', () => {
+  it('shows translated error message for required field', () => {
     const errors: FieldErrors<StudentFormData> = {
-      nom: { type: 'required', message: 'Le nom est obligatoire' }
+      nom: { type: 'required', message: 'Required' }
     }
     renderFields(errors)
 
-    expect(screen.getByText('Le nom est obligatoire')).toBeInTheDocument()
+    expect(screen.getByText(/Nom est obligatoire/)).toBeInTheDocument()
   })
 })

@@ -19,6 +19,6 @@ describe('mapFormToBatchDto', () => {
     }
     expect(first.activity).toBe(ActivityType.WORK)
     expect(first.studentId).toBe(FIRST_ID)
-    expect(first.startsAt).toMatch(/^2026-04-01T/)
+    expect(first.startsAt).toBe('2026-04-01T10:30:00')
   })
 })

@@ -26,6 +26,22 @@
     "expectedColumns": "Colonnes attendues :",
     "expectedColumnsList": "Nom de famille, Prénom 1, INE, Division (classe)",
     "expectedColumnsHint": "Les colonnes Adresse, Commune, CP, Tel, Courriel sont importées mais optionnelles",
-    "submit": "Importer"
+    "submit": "Importer",
+    "success": "{{count}} élève(s) importé(s)",
+    "noStudentsCreated": "Aucun élève importé",
+    "errors": "erreur(s)",
+    "fileReadError": "Impossible de lire le fichier",
+    "error": {
+      "missingColumns": "Colonnes manquantes : {{columns}}",
+      "rowValidation": "Ligne {{rowNumber}} : {{message}}",
+      "duplicateIne": "{{studentName}} : INE déjà existant",
+      "databaseError": "{{studentName}} : {{message}}"
+    }
+  },
+  "validation": {
+    "required": "{{field}} est obligatoire",
+    "too_small": "{{field}} est obligatoire",
+    "too_big": "{{field}} est trop long",
+    "invalid_type": "{{field}} n'est pas valide"
   }
 }

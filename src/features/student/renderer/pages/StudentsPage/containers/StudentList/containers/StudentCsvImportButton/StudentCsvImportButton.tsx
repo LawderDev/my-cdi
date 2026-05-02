@@ -1,13 +1,12 @@
-import { useRef, useState } from 'react'
-import type { ChangeEvent } from 'react'
+import type { RefObject, ChangeEvent, KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
 import { Button } from '@ui/components/Button'
 import { Modal } from '@ui/components/Modal'
 import { Icon } from '@ui/components/Icon'
-import { useImportStudentsCsv } from '@student/api/useStudentMutations'
 import type { CsvImportResult } from '@student-shared'
+import { formatImportError } from './helpers/formatImportError'
 import {
   VISUALLY_HIDDEN_STYLE,
   TRIGGER_ICON_STYLE,
@@ -24,77 +23,39 @@ import {
 
 const CSV_ACCEPT = '.csv'
 
-export function StudentCsvImportButton() {
+interface StudentCsvImportButtonProps {
+  isModalOpen: boolean
+  pendingFile: File | null
+  result: CsvImportResult | null
+  error: string | null
+  isPending: boolean
+  inputRef: RefObject<HTMLInputElement | null>
+  openModal: () => void
+  closeModal: () => void
+  handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void
+  handleDropzoneClick: () => void
+  handleDropzoneKeyDown: (event: KeyboardEvent) => void
+  handleSubmit: () => void
+}
+
+export function StudentCsvImportButton(props: StudentCsvImportButtonProps) {
   const { t } = useTranslation('student')
   const { t: tCommon } = useTranslation('common')
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [pendingFile, setPendingFile] = useState<File | null>(null)
-  const [result, setResult] = useState<CsvImportResult | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const { mutate: importStudents, isPending } = useImportStudentsCsv()
 
-  function openModal() {
-    setIsModalOpen(true)
-    setResult(null)
-    setError(null)
-  }
-
-  function closeModal() {
-    setIsModalOpen(false)
-    setPendingFile(null)
-    setResult(null)
-    setError(null)
-    if (inputRef.current) {
-      inputRef.current.value = ''
-    }
-  }
-
-  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0]
-    if (!file) {
-      return
-    }
-    setPendingFile(file)
-    setResult(null)
-    setError(null)
-  }
-
-  function handleDropzoneClick() {
-    inputRef.current?.click()
-  }
-
-  async function handleSubmit() {
-    if (!pendingFile) {
-      return
-    }
-
-    try {
-      const csv = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => resolve(String(reader.result))
-        reader.onerror = () => reject(new Error('Impossible de lire le fichier'))
-        reader.readAsText(pendingFile)
-      })
-
-      importStudents(
-        { csv },
-        {
-          onSuccess: (data) => {
-            setResult(data)
-            if (data.errors === 0) {
-              closeModal()
-            }
-          },
-          onError: (err) => {
-            setError(err instanceof Error ? err.message : tCommon('app.unknownError'))
-          }
-        }
-      )
-    } catch (err) {
-      setError(err instanceof Error ? err.message : tCommon('app.unknownError'))
-    }
-  }
+  const {
+    isModalOpen,
+    pendingFile,
+    result,
+    error,
+    isPending,
+    inputRef,
+    openModal,
+    closeModal,
+    handleFileChange,
+    handleDropzoneClick,
+    handleDropzoneKeyDown,
+    handleSubmit
+  } = props
 
   return (
     <>
@@ -133,11 +94,7 @@ export function StudentCsvImportButton() {
           role="button"
           tabIndex={0}
           onClick={handleDropzoneClick}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              handleDropzoneClick()
-            }
-          }}
+          onKeyDown={handleDropzoneKeyDown}
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -212,7 +169,7 @@ export function StudentCsvImportButton() {
           </Alert>
         ) : null}
 
-        {result && result.errorMessages.length > 0 ? (
+        {result && result.errorDetails.length > 0 ? (
           <Box
             sx={{
               bgcolor: 'var(--surface)',
@@ -226,9 +183,9 @@ export function StudentCsvImportButton() {
               overflowY: 'auto'
             }}
           >
-            {result.errorMessages.map((msg, i) => (
-              <Box key={i} sx={{ color: 'var(--danger)', mb: 0.5 }}>
-                {msg}
+            {result.errorDetails.map((errorDetail, index) => (
+              <Box key={index} sx={{ color: 'var(--danger)', mb: 0.5 }}>
+                {formatImportError(errorDetail, t)}
               </Box>
             ))}
           </Box>

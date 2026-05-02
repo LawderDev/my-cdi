@@ -94,9 +94,8 @@ export class FrequentationGatewayDrizzle implements FrequentationGateway {
     startDate: string,
     endDate: string
   ): Promise<FrequentationWithStudentEntity[]> {
-    const startOfDay =
-      startDate.length === ISO_DATE_LENGTH ? `${startDate}T00:00:00.000Z` : startDate
-    const endOfDay = endDate.length === ISO_DATE_LENGTH ? `${endDate}T23:59:59.999Z` : endDate
+    const startOfDay = startDate.length === ISO_DATE_LENGTH ? `${startDate}T00:00:00` : startDate
+    const endOfDay = endDate.length === ISO_DATE_LENGTH ? `${endDate}T23:59:59` : endDate
 
     const results = await this.db
       .select({

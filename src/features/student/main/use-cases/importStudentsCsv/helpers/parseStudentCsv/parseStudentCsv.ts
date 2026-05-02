@@ -1,81 +1,88 @@
 import Papa from 'papaparse'
 import { csvRowSchema } from '../../validations/csvRowSchema'
-import { CSV_REQUIRED_COLUMNS, MAX_CSV_IMPORT_ROWS } from '../csvConstants'
+import {
+  CSV_REQUIRED_COLUMNS,
+  FIRST_DATA_ROW_NUMBER,
+  UTF8_BOM_CHARACTER,
+  HEADER_ALIASES
+} from '../csvConstants'
+import type { CsvImportError, CsvRowIssue } from '@student-shared'
 import type { CsvRow } from '../../validations/csvRowSchema'
+import type { ParseResult, ParsedCsv, RowValidationResult } from './parseStudentCsv.types'
 
-interface ParseSuccess {
-  success: true
-  data: CsvRow[]
-  errors: string[]
-}
-
-interface ParseFailure {
-  success: false
-  error: string
-}
-
-type ParseResult = ParseSuccess | ParseFailure
-
-const HEADER_AND_ONE_INDEXED_OFFSET = 2
+const NORMALISED_REQUIRED_COLUMNS = CSV_REQUIRED_COLUMNS.map(normaliseHeader)
 
 function stripBom(text: string): string {
-  if (text.charCodeAt(0) === 0xfeff) {
+  if (text.charCodeAt(0) === UTF8_BOM_CHARACTER) {
     return text.slice(1)
   }
   return text
 }
 
 function normaliseHeader(header: string): string {
-  return header
-    .replace(/^﻿/, '')
-    .trim()
-    .toLowerCase()
-    .normalize('NFC')
+  return header.trim().toLowerCase().normalize('NFC')
 }
 
-const NORMALISED_REQUIRED_COLUMNS = CSV_REQUIRED_COLUMNS.map(normaliseHeader)
+function resolveHeaderAlias(normalised: string): string {
+  return HEADER_ALIASES[normalised] ?? normalised
+}
 
-export function parseStudentCsv(rawCsvText: string): ParseResult {
-  const cleanText = stripBom(rawCsvText)
-
-  const parsed = Papa.parse<Record<string, string>>(cleanText, {
+function parseCsvText(text: string): ParsedCsv {
+  const parsed = Papa.parse<Record<string, string>>(text, {
     header: true,
     skipEmptyLines: true,
-    transformHeader: (header) => normaliseHeader(header)
+    transformHeader: (header) => resolveHeaderAlias(normaliseHeader(header))
   })
+  return {
+    headers: parsed.meta.fields ?? [],
+    rows: parsed.data
+  }
+}
 
-  const headers = parsed.meta.fields ?? []
+function validateHeaders(headers: string[]): CsvImportError | null {
   const missingColumns = NORMALISED_REQUIRED_COLUMNS.filter((col) => !headers.includes(col))
-
   if (missingColumns.length > 0) {
-    return {
-      success: false,
-      error: `Colonnes manquantes: ${missingColumns.join(', ')}`
-    }
+    return { type: 'MISSING_COLUMNS', columns: missingColumns }
   }
+  return null
+}
 
-  const dataRows = parsed.data
+function buildRowIssues(
+  errorIssues: Array<{ path: (string | number)[]; code: string }>
+): CsvRowIssue[] {
+  return errorIssues.map((issue) => ({
+    field: String(issue.path[0]),
+    code: issue.code
+  }))
+}
 
-  if (dataRows.length > MAX_CSV_IMPORT_ROWS) {
-    return {
-      success: false,
-      error: `Limite dépassée: ${MAX_CSV_IMPORT_ROWS} lignes maximum`
-    }
-  }
-
+function validateRows(rows: Record<string, string>[]): RowValidationResult {
   const validRows: CsvRow[] = []
-  const errors: string[] = []
+  const errors: CsvImportError[] = []
 
-  for (const [index, row] of dataRows.entries()) {
+  for (const [index, row] of rows.entries()) {
     const result = csvRowSchema.safeParse(row)
     if (result.success) {
       validRows.push(result.data)
     } else {
-      const rowNum = index + HEADER_AND_ONE_INDEXED_OFFSET
-      const messages = result.error.issues.map((issue) => issue.message).join(', ')
-      errors.push(`Ligne ${rowNum}: ${messages}`)
+      const rowNumber = index + FIRST_DATA_ROW_NUMBER
+      const issues = buildRowIssues(result.error.issues)
+      errors.push({ type: 'ROW_VALIDATION', rowNumber, issues })
     }
   }
 
-  return { success: true, data: validRows, errors }
+  return { validRows, errors }
+}
+
+export function parseStudentCsv(rawCsvText: string): ParseResult {
+  const cleanText = stripBom(rawCsvText)
+  const { headers, rows } = parseCsvText(cleanText)
+
+  const headerError = validateHeaders(headers)
+  if (headerError) {
+    return { data: [], errors: [headerError] }
+  }
+
+  const { validRows, errors } = validateRows(rows)
+  return { data: validRows, errors }
 }
