@@ -42,3 +42,9 @@ export interface BulkStudentResponseDto {
   created: number
   errors: number
 }
+
+export interface CsvImportResult {
+  created: number
+  errors: number
+  errorMessages: string[]
+}

@@ -2,10 +2,12 @@ import { useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
+import Alert from '@mui/material/Alert'
 import { Button } from '@ui/components/Button'
 import { Modal } from '@ui/components/Modal'
 import { Icon } from '@ui/components/Icon'
 import { useImportStudentsCsv } from '@student/api/useStudentMutations'
+import type { CsvImportResult } from '@student-shared'
 import {
   VISUALLY_HIDDEN_STYLE,
   TRIGGER_ICON_STYLE,
@@ -28,15 +30,21 @@ export function StudentCsvImportButton() {
   const inputRef = useRef<HTMLInputElement>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [pendingFile, setPendingFile] = useState<File | null>(null)
+  const [result, setResult] = useState<CsvImportResult | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const { mutate: importStudents, isPending } = useImportStudentsCsv()
 
   function openModal() {
     setIsModalOpen(true)
+    setResult(null)
+    setError(null)
   }
 
   function closeModal() {
     setIsModalOpen(false)
     setPendingFile(null)
+    setResult(null)
+    setError(null)
     if (inputRef.current) {
       inputRef.current.value = ''
     }
@@ -48,6 +56,8 @@ export function StudentCsvImportButton() {
       return
     }
     setPendingFile(file)
+    setResult(null)
+    setError(null)
   }
 
   function handleDropzoneClick() {
@@ -62,8 +72,14 @@ export function StudentCsvImportButton() {
     importStudents(
       { csv },
       {
-        onSuccess: () => {
-          closeModal()
+        onSuccess: (data) => {
+          setResult(data)
+          if (data.errors === 0) {
+            closeModal()
+          }
+        },
+        onError: (err) => {
+          setError(err instanceof Error ? err.message : tCommon('app.unknownError'))
         }
       }
     )
@@ -169,6 +185,44 @@ export function StudentCsvImportButton() {
           onChange={handleFileChange}
           style={VISUALLY_HIDDEN_STYLE}
         />
+
+        {error ? (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        ) : null}
+
+        {result ? (
+          <Alert severity={result.errors > 0 ? 'warning' : 'success'} sx={{ mb: 2 }}>
+            {result.created > 0
+              ? t('csvImport.success', { count: result.created })
+              : t('csvImport.noStudentsCreated')}
+            {result.errors > 0 ? ` (${result.errors} ${t('csvImport.errors')})` : ''}
+          </Alert>
+        ) : null}
+
+        {result && result.errorMessages.length > 0 ? (
+          <Box
+            sx={{
+              bgcolor: 'var(--surface)',
+              borderRadius: 'var(--radius-sm)',
+              p: 1.75,
+              fontSize: `${HINT_FONT_SIZE_PX}px`,
+              color: 'var(--text-dim)',
+              lineHeight: 1.5,
+              mb: 2,
+              maxHeight: '200px',
+              overflowY: 'auto'
+            }}
+          >
+            {result.errorMessages.map((msg, i) => (
+              <Box key={i} sx={{ color: 'var(--danger)', mb: 0.5 }}>
+                {msg}
+              </Box>
+            ))}
+          </Box>
+        ) : null}
+
         <Box
           sx={{
             bgcolor: 'var(--surface)',

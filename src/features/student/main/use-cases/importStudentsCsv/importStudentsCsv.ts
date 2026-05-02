@@ -1,7 +1,7 @@
 import { createStudentSchema } from '@student-shared'
 import type { StudentGateway } from '@student/gateways/student'
 import { parseStudentCsv } from './helpers/parseStudentCsv'
-import type { CsvImportResult } from './types/CsvImportResult'
+import type { CsvImportResult } from '@student-shared'
 import type { UseCaseResult } from '../types/UseCaseResult'
 
 interface ImportStudentsCsvDeps {
