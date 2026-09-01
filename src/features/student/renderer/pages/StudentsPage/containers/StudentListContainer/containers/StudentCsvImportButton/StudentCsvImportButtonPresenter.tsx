@@ -7,9 +7,8 @@ import type { CsvImportResult } from '@student-shared'
 import {
   VISUALLY_HIDDEN_STYLE,
   TRIGGER_ICON_STYLE,
-  DROPZONE_ICON_STYLE,
-  DROPZONE_ICON_MARGIN_BOTTOM_PX,
   Dropzone,
+  DropzoneIcon,
   DropzoneSubtitle,
   DropzoneTitle,
   ErrorLine,
@@ -98,17 +97,12 @@ export function StudentCsvImportButtonPresenter(props: StudentCsvImportButtonPre
           onClick={handleDropzoneClick}
           onKeyDown={handleDropzoneKeyDown}
         >
-          <Icon
-            name="cloud_upload"
-            style={{
-              ...DROPZONE_ICON_STYLE,
-              marginBottom: `${DROPZONE_ICON_MARGIN_BOTTOM_PX}px`,
-              color: 'var(--text-dim)'
-            }}
-          />
-          <DropzoneTitle>{t('csvImport.dropzoneTitle')}</DropzoneTitle>
-          <DropzoneSubtitle>{t('csvImport.dropzoneSubtitle')}</DropzoneSubtitle>
-          {pendingFile ? <SelectedFileName>{pendingFile.name}</SelectedFileName> : null}
+          <DropzoneIcon name="cloud_upload" />
+          <DropzoneTitle variant="body1">{t('csvImport.dropzoneTitle')}</DropzoneTitle>
+          <DropzoneSubtitle variant="body2">{t('csvImport.dropzoneSubtitle')}</DropzoneSubtitle>
+          {pendingFile ? (
+            <SelectedFileName variant="body2">{pendingFile.name}</SelectedFileName>
+          ) : null}
         </Dropzone>
         <input
           ref={inputRef}

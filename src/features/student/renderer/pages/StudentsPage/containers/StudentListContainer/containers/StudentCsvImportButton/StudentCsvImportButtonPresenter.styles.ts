@@ -1,8 +1,11 @@
 import type { CSSProperties } from 'react'
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
+import { Icon } from '@ui/components/Icon'
+import { FONT_WEIGHTS, RADII, TYPE_SCALE } from '@ui/theme'
 
 export const VISUALLY_HIDDEN_STYLE: CSSProperties = {
   position: 'absolute',
@@ -15,21 +18,11 @@ export const VISUALLY_HIDDEN_STYLE: CSSProperties = {
   whiteSpace: 'nowrap',
   border: 0
 }
-export const TRIGGER_ICON_FONT_SIZE_PX = 16
+export const TRIGGER_ICON_FONT_SIZE_PX = TYPE_SCALE.subtitle1
 export const TRIGGER_ICON_STYLE = { fontSize: TRIGGER_ICON_FONT_SIZE_PX } as const
-export const DROPZONE_ICON_FONT_SIZE_PX = 40
-export const DROPZONE_ICON_STYLE = { fontSize: DROPZONE_ICON_FONT_SIZE_PX } as const
-export const DROPZONE_ICON_MARGIN_BOTTOM_PX = 8
 
-export const DROPZONE_PADDING_PX = 40
-export const DROPZONE_TITLE_FONT_SIZE_PX = 13
-export const DROPZONE_TITLE_FONT_WEIGHT = 500
-export const DROPZONE_SUBTITLE_FONT_SIZE_PX = 12
-export const HINT_TITLE_FONT_WEIGHT = 600
-export const HINT_FONT_SIZE_PX = 12
-export const SELECTED_FILE_FONT_SIZE_PX = 12
-export const SELECTED_FILE_FONT_WEIGHT = 500
-export const ERROR_LINES_MAX_HEIGHT_PX = 200
+const DROPZONE_BORDER_WIDTH_PX = 2
+const ERROR_LINES_MAX_HEIGHT_PX = 200
 
 export const ResultAlert = styled(Alert, {
   shouldForwardProp: shouldForwardStyledProp
@@ -44,49 +37,52 @@ export const Dropzone = styled(Box, {
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  border: '2px dashed var(--border)',
-  borderRadius: 'var(--radius)',
-  padding: `${DROPZONE_PADDING_PX}px`,
+  border: `${DROPZONE_BORDER_WIDTH_PX}px dashed ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
+  padding: theme.spacing(5),
   textAlign: 'center',
   cursor: 'pointer',
-  transition: 'border-color 0.2s',
+  transition: theme.transitions.create('border-color'),
   marginBottom: theme.spacing(2),
-  '&:hover': { borderColor: 'var(--accent)' }
+  '&:hover': { borderColor: theme.palette.primary.main }
 }))
 
-export const DropzoneTitle = styled('p', {
+export const DropzoneIcon = styled(Icon)(({ theme }) => ({
+  fontSize: TYPE_SCALE.h4,
+  marginBottom: theme.spacing(1),
+  color: theme.palette.text.disabled
+}))
+
+export const DropzoneTitle = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  fontSize: `${DROPZONE_TITLE_FONT_SIZE_PX}px`,
-  fontWeight: DROPZONE_TITLE_FONT_WEIGHT,
   marginBottom: theme.spacing(0.5),
-  margin: 0
+  margin: 0,
+  fontWeight: theme.typography.body2.fontWeight,
+  color: theme.palette.text.primary
 }))
 
-export const DropzoneSubtitle = styled('small', {
+export const DropzoneSubtitle = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  fontSize: `${DROPZONE_SUBTITLE_FONT_SIZE_PX}px`,
-  color: 'var(--text-dim)'
-})
+})(({ theme }) => ({
+  color: theme.palette.text.disabled
+}))
 
-export const SelectedFileName = styled(Box, {
+export const SelectedFileName = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
   marginTop: theme.spacing(1.5),
-  fontSize: `${SELECTED_FILE_FONT_SIZE_PX}px`,
-  color: 'var(--text)',
-  fontWeight: SELECTED_FILE_FONT_WEIGHT
+  color: theme.palette.text.secondary
 }))
 
 export const ErrorLinesPanel = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  backgroundColor: 'var(--surface)',
-  borderRadius: 'var(--radius-sm)',
+  backgroundColor: theme.palette.surface,
+  borderRadius: RADII.small,
   padding: theme.spacing(1.75),
-  fontSize: `${HINT_FONT_SIZE_PX}px`,
-  color: 'var(--text-dim)',
+  fontSize: theme.typography.body2.fontSize,
+  color: theme.palette.text.disabled,
   lineHeight: 1.5,
   marginBottom: theme.spacing(2),
   maxHeight: `${ERROR_LINES_MAX_HEIGHT_PX}px`,
@@ -96,26 +92,26 @@ export const ErrorLinesPanel = styled(Box, {
 export const ErrorLine = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  color: 'var(--danger)',
+  color: theme.palette.error.main,
   marginBottom: theme.spacing(0.5)
 }))
 
 export const HintPanel = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  backgroundColor: 'var(--surface)',
-  borderRadius: 'var(--radius-sm)',
+  backgroundColor: theme.palette.surface,
+  borderRadius: RADII.small,
   padding: theme.spacing(1.75),
-  fontSize: `${HINT_FONT_SIZE_PX}px`,
-  color: 'var(--text-dim)',
+  fontSize: theme.typography.body2.fontSize,
+  color: theme.palette.text.disabled,
   lineHeight: 1.5
 }))
 
 export const HintTitle = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  fontWeight: HINT_TITLE_FONT_WEIGHT,
-  color: 'var(--text)',
+  fontWeight: FONT_WEIGHTS.semibold,
+  color: theme.palette.text.secondary,
   marginBottom: theme.spacing(0.5)
 }))
 
@@ -124,5 +120,5 @@ export const HintSmall = styled('small', {
 })(({ theme }) => ({
   display: 'block',
   marginTop: theme.spacing(0.5),
-  fontSize: `${HINT_FONT_SIZE_PX}px`
+  fontSize: theme.typography.body2.fontSize
 }))

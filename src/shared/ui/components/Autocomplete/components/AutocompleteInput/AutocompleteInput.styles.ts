@@ -1,13 +1,20 @@
 import TextField from '@mui/material/TextField'
 import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
-import { theme } from '@ui/theme'
+import { TINT_ALPHAS, theme } from '@ui/theme'
+import { Icon } from '../../../Icon'
 
 export const SEARCH_ICON_FONT_SIZE_PX = theme.typography.h5.fontSize
 
 const INPUT_HEIGHT_PX = 42
 const FOCUS_RING_SPREAD_PX = 3
-const FOCUS_RING_ALPHA = 0.1
+const FOCUS_RING_ALPHA = TINT_ALPHAS.surface
+
+export const SearchIcon = styled(Icon, {
+  shouldForwardProp: shouldForwardStyledProp
+})(({ theme }) => ({
+  color: theme.palette.text.disabled
+}))
 
 export const InputField = styled(TextField, {
   shouldForwardProp: shouldForwardStyledProp

@@ -1,14 +1,12 @@
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import { styled } from '@mui/material/styles'
+import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
-import {
-  LABEL_FONT_SIZE_PX,
-  LABEL_FONT_WEIGHT,
-  INPUT_HEIGHT_PX,
-  INPUT_FONT_SIZE_PX,
-  ERROR_FONT_SIZE_PX
-} from './presenters/StudentFormFieldsPresenter/StudentFormFieldsPresenter.styles'
+import { RADII, TINT_ALPHAS } from '@ui/theme'
+
+const INPUT_HEIGHT_PX = 40
+
+const INPUT_TRANSITION_DURATION = 'border-color'
 
 export const FieldRow = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
@@ -20,11 +18,11 @@ export const FieldLabel = styled('label', {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
   display: 'block',
-  fontSize: `${LABEL_FONT_SIZE_PX}px`,
-  fontWeight: LABEL_FONT_WEIGHT,
-  color: 'var(--text-dim)',
+  fontSize: theme.typography.overline.fontSize,
+  fontWeight: theme.typography.overline.fontWeight,
+  color: theme.palette.text.disabled,
   textTransform: 'uppercase',
-  letterSpacing: '0.8px',
+  letterSpacing: theme.typography.overline.letterSpacing,
   marginBottom: theme.spacing(0.75)
 }))
 
@@ -32,39 +30,39 @@ export const FieldError = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
   marginTop: theme.spacing(0.5),
-  fontSize: `${ERROR_FONT_SIZE_PX}px`,
-  color: 'var(--danger)'
+  fontSize: theme.typography.caption.fontSize,
+  color: theme.palette.error.main
 }))
 
 export const FieldInput = styled(TextField, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     height: `${INPUT_HEIGHT_PX}px`,
-    fontSize: `${INPUT_FONT_SIZE_PX}px`,
-    backgroundColor: 'var(--surface)',
-    color: 'var(--title)',
-    borderRadius: 'var(--radius-sm)',
-    transition: 'border-color 0.2s'
+    fontSize: theme.typography.body1.fontSize,
+    backgroundColor: theme.palette.surface,
+    color: theme.palette.text.primary,
+    borderRadius: RADII.small,
+    transition: theme.transitions.create(INPUT_TRANSITION_DURATION)
   },
   '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'var(--border)'
+    borderColor: theme.palette.divider
   },
   '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'var(--border-light)'
+    borderColor: theme.palette.dividerStrong
   },
   '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'var(--accent)',
-    boxShadow: '0 0 0 3px var(--accent-bg)'
+    borderColor: theme.palette.primary.main,
+    boxShadow: `0 0 0 3px ${alpha(theme.palette.primary.main, TINT_ALPHAS.surface)}`
   },
   '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'var(--danger)'
+    borderColor: theme.palette.error.main
   },
   '& .MuiOutlinedInput-root.Mui-error:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'var(--danger)'
+    borderColor: theme.palette.error.main
   },
   '& .MuiOutlinedInput-root.Mui-error.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'var(--danger)',
+    borderColor: theme.palette.error.main,
     boxShadow: 'none'
   }
-})
+}))

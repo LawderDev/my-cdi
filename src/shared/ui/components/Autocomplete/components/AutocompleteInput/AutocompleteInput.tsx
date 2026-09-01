@@ -1,7 +1,6 @@
 import InputAdornment from '@mui/material/InputAdornment'
-import { Icon } from '../../../Icon'
 import type { AutocompleteInputProps } from './types/AutocompleteInputProps'
-import { InputField, SEARCH_ICON_FONT_SIZE_PX } from './AutocompleteInput.styles'
+import { InputField, SearchIcon } from './AutocompleteInput.styles'
 
 export function AutocompleteInput({ placeholder, params }: AutocompleteInputProps) {
   return (
@@ -15,13 +14,7 @@ export function AutocompleteInput({ placeholder, params }: AutocompleteInputProp
           ...params.slotProps.input,
           endAdornment: (
             <InputAdornment position="end">
-              <Icon
-                name="search"
-                style={{
-                  fontSize: `${SEARCH_ICON_FONT_SIZE_PX}px`,
-                  color: 'var(--text-dim)'
-                }}
-              />
+              <SearchIcon name="search" />
             </InputAdornment>
           )
         },

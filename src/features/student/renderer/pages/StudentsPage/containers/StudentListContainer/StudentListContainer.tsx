@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
-import { Icon } from '@ui/components/Icon'
 import { useStudentListData } from './hooks/useStudentListData'
 import { useStudentSelection } from './hooks/useStudentSelection'
 import { useDeleteStudent } from '@student/api/useStudentMutations'
@@ -18,7 +17,7 @@ import { StudentBatchActionsContainer } from './containers/StudentBatchActionsCo
 import {
   CHECKBOX_CELL_STYLE,
   ACTIONS_CELL_STYLE,
-  SORT_ICON_STYLE,
+  SortIcon,
   StudentListLayout
 } from './StudentListContainer.styles'
 import type { StudentListContainerProps } from './types/StudentListContainerProps'
@@ -104,7 +103,7 @@ export function StudentListContainer({ onEditStudent, onAddStudent }: StudentLis
         }}
       >
         {tStudent(`fields.${field}`)}
-        <Icon name="unfold_more" style={SORT_ICON_STYLE} />
+        <SortIcon name="unfold_more" />
       </th>
     ))
     return [
@@ -112,7 +111,7 @@ export function StudentListContainer({ onEditStudent, onAddStudent }: StudentLis
       ...sortNodes,
       <th key="visits">
         {tStudent('fields.visits')}
-        <Icon name="unfold_more" style={SORT_ICON_STYLE} />
+        <SortIcon name="unfold_more" />
       </th>,
       <th key="actions" style={ACTIONS_CELL_STYLE}>
         {tStudent('fields.actions')}

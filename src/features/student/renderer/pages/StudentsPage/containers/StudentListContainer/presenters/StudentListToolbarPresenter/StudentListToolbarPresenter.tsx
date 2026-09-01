@@ -6,9 +6,9 @@ import { Icon } from '@ui/components/Icon'
 import { StudentCsvImportButtonContainer } from '../../containers/StudentCsvImportButton'
 import {
   SMALL_ICON_STYLE,
-  SEARCH_ICON_FONT_SIZE_PX,
   CountLabel,
   SearchField,
+  SearchIcon,
   ToolbarRoot,
   ToolbarSpacer
 } from './StudentListToolbarPresenter.styles'
@@ -43,19 +43,13 @@ export function StudentListToolbarPresenter({
             'aria-label': t('searchPlaceholder'),
             startAdornment: (
               <InputAdornment position="start">
-                <Icon
-                  name="search"
-                  style={{
-                    color: 'var(--text-dim)',
-                    fontSize: `${SEARCH_ICON_FONT_SIZE_PX}px`
-                  }}
-                />
+                <SearchIcon name="search" />
               </InputAdornment>
             )
           }
         }}
       />
-      <CountLabel>{t('count', { count: totalCount })}</CountLabel>
+      <CountLabel variant="body2">{t('count', { count: totalCount })}</CountLabel>
       <ToolbarSpacer />
       <StudentCsvImportButtonContainer />
       <Button

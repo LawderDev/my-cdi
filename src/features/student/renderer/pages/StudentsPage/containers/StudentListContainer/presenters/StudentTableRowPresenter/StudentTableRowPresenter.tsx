@@ -1,12 +1,14 @@
 import type { MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import Box from '@mui/material/Box'
 import { IconButton } from '@ui/components/IconButton'
 import { StudentAvatarPresenter } from '@student/presenters/StudentAvatarPresenter'
 import type { StudentViewModel } from '@student/types'
 import {
+  ClassTag,
   IneCell,
   NameCellContent,
+  NameText,
+  RowActions,
   SelectCheckbox,
   VisitsCell
 } from './StudentTableRowPresenter.styles'
@@ -48,21 +50,17 @@ export function StudentTableRowPresenter({
       <td>
         <NameCellContent>
           <StudentAvatarPresenter id={student.id} initials={initials} size="sm" />
-          <Box component="span" className="td-name">
-            {student.nom}
-          </Box>
+          <NameText>{student.nom}</NameText>
         </NameCellContent>
       </td>
       <td>{student.prenom}</td>
       <td>
-        <Box component="span" className="td-class">
-          {student.classe}
-        </Box>
+        <ClassTag>{student.classe}</ClassTag>
       </td>
       <IneCell>{student.ine}</IneCell>
       <VisitsCell>{VISITS_PLACEHOLDER}</VisitsCell>
       <td>
-        <Box className="td-actions">
+        <RowActions>
           <IconButton iconName="edit" aria-label={t('app.edit')} onClick={onEditClick} />
           <IconButton
             iconName="delete"
@@ -70,7 +68,7 @@ export function StudentTableRowPresenter({
             aria-label={t('app.delete')}
             onClick={onDeleteClick}
           />
-        </Box>
+        </RowActions>
       </td>
     </tr>
   )

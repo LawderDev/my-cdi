@@ -2,8 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { I18nextProvider } from 'react-i18next'
+import { ThemeProvider } from '@mui/material/styles'
 import type { ReactNode } from 'react'
 import i18n from '@shared/i18n/config'
+import { theme } from '@ui/theme'
 import { StudentsPage } from '../StudentsPage'
 import type { StudentResponseDto } from '@student-shared'
 
@@ -29,7 +31,9 @@ function createWrapper() {
   return function Wrapper({ children }: { children: ReactNode }) {
     return (
       <I18nextProvider i18n={i18n}>
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </QueryClientProvider>
       </I18nextProvider>
     )
   }

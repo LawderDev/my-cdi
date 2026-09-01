@@ -13,7 +13,7 @@ export function StudentTablePresenter({
   countLabel
 }: StudentTablePresenterProps) {
   return (
-    <TableRoot className="data-table">
+    <TableRoot>
       <TableElement>
         <thead>
           <tr>{headerNodes}</tr>

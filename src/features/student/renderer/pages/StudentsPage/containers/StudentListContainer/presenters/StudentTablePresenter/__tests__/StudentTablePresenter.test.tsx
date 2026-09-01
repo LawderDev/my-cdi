@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import type { ReactNode } from 'react'
 import { render, screen } from '@testing-library/react'
+import { ThemeProvider } from '@mui/material/styles'
+import { theme } from '@ui/theme'
 import { StudentTablePresenter } from '../StudentTablePresenter'
 import { StudentTableRowPresenter } from '../../StudentTableRowPresenter'
 import type { StudentTableRowPresenterProps } from '../../StudentTableRowPresenter'
@@ -63,13 +65,15 @@ function buildHeaderNodes(): ReactNode[] {
 describe('StudentTablePresenter', () => {
   it('renders student row nodes', () => {
     render(
-      <StudentTablePresenter
-        headerNodes={buildHeaderNodes()}
-        rowNodes={STUDENTS.map((student) => (
-          <StudentTableRowPresenter key={student.id} {...buildRowProps(student)} />
-        ))}
-        countLabel="2 élèves"
-      />
+      <ThemeProvider theme={theme}>
+        <StudentTablePresenter
+          headerNodes={buildHeaderNodes()}
+          rowNodes={STUDENTS.map((student) => (
+            <StudentTableRowPresenter key={student.id} {...buildRowProps(student)} />
+          ))}
+          countLabel="2 élèves"
+        />
+      </ThemeProvider>
     )
 
     expect(screen.getByText('Dupont')).toBeInTheDocument()
@@ -80,7 +84,13 @@ describe('StudentTablePresenter', () => {
 
   it('renders the header nodes it receives', () => {
     render(
-      <StudentTablePresenter headerNodes={buildHeaderNodes()} rowNodes={[]} countLabel="0 élève" />
+      <ThemeProvider theme={theme}>
+        <StudentTablePresenter
+          headerNodes={buildHeaderNodes()}
+          rowNodes={[]}
+          countLabel="0 élève"
+        />
+      </ThemeProvider>
     )
 
     expect(screen.getByText('Nom')).toBeInTheDocument()

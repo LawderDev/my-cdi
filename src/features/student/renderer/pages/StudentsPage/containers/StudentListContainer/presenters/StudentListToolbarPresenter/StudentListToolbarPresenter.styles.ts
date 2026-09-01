@@ -1,17 +1,18 @@
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
-import { styled } from '@mui/material/styles'
+import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
+import { Icon } from '@ui/components/Icon'
+import { RADII, TINT_ALPHAS, TYPE_SCALE } from '@ui/theme'
 
-export const SMALL_ICON_FONT_SIZE_PX = 16
+export const SMALL_ICON_FONT_SIZE_PX = TYPE_SCALE.subtitle1
 export const SMALL_ICON_STYLE = { fontSize: SMALL_ICON_FONT_SIZE_PX } as const
 
-export const SEARCH_WRAPPER_MAX_WIDTH_PX = 380
-export const SEARCH_INPUT_HEIGHT_PX = 40
-export const SEARCH_INPUT_FONT_SIZE_PX = 13
-export const SEARCH_ICON_FONT_SIZE_PX = 18
-export const COUNT_FONT_SIZE_PX = 12
-export const COUNT_FONT_WEIGHT = 500
+const SEARCH_WRAPPER_MAX_WIDTH_PX = 380
+const SEARCH_INPUT_HEIGHT_PX = 40
+const INPUT_TRANSITION = 'border-color'
+export const SEARCH_ICON_FONT_SIZE_PX = TYPE_SCALE.h6
 
 export const ToolbarRoot = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
@@ -24,36 +25,39 @@ export const ToolbarRoot = styled(Box, {
 
 export const SearchField = styled(TextField, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   flex: 1,
   maxWidth: `${SEARCH_WRAPPER_MAX_WIDTH_PX}px`,
   '& .MuiOutlinedInput-root': {
     height: `${SEARCH_INPUT_HEIGHT_PX}px`,
-    fontSize: `${SEARCH_INPUT_FONT_SIZE_PX}px`,
-    backgroundColor: 'var(--surface)',
-    color: 'var(--title)',
-    borderRadius: 'var(--radius-sm)',
-    transition: 'border-color 0.2s'
+    fontSize: theme.typography.body1.fontSize,
+    backgroundColor: theme.palette.surface,
+    color: theme.palette.text.primary,
+    borderRadius: RADII.small,
+    transition: theme.transitions.create(INPUT_TRANSITION)
   },
   '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'var(--border)'
+    borderColor: theme.palette.divider
   },
   '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'var(--border-light)'
+    borderColor: theme.palette.dividerStrong
   },
   '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'var(--accent)',
-    boxShadow: '0 0 0 3px var(--accent-bg)'
+    borderColor: theme.palette.primary.main,
+    boxShadow: `0 0 0 3px ${alpha(theme.palette.primary.main, TINT_ALPHAS.surface)}`
   }
-})
+}))
 
-export const CountLabel = styled('span', {
+export const SearchIcon = styled(Icon)(({ theme }) => ({
+  fontSize: SEARCH_ICON_FONT_SIZE_PX,
+  color: theme.palette.text.disabled
+}))
+
+export const CountLabel = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  fontSize: `${COUNT_FONT_SIZE_PX}px`,
-  color: 'var(--text-dim)',
-  fontWeight: COUNT_FONT_WEIGHT
-})
+})(({ theme }) => ({
+  color: theme.palette.text.disabled
+}))
 
 export const ToolbarSpacer = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp

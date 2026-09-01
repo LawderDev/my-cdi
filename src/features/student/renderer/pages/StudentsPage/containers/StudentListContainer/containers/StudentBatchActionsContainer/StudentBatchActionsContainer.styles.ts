@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
+import { RADII } from '@ui/theme'
 
 export const NO_SELECTION = 0
-export const STRIP_FONT_SIZE_PX = 12
-export const COUNT_FONT_WEIGHT = 500
 
 export const BatchActionsStrip = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
@@ -14,15 +14,15 @@ export const BatchActionsStrip = styled(Box, {
   gap: theme.spacing(1.5),
   paddingInline: theme.spacing(1.5),
   paddingBlock: theme.spacing(1),
-  backgroundColor: 'var(--surface)',
-  border: '1px solid var(--border)',
-  borderRadius: 'var(--radius-sm)',
-  fontSize: `${STRIP_FONT_SIZE_PX}px`,
-  color: 'var(--text-dim)'
+  backgroundColor: theme.palette.surface,
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: RADII.small,
+  fontSize: theme.typography.body2.fontSize,
+  color: theme.palette.text.disabled
 }))
 
-export const BatchCountLabel = styled('span', {
+export const BatchCountLabel = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  fontWeight: COUNT_FONT_WEIGHT
-})
+})(({ theme }) => ({
+  color: theme.palette.text.disabled
+}))

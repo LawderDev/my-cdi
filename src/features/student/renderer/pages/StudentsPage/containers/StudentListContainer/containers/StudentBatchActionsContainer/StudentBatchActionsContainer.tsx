@@ -61,7 +61,7 @@ export function StudentBatchActionsContainer({
           {batchDeleteLabel}
         </Button>
         {hasSelection ? (
-          <BatchCountLabel>{formatBatchMessage(selectedCount)}</BatchCountLabel>
+          <BatchCountLabel variant="body2">{formatBatchMessage(selectedCount)}</BatchCountLabel>
         ) : null}
       </BatchActionsStrip>
 
