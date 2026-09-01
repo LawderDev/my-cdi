@@ -1,5 +1,5 @@
 import { useSidebar } from './hooks/useSidebar'
-import { SidebarPresenter } from './components/SidebarPresenter'
+import { SidebarPresenter } from './presenters/SidebarPresenter'
 
 export function Sidebar() {
   const { navButtonNodes, onSettingsClick } = useSidebar()

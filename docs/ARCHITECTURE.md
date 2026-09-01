@@ -228,7 +228,7 @@ A single class-component `ErrorBoundary` wraps the route tree below `BrowserRout
 
 ### Presenters (`…Presenter`)
 
-- Pure `props → JSX` components, named `XPresenter`
+- Pure `props → JSX` components, named `XPresenter`, living under `presenters/` folders
 - **Zero hooks** except `useTranslation` (read-only context consumer)
 - **Zero state, zero logic, zero inline functions**
 - **Zero `.map()` / `.filter()` / `.reduce()`** — lists arrive as pre-built `ReactNode[]` or the container maps a flat view model array in the container itself
@@ -240,7 +240,7 @@ A single class-component `ErrorBoundary` wraps the route tree below `BrowserRout
 ```
 Page (pages/XPage/XPage.tsx)
   └── Container (containers/XContainer/XContainer.tsx)
-        └── Presenter (components/XPresenter/XPresenter.tsx)
+        └── Presenter (presenters/XPresenter/XPresenter.tsx)
 ```
 
 Pages orchestrate dialog state and compose containers. Containers manage data, selection, and batch actions, then pass props to presenters. Presenters are pure `props → JSX`.
@@ -731,7 +731,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 
 | Artifact   | 1 consumer                   | Multiple at same level  | Cross-feature            |
 | ---------- | ---------------------------- | ----------------------- | ------------------------ |
-| Component  | `containers/X/components/Y/` | `renderer/components/`  | `shared/ui/components/`  |
+| Component  | `containers/X/presenters/Y/` | `renderer/presenters/`  | `shared/ui/components/`  |
 | Container  | `pages/X/containers/Y/`      | N/A (nest deeper)       | N/A                      |
 | Hook       | `containers/X/hooks/`        | `renderer/hooks/`       | `shared/ui/hooks/`       |
 | Helper     | `containers/X/helpers/`      | `renderer/helpers/`     | `shared/ui/helpers/`     |
@@ -780,7 +780,7 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 | Gateway implementation     | Unit        | `gateways/unitName/__tests__/`    | Drizzle queries against in-memory DB |
 | `api/` (React Query hooks) | Unit        | `api/unitName/__tests__/`         | Query keys, mutation calls           |
 | Container components       | Integration | `containers/X/__tests__/`         | Renders, data flows, callbacks       |
-| Presenter components       | Integration | `components/X/__tests__/`         | Props render correctly, interactions |
+| Presenter components       | Integration | `presenters/X/__tests__/`         | Props render correctly, interactions |
 | Page components            | Integration | `pages/X/__tests__/`              | Page renders, routes work            |
 
 **Rule:** Every folder with logic has `__tests__/` co-located. No empty test directories.

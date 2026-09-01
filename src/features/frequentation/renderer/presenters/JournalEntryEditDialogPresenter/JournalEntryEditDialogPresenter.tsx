@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { Modal } from '@ui/components/Modal'
 import { Button } from '@ui/components/Button'
 import { Avatar } from '@ui/components/Avatar'
-import { ActivityGridPresenter } from '@frequentation/components/ActivityGridPresenter'
+import { ActivityGridPresenter } from '@frequentation/presenters/ActivityGridPresenter'
 import { EntrySummary, StudentClasse, StudentName } from './JournalEntryEditDialogPresenter.styles'
 
 export interface EditDialogEntryViewModel {

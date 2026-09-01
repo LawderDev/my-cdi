@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import Box from '@mui/material/Box'
 import { CalendarViewPresenter } from '../CalendarViewPresenter'
-import { CalendarDayPresenter } from '../components/CalendarDayPresenter'
+import { CalendarDayPresenter } from '../presenters/CalendarDayPresenter'
 import type { CalendarCell } from '../../../helpers/buildCalendarMonth'
 import { DOW_FONT_SIZE_PX, DOW_FONT_WEIGHT } from '../CalendarViewPresenter.styles'
 

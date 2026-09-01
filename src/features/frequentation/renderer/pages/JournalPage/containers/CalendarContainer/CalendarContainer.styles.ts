@@ -3,7 +3,7 @@ import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import {
   DOW_FONT_SIZE_PX,
   DOW_FONT_WEIGHT
-} from './components/CalendarViewPresenter/CalendarViewPresenter.styles'
+} from './presenters/CalendarViewPresenter/CalendarViewPresenter.styles'
 
 export const WeekdayLabel = styled('div', {
   shouldForwardProp: shouldForwardStyledProp

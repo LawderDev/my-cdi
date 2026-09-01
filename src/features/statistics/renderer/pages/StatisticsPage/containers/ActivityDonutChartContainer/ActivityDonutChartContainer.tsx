@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { ReactNode } from 'react'
-import { ChartCardPresenter } from '@statistics/components/ChartCardPresenter'
-import { ChartLegendPresenter } from '@statistics/components/ChartLegendPresenter'
+import { ChartCardPresenter } from '@statistics/presenters/ChartCardPresenter'
+import { ChartLegendPresenter } from '@statistics/presenters/ChartLegendPresenter'
 import {
   CX,
   CY,

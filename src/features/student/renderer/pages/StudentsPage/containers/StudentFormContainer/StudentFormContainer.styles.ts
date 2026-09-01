@@ -8,7 +8,7 @@ import {
   INPUT_HEIGHT_PX,
   INPUT_FONT_SIZE_PX,
   ERROR_FONT_SIZE_PX
-} from './components/StudentFormFieldsPresenter/StudentFormFieldsPresenter.styles'
+} from './presenters/StudentFormFieldsPresenter/StudentFormFieldsPresenter.styles'
 
 export const FieldRow = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp

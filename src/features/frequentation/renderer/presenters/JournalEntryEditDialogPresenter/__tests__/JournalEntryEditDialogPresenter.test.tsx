@@ -3,10 +3,10 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '@shared/i18n/config'
 import { JournalEntryEditDialogPresenter } from '../JournalEntryEditDialogPresenter'
-import { buildActivityTiles } from '@frequentation/components/ActivityGridPresenter/helpers/buildActivityTiles'
-import { buildActivityTileNodes } from '@frequentation/components/ActivityGridPresenter/helpers/buildActivityTileNodes'
+import { buildActivityTiles } from '@frequentation/presenters/ActivityGridPresenter/helpers/buildActivityTiles'
+import { buildActivityTileNodes } from '@frequentation/presenters/ActivityGridPresenter/helpers/buildActivityTileNodes'
 import { ActivityType } from '@types'
-import type { ActivityGridOption } from '@frequentation/components/ActivityGridPresenter'
+import type { ActivityGridOption } from '@frequentation/presenters/ActivityGridPresenter'
 
 const ACTIVITIES: ActivityGridOption[] = [
   { value: ActivityType.WORK, label: 'Travail', iconName: 'edit' },

@@ -1,5 +1,5 @@
 import { useHeader } from './hooks/useHeader'
-import { HeaderPresenter } from './components/HeaderPresenter'
+import { HeaderPresenter } from './presenters/HeaderPresenter'
 
 export function Header() {
   const { title, subtitle, time } = useHeader()

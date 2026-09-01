@@ -1,6 +1,6 @@
 import { useAutoUpdater } from '../../hooks/useAutoUpdater'
 import { buildProgressDisplay } from './helpers/buildProgressDisplay'
-import { UpdateBannerPresenter } from './components/UpdateBannerPresenter'
+import { UpdateBannerPresenter } from './presenters/UpdateBannerPresenter'
 
 export function UpdateBanner() {
   const { status, availableInfo, downloadedInfo, progress, errorInfo, installNow, dismiss } =

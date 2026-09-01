@@ -10,10 +10,10 @@ import { useStudentSelection } from './hooks/useStudentSelection'
 import { useDeleteStudent } from '@student/api/useStudentMutations'
 import { buildStudentInitials } from '@student/helpers/studentFormatters'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
-import { StudentTablePresenter } from './components/StudentTablePresenter'
-import { StudentTableRowPresenter } from './components/StudentTableRowPresenter'
+import { StudentTablePresenter } from './presenters/StudentTablePresenter'
+import { StudentTableRowPresenter } from './presenters/StudentTableRowPresenter'
 import { buildNextSortConfig } from './helpers/buildNextSortConfig'
-import { StudentListToolbarPresenter } from './components/StudentListToolbarPresenter'
+import { StudentListToolbarPresenter } from './presenters/StudentListToolbarPresenter'
 import { StudentBatchActionsContainer } from './containers/StudentBatchActionsContainer'
 import {
   CHECKBOX_CELL_STYLE,

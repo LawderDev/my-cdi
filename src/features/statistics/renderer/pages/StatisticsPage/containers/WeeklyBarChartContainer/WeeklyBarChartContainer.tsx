@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { ChartCardPresenter } from '@statistics/components/ChartCardPresenter'
+import { ChartCardPresenter } from '@statistics/presenters/ChartCardPresenter'
 import {
   BarChartRow,
   BarColumn,

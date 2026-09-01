@@ -1,4 +1,4 @@
-import { StatCardPresenter } from '@statistics/components/StatCardPresenter'
+import { StatCardPresenter } from '@statistics/presenters/StatCardPresenter'
 import { StatsKpiGrid } from './StatsKpiCardsContainer.styles'
 import { useStatsKpiCards } from './hooks/useStatsKpiCards'
 import type { StatsKpiCardsContainerProps } from './types/StatsKpiCardsContainerProps'

@@ -14,15 +14,15 @@ export default defineConfig({
       { find: '@frequentation-shared', replacement: resolve('src/features/frequentation/shared') },
       { find: '@statistics-shared', replacement: resolve('src/features/statistics/shared') },
       {
-        find: /^@student\/(types|helpers|api|validations|pages|components|hooks|containers|routes)(.*)$/,
+        find: /^@student\/(types|helpers|api|validations|pages|components|presenters|hooks|containers|routes)(.*)$/,
         replacement: resolve('src/features/student/renderer') + '/$1$2'
       },
       {
-        find: /^@frequentation\/(types|helpers|api|validations|pages|components|hooks|containers|routes)(.*)$/,
+        find: /^@frequentation\/(types|helpers|api|validations|pages|components|presenters|hooks|containers|routes)(.*)$/,
         replacement: resolve('src/features/frequentation/renderer') + '/$1$2'
       },
       {
-        find: /^@statistics\/(types|helpers|api|validations|pages|components|hooks|containers|routes)(.*)$/,
+        find: /^@statistics\/(types|helpers|api|validations|pages|components|presenters|hooks|containers|routes)(.*)$/,
         replacement: resolve('src/features/statistics/renderer') + '/$1$2'
       },
       { find: /^@student(\/.*)?$/, replacement: resolve('src/features/student/main') + '$1' },

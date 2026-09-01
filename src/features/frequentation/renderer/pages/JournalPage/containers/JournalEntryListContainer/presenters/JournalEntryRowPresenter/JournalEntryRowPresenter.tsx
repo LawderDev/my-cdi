@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Avatar } from '@ui/components/Avatar'
 import { IconButton } from '@ui/components/IconButton'
-import { ActivityChipPresenter } from '@frequentation/components/ActivityChipPresenter'
+import { ActivityChipPresenter } from '@frequentation/presenters/ActivityChipPresenter'
 import {
   ACTIONS_CLASS,
   ClasseTag,
