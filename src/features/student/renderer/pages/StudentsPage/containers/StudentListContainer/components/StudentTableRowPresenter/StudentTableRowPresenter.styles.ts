@@ -1,6 +1,6 @@
 import Checkbox from '@mui/material/Checkbox'
 import Box from '@mui/material/Box'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 
@@ -9,19 +9,19 @@ export const NUMERIC_FONT_WEIGHT = 600
 
 export const SelectCheckbox = styled(Checkbox, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   color: 'var(--border-light)',
-  p: 0.5,
+  padding: theme.spacing(0.5),
   '&.Mui-checked': { color: 'var(--accent)' }
-})
+}))
 
 export const NameCellContent = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: 1.25
-})
+  gap: theme.spacing(1.25)
+}))
 
 export const IneCell = styled('td', {
   shouldForwardProp: shouldForwardStyledProp

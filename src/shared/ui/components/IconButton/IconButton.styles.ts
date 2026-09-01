@@ -1,5 +1,5 @@
 import MuiIconButton from '@mui/material/IconButton'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import type { CSSProperties } from 'react'
 import type { IconButtonTone } from './types/IconButtonProps'

@@ -1,4 +1,4 @@
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const GRID_COLUMNS = 3
@@ -9,8 +9,8 @@ export const TILE_TRANSITION = 'all 0.15s'
 
 export const GridRoot = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: `repeat(${GRID_COLUMNS}, 1fr)`,
-  gap: 1
-})
+  gap: theme.spacing(1)
+}))

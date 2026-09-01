@@ -1,6 +1,6 @@
 import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const TITLE_FONT_SIZE_PX = 15
@@ -18,45 +18,45 @@ export const SEARCH_ICON_FONT_SIZE_PX = 14
 
 export const ToolbarRoot = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  px: 2.5,
-  py: 2,
+  paddingInline: theme.spacing(2.5),
+  paddingBlock: theme.spacing(2),
   borderBottom: '1px solid var(--border)'
-})
+}))
 
 export const ToolbarTitle = styled('h3', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontSize: `${TITLE_FONT_SIZE_PX}px`,
   fontWeight: TITLE_FONT_WEIGHT,
   display: 'flex',
   alignItems: 'center',
-  gap: 1,
-  m: 0
-})
+  gap: theme.spacing(1),
+  margin: 0
+}))
 
 export const CountBadge = styled('span', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontSize: `${COUNT_FONT_SIZE_PX}px`,
-  bgcolor: 'var(--accent-bg)',
+  backgroundColor: 'var(--accent-bg)',
   color: 'var(--accent)',
-  px: 1.25,
-  py: 0.25,
+  paddingInline: theme.spacing(1.25),
+  paddingBlock: theme.spacing(0.25),
   borderRadius: `${COUNT_BORDER_RADIUS_PX}px`,
   fontWeight: COUNT_FONT_WEIGHT
-})
+}))
 
 export const ToolbarControls = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: 1.5
-})
+  gap: theme.spacing(1.5)
+}))
 
 export const SearchField = styled(TextField, {
   shouldForwardProp: shouldForwardStyledProp
@@ -65,7 +65,7 @@ export const SearchField = styled(TextField, {
   '& .MuiOutlinedInput-root': {
     height: `${SEARCH_INPUT_HEIGHT_PX}px`,
     fontSize: `${SEARCH_INPUT_FONT_SIZE_PX}px`,
-    bgcolor: 'var(--surface)',
+    backgroundColor: 'var(--surface)',
     color: 'var(--title)',
     borderRadius: 'var(--radius-sm)',
     transition: 'border-color 0.2s'
@@ -84,11 +84,11 @@ export const SearchField = styled(TextField, {
 
 export const PeriodSelect = styled(Select, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   height: `${SELECT_HEIGHT_PX}px`,
   fontSize: `${SELECT_FONT_SIZE_PX}px`,
   color: 'var(--text)',
-  bgcolor: 'var(--surface)',
+  backgroundColor: 'var(--surface)',
   borderRadius: 'var(--radius-xs)',
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: 'var(--border)'
@@ -100,12 +100,12 @@ export const PeriodSelect = styled(Select, {
     borderColor: 'var(--accent)'
   },
   '& .MuiSelect-select': {
-    py: 0,
-    pl: 1.25,
-    pr: 3,
+    paddingBlock: 0,
+    paddingLeft: theme.spacing(1.25),
+    paddingRight: theme.spacing(3),
     display: 'flex',
     alignItems: 'center',
     minHeight: 0,
     height: `${SELECT_HEIGHT_PX}px`
   }
-})
+}))

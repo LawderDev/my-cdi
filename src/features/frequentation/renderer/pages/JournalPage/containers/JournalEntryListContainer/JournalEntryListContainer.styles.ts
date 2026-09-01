@@ -1,5 +1,5 @@
 import { Card } from '@ui/components/Card'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const ListCard = styled(Card, {
@@ -14,8 +14,8 @@ export const ListCard = styled(Card, {
 
 export const EntriesScroll = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   flex: 1,
   overflowY: 'auto',
-  p: 1
-})
+  padding: theme.spacing(1)
+}))

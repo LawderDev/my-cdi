@@ -1,6 +1,6 @@
 import ButtonBase from '@mui/material/ButtonBase'
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 
@@ -12,26 +12,26 @@ export const TIME_PERIOD_FONT_WEIGHT = 500
 
 export const TimeRow = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: 1,
-  mb: 2
-})
+  gap: theme.spacing(1),
+  marginBottom: theme.spacing(2)
+}))
 
 export const TimeButton = styled(ButtonBase, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'inline-flex',
   alignItems: 'center',
-  gap: 1,
+  gap: theme.spacing(1),
   borderRadius: 'var(--radius-xs)',
-  px: 0.5,
-  py: 0.25,
+  paddingInline: theme.spacing(0.5),
+  paddingBlock: theme.spacing(0.25),
   transition: 'background 0.15s',
-  '&:hover': { bgcolor: 'var(--surface)' },
+  '&:hover': { backgroundColor: 'var(--surface)' },
   '&:focus-visible': { outline: '2px solid var(--accent-border)', outlineOffset: '2px' }
-})
+}))
 
 export const TimeDisplay = styled('span', {
   shouldForwardProp: shouldForwardStyledProp
@@ -51,12 +51,12 @@ export const HiddenTimePicker = styled(MobileTimePicker, {
 
 export const PeriodBadge = styled('span', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontSize: `${TIME_PERIOD_FONT_SIZE_PX}px`,
   color: 'var(--text-dim)',
   fontWeight: TIME_PERIOD_FONT_WEIGHT,
-  px: 1,
-  py: 0.25,
-  bgcolor: 'var(--surface)',
+  paddingInline: theme.spacing(1),
+  paddingBlock: theme.spacing(0.25),
+  backgroundColor: 'var(--surface)',
   borderRadius: 'var(--radius-xs)'
-})
+}))

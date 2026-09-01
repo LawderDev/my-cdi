@@ -1,5 +1,5 @@
 import MuiButton from '@mui/material/Button'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 const PRIMARY_HEIGHT_PX = 40
@@ -12,14 +12,14 @@ const DISABLED_OPACITY = 0.5
 
 export const ButtonRoot = styled(MuiButton, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   height: `${PRIMARY_HEIGHT_PX}px`,
   borderRadius: 'var(--radius-sm)',
   fontSize: `${PRIMARY_FONT_SIZE_PX}px`,
   textTransform: 'none',
   '&[data-variant="primary"]': {
     fontWeight: PRIMARY_FONT_WEIGHT,
-    px: 2.5,
+    paddingInline: theme.spacing(2.5),
     backgroundColor: 'var(--accent)',
     color: '#fff',
     boxShadow: '0 2px 8px rgba(124,77,255,0.3)',
@@ -36,7 +36,7 @@ export const ButtonRoot = styled(MuiButton, {
   '&[data-variant="secondary"]': {
     height: `${SECONDARY_HEIGHT_PX}px`,
     fontWeight: SECONDARY_FONT_WEIGHT,
-    px: 2,
+    paddingInline: theme.spacing(2),
     backgroundColor: 'var(--surface)',
     color: 'var(--title)',
     borderColor: 'var(--border)',
@@ -48,7 +48,7 @@ export const ButtonRoot = styled(MuiButton, {
   '&[data-variant="danger"]': {
     height: `${DANGER_HEIGHT_PX}px`,
     fontWeight: SECONDARY_FONT_WEIGHT,
-    px: 2,
+    paddingInline: theme.spacing(2),
     backgroundColor: 'var(--danger-bg)',
     color: 'var(--danger)',
     border: '1px solid rgba(248,113,113,0.25)',
@@ -58,4 +58,4 @@ export const ButtonRoot = styled(MuiButton, {
       boxShadow: 'none'
     }
   }
-})
+}))

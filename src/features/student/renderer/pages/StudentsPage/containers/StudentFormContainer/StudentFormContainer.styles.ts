@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import {
   LABEL_FONT_SIZE_PX,
@@ -12,29 +12,29 @@ import {
 
 export const FieldRow = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  mb: 2
-})
+})(({ theme }) => ({
+  marginBottom: theme.spacing(2)
+}))
 
 export const FieldLabel = styled('label', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'block',
   fontSize: `${LABEL_FONT_SIZE_PX}px`,
   fontWeight: LABEL_FONT_WEIGHT,
   color: 'var(--text-dim)',
   textTransform: 'uppercase',
   letterSpacing: '0.8px',
-  mb: 0.75
-})
+  marginBottom: theme.spacing(0.75)
+}))
 
 export const FieldError = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  mt: 0.5,
+})(({ theme }) => ({
+  marginTop: theme.spacing(0.5),
   fontSize: `${ERROR_FONT_SIZE_PX}px`,
   color: 'var(--danger)'
-})
+}))
 
 export const FieldInput = styled(TextField, {
   shouldForwardProp: shouldForwardStyledProp
@@ -42,7 +42,7 @@ export const FieldInput = styled(TextField, {
   '& .MuiOutlinedInput-root': {
     height: `${INPUT_HEIGHT_PX}px`,
     fontSize: `${INPUT_FONT_SIZE_PX}px`,
-    bgcolor: 'var(--surface)',
+    backgroundColor: 'var(--surface)',
     color: 'var(--title)',
     borderRadius: 'var(--radius-sm)',
     transition: 'border-color 0.2s'

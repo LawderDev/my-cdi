@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const VISUALLY_HIDDEN_STYLE: CSSProperties = {
@@ -33,13 +33,13 @@ export const ERROR_LINES_MAX_HEIGHT_PX = 200
 
 export const ResultAlert = styled(Alert, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  mb: 2
-})
+})(({ theme }) => ({
+  marginBottom: theme.spacing(2)
+}))
 
 export const Dropzone = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -50,18 +50,18 @@ export const Dropzone = styled(Box, {
   textAlign: 'center',
   cursor: 'pointer',
   transition: 'border-color 0.2s',
-  mb: 2,
+  marginBottom: theme.spacing(2),
   '&:hover': { borderColor: 'var(--accent)' }
-})
+}))
 
 export const DropzoneTitle = styled('p', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontSize: `${DROPZONE_TITLE_FONT_SIZE_PX}px`,
   fontWeight: DROPZONE_TITLE_FONT_WEIGHT,
-  mb: 0.5,
-  m: 0
-})
+  marginBottom: theme.spacing(0.5),
+  margin: 0
+}))
 
 export const DropzoneSubtitle = styled('small', {
   shouldForwardProp: shouldForwardStyledProp
@@ -72,57 +72,57 @@ export const DropzoneSubtitle = styled('small', {
 
 export const SelectedFileName = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  mt: 1.5,
+})(({ theme }) => ({
+  marginTop: theme.spacing(1.5),
   fontSize: `${SELECTED_FILE_FONT_SIZE_PX}px`,
   color: 'var(--text)',
   fontWeight: SELECTED_FILE_FONT_WEIGHT
-})
+}))
 
 export const ErrorLinesPanel = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  bgcolor: 'var(--surface)',
+})(({ theme }) => ({
+  backgroundColor: 'var(--surface)',
   borderRadius: 'var(--radius-sm)',
-  p: 1.75,
+  padding: theme.spacing(1.75),
   fontSize: `${HINT_FONT_SIZE_PX}px`,
   color: 'var(--text-dim)',
   lineHeight: 1.5,
-  mb: 2,
+  marginBottom: theme.spacing(2),
   maxHeight: `${ERROR_LINES_MAX_HEIGHT_PX}px`,
   overflowY: 'auto'
-})
+}))
 
 export const ErrorLine = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   color: 'var(--danger)',
-  mb: 0.5
-})
+  marginBottom: theme.spacing(0.5)
+}))
 
 export const HintPanel = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  bgcolor: 'var(--surface)',
+})(({ theme }) => ({
+  backgroundColor: 'var(--surface)',
   borderRadius: 'var(--radius-sm)',
-  p: 1.75,
+  padding: theme.spacing(1.75),
   fontSize: `${HINT_FONT_SIZE_PX}px`,
   color: 'var(--text-dim)',
   lineHeight: 1.5
-})
+}))
 
 export const HintTitle = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontWeight: HINT_TITLE_FONT_WEIGHT,
   color: 'var(--text)',
-  mb: 0.5
-})
+  marginBottom: theme.spacing(0.5)
+}))
 
 export const HintSmall = styled('small', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'block',
-  mt: 0.5,
+  marginTop: theme.spacing(0.5),
   fontSize: `${HINT_FONT_SIZE_PX}px`
-})
+}))

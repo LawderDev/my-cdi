@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import type { CSSProperties } from 'react'
 import { MONO_FONT_FAMILY } from '@ui/theme'
@@ -25,13 +25,13 @@ export const ICON_CSS: CSSProperties = {
 
 export const PageRoot = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: PAGE_MIN_HEIGHT,
-  p: PAGE_PADDING
-})
+  padding: theme.spacing(PAGE_PADDING)
+}))
 
 export const FallbackCard = styled(Card, {
   shouldForwardProp: shouldForwardStyledProp
@@ -42,12 +42,12 @@ export const FallbackCard = styled(Card, {
 
 export const TitleRow = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: GAP_SMALL,
-  mb: MB_MEDIUM
-})
+  gap: theme.spacing(GAP_SMALL),
+  marginBottom: theme.spacing(MB_MEDIUM)
+}))
 
 export const Heading = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
@@ -60,23 +60,23 @@ export const Heading = styled(Typography, {
 
 export const DescriptionText = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   color: 'var(--text)',
-  mb: MB_LARGE
-})
+  marginBottom: theme.spacing(MB_LARGE)
+}))
 
 export const DetailsBox = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  mb: MB_LARGE,
+})(({ theme }) => ({
+  marginBottom: theme.spacing(MB_LARGE),
   fontFamily: MONO_FONT_FAMILY,
   fontSize: DETAILS_FONT_SIZE,
   color: 'var(--text-dim)'
-})
+}))
 
 export const PreBlock = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   whiteSpace: 'pre-wrap',
-  mt: PRE_MARGIN_TOP
-})
+  marginTop: theme.spacing(PRE_MARGIN_TOP)
+}))

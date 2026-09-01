@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 
@@ -8,30 +8,30 @@ const TITLE_FONT_SIZE_PX = 17
 const SUBTITLE_FONT_SIZE_PX = 12
 const CLOCK_FONT_SIZE_PX = 13
 const TITLE_FONT_WEIGHT = 600
-const PX_SPACING = 3.5
+const PADDING_X_STEPS = 3.5
 const GAP_MEDIUM = 2
 const GAP_SMALL = 1.5
 
 export const HeaderRoot = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   height: `${HEADER_HEIGHT_PX}px`,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  px: PX_SPACING,
+  paddingInline: theme.spacing(PADDING_X_STEPS),
   borderBottom: '1px solid var(--border)',
   flexShrink: 0,
-  bgcolor: 'var(--bg)'
-})
+  backgroundColor: 'var(--bg)'
+}))
 
 export const TitleBlock = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: GAP_MEDIUM
-})
+  gap: theme.spacing(GAP_MEDIUM)
+}))
 
 export const Title = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
@@ -51,11 +51,11 @@ export const Subtitle = styled(Box, {
 
 export const ClockArea = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: GAP_SMALL
-})
+  gap: theme.spacing(GAP_SMALL)
+}))
 
 export const Clock = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp

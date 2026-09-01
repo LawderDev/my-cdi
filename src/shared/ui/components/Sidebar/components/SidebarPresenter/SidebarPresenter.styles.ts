@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 const SIDEBAR_WIDTH_PX = 68
@@ -16,54 +16,54 @@ export const SETTINGS_LABEL_KEY = 'nav.settings'
 
 export const SidebarRoot = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   width: `${SIDEBAR_WIDTH_PX}px`,
-  bgcolor: 'var(--bg-nav)',
+  backgroundColor: 'var(--bg-nav)',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  py: 1.5,
+  paddingBlock: theme.spacing(1.5),
   borderRight: '1px solid var(--border)',
   flexShrink: 0,
   position: 'relative',
   zIndex: SIDEBAR_Z_INDEX
-})
+}))
 
 export const Logo = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   width: `${LOGO_SIZE_PX}px`,
   height: `${LOGO_SIZE_PX}px`,
   borderRadius: `${LOGO_BORDER_RADIUS_PX}px`,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  mb: 3,
+  marginBottom: theme.spacing(3),
   fontWeight: LOGO_FONT_WEIGHT,
   fontSize: `${LOGO_FONT_SIZE_PX}px`,
   color: '#fff',
   letterSpacing: '-0.5px',
   background: LOGO_BG,
   boxShadow: LOGO_SHADOW
-})
+}))
 
 export const NavList = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: 0.5,
+  gap: theme.spacing(0.5),
   width: '100%',
-  px: 1,
+  paddingInline: theme.spacing(1),
   flex: 1
-})
+}))
 
 export const FooterList = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: 0.5,
-  px: 1,
-  pb: 0.5
-})
+  gap: theme.spacing(0.5),
+  paddingInline: theme.spacing(1),
+  paddingBottom: theme.spacing(0.5)
+}))

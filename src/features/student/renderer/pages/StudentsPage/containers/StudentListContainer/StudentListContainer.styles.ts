@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const SORT_ICON_FONT_SIZE_PX = 13
@@ -14,8 +14,8 @@ export const SORT_ICON_STYLE = {
 
 export const StudentListLayout = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: 1.5
-})
+  gap: theme.spacing(1.5)
+}))

@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const RESPONSIVE_BREAKPOINT_PX = 1100
@@ -14,11 +14,11 @@ export const INFO_COLOR = '#60a5fa'
 
 export const StatsKpiGrid = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(4, 1fr)',
-  gap: 2,
+  gap: theme.spacing(2),
   [`@media (max-width: ${RESPONSIVE_BREAKPOINT_PX}px)`]: {
     gridTemplateColumns: 'repeat(2, 1fr)'
   }
-})
+}))

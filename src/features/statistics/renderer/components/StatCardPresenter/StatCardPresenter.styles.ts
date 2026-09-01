@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 
@@ -14,30 +14,30 @@ export const DELTA_FONT_WEIGHT = 500
 
 export const StatCardIcon = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})<{ $bg: string; $color: string }>(({ $bg, $color }) => ({
+})<{ $bg: string; $color: string }>(({ theme, $bg, $color }) => ({
   width: `${ICON_SIZE_PX}px`,
   height: `${ICON_SIZE_PX}px`,
   borderRadius: 'var(--radius-sm)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  mb: 1.5,
+  marginBottom: theme.spacing(1.5),
   fontSize: `${ICON_FONT_SIZE_PX}px`,
   flexShrink: 0,
-  bgcolor: $bg,
+  backgroundColor: $bg,
   color: $color
 }))
 
 export const StatCardLabel = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontSize: `${LABEL_FONT_SIZE_PX}px`,
   fontWeight: LABEL_FONT_WEIGHT,
   color: 'var(--text-dim)',
   textTransform: 'uppercase',
   letterSpacing: '0.8px',
-  mb: 1
-})
+  marginBottom: theme.spacing(1)
+}))
 
 export const StatCardValue = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
@@ -51,12 +51,12 @@ export const StatCardValue = styled(Box, {
 
 export const StatCardDelta = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontSize: `${DELTA_FONT_SIZE_PX}px`,
-  mt: 0.75,
+  marginTop: theme.spacing(0.75),
   fontWeight: DELTA_FONT_WEIGHT,
   color: 'var(--danger)',
   '&[data-sign="up"]': {
     color: 'var(--success)'
   }
-})
+}))

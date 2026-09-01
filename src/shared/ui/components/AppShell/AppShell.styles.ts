@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 const MAIN_PADDING_X = 3.5
@@ -24,9 +24,9 @@ export const ContentColumn = styled(Box, {
 
 export const MainArea = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   flex: 1,
   overflowY: 'auto',
-  px: MAIN_PADDING_X,
-  py: MAIN_PADDING_Y
-})
+  paddingInline: theme.spacing(MAIN_PADDING_X),
+  paddingBlock: theme.spacing(MAIN_PADDING_Y)
+}))

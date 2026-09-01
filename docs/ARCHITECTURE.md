@@ -291,25 +291,26 @@ Conditional rendering (`cond ? <A/> : null`) and early returns choosing *what* t
 
 ### Styling: `styled()` in `.styles.ts`
 
-- **Zero inline `sx={{...}}`** in feature or shared/ui components. All styling lives in `XPresenter.styles.ts` (or `XContainer.styles.ts`) as `styled()` components from `@ui/helpers/styled`.
-- `@ui/helpers/styled` wraps MUI v9's `styled()`: v9 serialises style objects with emotion's raw CSS serializer and does **not** resolve MUI system props (`mt`, `px`, `gap`, `bgcolor`, …) — they would reach the stylesheet unprocessed and be silently dropped. The wrapper routes the style object (nested selectors included) through `theme.unstable_sx`, restoring the exact semantics of the `sx` prop. **Always import `styled` from `@ui/helpers/styled`, never from `@mui/material/styles`.**
+- **Zero inline `sx={{...}}`** in feature or shared/ui components. All styling lives in `XPresenter.styles.ts` (or `XContainer.styles.ts`) as `styled()` components from `@mui/material/styles`.
+- MUI v9's `styled()` serialises style objects with emotion's raw CSS serializer and does **not** resolve MUI system props (`mt`, `px`, `gap`, `bgcolor`, …) — they would reach the stylesheet unprocessed and be silently dropped. Style objects therefore use **real CSS properties** and `theme.spacing()` for spacing-scale values (`paddingInline: theme.spacing(1)`, `backgroundColor`, `gap: theme.spacing(0.75)`), never system-prop shorthands.
 - Every styled call passes the shared prop filter:
 
 ```tsx
 // XPresenter.styles.ts
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const TileButton = styled('button', { shouldForwardProp: shouldForwardStyledProp })<{
   $isSelected: boolean
-}>(({ $isSelected }) => ({
+}>(({ theme, $isSelected }) => ({
   borderColor: $isSelected ? 'var(--accent)' : 'var(--border)',
-  '&[data-selected="true"]': { bgcolor: 'var(--accent-bg)' }
+  paddingInline: theme.spacing(1),
+  '&[data-selected="true"]': { backgroundColor: 'var(--accent-bg)' }
 }))
 ```
 
 - Conditional styles via transient `$props` (typed in the generic) or attribute selectors when the state is already in the DOM (`'&[data-active="true"]'`, `'&[data-sign="up"]'`) — never conditional object spreads
-- px values > 12 are hoisted to `*_PX` constants; MUI spacing steps (`mb: 2`, `gap: 1`) stay numeric
+- px values > 12 are hoisted to `*_PX` constants; spacing-scale values use `theme.spacing()` (constants holding spacing steps are named `*_STEPS`)
 - The one exception: `Card` forwards its callers' `sx` prop to its styled root (MUI applies caller `sx` after the base styles)
 
 ### List & Table Patterns
@@ -709,7 +710,7 @@ The design system in `shared/ui/components/` wraps MUI primitives with applicati
 | `Modal`         | Dialog wrapper with custom width mapping       |
 | `ErrorBoundary` | Global render-error catch + fallback UI        |
 
-`.styles.ts` files export `styled()` components (plus `*_PX` size constants) built with the `@ui/helpers/styled` wrapper (MUI v9 `styled()` + the sx engine) and the shared `shouldForwardStyledProp` filter — not MUI `sx`. CSS custom properties in `shared/ui/styles/global.css` (`--bg`, `--card`, `--accent`, `--radius`) coexist with the MUI theme.
+`.styles.ts` files export `styled()` components (plus `*_PX` size constants) built with `@mui/material/styles` `styled()` using plain CSS properties and `theme.spacing()` — never MUI system props — and the shared `shouldForwardStyledProp` filter; not MUI `sx`. CSS custom properties in `shared/ui/styles/global.css` (`--bg`, `--card`, `--accent`, `--radius`) coexist with the MUI theme.
 
 ---
 

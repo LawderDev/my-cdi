@@ -1,5 +1,5 @@
 import TextField from '@mui/material/TextField'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const SEARCH_ICON_FONT_SIZE_PX = 20

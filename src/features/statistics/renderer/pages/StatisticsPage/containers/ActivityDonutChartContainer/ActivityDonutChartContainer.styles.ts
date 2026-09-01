@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 
@@ -21,11 +21,11 @@ export const LEGEND_DOT_BORDER_RADIUS_PX = 2
 
 export const ChartBody = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: 3
-})
+  gap: theme.spacing(3)
+}))
 
 export const ChartSvg = styled('svg', {
   shouldForwardProp: shouldForwardStyledProp
@@ -35,12 +35,12 @@ export const ChartSvg = styled('svg', {
 
 export const LegendItem = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: 1,
+  gap: theme.spacing(1),
   fontSize: `${LEGEND_ITEM_FONT_SIZE_PX}px`
-})
+}))
 
 export const LegendDot = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp

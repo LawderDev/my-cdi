@@ -1,4 +1,4 @@
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const NAME_FONT_SIZE_PX = 13
@@ -7,15 +7,15 @@ export const NAME_FONT_WEIGHT = 500
 
 export const EntrySummary = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: 1.25,
-  mb: 2,
-  p: 1.25,
-  bgcolor: 'var(--surface)',
+  gap: theme.spacing(1.25),
+  marginBottom: theme.spacing(2),
+  padding: theme.spacing(1.25),
+  backgroundColor: 'var(--surface)',
   borderRadius: 'var(--radius-sm)'
-})
+}))
 
 export const StudentName = styled('div', {
   shouldForwardProp: shouldForwardStyledProp

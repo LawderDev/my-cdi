@@ -1,4 +1,4 @@
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 
@@ -14,20 +14,20 @@ export const ACTIONS_CLASS = 'att-actions'
 
 export const Row = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})<{ $isSelected: boolean }>(({ $isSelected }) => ({
+})<{ $isSelected: boolean }>(({ theme, $isSelected }) => ({
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
-  gap: 1.5,
-  px: 1.5,
-  py: 1.25,
+  gap: theme.spacing(1.5),
+  paddingInline: theme.spacing(1.5),
+  paddingBlock: theme.spacing(1.25),
   borderRadius: 'var(--radius-sm)',
   cursor: 'pointer',
   transition: 'background-color 0.15s',
-  bgcolor: $isSelected ? 'var(--accent-bg)' : 'transparent',
-  mt: 0.5,
+  backgroundColor: $isSelected ? 'var(--accent-bg)' : 'transparent',
+  marginTop: theme.spacing(0.5),
   '&:hover': {
-    bgcolor: $isSelected ? 'var(--accent-bg)' : 'var(--surface)'
+    backgroundColor: $isSelected ? 'var(--accent-bg)' : 'var(--surface)'
   },
   [`&:hover .${ACTIONS_CLASS}`]: {
     opacity: 1
@@ -43,31 +43,31 @@ export const RowMain = styled('div', {
 
 export const StudentName = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontSize: `${NAME_FONT_SIZE_PX}px`,
   fontWeight: NAME_FONT_WEIGHT,
   display: 'flex',
   alignItems: 'center',
-  gap: 0.75
-})
+  gap: theme.spacing(0.75)
+}))
 
 export const ClasseTag = styled('span', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontSize: `${CLASSE_FONT_SIZE_PX}px`,
   color: 'var(--text-dim)',
   fontWeight: CLASSE_FONT_WEIGHT,
-  ml: 0.5
-})
+  marginLeft: theme.spacing(0.5)
+}))
 
 export const MetaRow = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: 1,
-  mt: 0.25
-})
+  gap: theme.spacing(1),
+  marginTop: theme.spacing(0.25)
+}))
 
 export const TimeText = styled('span', {
   shouldForwardProp: shouldForwardStyledProp
@@ -79,21 +79,21 @@ export const TimeText = styled('span', {
 
 export const PeriodTag = styled('span', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontSize: `${PERIOD_FONT_SIZE_PX}px`,
   fontWeight: PERIOD_FONT_WEIGHT,
-  px: 0.75,
-  py: '1px',
+  paddingInline: theme.spacing(0.75),
+  paddingBlock: '1px',
   borderRadius: 'var(--radius-xs)',
   textTransform: 'uppercase',
   letterSpacing: '0.5px'
-})
+}))
 
 export const RowActions = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
-  gap: 0.25,
+  gap: theme.spacing(0.25),
   opacity: 0,
   transition: 'opacity 0.15s'
-})
+}))

@@ -1,13 +1,13 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import type { CSSProperties } from 'react'
 
 const ICON_FONT_SIZE_PX = 48
 const ICON_OPACITY = 0.4
 const PY_SPACING = 7.5
-const PX_SPACING = 2.5
+const PADDING_X_STEPS = 2.5
 const MESSAGE_MB_SPACING = 0.5
 const DESCRIPTION_OPACITY = 0.7
 const ICON_MARGIN_BOTTOM = '12px'
@@ -22,23 +22,23 @@ export const ICON_CSS: CSSProperties = {
 
 export const Root = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
   textAlign: 'center',
   color: 'var(--text-dim)',
-  py: PY_SPACING,
-  px: PX_SPACING
-})
+  paddingBlock: theme.spacing(PY_SPACING),
+  paddingInline: theme.spacing(PADDING_X_STEPS)
+}))
 
 export const MessageText = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontSize: MESSAGE_FONT_SIZE,
-  mb: MESSAGE_MB_SPACING
-})
+  marginBottom: theme.spacing(MESSAGE_MB_SPACING)
+}))
 
 export const DescriptionText = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp

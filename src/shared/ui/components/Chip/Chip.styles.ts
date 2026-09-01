@@ -1,5 +1,5 @@
 import MuiChip from '@mui/material/Chip'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 const CHIP_HEIGHT_PX = 28

@@ -2,10 +2,10 @@ import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
-const PX_SPACING = 3
+const PADDING_X_STEPS = 3
 const PT_SPACING = 2.5
 const PY_BODY_SPACING = 2.5
 const PB_FOOTER_SPACING = 2.5
@@ -28,28 +28,28 @@ export const DialogRoot = styled(Dialog, {
 
 export const DialogHeader = styled(DialogTitle, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  px: PX_SPACING,
-  pt: PT_SPACING,
-  pb: TITLE_PB,
+  paddingInline: theme.spacing(PADDING_X_STEPS),
+  paddingTop: theme.spacing(PT_SPACING),
+  paddingBottom: TITLE_PB,
   fontSize: TITLE_FONT_SIZE,
   fontWeight: FONT_WEIGHT_SEMIBOLD
-})
+}))
 
 export const DialogBody = styled(DialogContent, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  px: PX_SPACING,
-  py: PY_BODY_SPACING
-})
+})(({ theme }) => ({
+  paddingInline: theme.spacing(PADDING_X_STEPS),
+  paddingBlock: theme.spacing(PY_BODY_SPACING)
+}))
 
 export const DialogFooter = styled(DialogActions, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  px: PX_SPACING,
-  pb: PB_FOOTER_SPACING,
-  gap: FOOTER_GAP
-})
+})(({ theme }) => ({
+  paddingInline: theme.spacing(PADDING_X_STEPS),
+  paddingBottom: theme.spacing(PB_FOOTER_SPACING),
+  gap: theme.spacing(FOOTER_GAP)
+}))

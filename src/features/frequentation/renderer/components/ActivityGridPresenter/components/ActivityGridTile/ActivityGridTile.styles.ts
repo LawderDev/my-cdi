@@ -1,4 +1,4 @@
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import {
   TILE_FONT_SIZE_PX,
@@ -8,13 +8,13 @@ import {
 
 export const TileButton = styled('button', {
   shouldForwardProp: shouldForwardStyledProp
-})<{ $isSelected: boolean }>(({ $isSelected }) => ({
+})<{ $isSelected: boolean }>(({ theme, $isSelected }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: 0.75,
-  px: 1,
-  py: 1.5,
+  gap: theme.spacing(0.75),
+  paddingInline: theme.spacing(1),
+  paddingBlock: theme.spacing(1.5),
   border: '1px solid',
   borderColor: $isSelected ? 'var(--accent)' : 'var(--border)',
   borderRadius: 'var(--radius-sm)',
@@ -23,10 +23,10 @@ export const TileButton = styled('button', {
   fontSize: `${TILE_FONT_SIZE_PX}px`,
   fontWeight: TILE_FONT_WEIGHT,
   userSelect: 'none',
-  bgcolor: $isSelected ? 'var(--accent-bg)' : 'var(--card)',
+  backgroundColor: $isSelected ? 'var(--accent-bg)' : 'var(--card)',
   color: $isSelected ? 'var(--accent)' : 'var(--text)',
   '&:hover': {
     borderColor: $isSelected ? 'var(--accent)' : 'var(--border-light)',
-    bgcolor: $isSelected ? 'var(--accent-bg)' : 'var(--surface)'
+    backgroundColor: $isSelected ? 'var(--accent-bg)' : 'var(--surface)'
   }
 }))

@@ -1,5 +1,5 @@
 import Paper from '@mui/material/Paper'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import type { CardPadding } from './types/CardProps'
 

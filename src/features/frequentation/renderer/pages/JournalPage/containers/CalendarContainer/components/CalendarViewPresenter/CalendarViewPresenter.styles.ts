@@ -1,4 +1,4 @@
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const TITLE_FONT_SIZE_PX = 15
@@ -9,12 +9,12 @@ export const WEEK_DAYS_COUNT = 7
 
 export const CalendarHeader = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  mb: 2
-})
+  marginBottom: theme.spacing(2)
+}))
 
 export const MonthTitle = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
@@ -25,16 +25,16 @@ export const MonthTitle = styled('div', {
 
 export const NavGroup = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
-  gap: 0.5
-})
+  gap: theme.spacing(0.5)
+}))
 
 export const MonthGrid = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: `repeat(${WEEK_DAYS_COUNT}, 1fr)`,
-  gap: 0.25,
+  gap: theme.spacing(0.25),
   textAlign: 'center'
-})
+}))

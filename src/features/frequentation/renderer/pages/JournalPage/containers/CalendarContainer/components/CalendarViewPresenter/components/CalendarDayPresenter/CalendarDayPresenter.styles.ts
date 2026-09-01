@@ -1,4 +1,4 @@
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const DAY_FONT_SIZE_PX = 13
@@ -17,7 +17,7 @@ export const DayCell = styled('button', {
   width: `${DAY_SIZE_PX}px`,
   height: `${DAY_SIZE_PX}px`,
   borderRadius: '50%',
-  mx: 'auto',
+  marginInline: 'auto',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -25,19 +25,19 @@ export const DayCell = styled('button', {
   cursor: 'pointer',
   transition: DAY_TRANSITION,
   border: 'none',
-  bgcolor: 'transparent',
+  backgroundColor: 'transparent',
   color: 'var(--title)',
   outline: 'none',
   '&:hover': {
-    bgcolor: 'var(--surface)'
+    backgroundColor: 'var(--surface)'
   },
   '&[data-today="true"]': {
-    bgcolor: 'var(--accent)',
+    backgroundColor: 'var(--accent)',
     color: '#fff',
     fontWeight: DAY_TODAY_FONT_WEIGHT,
     boxShadow: TODAY_SHADOW,
     '&:hover': {
-      bgcolor: 'var(--accent)'
+      backgroundColor: 'var(--accent)'
     }
   },
   '&[data-selected="true"]': {
@@ -56,9 +56,9 @@ export const DayCell = styled('button', {
     width: `${VISITS_DOT_SIZE_PX}px`,
     height: `${VISITS_DOT_SIZE_PX}px`,
     borderRadius: '50%',
-    bgcolor: 'var(--accent)'
+    backgroundColor: 'var(--accent)'
   },
   '&[data-today="true"][data-has-visits="true"]::after': {
-    bgcolor: '#fff'
+    backgroundColor: '#fff'
   }
 })

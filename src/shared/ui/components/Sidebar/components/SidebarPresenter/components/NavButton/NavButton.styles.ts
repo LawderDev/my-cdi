@@ -1,4 +1,4 @@
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 const NAV_BTN_WIDTH_PX = 52
@@ -24,10 +24,10 @@ export const NavButtonRoot = styled('button', {
   border: 'none',
   cursor: 'pointer',
   transition: TRANSITION,
-  bgcolor: $active ? 'var(--accent-bg)' : 'transparent',
+  backgroundColor: $active ? 'var(--accent-bg)' : 'transparent',
   color: $active ? 'var(--accent)' : 'var(--text-dim)',
   '&:hover': {
-    bgcolor: $active ? 'var(--accent-bg)' : 'var(--card)',
+    backgroundColor: $active ? 'var(--accent-bg)' : 'var(--card)',
     color: $active ? 'var(--accent)' : 'var(--text)'
   },
   '&::before': {
@@ -38,7 +38,7 @@ export const NavButtonRoot = styled('button', {
     transform: 'translateY(-50%)',
     width: `${ACTIVE_BAR_WIDTH_PX}px`,
     height: `${ACTIVE_BAR_HEIGHT_PX}px`,
-    bgcolor: 'var(--accent)',
+    backgroundColor: 'var(--accent)',
     borderRadius: ACTIVE_BAR_BORDER_RADIUS,
     display: $active ? 'block' : 'none'
   }

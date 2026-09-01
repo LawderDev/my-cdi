@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import { styled } from '@ui/helpers/styled'
+import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const SMALL_ICON_FONT_SIZE_PX = 16
@@ -15,12 +15,12 @@ export const COUNT_FONT_WEIGHT = 500
 
 export const ToolbarRoot = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: 1.5,
-  mb: 2.5
-})
+  gap: theme.spacing(1.5),
+  marginBottom: theme.spacing(2.5)
+}))
 
 export const SearchField = styled(TextField, {
   shouldForwardProp: shouldForwardStyledProp
@@ -30,7 +30,7 @@ export const SearchField = styled(TextField, {
   '& .MuiOutlinedInput-root': {
     height: `${SEARCH_INPUT_HEIGHT_PX}px`,
     fontSize: `${SEARCH_INPUT_FONT_SIZE_PX}px`,
-    bgcolor: 'var(--surface)',
+    backgroundColor: 'var(--surface)',
     color: 'var(--title)',
     borderRadius: 'var(--radius-sm)',
     transition: 'border-color 0.2s'
