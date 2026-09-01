@@ -1,18 +1,10 @@
-import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
+import { FallbackRoot } from './RouteSuspenseFallback.styles'
 
 export function RouteSuspenseFallback() {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100%',
-        p: 4
-      }}
-    >
+    <FallbackRoot>
       <CircularProgress color="primary" />
-    </Box>
+    </FallbackRoot>
   )
 }

@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box'
+import { StudentsPageLayout } from './StudentsPage.styles'
 import { useStudentsPage } from './hooks/useStudentsPage'
 import { StudentListContainer } from './containers/StudentListContainer'
 import { StudentFormContainer } from './containers/StudentFormContainer'
@@ -14,7 +14,7 @@ export function StudentsPage() {
   } = useStudentsPage()
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+    <StudentsPageLayout>
       <StudentListContainer onEditStudent={setEditingStudent} onAddStudent={openAddDialog} />
 
       <StudentFormContainer
@@ -30,6 +30,6 @@ export function StudentsPage() {
         open={editingStudent !== null}
         onClose={closeEditDialog}
       />
-    </Box>
+    </StudentsPageLayout>
   )
 }

@@ -1,7 +1,5 @@
 import type { RefObject, ChangeEvent, KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import Box from '@mui/material/Box'
-import Alert from '@mui/material/Alert'
 import { Button } from '@ui/components/Button'
 import { Modal } from '@ui/components/Modal'
 import { Icon } from '@ui/components/Icon'
@@ -10,14 +8,17 @@ import {
   VISUALLY_HIDDEN_STYLE,
   TRIGGER_ICON_STYLE,
   DROPZONE_ICON_STYLE,
-  DROPZONE_PADDING_PX,
-  DROPZONE_TITLE_FONT_SIZE_PX,
-  DROPZONE_TITLE_FONT_WEIGHT,
-  DROPZONE_SUBTITLE_FONT_SIZE_PX,
-  HINT_TITLE_FONT_WEIGHT,
-  HINT_FONT_SIZE_PX,
-  SELECTED_FILE_FONT_SIZE_PX,
-  SELECTED_FILE_FONT_WEIGHT
+  DROPZONE_ICON_MARGIN_BOTTOM_PX,
+  Dropzone,
+  DropzoneSubtitle,
+  DropzoneTitle,
+  ErrorLine,
+  ErrorLinesPanel,
+  HintPanel,
+  HintSmall,
+  HintTitle,
+  ResultAlert,
+  SelectedFileName
 } from './StudentCsvImportButtonPresenter.styles'
 
 const CSV_ACCEPT = '.csv'
@@ -91,60 +92,24 @@ export function StudentCsvImportButtonPresenter(props: StudentCsvImportButtonPre
           </>
         }
       >
-        <Box
+        <Dropzone
           role="button"
           tabIndex={0}
           onClick={handleDropzoneClick}
           onKeyDown={handleDropzoneKeyDown}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '2px dashed var(--border)',
-            borderRadius: 'var(--radius)',
-            p: `${DROPZONE_PADDING_PX}px`,
-            textAlign: 'center',
-            cursor: 'pointer',
-            transition: 'border-color 0.2s',
-            mb: 2,
-            '&:hover': { borderColor: 'var(--accent)' }
-          }}
         >
           <Icon
             name="cloud_upload"
-            style={{ ...DROPZONE_ICON_STYLE, marginBottom: '8px', color: 'var(--text-dim)' }}
-          />
-          <Box
-            component="p"
-            sx={{
-              fontSize: `${DROPZONE_TITLE_FONT_SIZE_PX}px`,
-              fontWeight: DROPZONE_TITLE_FONT_WEIGHT,
-              mb: 0.5,
-              m: 0
+            style={{
+              ...DROPZONE_ICON_STYLE,
+              marginBottom: `${DROPZONE_ICON_MARGIN_BOTTOM_PX}px`,
+              color: 'var(--text-dim)'
             }}
-          >
-            {t('csvImport.dropzoneTitle')}
-          </Box>
-          <Box
-            component="small"
-            sx={{ fontSize: `${DROPZONE_SUBTITLE_FONT_SIZE_PX}px`, color: 'var(--text-dim)' }}
-          >
-            {t('csvImport.dropzoneSubtitle')}
-          </Box>
-          {pendingFile ? (
-            <Box
-              sx={{
-                mt: 1.5,
-                fontSize: `${SELECTED_FILE_FONT_SIZE_PX}px`,
-                color: 'var(--text)',
-                fontWeight: SELECTED_FILE_FONT_WEIGHT
-              }}
-            >
-              {pendingFile.name}
-            </Box>
-          ) : null}
-        </Box>
+          />
+          <DropzoneTitle>{t('csvImport.dropzoneTitle')}</DropzoneTitle>
+          <DropzoneSubtitle>{t('csvImport.dropzoneSubtitle')}</DropzoneSubtitle>
+          {pendingFile ? <SelectedFileName>{pendingFile.name}</SelectedFileName> : null}
+        </Dropzone>
         <input
           ref={inputRef}
           type="file"
@@ -155,64 +120,30 @@ export function StudentCsvImportButtonPresenter(props: StudentCsvImportButtonPre
           style={VISUALLY_HIDDEN_STYLE}
         />
 
-        {error ? (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        ) : null}
+        {error ? <ResultAlert severity="error">{error}</ResultAlert> : null}
 
         {result ? (
-          <Alert severity={result.errors > 0 ? 'warning' : 'success'} sx={{ mb: 2 }}>
+          <ResultAlert severity={result.errors > 0 ? 'warning' : 'success'}>
             {result.created > 0
               ? t('csvImport.success', { count: result.created })
               : t('csvImport.noStudentsCreated')}
             {result.errors > 0 ? ` (${result.errors} ${t('csvImport.errors')})` : ''}
-          </Alert>
+          </ResultAlert>
         ) : null}
 
         {result && result.errorDetails.length > 0 ? (
-          <Box
-            sx={{
-              bgcolor: 'var(--surface)',
-              borderRadius: 'var(--radius-sm)',
-              p: 1.75,
-              fontSize: `${HINT_FONT_SIZE_PX}px`,
-              color: 'var(--text-dim)',
-              lineHeight: 1.5,
-              mb: 2,
-              maxHeight: '200px',
-              overflowY: 'auto'
-            }}
-          >
+          <ErrorLinesPanel>
             {errorLines.map((errorLine, index) => (
-              <Box key={index} sx={{ color: 'var(--danger)', mb: 0.5 }}>
-                {errorLine}
-              </Box>
+              <ErrorLine key={index}>{errorLine}</ErrorLine>
             ))}
-          </Box>
+          </ErrorLinesPanel>
         ) : null}
 
-        <Box
-          sx={{
-            bgcolor: 'var(--surface)',
-            borderRadius: 'var(--radius-sm)',
-            p: 1.75,
-            fontSize: `${HINT_FONT_SIZE_PX}px`,
-            color: 'var(--text-dim)',
-            lineHeight: 1.5
-          }}
-        >
-          <Box sx={{ fontWeight: HINT_TITLE_FONT_WEIGHT, color: 'var(--text)', mb: 0.5 }}>
-            {t('csvImport.expectedColumns')}
-          </Box>
+        <HintPanel>
+          <HintTitle>{t('csvImport.expectedColumns')}</HintTitle>
           {t('csvImport.expectedColumnsList')}
-          <Box
-            component="small"
-            sx={{ display: 'block', mt: 0.5, fontSize: `${HINT_FONT_SIZE_PX}px` }}
-          >
-            {t('csvImport.expectedColumnsHint')}
-          </Box>
-        </Box>
+          <HintSmall>{t('csvImport.expectedColumnsHint')}</HintSmall>
+        </HintPanel>
       </Modal>
     </>
   )

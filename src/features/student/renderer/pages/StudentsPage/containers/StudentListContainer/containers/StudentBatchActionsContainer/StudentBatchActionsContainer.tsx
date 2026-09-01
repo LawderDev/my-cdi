@@ -1,12 +1,11 @@
-import Box from '@mui/material/Box'
 import { Button } from '@ui/components/Button'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useStudentBatchActions } from './hooks/useStudentBatchActions'
 import { formatBatchMessage } from './helpers/formatBatchMessage'
 import {
   NO_SELECTION,
-  STRIP_FONT_SIZE_PX,
-  COUNT_FONT_WEIGHT
+  BatchActionsStrip,
+  BatchCountLabel
 } from './StudentBatchActionsContainer.styles'
 
 interface StudentBatchActionsContainerProps {
@@ -50,20 +49,7 @@ export function StudentBatchActionsContainer({
 
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1.5,
-          px: 1.5,
-          py: 1,
-          bgcolor: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-sm)',
-          fontSize: `${STRIP_FONT_SIZE_PX}px`,
-          color: 'var(--text-dim)'
-        }}
-      >
+      <BatchActionsStrip>
         <Button
           variant="secondary"
           onClick={handleSelectToggle}
@@ -75,11 +61,9 @@ export function StudentBatchActionsContainer({
           {batchDeleteLabel}
         </Button>
         {hasSelection ? (
-          <Box component="span" sx={{ fontWeight: COUNT_FONT_WEIGHT }}>
-            {formatBatchMessage(selectedCount)}
-          </Box>
+          <BatchCountLabel>{formatBatchMessage(selectedCount)}</BatchCountLabel>
         ) : null}
-      </Box>
+      </BatchActionsStrip>
 
       <ConfirmDialog
         open={showConfirm}

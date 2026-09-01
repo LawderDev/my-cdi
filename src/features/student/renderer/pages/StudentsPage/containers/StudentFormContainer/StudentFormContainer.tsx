@@ -1,19 +1,11 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
 import { Modal } from '@ui/components/Modal'
 import { StudentFormActionsPresenter } from './components/StudentFormActionsPresenter'
 import { StudentFormFieldsPresenter } from './components/StudentFormFieldsPresenter'
 import { useStudentForm } from './hooks/useStudentForm'
 import { getValidationErrorMessage } from './components/StudentFormFieldsPresenter/helpers/getValidationErrorMessage'
-import {
-  LABEL_FONT_SIZE_PX,
-  LABEL_FONT_WEIGHT,
-  INPUT_HEIGHT_PX,
-  INPUT_FONT_SIZE_PX,
-  ERROR_FONT_SIZE_PX
-} from './components/StudentFormFieldsPresenter/StudentFormFieldsPresenter.styles'
+import { FieldError, FieldInput, FieldLabel, FieldRow } from './StudentFormContainer.styles'
 import type { StudentViewModel } from '@student/types'
 import type { StudentFormData } from './types/StudentFormData'
 
@@ -38,23 +30,9 @@ export function StudentFormContainer({ mode, student, open, onClose }: StudentFo
     const hasError = Boolean(errors[key])
     const errorMessage = getValidationErrorMessage(String(key), hasError, t)
     return (
-      <Box key={String(key)} sx={{ mb: 2 }}>
-        <Box
-          component="label"
-          htmlFor={fieldId}
-          sx={{
-            display: 'block',
-            fontSize: `${LABEL_FONT_SIZE_PX}px`,
-            fontWeight: LABEL_FONT_WEIGHT,
-            color: 'var(--text-dim)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.8px',
-            mb: 0.75
-          }}
-        >
-          {t(`fields.${String(key)}`)}
-        </Box>
-        <TextField
+      <FieldRow key={String(key)}>
+        <FieldLabel htmlFor={fieldId}>{t(`fields.${String(key)}`)}</FieldLabel>
+        <FieldInput
           id={fieldId}
           type="text"
           size="small"
@@ -67,39 +45,9 @@ export function StudentFormContainer({ mode, student, open, onClose }: StudentFo
             }
           }}
           {...register(key)}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              height: `${INPUT_HEIGHT_PX}px`,
-              fontSize: `${INPUT_FONT_SIZE_PX}px`,
-              bgcolor: 'var(--surface)',
-              color: 'var(--title)',
-              borderRadius: 'var(--radius-sm)',
-              transition: 'border-color 0.2s'
-            },
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: hasError ? 'var(--danger)' : 'var(--border)'
-            },
-            '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: hasError ? 'var(--danger)' : 'var(--border-light)'
-            },
-            '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: hasError ? 'var(--danger)' : 'var(--accent)',
-              boxShadow: hasError ? 'none' : '0 0 0 3px var(--accent-bg)'
-            }
-          }}
         />
-        {errorMessage ? (
-          <Box
-            sx={{
-              mt: 0.5,
-              fontSize: `${ERROR_FONT_SIZE_PX}px`,
-              color: 'var(--danger)'
-            }}
-          >
-            {errorMessage}
-          </Box>
-        ) : null}
-      </Box>
+        {errorMessage ? <FieldError>{errorMessage}</FieldError> : null}
+      </FieldRow>
     )
   })
 

@@ -18,7 +18,8 @@ import { StudentBatchActionsContainer } from './containers/StudentBatchActionsCo
 import {
   CHECKBOX_CELL_STYLE,
   ACTIONS_CELL_STYLE,
-  SORT_ICON_STYLE
+  SORT_ICON_STYLE,
+  StudentListLayout
 } from './StudentListContainer.styles'
 import type { StudentListContainerProps } from './types/StudentListContainerProps'
 import type { StudentSortField, StudentViewModel } from '@student/types'
@@ -124,7 +125,7 @@ export function StudentListContainer({ onEditStudent, onAddStudent }: StudentLis
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+    <StudentListLayout>
       <StudentListToolbarPresenter
         searchTerm={searchTerm}
         totalCount={filteredStudents.length}
@@ -165,6 +166,6 @@ export function StudentListContainer({ onEditStudent, onAddStudent }: StudentLis
           {tStudent('deleteSuccess')}
         </Alert>
       </Snackbar>
-    </Box>
+    </StudentListLayout>
   )
 }

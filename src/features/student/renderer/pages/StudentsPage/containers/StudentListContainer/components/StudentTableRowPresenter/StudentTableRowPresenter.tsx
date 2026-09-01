@@ -1,12 +1,15 @@
 import type { MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
-import Checkbox from '@mui/material/Checkbox'
 import { IconButton } from '@ui/components/IconButton'
-import { MONO_FONT_FAMILY } from '@ui/theme'
 import { StudentAvatarPresenter } from '@student/components/StudentAvatarPresenter'
 import type { StudentViewModel } from '@student/types'
-import { NUMERIC_FONT_SIZE_PX, NUMERIC_FONT_WEIGHT } from './StudentTableRowPresenter.styles'
+import {
+  IneCell,
+  NameCellContent,
+  SelectCheckbox,
+  VisitsCell
+} from './StudentTableRowPresenter.styles'
 
 export interface StudentTableRowPresenterProps {
   student: StudentViewModel
@@ -34,26 +37,21 @@ export function StudentTableRowPresenter({
   return (
     <tr data-selected={selected}>
       <td>
-        <Checkbox
+        <SelectCheckbox
           checked={selected}
           onChange={onCheckboxChange}
           onClick={onCheckboxClick}
           size="small"
           aria-label={t('app.select')}
-          sx={{
-            color: 'var(--border-light)',
-            p: 0.5,
-            '&.Mui-checked': { color: 'var(--accent)' }
-          }}
         />
       </td>
       <td>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
+        <NameCellContent>
           <StudentAvatarPresenter id={student.id} initials={initials} size="sm" />
           <Box component="span" className="td-name">
             {student.nom}
           </Box>
-        </Box>
+        </NameCellContent>
       </td>
       <td>{student.prenom}</td>
       <td>
@@ -61,27 +59,8 @@ export function StudentTableRowPresenter({
           {student.classe}
         </Box>
       </td>
-      <Box
-        component="td"
-        sx={{
-          fontFamily: MONO_FONT_FAMILY,
-          fontSize: `${NUMERIC_FONT_SIZE_PX}px`,
-          color: 'var(--text-dim)'
-        }}
-      >
-        {student.ine}
-      </Box>
-      <Box
-        component="td"
-        sx={{
-          fontFamily: MONO_FONT_FAMILY,
-          fontSize: `${NUMERIC_FONT_SIZE_PX}px`,
-          fontWeight: NUMERIC_FONT_WEIGHT,
-          color: 'var(--text-dim)'
-        }}
-      >
-        {VISITS_PLACEHOLDER}
-      </Box>
+      <IneCell>{student.ine}</IneCell>
+      <VisitsCell>{VISITS_PLACEHOLDER}</VisitsCell>
       <td>
         <Box className="td-actions">
           <IconButton iconName="edit" aria-label={t('app.edit')} onClick={onEditClick} />
