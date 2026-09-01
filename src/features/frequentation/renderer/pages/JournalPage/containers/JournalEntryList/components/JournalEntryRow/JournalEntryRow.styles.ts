@@ -1,5 +1,3 @@
-export const TIME_FORMAT = 'HH:mm'
-
 export const NAME_FONT_SIZE_PX = 13
 export const NAME_FONT_WEIGHT = 500
 export const CLASSE_FONT_SIZE_PX = 11

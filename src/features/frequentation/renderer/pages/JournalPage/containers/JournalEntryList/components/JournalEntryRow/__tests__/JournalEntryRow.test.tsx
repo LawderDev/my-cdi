@@ -3,39 +3,31 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '@shared/i18n/config'
 import { JournalEntryRow } from '../JournalEntryRow'
-import { ActivityType } from '@types'
-import type { JournalEntryViewModel } from '@frequentation/types'
 
-const ENTRY_ID = 42
 const STUDENT_ID = 7
+const ENTRY_TIME = '09:00'
+const PERIOD_LABEL = 'Matin'
 
-const entry: JournalEntryViewModel = {
-  id: ENTRY_ID,
-  startsAt: '2026-04-01T09:00:00.000',
-  activity: ActivityType.WORK,
-  student: {
-    id: STUDENT_ID,
-    nom: 'Dupont',
-    prenom: 'Jean',
-    classe: '3ème A',
-    ine: 'INE-1',
-    displayName: 'Jean Dupont'
-  },
+const baseProps = {
+  initials: 'JD',
+  avatarColorSeed: STUDENT_ID,
+  displayName: 'Jean Dupont',
+  classe: '3ème A',
+  time: ENTRY_TIME,
+  periodLabel: PERIOD_LABEL,
+  periodClass: 'period-morning',
+  activityCssClass: 'act-travail',
   activityLabel: 'Travail',
-  activityColor: '#1976d2'
+  selected: false,
+  onRowClick: vi.fn(),
+  onEditClick: vi.fn(),
+  onDeleteClick: vi.fn()
 }
 
 function renderRow(props: Partial<Parameters<typeof JournalEntryRow>[0]> = {}) {
   return render(
     <I18nextProvider i18n={i18n}>
-      <JournalEntryRow
-        entry={entry}
-        selected={false}
-        onRowClick={vi.fn()}
-        onEditClick={vi.fn()}
-        onDeleteClick={vi.fn()}
-        {...props}
-      />
+      <JournalEntryRow {...baseProps} {...props} />
     </I18nextProvider>
   )
 }
@@ -54,7 +46,13 @@ describe('JournalEntryRow', () => {
     expect(screen.getByText('Jean Dupont')).toBeInTheDocument()
     expect(screen.getByText('3ème A')).toBeInTheDocument()
     expect(screen.getByText('Travail')).toBeInTheDocument()
-    expect(screen.getByText('09:00')).toBeInTheDocument()
+    expect(screen.getByText(ENTRY_TIME)).toBeInTheDocument()
+    expect(screen.getByText(PERIOD_LABEL)).toBeInTheDocument()
+  })
+
+  it('renders the initials avatar', () => {
+    const { container } = renderRow()
+    expect(container.textContent).toContain('JD')
   })
 
   it('clicking the row triggers onRowClick', () => {

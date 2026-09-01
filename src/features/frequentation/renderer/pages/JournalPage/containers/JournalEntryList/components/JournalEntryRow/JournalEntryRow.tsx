@@ -1,12 +1,9 @@
-import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { Avatar } from '@ui/components/Avatar'
 import { IconButton } from '@ui/components/IconButton'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 import { ActivityChip } from '@frequentation/components/ActivityChip'
-import { getEntryPeriod } from '../../helpers/getEntryPeriod'
-import type { JournalEntryViewModel } from '@frequentation/types'
 import {
   ACTIONS_CLASS,
   CLASSE_FONT_SIZE_PX,
@@ -15,34 +12,41 @@ import {
   NAME_FONT_WEIGHT,
   PERIOD_FONT_SIZE_PX,
   PERIOD_FONT_WEIGHT,
-  TIME_FONT_SIZE_PX,
-  TIME_FORMAT
+  TIME_FONT_SIZE_PX
 } from './JournalEntryRow.styles'
 
 export interface JournalEntryRowProps {
-  entry: JournalEntryViewModel
+  initials: string
+  avatarColorSeed: number
+  displayName: string
+  classe: string
+  time: string
+  periodLabel: string
+  periodClass: string
+  activityCssClass: string
+  activityLabel: string
   selected: boolean
   onRowClick: (event: React.MouseEvent) => void
   onEditClick: (event: React.MouseEvent) => void
   onDeleteClick: (event: React.MouseEvent) => void
 }
 
-function buildInitials(prenom: string, nom: string): string {
-  return `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase()
-}
-
 export function JournalEntryRow({
-  entry,
+  initials,
+  avatarColorSeed,
+  displayName,
+  classe,
+  time,
+  periodLabel,
+  periodClass,
+  activityCssClass,
+  activityLabel,
   selected,
   onRowClick,
   onEditClick,
   onDeleteClick
 }: JournalEntryRowProps) {
   const { t } = useTranslation('frequentation')
-  const period = getEntryPeriod(entry.startsAt)
-  const periodLabel = period === 'morning' ? t('period.morning') : t('period.afternoon')
-  const periodClass = period === 'morning' ? 'period-morning' : 'period-afternoon'
-  const time = dayjs(entry.startsAt).format(TIME_FORMAT)
 
   return (
     <Box
@@ -68,10 +72,7 @@ export function JournalEntryRow({
         }
       }}
     >
-      <Avatar
-        initials={buildInitials(entry.student.prenom, entry.student.nom)}
-        colorSeed={entry.student.id}
-      />
+      <Avatar initials={initials} colorSeed={avatarColorSeed} />
       <Box sx={{ flex: 1, minWidth: 0 }}>
         <Box
           sx={{
@@ -82,7 +83,7 @@ export function JournalEntryRow({
             gap: 0.75
           }}
         >
-          {entry.student.displayName}
+          {displayName}
           <Box
             component="span"
             sx={{
@@ -92,7 +93,7 @@ export function JournalEntryRow({
               ml: 0.5
             }}
           >
-            {entry.student.classe}
+            {classe}
           </Box>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.25 }}>
@@ -121,7 +122,7 @@ export function JournalEntryRow({
           >
             {periodLabel}
           </Box>
-          <ActivityChip activity={entry.activity} label={entry.activityLabel} />
+          <ActivityChip cssClass={activityCssClass} label={activityLabel} />
         </Box>
       </Box>
       <Box

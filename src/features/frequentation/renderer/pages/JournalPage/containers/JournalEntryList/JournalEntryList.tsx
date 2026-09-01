@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ChangeEvent, MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import dayjs from 'dayjs'
 import Box from '@mui/material/Box'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
@@ -11,12 +12,15 @@ import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useJournalEntries } from '@frequentation/api/useFrequentationQueries'
 import { useActivityLabels } from '@frequentation/hooks/useActivityLabels'
 import { toJournalEntryViewModel } from '@frequentation/helpers/journalEntryTransformers'
+import { getActivityCssClass } from '@frequentation/helpers/activityFormatters'
+import { buildInitials } from '@frequentation/helpers/buildInitials'
 import { useDeleteFrequentation } from '@frequentation/api/useFrequentationMutations'
 import { useJournalEntrySelection } from './hooks/useJournalEntrySelection'
 import { useEntryPeriodFilter } from './hooks/useEntryPeriodFilter'
 import { useSearchFilter } from './hooks/useSearchFilter'
 import { filterEntriesByPeriod } from './helpers/filterEntriesByPeriod'
 import { filterJournalEntriesBySearchTerm } from './helpers/filterJournalEntriesBySearchTerm'
+import { getEntryPeriod } from './helpers/getEntryPeriod'
 import { JournalEntryToolbar } from './components/JournalEntryToolbar'
 import { JournalEntryRow } from './components/JournalEntryRow'
 import { JournalBatchActions } from './containers/JournalBatchActions'
@@ -30,6 +34,7 @@ interface JournalEntryListProps {
 }
 
 const FEEDBACK_AUTO_HIDE_MS = 4000
+const TIME_FORMAT = 'HH:mm'
 
 export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryListProps) {
   const { t } = useTranslation('frequentation')
@@ -109,8 +114,17 @@ export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryList
   }
 
   function buildRowProps(entry: JournalEntryViewModel): JournalEntryRowProps {
+    const period = getEntryPeriod(entry.startsAt)
     return {
-      entry,
+      initials: buildInitials(entry.student.prenom, entry.student.nom),
+      avatarColorSeed: entry.student.id,
+      displayName: entry.student.displayName,
+      classe: entry.student.classe,
+      time: dayjs(entry.startsAt).format(TIME_FORMAT),
+      periodLabel: period === 'morning' ? t('period.morning') : t('period.afternoon'),
+      periodClass: period === 'morning' ? 'period-morning' : 'period-afternoon',
+      activityCssClass: getActivityCssClass(entry.activity),
+      activityLabel: entry.activityLabel,
       selected: selectedIds.includes(entry.id),
       onRowClick: (event) => handleRowClick(entry, event),
       onEditClick: (event) => handleRowEditClick(entry, event),

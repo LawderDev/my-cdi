@@ -1,20 +1,8 @@
 import { useTranslation } from 'react-i18next'
+import type { ReactNode } from 'react'
 import Box from '@mui/material/Box'
 import { Autocomplete } from '@ui/components/Autocomplete'
-import { Chip } from '@ui/components/Chip'
 import type { AutocompleteOption } from '@ui/components/Autocomplete'
-
-interface StudentOption {
-  id: number
-  displayName: string
-  classe: string
-}
-
-export interface StudentChip {
-  id: number
-  label: string
-  onRemove: () => void
-}
 
 import {
   LABEL_FONT_SIZE_PX,
@@ -24,9 +12,9 @@ import {
 } from './StudentMultiSelect.styles'
 
 interface StudentMultiSelectProps {
-  students: StudentOption[]
+  options: AutocompleteOption<number>[]
   selectedIds: number[]
-  chips: StudentChip[]
+  chipNodes: ReactNode[]
   inputValue: string
   onInputChange: (value: string) => void
   onSelect: (option: AutocompleteOption<number>) => void
@@ -34,21 +22,15 @@ interface StudentMultiSelectProps {
 }
 
 export function StudentMultiSelect({
-  students,
+  options,
   selectedIds,
-  chips,
+  chipNodes,
   inputValue,
   onInputChange,
   onSelect,
   loading
 }: StudentMultiSelectProps) {
   const { t } = useTranslation('frequentation')
-
-  const options: AutocompleteOption<number>[] = students.map((student) => ({
-    value: student.id,
-    label: student.displayName,
-    badge: student.classe
-  }))
 
   return (
     <Box>
@@ -89,9 +71,7 @@ export function StudentMultiSelect({
           mt: 1
         }}
       >
-        {chips.map((chip) => (
-          <Chip key={chip.id} label={chip.label} onRemove={chip.onRemove} />
-        ))}
+        {chipNodes}
       </Box>
     </Box>
   )

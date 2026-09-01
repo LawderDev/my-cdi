@@ -1,29 +1,34 @@
 import { useTranslation } from 'react-i18next'
+import type { ReactNode } from 'react'
 import Box from '@mui/material/Box'
 import { Modal } from '@ui/components/Modal'
 import { Button } from '@ui/components/Button'
 import { Avatar } from '@ui/components/Avatar'
 import { ActivityGrid } from '@frequentation/components/ActivityGrid'
-import type { ActivityGridTile } from '@frequentation/components/ActivityGrid'
-import type { JournalEntryViewModel } from '@frequentation/types'
-import { buildInitials } from './helpers/buildInitials'
 import {
   CLASSE_FONT_SIZE_PX,
   NAME_FONT_SIZE_PX,
   NAME_FONT_WEIGHT
 } from './JournalEntryEditDialog.styles'
 
+export interface EditDialogEntryViewModel {
+  initials: string
+  colorSeed: number
+  displayName: string
+  classe: string
+}
+
 interface JournalEntryEditDialogProps {
   open: boolean
-  tiles: ActivityGridTile[]
+  tileNodes: ReactNode[]
   onSubmit: () => void
   onClose: () => void
-  entry?: JournalEntryViewModel
+  entry?: EditDialogEntryViewModel
 }
 
 export function JournalEntryEditDialog({
   open,
-  tiles,
+  tileNodes,
   onSubmit,
   onClose,
   entry
@@ -59,21 +64,18 @@ export function JournalEntryEditDialog({
             borderRadius: 'var(--radius-sm)'
           }}
         >
-          <Avatar
-            initials={buildInitials(entry.student.prenom, entry.student.nom)}
-            colorSeed={entry.student.id}
-          />
+          <Avatar initials={entry.initials} colorSeed={entry.colorSeed} />
           <Box>
             <Box sx={{ fontWeight: NAME_FONT_WEIGHT, fontSize: `${NAME_FONT_SIZE_PX}px` }}>
-              {entry.student.displayName}
+              {entry.displayName}
             </Box>
             <Box sx={{ fontSize: `${CLASSE_FONT_SIZE_PX}px`, color: 'var(--text-dim)' }}>
-              {entry.student.classe}
+              {entry.classe}
             </Box>
           </Box>
         </Box>
       ) : null}
-      <ActivityGrid tiles={tiles} />
+      <ActivityGrid tileNodes={tileNodes} />
     </Modal>
   )
 }

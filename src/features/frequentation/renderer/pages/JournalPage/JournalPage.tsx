@@ -4,6 +4,8 @@ import { JournalEntryForm } from './containers/JournalEntryForm'
 import { JournalEntryList } from './containers/JournalEntryList'
 import { JournalEntryEditDialog } from '@frequentation/components/JournalEntryEditDialog'
 import { buildActivityTiles } from '@frequentation/components/ActivityGrid/helpers/buildActivityTiles'
+import { buildActivityTileNodes } from '@frequentation/components/ActivityGrid/helpers/buildActivityTileNodes'
+import { buildInitials } from '@frequentation/helpers/buildInitials'
 import { useJournalPage } from './hooks/useJournalPage'
 
 export function JournalPage() {
@@ -39,10 +41,17 @@ export function JournalPage() {
       {editingEntry && editingActivity ? (
         <JournalEntryEditDialog
           open
-          tiles={buildActivityTiles(activityOptions, editingActivity, setEditingActivity)}
+          tileNodes={buildActivityTileNodes(
+            buildActivityTiles(activityOptions, editingActivity, setEditingActivity)
+          )}
           onSubmit={submitEdit}
           onClose={closeEditDialog}
-          entry={editingEntry}
+          entry={{
+            initials: buildInitials(editingEntry.student.prenom, editingEntry.student.nom),
+            colorSeed: editingEntry.student.id,
+            displayName: editingEntry.student.displayName,
+            classe: editingEntry.student.classe
+          }}
         />
       ) : null}
     </Box>

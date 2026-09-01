@@ -1,15 +1,12 @@
 import Box from '@mui/material/Box'
-import { getActivityCssClass } from '@frequentation/helpers/activityFormatters'
-import type { ActivityType } from '@types'
 import { DOT_SIZE_PX, FONT_SIZE_PX, FONT_WEIGHT } from './ActivityChip.styles'
 
 interface ActivityChipProps {
-  activity: ActivityType
+  cssClass: string
   label: string
 }
 
-export function ActivityChip({ activity, label }: ActivityChipProps) {
-  const cssClass = getActivityCssClass(activity)
+export function ActivityChip({ cssClass, label }: ActivityChipProps) {
   return (
     <Box
       component="span"

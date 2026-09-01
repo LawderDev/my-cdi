@@ -4,6 +4,7 @@ import { I18nextProvider } from 'react-i18next'
 import i18n from '@shared/i18n/config'
 import { JournalEntryEditDialog } from '../JournalEntryEditDialog'
 import { buildActivityTiles } from '@frequentation/components/ActivityGrid/helpers/buildActivityTiles'
+import { buildActivityTileNodes } from '@frequentation/components/ActivityGrid/helpers/buildActivityTileNodes'
 import { ActivityType } from '@types'
 import type { ActivityGridOption } from '@frequentation/components/ActivityGrid'
 
@@ -18,7 +19,12 @@ describe('JournalEntryEditDialog', () => {
     const tiles = buildActivityTiles(ACTIVITIES, ActivityType.WORK, onActivityChange)
     render(
       <I18nextProvider i18n={i18n}>
-        <JournalEntryEditDialog open tiles={tiles} onSubmit={vi.fn()} onClose={vi.fn()} />
+        <JournalEntryEditDialog
+          open
+          tileNodes={buildActivityTileNodes(tiles)}
+          onSubmit={vi.fn()}
+          onClose={vi.fn()}
+        />
       </I18nextProvider>
     )
     fireEvent.click(screen.getByRole('button', { name: 'Lecture' }))
@@ -30,7 +36,12 @@ describe('JournalEntryEditDialog', () => {
     const tiles = buildActivityTiles(ACTIVITIES, ActivityType.WORK, vi.fn())
     render(
       <I18nextProvider i18n={i18n}>
-        <JournalEntryEditDialog open tiles={tiles} onSubmit={onSubmit} onClose={vi.fn()} />
+        <JournalEntryEditDialog
+          open
+          tileNodes={buildActivityTileNodes(tiles)}
+          onSubmit={onSubmit}
+          onClose={vi.fn()}
+        />
       </I18nextProvider>
     )
     fireEvent.click(screen.getByRole('button', { name: /enregistrer/i }))

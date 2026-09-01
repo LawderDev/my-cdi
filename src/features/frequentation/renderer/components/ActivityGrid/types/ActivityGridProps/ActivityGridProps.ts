@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { ActivityType } from '@types'
 
 export interface ActivityGridOption {
@@ -15,5 +16,5 @@ export interface ActivityGridTile {
 }
 
 export interface ActivityGridProps {
-  tiles: ActivityGridTile[]
+  tileNodes: ReactNode[]
 }

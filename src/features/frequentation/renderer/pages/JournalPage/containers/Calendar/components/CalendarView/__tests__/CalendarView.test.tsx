@@ -1,25 +1,16 @@
 import { describe, it, expect, vi } from 'vitest'
+import type { ReactNode } from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
+import Box from '@mui/material/Box'
 import { CalendarView } from '../CalendarView'
-import type { CalendarDayCell } from '../types/CalendarViewProps'
+import { CalendarDay } from '../components/CalendarDay'
 import type { CalendarCell } from '../../../helpers/buildCalendarMonth'
+import { DOW_FONT_SIZE_PX, DOW_FONT_WEIGHT } from '../CalendarView.styles'
 
 const WEEKDAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
 const DAY_FIRST = 1
 const DAY_TODAY = 15
 const DAY_LATER = 20
-
-function buildDayCells(
-  cells: CalendarCell[],
-  onSelectCell: (iso: string) => void
-): CalendarDayCell[] {
-  return cells.map((cell) => ({
-    ...cell,
-    onClick: () => {
-      onSelectCell(cell.iso)
-    }
-  }))
-}
 
 const SAMPLE_CELLS: CalendarCell[] = [
   {
@@ -48,12 +39,36 @@ const SAMPLE_CELLS: CalendarCell[] = [
   }
 ]
 
+function buildWeekdayNodes(labels: string[]): ReactNode[] {
+  return labels.map((label) => (
+    <Box
+      key={label}
+      sx={{
+        fontSize: `${DOW_FONT_SIZE_PX}px`,
+        fontWeight: DOW_FONT_WEIGHT,
+        color: 'var(--text-dim)',
+        py: 0.75,
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px'
+      }}
+    >
+      {label}
+    </Box>
+  ))
+}
+
+function buildDayNodes(cells: CalendarCell[], onSelectCell: (iso: string) => void): ReactNode[] {
+  return cells.map((cell) => (
+    <CalendarDay key={cell.iso} cell={cell} onClick={() => onSelectCell(cell.iso)} />
+  ))
+}
+
 function renderView(overrides: Partial<Parameters<typeof CalendarView>[0]> = {}) {
   const onSelectDay = vi.fn()
   const props = {
     monthLabel: 'Avril 2026',
-    cells: buildDayCells(SAMPLE_CELLS, onSelectDay),
-    weekdayLabels: WEEKDAYS,
+    weekdayNodes: buildWeekdayNodes(WEEKDAYS),
+    dayNodes: buildDayNodes(SAMPLE_CELLS, onSelectDay),
     onPrev: vi.fn(),
     onToday: vi.fn(),
     onNext: vi.fn(),

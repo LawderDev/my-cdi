@@ -1,13 +1,9 @@
-import type { CalendarCell } from '../../../../helpers/buildCalendarMonth'
-
-export interface CalendarDayCell extends CalendarCell {
-  onClick: () => void
-}
+import type { ReactNode } from 'react'
 
 export interface CalendarViewProps {
   monthLabel: string
-  cells: CalendarDayCell[]
-  weekdayLabels: string[]
+  weekdayNodes: ReactNode[]
+  dayNodes: ReactNode[]
   onPrev: () => void
   onToday: () => void
   onNext: () => void

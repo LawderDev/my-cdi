@@ -2,19 +2,12 @@ import Box from '@mui/material/Box'
 import { Card } from '@ui/components/Card'
 import { IconButton } from '@ui/components/IconButton'
 import type { CalendarViewProps } from './types/CalendarViewProps'
-import { CalendarDay } from './components/CalendarDay'
-import {
-  DOW_FONT_SIZE_PX,
-  DOW_FONT_WEIGHT,
-  TITLE_FONT_SIZE_PX,
-  TITLE_FONT_WEIGHT,
-  WEEK_DAYS_COUNT
-} from './CalendarView.styles'
+import { TITLE_FONT_SIZE_PX, TITLE_FONT_WEIGHT, WEEK_DAYS_COUNT } from './CalendarView.styles'
 
 export function CalendarView({
   monthLabel,
-  cells,
-  weekdayLabels,
+  weekdayNodes,
+  dayNodes,
   onPrev,
   onToday,
   onNext,
@@ -42,24 +35,8 @@ export function CalendarView({
           textAlign: 'center'
         }}
       >
-        {weekdayLabels.map((label) => (
-          <Box
-            key={label}
-            sx={{
-              fontSize: `${DOW_FONT_SIZE_PX}px`,
-              fontWeight: DOW_FONT_WEIGHT,
-              color: 'var(--text-dim)',
-              py: 0.75,
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px'
-            }}
-          >
-            {label}
-          </Box>
-        ))}
-        {cells.map((cell) => (
-          <CalendarDay key={cell.iso} cell={cell} onClick={cell.onClick} />
-        ))}
+        {weekdayNodes}
+        {dayNodes}
       </Box>
     </Card>
   )

@@ -1,8 +1,6 @@
-import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import ButtonBase from '@mui/material/ButtonBase'
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker'
-import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import { Icon } from '@ui/components/Icon'
 import { MONO_FONT_FAMILY } from '@ui/theme'
@@ -12,42 +10,30 @@ import {
   TIME_DISPLAY_FONT_SIZE_PX,
   TIME_DISPLAY_FONT_WEIGHT,
   TIME_PERIOD_FONT_SIZE_PX,
-  TIME_PERIOD_FONT_WEIGHT,
-  TIME_FORMAT,
-  NOON_HOUR
+  TIME_PERIOD_FONT_WEIGHT
 } from './TimeRow.styles'
 
 interface TimeRowProps {
   value: string
-  onChange: (next: string) => void
+  dateValue: Dayjs
+  periodLabel: string
+  onCommit: (next: Dayjs | null) => void
   ariaLabel: string
   open: boolean
   onOpen: () => void
   onClose: () => void
 }
 
-function periodFromTime(time: string): 'morning' | 'afternoon' {
-  const [hourPart] = time.split(':')
-  const hour = Number.parseInt(hourPart ?? '', 10)
-  if (!Number.isFinite(hour) || hour < NOON_HOUR) {
-    return 'morning'
-  }
-  return 'afternoon'
-}
-
-export function TimeRow({ value, onChange, ariaLabel, open, onOpen, onClose }: TimeRowProps) {
-  const { t } = useTranslation('frequentation')
-  const dateValue = dayjs(`2000-01-01T${value}`)
-  const period = periodFromTime(value)
-  const periodLabel = period === 'morning' ? t('period.morning') : t('period.afternoon')
-
-  function commit(next: Dayjs | null): void {
-    if (next === null) {
-      return
-    }
-    onChange(next.format(TIME_FORMAT))
-  }
-
+export function TimeRow({
+  value,
+  dateValue,
+  periodLabel,
+  onCommit,
+  ariaLabel,
+  open,
+  onOpen,
+  onClose
+}: TimeRowProps) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
       <ButtonBase
@@ -99,8 +85,8 @@ export function TimeRow({ value, onChange, ariaLabel, open, onOpen, onClose }: T
       <MobileTimePicker
         open={open}
         value={dateValue}
-        onChange={commit}
-        onAccept={commit}
+        onChange={onCommit}
+        onAccept={onCommit}
         onClose={onClose}
         ampm={false}
         slotProps={{

@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller } from 'react-hook-form'
+import dayjs from 'dayjs'
 import Box from '@mui/material/Box'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
@@ -9,16 +11,27 @@ import { Button } from '@ui/components/Button'
 import { Icon } from '@ui/components/Icon'
 import { ActivityGrid } from '@frequentation/components/ActivityGrid'
 import { buildActivityTiles } from '@frequentation/components/ActivityGrid/helpers/buildActivityTiles'
+import { buildActivityTileNodes } from '@frequentation/components/ActivityGrid/helpers/buildActivityTileNodes'
 import { useJournalEntryForm } from './hooks/useJournalEntryForm'
 import { StudentMultiSelect } from './components/StudentMultiSelect'
-import type { StudentChip } from './components/StudentMultiSelect'
+import { Chip } from '@ui/components/Chip'
+import type { AutocompleteOption } from '@ui/components/Autocomplete'
 import { TimeRow } from './components/TimeRow'
+import { periodFromTime } from './components/TimeRow/helpers/periodFromTime'
 
 import {
   SECTION_LABEL_FONT_SIZE_PX,
   SECTION_LABEL_FONT_WEIGHT,
   FEEDBACK_AUTO_HIDE_MS
 } from './JournalEntryForm.styles'
+
+const TIME_FORMAT = 'HH:mm'
+
+interface StudentChip {
+  id: number
+  label: string
+  onRemove: () => void
+}
 
 interface JournalEntryFormProps {
   selectedDate: string
@@ -59,6 +72,20 @@ export function JournalEntryForm({ selectedDate, onSubmitted }: JournalEntryForm
       }))
   }
 
+  function buildStudentOptions(): AutocompleteOption<number>[] {
+    return studentOptions.map((student) => ({
+      value: student.id,
+      label: student.displayName,
+      badge: student.classe
+    }))
+  }
+
+  function buildStudentChipNodes(selectedIds: number[]): ReactNode[] {
+    return buildStudentChips(selectedIds).map((chip) => (
+      <Chip key={chip.id} label={chip.label} onRemove={chip.onRemove} />
+    ))
+  }
+
   return (
     <Card>
       <Box
@@ -76,16 +103,26 @@ export function JournalEntryForm({ selectedDate, onSubmitted }: JournalEntryForm
       <Controller
         control={form.control}
         name="time"
-        render={({ field }) => (
-          <TimeRow
-            value={field.value}
-            onChange={field.onChange}
-            ariaLabel={t('form.startsAt')}
-            open={timePickerOpen}
-            onOpen={() => setTimePickerOpen(true)}
-            onClose={() => setTimePickerOpen(false)}
-          />
-        )}
+        render={({ field }) => {
+          const dateValue = dayjs(`2000-01-01T${field.value}`)
+          const period = periodFromTime(field.value)
+          return (
+            <TimeRow
+              value={field.value}
+              dateValue={dateValue}
+              periodLabel={period === 'morning' ? t('period.morning') : t('period.afternoon')}
+              onCommit={(next) => {
+                if (next !== null) {
+                  field.onChange(next.format(TIME_FORMAT))
+                }
+              }}
+              ariaLabel={t('form.startsAt')}
+              open={timePickerOpen}
+              onOpen={() => setTimePickerOpen(true)}
+              onClose={() => setTimePickerOpen(false)}
+            />
+          )
+        }}
       />
       <Box
         component="form"
@@ -97,9 +134,9 @@ export function JournalEntryForm({ selectedDate, onSubmitted }: JournalEntryForm
           name="studentIds"
           render={({ field }) => (
             <StudentMultiSelect
-              students={studentOptions}
+              options={buildStudentOptions()}
               selectedIds={field.value}
-              chips={buildStudentChips(field.value)}
+              chipNodes={buildStudentChipNodes(field.value)}
               inputValue={studentInputValue}
               onInputChange={setStudentInputValue}
               onSelect={(option) => handleStudentSelect(field.value, option.value)}
@@ -112,7 +149,9 @@ export function JournalEntryForm({ selectedDate, onSubmitted }: JournalEntryForm
           name="activity"
           render={({ field }) => (
             <ActivityGrid
-              tiles={buildActivityTiles(activityOptions, field.value, field.onChange)}
+              tileNodes={buildActivityTileNodes(
+                buildActivityTiles(activityOptions, field.value, field.onChange)
+              )}
             />
           )}
         />

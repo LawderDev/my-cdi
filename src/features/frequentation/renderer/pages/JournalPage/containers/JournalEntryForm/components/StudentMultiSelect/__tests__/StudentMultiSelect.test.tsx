@@ -2,21 +2,23 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '@shared/i18n/config'
+import { Chip } from '@ui/components/Chip'
+import type { AutocompleteOption } from '@ui/components/Autocomplete'
 import { StudentMultiSelect } from '../StudentMultiSelect'
 
 const FIRST_ID = 1
 const SECOND_ID = 2
 
-const STUDENTS = [
-  { id: FIRST_ID, displayName: 'Jean Dupont', classe: '3A' },
-  { id: SECOND_ID, displayName: 'Marie Martin', classe: '3B' }
+const STUDENT_OPTIONS: AutocompleteOption<number>[] = [
+  { value: FIRST_ID, label: 'Jean Dupont', badge: '3A' },
+  { value: SECOND_ID, label: 'Marie Martin', badge: '3B' }
 ]
 
 function renderWithProvider(props: Partial<Parameters<typeof StudentMultiSelect>[0]> = {}) {
   const merged: Parameters<typeof StudentMultiSelect>[0] = {
-    students: STUDENTS,
+    options: STUDENT_OPTIONS,
     selectedIds: [],
-    chips: [],
+    chipNodes: [],
     inputValue: '',
     onInputChange: vi.fn(),
     onSelect: vi.fn(),
@@ -50,13 +52,13 @@ describe('StudentMultiSelect', () => {
     expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ value: FIRST_ID }))
   })
 
-  it('renders one chip per selected student and clicking the × calls its onRemove', () => {
+  it('renders one chip node per selected student and clicking the × calls its onRemove', () => {
     const removeFirst = vi.fn()
     const removeSecond = vi.fn()
     renderWithProvider({
-      chips: [
-        { id: FIRST_ID, label: 'Jean Dupont', onRemove: removeFirst },
-        { id: SECOND_ID, label: 'Marie Martin', onRemove: removeSecond }
+      chipNodes: [
+        <Chip key={FIRST_ID} label="Jean Dupont" onRemove={removeFirst} />,
+        <Chip key={SECOND_ID} label="Marie Martin" onRemove={removeSecond} />
       ]
     })
     expect(screen.getByText('Jean Dupont')).toBeInTheDocument()
