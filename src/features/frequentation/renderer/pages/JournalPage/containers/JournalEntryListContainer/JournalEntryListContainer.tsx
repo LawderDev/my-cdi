@@ -1,0 +1,197 @@
+import { useState } from 'react'
+import type { ChangeEvent, MouseEvent } from 'react'
+import { useTranslation } from 'react-i18next'
+import dayjs from 'dayjs'
+import Box from '@mui/material/Box'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
+import type { SelectChangeEvent } from '@mui/material/Select'
+import { Card } from '@ui/components/Card'
+import { EmptyState } from '@ui/components/EmptyState'
+import { ConfirmDialog } from '@ui/components/ConfirmDialog'
+import { useJournalEntries } from '@frequentation/api/useFrequentationQueries'
+import { useActivityLabels } from '@frequentation/hooks/useActivityLabels'
+import { toJournalEntryViewModel } from '@frequentation/helpers/journalEntryTransformers'
+import { getActivityCssClass } from '@frequentation/helpers/activityFormatters'
+import { buildInitials } from '@frequentation/helpers/buildInitials'
+import { useDeleteFrequentation } from '@frequentation/api/useFrequentationMutations'
+import { useJournalEntrySelection } from './hooks/useJournalEntrySelection'
+import { useEntryPeriodFilter } from './hooks/useEntryPeriodFilter'
+import { useSearchFilter } from './hooks/useSearchFilter'
+import { filterEntriesByPeriod } from './helpers/filterEntriesByPeriod'
+import { filterJournalEntriesBySearchTerm } from './helpers/filterJournalEntriesBySearchTerm'
+import { getEntryPeriod } from './helpers/getEntryPeriod'
+import { JournalEntryToolbarPresenter } from './components/JournalEntryToolbarPresenter'
+import { JournalEntryRowPresenter } from './components/JournalEntryRowPresenter'
+import { JournalBatchActionsContainer } from './containers/JournalBatchActionsContainer'
+import type { JournalEntryRowPresenterProps } from './components/JournalEntryRowPresenter'
+import type { EntryPeriodFilter } from './helpers/filterEntriesByPeriod'
+import type { JournalEntryViewModel } from '@frequentation/types'
+
+interface JournalEntryListContainerProps {
+  selectedDate: string
+  onEditEntry: (entry: JournalEntryViewModel) => void
+}
+
+const FEEDBACK_AUTO_HIDE_MS = 4000
+const TIME_FORMAT = 'HH:mm'
+
+export function JournalEntryListContainer({
+  selectedDate,
+  onEditEntry
+}: JournalEntryListContainerProps) {
+  const { t } = useTranslation('frequentation')
+  const { selectedIds, toggle, selectAll, clearSelection } = useJournalEntrySelection()
+  const { period, setPeriod } = useEntryPeriodFilter()
+  const { searchTerm, setSearchTerm } = useSearchFilter()
+  const { data } = useJournalEntries({ startDate: selectedDate, endDate: selectedDate })
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null)
+  const [deleteSuccess, setDeleteSuccess] = useState(false)
+  const { mutate: deleteOne } = useDeleteFrequentation({
+    onSuccess: () => {
+      setDeleteSuccess(true)
+    }
+  })
+  const { getLabel } = useActivityLabels()
+
+  const dtos = data ?? []
+  const entries = dtos.map((dto) => toJournalEntryViewModel(dto, getLabel))
+  const filteredByPeriod = filterEntriesByPeriod(entries, period)
+  const filtered = filterJournalEntriesBySearchTerm(filteredByPeriod, searchTerm)
+
+  function handleSelectAll() {
+    selectAll(entries.map((entry) => entry.id))
+  }
+
+  function handleDeleteClick(entry: JournalEntryViewModel) {
+    setPendingDeleteId(entry.id)
+  }
+
+  function handleConfirmDelete() {
+    if (pendingDeleteId !== null) {
+      deleteOne({ id: pendingDeleteId })
+      setPendingDeleteId(null)
+    }
+  }
+
+  function closeConfirmDelete() {
+    setPendingDeleteId(null)
+  }
+
+  function dismissDeleteSuccess() {
+    setDeleteSuccess(false)
+  }
+
+  function isPeriodFilter(value: string): value is EntryPeriodFilter {
+    return value === 'all' || value === 'morning' || value === 'afternoon'
+  }
+
+  function handlePeriodChange(event: SelectChangeEvent<EntryPeriodFilter>) {
+    const next = event.target.value
+    if (isPeriodFilter(next)) {
+      setPeriod(next)
+    }
+  }
+
+  function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
+    setSearchTerm(event.target.value)
+  }
+
+  function handleRowClick(entry: JournalEntryViewModel, event: MouseEvent) {
+    if (event.metaKey || event.ctrlKey) {
+      event.preventDefault()
+      toggle(entry.id)
+      return
+    }
+    onEditEntry(entry)
+  }
+
+  function handleRowEditClick(entry: JournalEntryViewModel, event: MouseEvent) {
+    event.stopPropagation()
+    onEditEntry(entry)
+  }
+
+  function handleRowDeleteClick(entry: JournalEntryViewModel, event: MouseEvent) {
+    event.stopPropagation()
+    handleDeleteClick(entry)
+  }
+
+  function buildRowProps(entry: JournalEntryViewModel): JournalEntryRowPresenterProps {
+    const period = getEntryPeriod(entry.startsAt)
+    return {
+      initials: buildInitials(entry.student.prenom, entry.student.nom),
+      avatarColorSeed: entry.student.id,
+      displayName: entry.student.displayName,
+      classe: entry.student.classe,
+      time: dayjs(entry.startsAt).format(TIME_FORMAT),
+      periodLabel: period === 'morning' ? t('period.morning') : t('period.afternoon'),
+      periodClass: period === 'morning' ? 'period-morning' : 'period-afternoon',
+      activityCssClass: getActivityCssClass(entry.activity),
+      activityLabel: entry.activityLabel,
+      selected: selectedIds.includes(entry.id),
+      onRowClick: (event) => handleRowClick(entry, event),
+      onEditClick: (event) => handleRowEditClick(entry, event),
+      onDeleteClick: (event) => handleRowDeleteClick(entry, event)
+    }
+  }
+
+  return (
+    <Card
+      padding="none"
+      sx={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 0,
+        overflow: 'hidden'
+      }}
+    >
+      <JournalEntryToolbarPresenter
+        entryCount={filtered.length}
+        period={period}
+        onPeriodChange={handlePeriodChange}
+        searchTerm={searchTerm}
+        onSearchChange={handleSearchChange}
+      />
+      <JournalBatchActionsContainer
+        selectedIds={selectedIds}
+        totalCount={entries.length}
+        onSelectAll={handleSelectAll}
+        onClearSelection={clearSelection}
+        onAfterDelete={clearSelection}
+        onAfterUpdate={clearSelection}
+      />
+      <Box sx={{ flex: 1, overflowY: 'auto', p: 1 }}>
+        {filtered.length === 0 ? (
+          <EmptyState
+            iconName="event_available"
+            message={t('noEntries')}
+            description={t('emptyHint')}
+          />
+        ) : (
+          filtered.map((entry) => (
+            <JournalEntryRowPresenter key={entry.id} {...buildRowProps(entry)} />
+          ))
+        )}
+      </Box>
+      <ConfirmDialog
+        open={pendingDeleteId !== null}
+        title={t('batchActions.confirmDeleteTitle')}
+        message={t('row.confirmDelete')}
+        destructive
+        onConfirm={handleConfirmDelete}
+        onClose={closeConfirmDelete}
+      />
+      <Snackbar
+        open={deleteSuccess}
+        autoHideDuration={FEEDBACK_AUTO_HIDE_MS}
+        onClose={dismissDeleteSuccess}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="success" onClose={dismissDeleteSuccess} variant="filled">
+          {t('deleteSuccess')}
+        </Alert>
+      </Snackbar>
+    </Card>
+  )
+}

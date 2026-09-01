@@ -1,1 +1,0 @@
-export { JournalEntryForm } from './JournalEntryForm'

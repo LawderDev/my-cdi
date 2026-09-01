@@ -21,7 +21,9 @@ function Harness(props: { onStatisticsClick: () => void; onSettingsClick: () => 
     />
   ))
 
-  return <SidebarPresenter navButtonNodes={navButtonNodes} onSettingsClick={props.onSettingsClick} />
+  return (
+    <SidebarPresenter navButtonNodes={navButtonNodes} onSettingsClick={props.onSettingsClick} />
+  )
 }
 
 function renderView() {

@@ -1,1 +1,0 @@
-export { JournalEntryList } from './JournalEntryList'

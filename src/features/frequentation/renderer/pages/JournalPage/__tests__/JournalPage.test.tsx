@@ -40,7 +40,7 @@ describe('JournalPage', () => {
 
   it('renders the calendar, in-place form, and the attendance list shell', async () => {
     render(withQuery(<JournalPage />))
-    // Calendar renders weekday headers
+    // CalendarContainer renders weekday headers
     expect(screen.getByText('Lun')).toBeInTheDocument()
     // Attendance list header (Présents) rendered
     await waitFor(() => {

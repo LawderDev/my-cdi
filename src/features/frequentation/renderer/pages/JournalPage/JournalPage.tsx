@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box'
-import { Calendar } from './containers/Calendar'
-import { JournalEntryForm } from './containers/JournalEntryForm'
-import { JournalEntryList } from './containers/JournalEntryList'
-import { JournalEntryEditDialog } from '@frequentation/components/JournalEntryEditDialog'
-import { buildActivityTiles } from '@frequentation/components/ActivityGrid/helpers/buildActivityTiles'
-import { buildActivityTileNodes } from '@frequentation/components/ActivityGrid/helpers/buildActivityTileNodes'
+import { CalendarContainer } from './containers/CalendarContainer'
+import { JournalEntryFormContainer } from './containers/JournalEntryFormContainer'
+import { JournalEntryListContainer } from './containers/JournalEntryListContainer'
+import { JournalEntryEditDialogPresenter } from '@frequentation/components/JournalEntryEditDialogPresenter'
+import { buildActivityTiles } from '@frequentation/components/ActivityGridPresenter/helpers/buildActivityTiles'
+import { buildActivityTileNodes } from '@frequentation/components/ActivityGridPresenter/helpers/buildActivityTileNodes'
 import { buildInitials } from '@frequentation/helpers/buildInitials'
 import { useJournalPage } from './hooks/useJournalPage'
 
@@ -32,14 +32,14 @@ export function JournalPage() {
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pb: 3 }}>
-        <Calendar selectedDate={selectedDate} onSelectDate={setSelectedDate} />
-        <JournalEntryForm selectedDate={selectedDate} />
+        <CalendarContainer selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+        <JournalEntryFormContainer selectedDate={selectedDate} />
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pb: 3 }}>
-        <JournalEntryList selectedDate={selectedDate} onEditEntry={startEditing} />
+        <JournalEntryListContainer selectedDate={selectedDate} onEditEntry={startEditing} />
       </Box>
       {editingEntry && editingActivity ? (
-        <JournalEntryEditDialog
+        <JournalEntryEditDialogPresenter
           open
           tileNodes={buildActivityTileNodes(
             buildActivityTiles(activityOptions, editingActivity, setEditingActivity)
