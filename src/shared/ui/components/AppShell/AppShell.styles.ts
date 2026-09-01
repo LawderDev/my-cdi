@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { styled } from '@mui/material/styles'
+import { styled } from '@ui/helpers/styled'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 const MAIN_PADDING_X = 3.5

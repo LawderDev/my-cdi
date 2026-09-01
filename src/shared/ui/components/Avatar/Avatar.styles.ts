@@ -1,5 +1,5 @@
 import MuiAvatar from '@mui/material/Avatar'
-import { styled } from '@mui/material/styles'
+import { styled } from '@ui/helpers/styled'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import type { AvatarSize } from './types/AvatarProps'
 

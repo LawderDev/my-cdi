@@ -1,5 +1,5 @@
 import { Card } from '@ui/components/Card'
-import { styled } from '@mui/material/styles'
+import { styled } from '@ui/helpers/styled'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const ListCard = styled(Card, {

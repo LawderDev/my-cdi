@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { styled } from '@mui/material/styles'
+import { styled } from '@ui/helpers/styled'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import type { CSSProperties } from 'react'
 import { MONO_FONT_FAMILY } from '@ui/theme'

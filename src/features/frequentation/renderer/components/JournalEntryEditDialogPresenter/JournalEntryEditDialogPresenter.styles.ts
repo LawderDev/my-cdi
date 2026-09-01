@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles'
+import { styled } from '@ui/helpers/styled'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const NAME_FONT_SIZE_PX = 13

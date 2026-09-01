@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert'
-import { styled } from '@mui/material/styles'
+import { styled } from '@ui/helpers/styled'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const VISUALLY_HIDDEN_STYLE: CSSProperties = {

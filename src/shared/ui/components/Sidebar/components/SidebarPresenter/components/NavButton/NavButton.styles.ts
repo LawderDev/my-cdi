@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles'
+import { styled } from '@ui/helpers/styled'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 const NAV_BTN_WIDTH_PX = 52

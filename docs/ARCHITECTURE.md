@@ -291,12 +291,13 @@ Conditional rendering (`cond ? <A/> : null`) and early returns choosing *what* t
 
 ### Styling: `styled()` in `.styles.ts`
 
-- **Zero inline `sx={{...}}`** in feature or shared/ui components. All styling lives in `XPresenter.styles.ts` (or `XContainer.styles.ts`) as `styled()` components from `@mui/material/styles`.
+- **Zero inline `sx={{...}}`** in feature or shared/ui components. All styling lives in `XPresenter.styles.ts` (or `XContainer.styles.ts`) as `styled()` components from `@ui/helpers/styled`.
+- `@ui/helpers/styled` wraps MUI v9's `styled()`: v9 serialises style objects with emotion's raw CSS serializer and does **not** resolve MUI system props (`mt`, `px`, `gap`, `bgcolor`, …) — they would reach the stylesheet unprocessed and be silently dropped. The wrapper routes the style object (nested selectors included) through `theme.unstable_sx`, restoring the exact semantics of the `sx` prop. **Always import `styled` from `@ui/helpers/styled`, never from `@mui/material/styles`.**
 - Every styled call passes the shared prop filter:
 
 ```tsx
 // XPresenter.styles.ts
-import { styled } from '@mui/material/styles'
+import { styled } from '@ui/helpers/styled'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const TileButton = styled('button', { shouldForwardProp: shouldForwardStyledProp })<{
@@ -708,7 +709,7 @@ The design system in `shared/ui/components/` wraps MUI primitives with applicati
 | `Modal`         | Dialog wrapper with custom width mapping       |
 | `ErrorBoundary` | Global render-error catch + fallback UI        |
 
-`.styles.ts` files export `styled()` components (plus `*_PX` size constants) built with `@mui/material/styles` `styled()` and the shared `shouldForwardStyledProp` filter — not MUI `sx`. CSS custom properties in `shared/ui/styles/global.css` (`--bg`, `--card`, `--accent`, `--radius`) coexist with the MUI theme.
+`.styles.ts` files export `styled()` components (plus `*_PX` size constants) built with the `@ui/helpers/styled` wrapper (MUI v9 `styled()` + the sx engine) and the shared `shouldForwardStyledProp` filter — not MUI `sx`. CSS custom properties in `shared/ui/styles/global.css` (`--bg`, `--card`, `--accent`, `--radius`) coexist with the MUI theme.
 
 ---
 

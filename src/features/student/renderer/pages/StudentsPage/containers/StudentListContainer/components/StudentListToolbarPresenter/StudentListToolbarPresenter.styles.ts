@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import { styled } from '@mui/material/styles'
+import { styled } from '@ui/helpers/styled'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const SMALL_ICON_FONT_SIZE_PX = 16

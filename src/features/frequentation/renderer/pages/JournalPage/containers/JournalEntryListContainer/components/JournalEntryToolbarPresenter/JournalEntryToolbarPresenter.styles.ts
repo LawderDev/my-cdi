@@ -1,6 +1,6 @@
 import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select'
-import { styled } from '@mui/material/styles'
+import { styled } from '@ui/helpers/styled'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const TITLE_FONT_SIZE_PX = 15

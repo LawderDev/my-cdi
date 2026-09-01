@@ -1,5 +1,5 @@
 import MuiButton from '@mui/material/Button'
-import { styled } from '@mui/material/styles'
+import { styled } from '@ui/helpers/styled'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 const PRIMARY_HEIGHT_PX = 40
