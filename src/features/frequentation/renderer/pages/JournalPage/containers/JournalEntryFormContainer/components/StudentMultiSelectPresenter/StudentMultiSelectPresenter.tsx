@@ -4,12 +4,7 @@ import Box from '@mui/material/Box'
 import { Autocomplete } from '@ui/components/Autocomplete'
 import type { AutocompleteOption } from '@ui/components/Autocomplete'
 
-import {
-  LABEL_FONT_SIZE_PX,
-  LABEL_FONT_WEIGHT,
-  LOADING_FONT_SIZE_PX,
-  CHIPS_MIN_HEIGHT_PX
-} from './StudentMultiSelectPresenter.styles'
+import { ChipsRow, FieldLabel, LoadingText } from './StudentMultiSelectPresenter.styles'
 
 interface StudentMultiSelectPresenterProps {
   options: AutocompleteOption<number>[]
@@ -34,25 +29,8 @@ export function StudentMultiSelectPresenter({
 
   return (
     <Box>
-      <Box
-        component="span"
-        sx={{
-          display: 'block',
-          fontSize: `${LABEL_FONT_SIZE_PX}px`,
-          fontWeight: LABEL_FONT_WEIGHT,
-          textTransform: 'uppercase',
-          letterSpacing: '0.8px',
-          color: 'var(--text-dim)',
-          mb: 0.75
-        }}
-      >
-        {t('form.selectStudents')}
-      </Box>
-      {loading ? (
-        <Box sx={{ fontSize: `${LOADING_FONT_SIZE_PX}px`, color: 'var(--text-dim)', mb: 1 }}>
-          {t('loading')}
-        </Box>
-      ) : null}
+      <FieldLabel>{t('form.selectStudents')}</FieldLabel>
+      {loading ? <LoadingText>{t('loading')}</LoadingText> : null}
       <Autocomplete<number>
         placeholder={t('form.searchStudent')}
         options={options}
@@ -62,17 +40,7 @@ export function StudentMultiSelectPresenter({
         excludedValues={selectedIds}
         disableCloseOnSelect
       />
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 0.75,
-          minHeight: `${CHIPS_MIN_HEIGHT_PX}px`,
-          mt: 1
-        }}
-      >
-        {chipNodes}
-      </Box>
+      <ChipsRow>{chipNodes}</ChipsRow>
     </Box>
   )
 }

@@ -1,15 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import type { ReactNode } from 'react'
-import Box from '@mui/material/Box'
 import { Modal } from '@ui/components/Modal'
 import { Button } from '@ui/components/Button'
 import { Avatar } from '@ui/components/Avatar'
 import { ActivityGridPresenter } from '@frequentation/components/ActivityGridPresenter'
-import {
-  CLASSE_FONT_SIZE_PX,
-  NAME_FONT_SIZE_PX,
-  NAME_FONT_WEIGHT
-} from './JournalEntryEditDialogPresenter.styles'
+import { EntrySummary, StudentClasse, StudentName } from './JournalEntryEditDialogPresenter.styles'
 
 export interface EditDialogEntryViewModel {
   initials: string
@@ -53,27 +48,13 @@ export function JournalEntryEditDialogPresenter({
       }
     >
       {entry ? (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1.25,
-            mb: 2,
-            p: 1.25,
-            bgcolor: 'var(--surface)',
-            borderRadius: 'var(--radius-sm)'
-          }}
-        >
+        <EntrySummary>
           <Avatar initials={entry.initials} colorSeed={entry.colorSeed} />
-          <Box>
-            <Box sx={{ fontWeight: NAME_FONT_WEIGHT, fontSize: `${NAME_FONT_SIZE_PX}px` }}>
-              {entry.displayName}
-            </Box>
-            <Box sx={{ fontSize: `${CLASSE_FONT_SIZE_PX}px`, color: 'var(--text-dim)' }}>
-              {entry.classe}
-            </Box>
-          </Box>
-        </Box>
+          <div>
+            <StudentName>{entry.displayName}</StudentName>
+            <StudentClasse>{entry.classe}</StudentClasse>
+          </div>
+        </EntrySummary>
       ) : null}
       <ActivityGridPresenter tileNodes={tileNodes} />
     </Modal>

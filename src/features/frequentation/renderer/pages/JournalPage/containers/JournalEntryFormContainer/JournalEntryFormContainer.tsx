@@ -3,7 +3,6 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller } from 'react-hook-form'
 import dayjs from 'dayjs'
-import Box from '@mui/material/Box'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import { Card } from '@ui/components/Card'
@@ -19,11 +18,7 @@ import type { AutocompleteOption } from '@ui/components/Autocomplete'
 import { TimeRowPresenter } from './components/TimeRowPresenter'
 import { periodFromTime } from './components/TimeRowPresenter/helpers/periodFromTime'
 
-import {
-  SECTION_LABEL_FONT_SIZE_PX,
-  SECTION_LABEL_FONT_WEIGHT,
-  FEEDBACK_AUTO_HIDE_MS
-} from './JournalEntryFormContainer.styles'
+import { EntryForm, SectionLabel, FEEDBACK_AUTO_HIDE_MS } from './JournalEntryFormContainer.styles'
 
 const TIME_FORMAT = 'HH:mm'
 
@@ -91,18 +86,7 @@ export function JournalEntryFormContainer({
 
   return (
     <Card>
-      <Box
-        sx={{
-          fontSize: `${SECTION_LABEL_FONT_SIZE_PX}px`,
-          fontWeight: SECTION_LABEL_FONT_WEIGHT,
-          textTransform: 'uppercase',
-          letterSpacing: '0.8px',
-          color: 'var(--text-dim)',
-          mb: 1.25
-        }}
-      >
-        {t('form.newEntry')}
-      </Box>
+      <SectionLabel>{t('form.newEntry')}</SectionLabel>
       <Controller
         control={form.control}
         name="time"
@@ -127,11 +111,7 @@ export function JournalEntryFormContainer({
           )
         }}
       />
-      <Box
-        component="form"
-        onSubmit={form.handleSubmit(handleSubmit)}
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-      >
+      <EntryForm onSubmit={form.handleSubmit(handleSubmit)}>
         <Controller
           control={form.control}
           name="studentIds"
@@ -167,7 +147,7 @@ export function JournalEntryFormContainer({
         >
           {t('form.submit')}
         </Button>
-      </Box>
+      </EntryForm>
       <Snackbar
         open={showSuccess}
         autoHideDuration={FEEDBACK_AUTO_HIDE_MS}

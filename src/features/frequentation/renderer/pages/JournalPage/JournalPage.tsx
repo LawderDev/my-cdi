@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { CalendarContainer } from './containers/CalendarContainer'
 import { JournalEntryFormContainer } from './containers/JournalEntryFormContainer'
 import { JournalEntryListContainer } from './containers/JournalEntryListContainer'
@@ -7,6 +6,7 @@ import { buildActivityTiles } from '@frequentation/components/ActivityGridPresen
 import { buildActivityTileNodes } from '@frequentation/components/ActivityGridPresenter/helpers/buildActivityTileNodes'
 import { buildInitials } from '@frequentation/helpers/buildInitials'
 import { useJournalPage } from './hooks/useJournalPage'
+import { PageGrid, SideColumn } from './JournalPage.styles'
 
 export function JournalPage() {
   const {
@@ -22,22 +22,14 @@ export function JournalPage() {
   } = useJournalPage()
 
   return (
-    <Box
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: '320px 1fr',
-        gridTemplateRows: '1fr',
-        gap: 3,
-        height: '100%'
-      }}
-    >
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pb: 3 }}>
+    <PageGrid>
+      <SideColumn>
         <CalendarContainer selectedDate={selectedDate} onSelectDate={setSelectedDate} />
         <JournalEntryFormContainer selectedDate={selectedDate} />
-      </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pb: 3 }}>
+      </SideColumn>
+      <SideColumn>
         <JournalEntryListContainer selectedDate={selectedDate} onEditEntry={startEditing} />
-      </Box>
+      </SideColumn>
       {editingEntry && editingActivity ? (
         <JournalEntryEditDialogPresenter
           open
@@ -54,6 +46,6 @@ export function JournalPage() {
           }}
         />
       ) : null}
-    </Box>
+    </PageGrid>
   )
 }

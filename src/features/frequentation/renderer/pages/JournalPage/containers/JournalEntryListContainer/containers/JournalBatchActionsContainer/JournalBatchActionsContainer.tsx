@@ -1,13 +1,12 @@
-import Box from '@mui/material/Box'
-import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { Button } from '@ui/components/Button'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useJournalBatchActions } from './hooks/useJournalBatchActions'
 import {
-  COUNT_FONT_SIZE_PX,
-  COUNT_FONT_WEIGHT,
-  MENU_MIN_WIDTH_PX
+  ActivityMenu,
+  BatchActionsRoot,
+  CountText,
+  MenuAnchor
 } from './JournalBatchActionsContainer.styles'
 import type { ActivityType } from '@types'
 
@@ -51,52 +50,27 @@ export function JournalBatchActionsContainer(props: JournalBatchActionsContainer
 
   return (
     <>
-      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 1, px: 1 }}>
+      <BatchActionsRoot>
         <Button variant="secondary" onClick={toggleSelection} disabled={isTotalEmpty}>
           {selectToggleLabel}
         </Button>
-        <Box ref={setAnchorEl} sx={{ display: 'inline-block' }}>
+        <MenuAnchor ref={setAnchorEl}>
           <Button variant="secondary" disabled={!hasSelection} onClick={toggleActivityMenu}>
             {changeActivityLabel}
           </Button>
-        </Box>
-        <Menu
-          anchorEl={anchorEl}
-          open={activityMenuOpen}
-          onClose={closeActivityMenu}
-          slotProps={{
-            paper: {
-              sx: {
-                minWidth: `${MENU_MIN_WIDTH_PX}px`,
-                bgcolor: 'var(--card)',
-                border: '1px solid var(--border)',
-                boxShadow: 'var(--shadow-lg)'
-              }
-            }
-          }}
-        >
+        </MenuAnchor>
+        <ActivityMenu anchorEl={anchorEl} open={activityMenuOpen} onClose={closeActivityMenu}>
           {activityOptions.map((option) => (
             <MenuItem key={option.value} onClick={() => handleActivityClick(option.value)}>
               {option.label}
             </MenuItem>
           ))}
-        </Menu>
+        </ActivityMenu>
         <Button variant="danger" disabled={!hasSelection} onClick={openConfirmDelete}>
           {deleteSelectionLabel}
         </Button>
-        {hasSelection ? (
-          <Box
-            component="span"
-            sx={{
-              fontSize: `${COUNT_FONT_SIZE_PX}px`,
-              color: 'var(--text-dim)',
-              fontWeight: COUNT_FONT_WEIGHT
-            }}
-          >
-            {selectedCountLabel}
-          </Box>
-        ) : null}
-      </Box>
+        {hasSelection ? <CountText>{selectedCountLabel}</CountText> : null}
+      </BatchActionsRoot>
 
       <ConfirmDialog
         open={confirmOpen}

@@ -2,11 +2,8 @@ import { useState } from 'react'
 import type { ChangeEvent, MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
-import Box from '@mui/material/Box'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
-import type { SelectChangeEvent } from '@mui/material/Select'
-import { Card } from '@ui/components/Card'
 import { EmptyState } from '@ui/components/EmptyState'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useJournalEntries } from '@frequentation/api/useFrequentationQueries'
@@ -24,6 +21,7 @@ import { getEntryPeriod } from './helpers/getEntryPeriod'
 import { JournalEntryToolbarPresenter } from './components/JournalEntryToolbarPresenter'
 import { JournalEntryRowPresenter } from './components/JournalEntryRowPresenter'
 import { JournalBatchActionsContainer } from './containers/JournalBatchActionsContainer'
+import { EntriesScroll, ListCard } from './JournalEntryListContainer.styles'
 import type { JournalEntryRowPresenterProps } from './components/JournalEntryRowPresenter'
 import type { EntryPeriodFilter } from './helpers/filterEntriesByPeriod'
 import type { JournalEntryViewModel } from '@frequentation/types'
@@ -86,10 +84,9 @@ export function JournalEntryListContainer({
     return value === 'all' || value === 'morning' || value === 'afternoon'
   }
 
-  function handlePeriodChange(event: SelectChangeEvent<EntryPeriodFilter>) {
-    const next = event.target.value
-    if (isPeriodFilter(next)) {
-      setPeriod(next)
+  function handlePeriodChange(value: string) {
+    if (isPeriodFilter(value)) {
+      setPeriod(value)
     }
   }
 
@@ -136,16 +133,7 @@ export function JournalEntryListContainer({
   }
 
   return (
-    <Card
-      padding="none"
-      sx={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: 0,
-        overflow: 'hidden'
-      }}
-    >
+    <ListCard padding="none">
       <JournalEntryToolbarPresenter
         entryCount={filtered.length}
         period={period}
@@ -161,7 +149,7 @@ export function JournalEntryListContainer({
         onAfterDelete={clearSelection}
         onAfterUpdate={clearSelection}
       />
-      <Box sx={{ flex: 1, overflowY: 'auto', p: 1 }}>
+      <EntriesScroll>
         {filtered.length === 0 ? (
           <EmptyState
             iconName="event_available"
@@ -173,7 +161,7 @@ export function JournalEntryListContainer({
             <JournalEntryRowPresenter key={entry.id} {...buildRowProps(entry)} />
           ))
         )}
-      </Box>
+      </EntriesScroll>
       <ConfirmDialog
         open={pendingDeleteId !== null}
         title={t('batchActions.confirmDeleteTitle')}
@@ -192,6 +180,6 @@ export function JournalEntryListContainer({
           {t('deleteSuccess')}
         </Alert>
       </Snackbar>
-    </Card>
+    </ListCard>
   )
 }
