@@ -1,7 +1,8 @@
+import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
+import { MONO_FONT_FAMILY } from '@ui/theme'
 import { ChartCardPresenter } from '@statistics/presenters/ChartCardPresenter'
 import {
-  ACCENT_COLOR,
   DASH_PATTERN,
   DOT_RADIUS,
   GRADIENT_OPACITY_TOP,
@@ -17,6 +18,7 @@ import type { MonthlyTrendChartContainerProps } from './types/MonthlyTrendChartC
 
 export function MonthlyTrendChartContainer({ dailyCounts }: MonthlyTrendChartContainerProps) {
   const { t } = useTranslation('statistics')
+  const theme = useTheme()
   const { trend, paddingLeft, innerRight } = useMonthlyTrendChart(dailyCounts)
 
   return (
@@ -25,8 +27,12 @@ export function MonthlyTrendChartContainer({ dailyCounts }: MonthlyTrendChartCon
         <ChartSvg viewBox={trend.viewBox} preserveAspectRatio="none" aria-label={t('charts.trend')}>
           <defs>
             <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={ACCENT_COLOR} stopOpacity={GRADIENT_OPACITY_TOP} />
-              <stop offset="100%" stopColor={ACCENT_COLOR} stopOpacity={0} />
+              <stop
+                offset="0%"
+                stopColor={theme.palette.primary.main}
+                stopOpacity={GRADIENT_OPACITY_TOP}
+              />
+              <stop offset="100%" stopColor={theme.palette.primary.main} stopOpacity={0} />
             </linearGradient>
           </defs>
           {trend.yLabels.map((label) => (
@@ -36,7 +42,7 @@ export function MonthlyTrendChartContainer({ dailyCounts }: MonthlyTrendChartCon
                 y1={label.y}
                 x2={innerRight}
                 y2={label.y}
-                stroke="var(--border)"
+                stroke={theme.palette.divider}
                 strokeWidth={1}
                 strokeDasharray={DASH_PATTERN}
               />
@@ -44,8 +50,8 @@ export function MonthlyTrendChartContainer({ dailyCounts }: MonthlyTrendChartCon
                 x={paddingLeft - Y_LABEL_OFFSET_X}
                 y={label.y + Y_LABEL_TEXT_OFFSET}
                 textAnchor="end"
-                fill="var(--text-dim)"
-                fontFamily="var(--mono)"
+                fill={theme.palette.text.disabled}
+                fontFamily={MONO_FONT_FAMILY}
                 fontSize={Y_LABEL_FONT_SIZE}
               >
                 {label.label}
@@ -56,7 +62,7 @@ export function MonthlyTrendChartContainer({ dailyCounts }: MonthlyTrendChartCon
           {trend.path ? (
             <path
               d={trend.path}
-              stroke={ACCENT_COLOR}
+              stroke={theme.palette.primary.main}
               strokeWidth={STROKE_WIDTH}
               fill="none"
               strokeLinecap="round"
@@ -69,8 +75,8 @@ export function MonthlyTrendChartContainer({ dailyCounts }: MonthlyTrendChartCon
               cx={dot.cx}
               cy={dot.cy}
               r={DOT_RADIUS}
-              fill={ACCENT_COLOR}
-              stroke="var(--card)"
+              fill={theme.palette.primary.main}
+              stroke={theme.palette.background.paper}
               strokeWidth={STROKE_WIDTH}
             />
           ))}

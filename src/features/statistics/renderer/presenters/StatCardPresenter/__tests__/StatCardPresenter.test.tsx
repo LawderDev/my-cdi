@@ -1,14 +1,19 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { alpha } from '@mui/material/styles'
+import { theme, TINT_ALPHAS } from '@ui/theme'
 import { StatCardPresenter } from '../StatCardPresenter'
+
+const SAMPLE_ICON_BG = alpha(theme.palette.primary.main, TINT_ALPHAS.surface)
+const SAMPLE_ICON_COLOR = theme.palette.primary.main
 
 describe('StatCardPresenter', () => {
   it('renders the label and value', () => {
     render(
       <StatCardPresenter
         iconName="people"
-        iconBg="var(--accent-bg)"
-        iconColor="var(--accent)"
+        iconBg={SAMPLE_ICON_BG}
+        iconColor={SAMPLE_ICON_COLOR}
         label="Visites totales"
         value="1,247"
       />
@@ -21,8 +26,8 @@ describe('StatCardPresenter', () => {
     render(
       <StatCardPresenter
         iconName="people"
-        iconBg="var(--accent-bg)"
-        iconColor="var(--accent)"
+        iconBg={SAMPLE_ICON_BG}
+        iconColor={SAMPLE_ICON_COLOR}
         label="Visites totales"
         value="1,247"
         delta={{ sign: 'up', text: '↑ 12%' }}
@@ -36,8 +41,8 @@ describe('StatCardPresenter', () => {
     render(
       <StatCardPresenter
         iconName="nights_stay"
-        iconBg="var(--accent-bg)"
-        iconColor="var(--accent)"
+        iconBg={SAMPLE_ICON_BG}
+        iconColor={SAMPLE_ICON_COLOR}
         label="Taux après-midi"
         value="43%"
         delta={{ sign: 'down', text: '↓ 4 points' }}
@@ -51,8 +56,8 @@ describe('StatCardPresenter', () => {
     const { container } = render(
       <StatCardPresenter
         iconName="people"
-        iconBg="var(--accent-bg)"
-        iconColor="var(--accent)"
+        iconBg={SAMPLE_ICON_BG}
+        iconColor={SAMPLE_ICON_COLOR}
         label="Visites"
         value="1"
       />

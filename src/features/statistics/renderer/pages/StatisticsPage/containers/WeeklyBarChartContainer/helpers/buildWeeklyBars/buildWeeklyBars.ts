@@ -1,3 +1,5 @@
+import { alpha } from '@mui/material/styles'
+import { theme } from '@ui/theme'
 import type { DailyCountDto } from '@statistics-shared'
 
 export interface WeeklyBar {
@@ -10,8 +12,9 @@ export interface WeeklyBar {
 const BAR_LABELS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
 const SUNDAY_INDEX = 6
 const MAX_BAR_HEIGHT = 160
-const WEEKEND_COLOR = 'rgba(124,77,255,.4)'
-const WEEKDAY_COLOR = 'var(--accent)'
+const WEEKEND_FILL_ALPHA = 0.4
+const WEEKEND_COLOR = alpha(theme.palette.primary.main, WEEKEND_FILL_ALPHA)
+const WEEKDAY_COLOR = theme.palette.primary.main
 const SUNDAY_DAY_OF_WEEK = 0
 
 function getMondayIndex(date: Date): number {

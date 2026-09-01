@@ -1,7 +1,6 @@
-import { Icon } from '@ui/components/Icon'
 import {
-  ICON_FONT_SIZE_PX,
   PeriodFilterButton,
+  PeriodFilterIcon,
   PeriodFilterRow
 } from './PeriodFilterContainer.styles'
 import { usePeriodFilter } from './hooks/usePeriodFilter'
@@ -20,9 +19,7 @@ export function PeriodFilterContainer({ value, onChange }: PeriodFilterContainer
           data-active={button.isActive}
           onClick={button.onSelect}
         >
-          {button.iconName ? (
-            <Icon name={button.iconName} style={{ fontSize: `${ICON_FONT_SIZE_PX}px` }} />
-          ) : null}
+          {button.iconName ? <PeriodFilterIcon name={button.iconName} /> : null}
           {button.label}
         </PeriodFilterButton>
       ))}

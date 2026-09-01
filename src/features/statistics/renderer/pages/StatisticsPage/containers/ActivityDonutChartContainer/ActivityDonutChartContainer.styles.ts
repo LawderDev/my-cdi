@@ -1,21 +1,19 @@
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
-import { MONO_FONT_FAMILY } from '@ui/theme'
+import { FONT_WEIGHTS, MONO_FONT_FAMILY, TYPE_SCALE } from '@ui/theme'
 
 export const CX = 70
 export const CY = 70
 export const SIZE = 140
 export const VALUE_OFFSET = -4
 export const LABEL_OFFSET = 12
-export const VALUE_FONT_SIZE = 18
-export const VALUE_FONT_WEIGHT = 700
-export const LABEL_FONT_SIZE = 9
-export const LABEL_FONT_WEIGHT = 500
+export const VALUE_FONT_SIZE = TYPE_SCALE.h6
+export const VALUE_FONT_WEIGHT = FONT_WEIGHTS.bold
+export const LABEL_FONT_SIZE = TYPE_SCALE.caption
+export const LABEL_FONT_WEIGHT = FONT_WEIGHTS.medium
 export const FILL_OPACITY = 0.9
-export const LEGEND_ITEM_FONT_SIZE_PX = 12
-export const LEGEND_VALUE_FONT_SIZE_PX = 12
-export const LEGEND_VALUE_FONT_WEIGHT = 600
 export const LEGEND_DOT_SIZE_PX = 8
 export const LEGEND_DOT_BORDER_RADIUS_PX = 2
 
@@ -38,8 +36,7 @@ export const LegendItem = styled(Box, {
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(1),
-  fontSize: `${LEGEND_ITEM_FONT_SIZE_PX}px`
+  gap: theme.spacing(1)
 }))
 
 export const LegendDot = styled(Box, {
@@ -52,18 +49,17 @@ export const LegendDot = styled(Box, {
   background: $color
 }))
 
-export const LegendLabel = styled(Box, {
+export const LegendLabel = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  color: 'var(--text)',
+})(({ theme }) => ({
+  color: theme.palette.text.secondary,
   flex: 1
-})
+}))
 
-export const LegendValue = styled(Box, {
+export const LegendValue = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontFamily: MONO_FONT_FAMILY,
-  fontWeight: LEGEND_VALUE_FONT_WEIGHT,
-  color: 'var(--title)',
-  fontSize: `${LEGEND_VALUE_FONT_SIZE_PX}px`
-})
+  fontWeight: FONT_WEIGHTS.semibold,
+  color: theme.palette.text.primary
+}))

@@ -1,62 +1,51 @@
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
-import { MONO_FONT_FAMILY } from '@ui/theme'
+import { FONT_WEIGHTS, MONO_FONT_FAMILY, RADII, TYPE_SCALE } from '@ui/theme'
 
 export const ICON_SIZE_PX = 40
-export const ICON_FONT_SIZE_PX = 20
-export const LABEL_FONT_SIZE_PX = 11
-export const LABEL_FONT_WEIGHT = 600
-export const VALUE_FONT_SIZE_PX = 28
-export const VALUE_FONT_WEIGHT = 700
-export const DELTA_FONT_SIZE_PX = 12
-export const DELTA_FONT_WEIGHT = 500
+export const ICON_FONT_SIZE_PX = TYPE_SCALE.h5
 
 export const StatCardIcon = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
 })<{ $bg: string; $color: string }>(({ theme, $bg, $color }) => ({
   width: `${ICON_SIZE_PX}px`,
   height: `${ICON_SIZE_PX}px`,
-  borderRadius: 'var(--radius-sm)',
+  borderRadius: RADII.small,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   marginBottom: theme.spacing(1.5),
-  fontSize: `${ICON_FONT_SIZE_PX}px`,
+  fontSize: ICON_FONT_SIZE_PX,
   flexShrink: 0,
   backgroundColor: $bg,
   color: $color
 }))
 
-export const StatCardLabel = styled(Box, {
+export const StatCardLabel = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  fontSize: `${LABEL_FONT_SIZE_PX}px`,
-  fontWeight: LABEL_FONT_WEIGHT,
-  color: 'var(--text-dim)',
-  textTransform: 'uppercase',
+  color: theme.palette.text.disabled,
   letterSpacing: '0.8px',
   marginBottom: theme.spacing(1)
 }))
 
-export const StatCardValue = styled(Box, {
+export const StatCardValue = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })({
   fontFamily: MONO_FONT_FAMILY,
-  fontSize: `${VALUE_FONT_SIZE_PX}px`,
-  fontWeight: VALUE_FONT_WEIGHT,
+  fontWeight: FONT_WEIGHTS.bold,
   letterSpacing: '-1px',
   lineHeight: 1
 })
 
-export const StatCardDelta = styled(Box, {
+export const StatCardDelta = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  fontSize: `${DELTA_FONT_SIZE_PX}px`,
   marginTop: theme.spacing(0.75),
-  fontWeight: DELTA_FONT_WEIGHT,
-  color: 'var(--danger)',
+  color: theme.palette.error.main,
   '&[data-sign="up"]': {
-    color: 'var(--success)'
+    color: theme.palette.success.main
   }
 }))

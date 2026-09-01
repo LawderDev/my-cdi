@@ -1,16 +1,19 @@
 import Box from '@mui/material/Box'
-import { styled } from '@mui/material/styles'
+import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
+import { theme, TINT_ALPHAS } from '@ui/theme'
 
-export const RESPONSIVE_BREAKPOINT_PX = 1100
-export const ACCENT_BG = 'var(--accent-bg)'
-export const ACCENT_COLOR = 'var(--accent)'
-export const SUCCESS_BG = 'var(--success-bg)'
-export const SUCCESS_COLOR = 'var(--success)'
-export const WARNING_BG = 'var(--warning-bg)'
-export const WARNING_COLOR = 'var(--warning)'
-export const INFO_BG = 'rgba(96,165,250,0.12)'
-export const INFO_COLOR = '#60a5fa'
+/** Extra tint step for the info KPI, slightly stronger than the shared surface tint. */
+const INFO_TINT_ALPHA = 0.12
+
+export const ACCENT_BG = alpha(theme.palette.primary.main, TINT_ALPHAS.surface)
+export const ACCENT_COLOR = theme.palette.primary.main
+export const SUCCESS_BG = alpha(theme.palette.success.main, TINT_ALPHAS.surface)
+export const SUCCESS_COLOR = theme.palette.success.main
+export const WARNING_BG = alpha(theme.palette.warning.main, TINT_ALPHAS.surface)
+export const WARNING_COLOR = theme.palette.warning.main
+export const INFO_BG = alpha(theme.palette.info.main, INFO_TINT_ALPHA)
+export const INFO_COLOR = theme.palette.info.main
 
 export const StatsKpiGrid = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
@@ -18,7 +21,7 @@ export const StatsKpiGrid = styled(Box, {
   display: 'grid',
   gridTemplateColumns: 'repeat(4, 1fr)',
   gap: theme.spacing(2),
-  [`@media (max-width: ${RESPONSIVE_BREAKPOINT_PX}px)`]: {
+  [theme.breakpoints.down('lg')]: {
     gridTemplateColumns: 'repeat(2, 1fr)'
   }
 }))

@@ -1,5 +1,7 @@
+import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import type { ReactNode } from 'react'
+import { MONO_FONT_FAMILY } from '@ui/theme'
 import { ChartCardPresenter } from '@statistics/presenters/ChartCardPresenter'
 import { ChartLegendPresenter } from '@statistics/presenters/ChartLegendPresenter'
 import {
@@ -25,12 +27,17 @@ import type { ActivityDonutChartContainerProps } from './types/ActivityDonutChar
 
 export function ActivityDonutChartContainer({ activityCounts }: ActivityDonutChartContainerProps) {
   const { t } = useTranslation('statistics')
+  const theme = useTheme()
   const { slices, total, legendItems } = useActivityDonutChart(activityCounts)
   const legendNodes: ReactNode[] = legendItems.map((item) => (
     <LegendItem key={item.label}>
       <LegendDot as="span" $color={item.color} />
-      <LegendLabel as="span">{item.label}</LegendLabel>
-      <LegendValue as="span">{item.value}</LegendValue>
+      <LegendLabel as="span" variant="body2">
+        {item.label}
+      </LegendLabel>
+      <LegendValue as="span" variant="body2">
+        {item.value}
+      </LegendValue>
     </LegendItem>
   ))
   return (
@@ -49,8 +56,8 @@ export function ActivityDonutChartContainer({ activityCounts }: ActivityDonutCha
             x={CX}
             y={CY + VALUE_OFFSET}
             textAnchor="middle"
-            fill="var(--title)"
-            fontFamily="var(--mono)"
+            fill={theme.palette.text.primary}
+            fontFamily={MONO_FONT_FAMILY}
             fontSize={VALUE_FONT_SIZE}
             fontWeight={VALUE_FONT_WEIGHT}
           >
@@ -60,8 +67,8 @@ export function ActivityDonutChartContainer({ activityCounts }: ActivityDonutCha
             x={CX}
             y={CY + LABEL_OFFSET}
             textAnchor="middle"
-            fill="var(--text-dim)"
-            fontFamily="var(--font)"
+            fill={theme.palette.text.disabled}
+            fontFamily={theme.typography.fontFamily}
             fontSize={LABEL_FONT_SIZE}
             fontWeight={LABEL_FONT_WEIGHT}
           >

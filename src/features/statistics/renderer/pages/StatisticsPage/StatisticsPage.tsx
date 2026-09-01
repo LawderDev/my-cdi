@@ -11,7 +11,7 @@ export function StatisticsPage() {
   const { period, setPeriod, stats, isLoading } = useStatisticsPage()
   const { t } = useTranslation('statistics')
   if (isLoading || !stats) {
-    return <StatisticsLoading>{t('loading')}</StatisticsLoading>
+    return <StatisticsLoading variant="subtitle2">{t('loading')}</StatisticsLoading>
   }
   return (
     <StatisticsLayout>

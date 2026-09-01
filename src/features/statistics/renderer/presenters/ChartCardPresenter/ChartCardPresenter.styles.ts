@@ -1,18 +1,21 @@
-import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
+import { Icon } from '@ui/components/Icon'
 
-export const TITLE_FONT_SIZE_PX = 13
-export const TITLE_FONT_WEIGHT = 600
-export const TITLE_ICON_FONT_SIZE_PX = 18
-
-export const ChartCardTitle = styled(Box, {
+export const ChartCardTitle = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  fontSize: `${TITLE_FONT_SIZE_PX}px`,
-  fontWeight: TITLE_FONT_WEIGHT,
+  color: theme.palette.text.primary,
   marginBottom: theme.spacing(2),
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1)
+}))
+
+export const ChartCardTitleIcon = styled(Icon, {
+  shouldForwardProp: shouldForwardStyledProp
+})(({ theme }) => ({
+  fontSize: theme.typography.h6.fontSize,
+  color: theme.palette.primary.main
 }))

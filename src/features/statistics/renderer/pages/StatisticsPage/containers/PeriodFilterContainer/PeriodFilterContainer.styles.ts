@@ -1,11 +1,9 @@
-import { styled } from '@mui/material/styles'
+import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
+import { Icon } from '@ui/components/Icon'
+import { FONT_WEIGHTS, RADII, TINT_ALPHAS } from '@ui/theme'
 
 export const BTN_HEIGHT_PX = 32
-export const BTN_FONT_SIZE_PX = 12
-export const BTN_FONT_WEIGHT = 500
-export const ACTIVE_FONT_WEIGHT = 600
-export const ICON_FONT_SIZE_PX = 14
 
 export const PeriodFilterRow = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
@@ -20,34 +18,40 @@ export const PeriodFilterButton = styled('button', {
 })(({ theme }) => ({
   height: `${BTN_HEIGHT_PX}px`,
   paddingInline: theme.spacing(1.75),
-  borderRadius: 'var(--radius-xs)',
-  fontSize: `${BTN_FONT_SIZE_PX}px`,
-  fontWeight: BTN_FONT_WEIGHT,
+  borderRadius: RADII.small,
+  fontSize: theme.typography.body2.fontSize,
+  fontWeight: FONT_WEIGHTS.medium,
   border: '1px solid',
-  borderColor: 'var(--border)',
-  transition: 'all 0.2s',
+  borderColor: theme.palette.divider,
+  transition: theme.transitions.create(['background-color', 'border-color', 'color']),
   display: 'inline-flex',
   alignItems: 'center',
   gap: theme.spacing(0.5),
   cursor: 'pointer',
   backgroundColor: 'transparent',
-  color: 'var(--text-dim)',
+  color: theme.palette.text.disabled,
   '&[data-active="true"]': {
-    fontWeight: ACTIVE_FONT_WEIGHT,
-    borderColor: 'var(--accent-border)',
-    backgroundColor: 'var(--accent-bg)',
-    color: 'var(--accent)'
+    fontWeight: FONT_WEIGHTS.semibold,
+    borderColor: alpha(theme.palette.primary.main, TINT_ALPHAS.border),
+    backgroundColor: alpha(theme.palette.primary.main, TINT_ALPHAS.surface),
+    color: theme.palette.primary.main
   },
   '&:hover': {
-    borderColor: 'var(--border-light)',
-    color: 'var(--title)'
+    borderColor: theme.palette.dividerStrong,
+    color: theme.palette.text.primary
   },
   '&[data-active="true"]:hover': {
-    borderColor: 'var(--accent-border)',
-    color: 'var(--accent)'
+    borderColor: alpha(theme.palette.primary.main, TINT_ALPHAS.border),
+    color: theme.palette.primary.main
   },
   '&:disabled': {
     opacity: 0.5,
     cursor: 'not-allowed'
   }
+}))
+
+export const PeriodFilterIcon = styled(Icon, {
+  shouldForwardProp: shouldForwardStyledProp
+})(({ theme }) => ({
+  fontSize: theme.typography.subtitle2.fontSize
 }))

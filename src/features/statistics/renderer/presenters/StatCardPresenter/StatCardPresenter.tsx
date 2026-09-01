@@ -21,9 +21,13 @@ export function StatCardPresenter({
       <StatCardIcon $bg={iconBg} $color={iconColor}>
         <Icon name={iconName} />
       </StatCardIcon>
-      <StatCardLabel>{label}</StatCardLabel>
-      <StatCardValue>{value}</StatCardValue>
-      {delta ? <StatCardDelta data-sign={delta.sign}>{delta.text}</StatCardDelta> : null}
+      <StatCardLabel variant="overline">{label}</StatCardLabel>
+      <StatCardValue variant="h4">{value}</StatCardValue>
+      {delta ? (
+        <StatCardDelta variant="body2" data-sign={delta.sign}>
+          {delta.text}
+        </StatCardDelta>
+      ) : null}
     </Card>
   )
 }

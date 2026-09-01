@@ -18,9 +18,9 @@ export function WeeklyBarChartContainer({ dailyCounts }: WeeklyBarChartContainer
       <BarChartRow>
         {bars.map((bar) => (
           <BarColumn key={bar.label}>
-            <BarValue>{bar.value}</BarValue>
+            <BarValue variant="caption">{bar.value}</BarValue>
             <BarFill $heightPx={bar.heightPx} $color={bar.color} />
-            <BarLabel>{bar.label}</BarLabel>
+            <BarLabel variant="caption">{bar.label}</BarLabel>
           </BarColumn>
         ))}
       </BarChartRow>
