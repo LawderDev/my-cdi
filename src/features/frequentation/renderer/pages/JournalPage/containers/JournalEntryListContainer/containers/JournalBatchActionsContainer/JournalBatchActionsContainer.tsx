@@ -1,12 +1,14 @@
 import MenuItem from '@mui/material/MenuItem'
 import { Button } from '@ui/components/Button'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
+import { getActivityColor } from '@frequentation/helpers/activityFormatters'
 import { useJournalBatchActions } from './hooks/useJournalBatchActions'
 import {
   ActivityMenu,
   BatchActionsRoot,
   CountText,
-  MenuAnchor
+  MenuAnchor,
+  MenuDot
 } from './JournalBatchActionsContainer.styles'
 import type { ActivityType } from '@types'
 
@@ -62,6 +64,7 @@ export function JournalBatchActionsContainer(props: JournalBatchActionsContainer
         <ActivityMenu anchorEl={anchorEl} open={activityMenuOpen} onClose={closeActivityMenu}>
           {activityOptions.map((option) => (
             <MenuItem key={option.value} onClick={() => handleActivityClick(option.value)}>
+              <MenuDot style={{ backgroundColor: getActivityColor(option.value) }} />
               {option.label}
             </MenuItem>
           ))}

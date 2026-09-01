@@ -12,8 +12,9 @@ export function AutocompleteInput({ placeholder, params }: AutocompleteInputProp
       slotProps={{
         input: {
           ...params.slotProps.input,
-          endAdornment: (
-            <InputAdornment position="end">
+          endAdornment: null,
+          startAdornment: (
+            <InputAdornment position="start">
               <SearchIcon name="search" />
             </InputAdornment>
           )

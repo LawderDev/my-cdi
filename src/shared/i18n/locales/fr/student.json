@@ -3,7 +3,8 @@
   "edit": "Modifier l'élève",
   "delete": "Supprimer l'élève",
   "import": "Importer CSV",
-  "count": "{{count}} élèves",
+  "count_one": "{{count}} élève",
+  "count_other": "{{count}} élèves",
   "searchPlaceholder": "Rechercher par nom, prénom, classe…",
   "fields": {
     "nom": "Nom",
@@ -13,7 +14,8 @@
     "visits": "Visites",
     "actions": "Actions"
   },
-  "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{count}} élève(s) ?",
+  "deleteConfirm_one": "Êtes-vous sûr de vouloir supprimer {{count}} élève ?",
+  "deleteConfirm_other": "Êtes-vous sûr de vouloir supprimer {{count}} élèves ?",
   "row.confirmDelete": "Voulez-vous vraiment supprimer cet élève ?",
   "deleteSuccess": "Élève supprimé",
   "csvImport": {
@@ -24,7 +26,8 @@
     "expectedColumnsList": "Nom de famille, Prénom 1, INE, Division (classe)",
     "expectedColumnsHint": "Les colonnes Adresse, Commune, CP, Tel, Courriel sont importées mais optionnelles",
     "submit": "Importer",
-    "success": "{{count}} élève(s) importé(s)",
+    "success_one": "{{count}} élève importé",
+    "success_other": "{{count}} élèves importés",
     "noStudentsCreated": "Aucun élève importé",
     "errors": "erreur(s)",
     "fileReadError": "Impossible de lire le fichier",

@@ -2,14 +2,12 @@ import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select'
 import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
-import { FONT_WEIGHTS, RADII, TINT_ALPHAS, TYPE_SCALE } from '@ui/theme'
+import { CONTROL_HEIGHTS, FONT_WEIGHTS, RADII, TINT_ALPHAS, TYPE_SCALE } from '@ui/theme'
 
-const SELECT_HEIGHT_PX = 30
 const SEARCH_WRAPPER_MAX_WIDTH_PX = 220
-const SEARCH_INPUT_HEIGHT_PX = 30
 
 export const TITLE_ICON_FONT_SIZE_PX = TYPE_SCALE.h6
-export const SEARCH_ICON_FONT_SIZE_PX = TYPE_SCALE.subtitle2
+export const SEARCH_ICON_FONT_SIZE_PX = TYPE_SCALE.subtitle1
 
 export const ToolbarRoot = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
@@ -58,7 +56,7 @@ export const SearchField = styled(TextField, {
 })(({ theme }) => ({
   maxWidth: `${SEARCH_WRAPPER_MAX_WIDTH_PX}px`,
   '& .MuiOutlinedInput-root': {
-    height: `${SEARCH_INPUT_HEIGHT_PX}px`,
+    height: `${CONTROL_HEIGHTS.sm}px`,
     fontSize: theme.typography.body2.fontSize,
     backgroundColor: theme.palette.surface,
     color: theme.palette.text.primary,
@@ -80,7 +78,7 @@ export const SearchField = styled(TextField, {
 export const PeriodSelect = styled(Select, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  height: `${SELECT_HEIGHT_PX}px`,
+  height: `${CONTROL_HEIGHTS.sm}px`,
   fontSize: theme.typography.body2.fontSize,
   color: theme.palette.text.secondary,
   backgroundColor: theme.palette.surface,
@@ -101,6 +99,6 @@ export const PeriodSelect = styled(Select, {
     display: 'flex',
     alignItems: 'center',
     minHeight: 0,
-    height: `${SELECT_HEIGHT_PX}px`
+    height: `${CONTROL_HEIGHTS.sm}px`
   }
 }))

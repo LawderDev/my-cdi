@@ -42,6 +42,11 @@ export const ButtonRoot = styled(MuiButton, {
     '&:hover': {
       backgroundColor: theme.palette.background.paper,
       borderColor: theme.palette.dividerStrong
+    },
+    '&.Mui-disabled': {
+      opacity: DISABLED_OPACITY,
+      color: theme.palette.text.primary,
+      backgroundColor: theme.palette.surface
     }
   },
   '&[data-variant="danger"]': {
@@ -55,6 +60,11 @@ export const ButtonRoot = styled(MuiButton, {
     '&:hover': {
       backgroundColor: alpha(theme.palette.error.main, DANGER_HOVER_ALPHA),
       boxShadow: 'none'
+    },
+    '&.Mui-disabled': {
+      opacity: DISABLED_OPACITY,
+      color: theme.palette.error.main,
+      backgroundColor: alpha(theme.palette.error.main, TINT_ALPHAS.surface)
     }
   }
 }))

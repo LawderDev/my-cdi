@@ -28,6 +28,9 @@ export const Row = styled('div', {
   },
   [`&:hover .${ACTIONS_CLASS}`]: {
     opacity: 1
+  },
+  [`&:focus-within .${ACTIONS_CLASS}`]: {
+    opacity: 1
   }
 }))
 

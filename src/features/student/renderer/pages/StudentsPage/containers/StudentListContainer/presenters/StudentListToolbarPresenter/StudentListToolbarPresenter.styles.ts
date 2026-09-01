@@ -4,15 +4,14 @@ import TextField from '@mui/material/TextField'
 import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import { Icon } from '@ui/components/Icon'
-import { RADII, TINT_ALPHAS, TYPE_SCALE } from '@ui/theme'
+import { CONTROL_HEIGHTS, TINT_ALPHAS, TYPE_SCALE } from '@ui/theme'
 
 export const SMALL_ICON_FONT_SIZE_PX = TYPE_SCALE.subtitle1
 export const SMALL_ICON_STYLE = { fontSize: SMALL_ICON_FONT_SIZE_PX } as const
 
 const SEARCH_WRAPPER_MAX_WIDTH_PX = 380
-const SEARCH_INPUT_HEIGHT_PX = 40
 const INPUT_TRANSITION = 'border-color'
-export const SEARCH_ICON_FONT_SIZE_PX = TYPE_SCALE.h6
+export const SEARCH_ICON_FONT_SIZE_PX = TYPE_SCALE.h5
 
 export const ToolbarRoot = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
@@ -29,11 +28,11 @@ export const SearchField = styled(TextField, {
   flex: 1,
   maxWidth: `${SEARCH_WRAPPER_MAX_WIDTH_PX}px`,
   '& .MuiOutlinedInput-root': {
-    height: `${SEARCH_INPUT_HEIGHT_PX}px`,
+    height: `${CONTROL_HEIGHTS.md}px`,
     fontSize: theme.typography.body1.fontSize,
     backgroundColor: theme.palette.surface,
     color: theme.palette.text.primary,
-    borderRadius: RADII.small,
+    borderRadius: theme.shape.borderRadius,
     transition: theme.transitions.create(INPUT_TRANSITION)
   },
   '& .MuiOutlinedInput-notchedOutline': {

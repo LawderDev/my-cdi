@@ -3,7 +3,8 @@
   "edit": "Edit student",
   "delete": "Delete student",
   "import": "Import CSV",
-  "count": "{{count}} students",
+  "count_one": "{{count}} student",
+  "count_other": "{{count}} students",
   "searchPlaceholder": "Search by name, first name, class…",
   "fields": {
     "nom": "Last name",
@@ -13,7 +14,8 @@
     "visits": "Visits",
     "actions": "Actions"
   },
-  "deleteConfirm": "Are you sure you want to delete {{count}} student(s)?",
+  "deleteConfirm_one": "Are you sure you want to delete {{count}} student?",
+  "deleteConfirm_other": "Are you sure you want to delete {{count}} students?",
   "row.confirmDelete": "Are you sure you want to delete this student?",
   "deleteSuccess": "Student deleted",
   "csvImport": {
@@ -24,7 +26,8 @@
     "expectedColumnsList": "Last name, First name, INE, Division (class)",
     "expectedColumnsHint": "Address, City, ZIP, Phone, Email columns are imported but optional",
     "submit": "Import",
-    "success": "{{count}} student(s) imported",
+    "success_one": "{{count}} student imported",
+    "success_other": "{{count}} students imported",
     "noStudentsCreated": "No students imported",
     "errors": "error(s)",
     "fileReadError": "Unable to read file",

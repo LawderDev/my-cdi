@@ -2,9 +2,7 @@ import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
-import { RADII, TINT_ALPHAS } from '@ui/theme'
-
-const INPUT_HEIGHT_PX = 40
+import { CONTROL_HEIGHTS, TINT_ALPHAS } from '@ui/theme'
 
 const INPUT_TRANSITION_DURATION = 'border-color'
 
@@ -38,11 +36,11 @@ export const FieldInput = styled(TextField, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    height: `${INPUT_HEIGHT_PX}px`,
+    height: `${CONTROL_HEIGHTS.md}px`,
     fontSize: theme.typography.body1.fontSize,
     backgroundColor: theme.palette.surface,
     color: theme.palette.text.primary,
-    borderRadius: RADII.small,
+    borderRadius: theme.shape.borderRadius,
     transition: theme.transitions.create(INPUT_TRANSITION_DURATION)
   },
   '& .MuiOutlinedInput-notchedOutline': {

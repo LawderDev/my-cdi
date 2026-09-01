@@ -63,5 +63,8 @@ export const RowActions = styled(Box, {
   transition: theme.transitions.create('opacity'),
   'tr:hover &': {
     opacity: 1
+  },
+  'tr:focus-within &': {
+    opacity: 1
   }
 }))

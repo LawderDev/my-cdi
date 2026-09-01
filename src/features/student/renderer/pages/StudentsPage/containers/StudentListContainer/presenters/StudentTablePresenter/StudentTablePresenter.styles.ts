@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
-import { styled } from '@mui/material/styles'
+import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
-import { FONT_WEIGHTS } from '@ui/theme'
+import { FONT_WEIGHTS, TINT_ALPHAS } from '@ui/theme'
 
 export const TableRoot = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
@@ -48,6 +48,12 @@ export const TableRoot = styled(Box, {
   '& tbody tr:hover': {
     backgroundColor: theme.palette.surface,
     color: theme.palette.text.secondary
+  },
+  '& tbody tr[data-selected="true"]': {
+    backgroundColor: alpha(theme.palette.primary.main, TINT_ALPHAS.surface)
+  },
+  '& tbody tr[data-selected="true"]:hover': {
+    backgroundColor: alpha(theme.palette.primary.main, TINT_ALPHAS.surface)
   }
 }))
 

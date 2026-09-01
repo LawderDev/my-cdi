@@ -40,7 +40,7 @@ export function StudentMultiSelectPresenter({
         excludedValues={selectedIds}
         disableCloseOnSelect
       />
-      <ChipsRow>{chipNodes}</ChipsRow>
+      {chipNodes.length > 0 ? <ChipsRow>{chipNodes}</ChipsRow> : null}
     </Box>
   )
 }

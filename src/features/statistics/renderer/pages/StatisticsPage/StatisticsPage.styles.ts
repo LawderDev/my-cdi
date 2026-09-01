@@ -27,3 +27,10 @@ export const StatisticsChartGrid = styled(Box, {
     gridTemplateColumns: '1fr'
   }
 }))
+
+export const StatisticsFullGrid = styled(Box, {
+  shouldForwardProp: shouldForwardStyledProp
+})(() => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr'
+}))

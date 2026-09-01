@@ -1,5 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import { StatisticsChartGrid, StatisticsLayout, StatisticsLoading } from './StatisticsPage.styles'
+import {
+  StatisticsChartGrid,
+  StatisticsFullGrid,
+  StatisticsLayout,
+  StatisticsLoading
+} from './StatisticsPage.styles'
 import { useStatisticsPage } from './hooks/useStatisticsPage'
 import { StatsKpiCardsContainer } from './containers/StatsKpiCardsContainer'
 import { PeriodFilterContainer } from './containers/PeriodFilterContainer'
@@ -21,9 +26,9 @@ export function StatisticsPage() {
         <WeeklyBarChartContainer dailyCounts={stats.dailyCounts} />
         <ActivityDonutChartContainer activityCounts={stats.activityCounts} />
       </StatisticsChartGrid>
-      <StatisticsChartGrid>
+      <StatisticsFullGrid>
         <MonthlyTrendChartContainer dailyCounts={stats.dailyCounts} />
-      </StatisticsChartGrid>
+      </StatisticsFullGrid>
     </StatisticsLayout>
   )
 }

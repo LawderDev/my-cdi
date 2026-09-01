@@ -88,6 +88,15 @@ export const RADII = {
   small: SMALL_BORDER_RADIUS_PX
 } as const
 
+/** Standard control heights: `md` for toolbars/forms/dialogs, `sm` for dense panel headers. */
+const CONTROL_HEIGHT_MD_PX = 40
+const CONTROL_HEIGHT_SM_PX = 30
+
+export const CONTROL_HEIGHTS = {
+  md: CONTROL_HEIGHT_MD_PX,
+  sm: CONTROL_HEIGHT_SM_PX
+} as const
+
 /** Alpha steps for tinted surfaces derived from palette colors. */
 const TINT_ALPHA_VALUE = 0.1
 const TINT_HOVER_ALPHA_VALUE = 0.2
