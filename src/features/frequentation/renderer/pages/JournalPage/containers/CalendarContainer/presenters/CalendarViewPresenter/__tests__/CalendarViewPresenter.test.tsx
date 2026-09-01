@@ -1,11 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
 import type { ReactNode } from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
-import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import { CalendarViewPresenter } from '../CalendarViewPresenter'
 import { CalendarDayPresenter } from '../presenters/CalendarDayPresenter'
 import type { CalendarCell } from '../../../helpers/buildCalendarMonth'
-import { DOW_FONT_SIZE_PX, DOW_FONT_WEIGHT } from '../CalendarViewPresenter.styles'
 
 const WEEKDAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
 const DAY_FIRST = 1
@@ -41,19 +40,9 @@ const SAMPLE_CELLS: CalendarCell[] = [
 
 function buildWeekdayNodes(labels: string[]): ReactNode[] {
   return labels.map((label) => (
-    <Box
-      key={label}
-      sx={{
-        fontSize: `${DOW_FONT_SIZE_PX}px`,
-        fontWeight: DOW_FONT_WEIGHT,
-        color: 'var(--text-dim)',
-        py: 0.75,
-        textTransform: 'uppercase',
-        letterSpacing: '0.5px'
-      }}
-    >
+    <Typography key={label} variant="overline" component="div">
       {label}
-    </Box>
+    </Typography>
   ))
 }
 

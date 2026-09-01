@@ -1,8 +1,20 @@
 import { describe, it, expect } from 'vitest'
-import { getActivityColor, getActivityCssClass, getActivityIcon } from '../activityFormatters'
+import { getActivityColor, getActivityIcon, getActivityTone } from '../activityFormatters'
+import { theme } from '@ui/theme'
 import { ActivityType } from '@types'
 
 const HEX_REGEX = /^#[0-9a-f]{6}$/i
+
+describe('getActivityTone', () => {
+  it('maps each ActivityType to its theme tone', () => {
+    expect(getActivityTone(ActivityType.COMPUTER)).toBe('computer')
+    expect(getActivityTone(ActivityType.WORK)).toBe('work')
+    expect(getActivityTone(ActivityType.READING)).toBe('reading')
+    expect(getActivityTone(ActivityType.RELAXATION)).toBe('relaxation')
+    expect(getActivityTone(ActivityType.GAME)).toBe('game')
+    expect(getActivityTone(ActivityType.OTHER)).toBe('other')
+  })
+})
 
 describe('getActivityColor', () => {
   it('returns a hex color for each ActivityType', () => {
@@ -14,13 +26,13 @@ describe('getActivityColor', () => {
     expect(getActivityColor(ActivityType.OTHER)).toMatch(HEX_REGEX)
   })
 
-  it('matches the codesign palette', () => {
-    expect(getActivityColor(ActivityType.COMPUTER)).toBe('#60a5fa')
-    expect(getActivityColor(ActivityType.WORK)).toBe('#4ade80')
-    expect(getActivityColor(ActivityType.READING)).toBe('#fbbf24')
-    expect(getActivityColor(ActivityType.RELAXATION)).toBe('#c084fc')
-    expect(getActivityColor(ActivityType.GAME)).toBe('#f87171')
-    expect(getActivityColor(ActivityType.OTHER)).toBe('#94a3b8')
+  it('sources each color from the theme activity palette', () => {
+    expect(getActivityColor(ActivityType.COMPUTER)).toBe(theme.palette.activity.computer)
+    expect(getActivityColor(ActivityType.WORK)).toBe(theme.palette.activity.work)
+    expect(getActivityColor(ActivityType.READING)).toBe(theme.palette.activity.reading)
+    expect(getActivityColor(ActivityType.RELAXATION)).toBe(theme.palette.activity.relaxation)
+    expect(getActivityColor(ActivityType.GAME)).toBe(theme.palette.activity.game)
+    expect(getActivityColor(ActivityType.OTHER)).toBe(theme.palette.activity.other)
   })
 
   it('returns distinct colors for distinct activities', () => {
@@ -45,16 +57,5 @@ describe('getActivityIcon', () => {
     expect(getActivityIcon(ActivityType.RELAXATION)).toBe('weekend')
     expect(getActivityIcon(ActivityType.GAME)).toBe('casino')
     expect(getActivityIcon(ActivityType.OTHER)).toBe('more_horiz')
-  })
-})
-
-describe('getActivityCssClass', () => {
-  it('returns the codesign-aligned CSS class for each ActivityType', () => {
-    expect(getActivityCssClass(ActivityType.COMPUTER)).toBe('act-ordinateur')
-    expect(getActivityCssClass(ActivityType.WORK)).toBe('act-travail')
-    expect(getActivityCssClass(ActivityType.READING)).toBe('act-lecture')
-    expect(getActivityCssClass(ActivityType.RELAXATION)).toBe('act-detente')
-    expect(getActivityCssClass(ActivityType.GAME)).toBe('act-jeu')
-    expect(getActivityCssClass(ActivityType.OTHER)).toBe('act-autre')
   })
 })

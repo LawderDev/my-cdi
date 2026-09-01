@@ -1,5 +1,6 @@
 import type { Dayjs } from 'dayjs'
 import { Icon } from '@ui/components/Icon'
+import { theme } from '@ui/theme'
 
 import {
   HiddenTimePicker,
@@ -36,11 +37,11 @@ export function TimeRowPresenter({
       <TimeButton onClick={onOpen} aria-label={ariaLabel}>
         <Icon
           name="schedule"
-          style={{ fontSize: `${TIME_ICON_FONT_SIZE_PX}px`, color: 'var(--text-dim)' }}
+          style={{ fontSize: TIME_ICON_FONT_SIZE_PX, color: theme.palette.text.disabled }}
         />
         <TimeDisplay>{value}</TimeDisplay>
       </TimeButton>
-      <PeriodBadge>{periodLabel}</PeriodBadge>
+      <PeriodBadge variant="caption">{periodLabel}</PeriodBadge>
       <HiddenTimePicker
         open={open}
         value={dateValue}

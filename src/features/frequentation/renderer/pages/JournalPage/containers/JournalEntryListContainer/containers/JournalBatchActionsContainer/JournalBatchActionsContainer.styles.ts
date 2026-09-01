@@ -1,10 +1,9 @@
 import Menu from '@mui/material/Menu'
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
-export const COUNT_FONT_SIZE_PX = 12
-export const COUNT_FONT_WEIGHT = 500
-export const MENU_MIN_WIDTH_PX = 180
+const MENU_MIN_WIDTH_PX = 180
 
 export const BatchActionsRoot = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
@@ -24,19 +23,17 @@ export const MenuAnchor = styled('div', {
 
 export const ActivityMenu = styled(Menu, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   '& .MuiPaper-root': {
     minWidth: `${MENU_MIN_WIDTH_PX}px`,
-    backgroundColor: 'var(--card)',
-    border: '1px solid var(--border)',
-    boxShadow: 'var(--shadow-lg)'
+    backgroundColor: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
+    boxShadow: theme.shadows[2]
   }
-})
+}))
 
-export const CountText = styled('span', {
+export const CountText = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  fontSize: `${COUNT_FONT_SIZE_PX}px`,
-  color: 'var(--text-dim)',
-  fontWeight: COUNT_FONT_WEIGHT
-})
+})(({ theme }) => ({
+  color: theme.palette.text.disabled
+}))

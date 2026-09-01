@@ -29,7 +29,9 @@ export function CalendarContainer({ selectedDate, onSelectDate }: CalendarContai
     })
   )
   const weekdayNodes: ReactNode[] = WEEKDAY_LABELS.map((label) => (
-    <WeekdayLabel key={label}>{label}</WeekdayLabel>
+    <WeekdayLabel key={label} variant="overline">
+      {label}
+    </WeekdayLabel>
   ))
   const dayNodes: ReactNode[] = cells.map((cell) => (
     <CalendarDayPresenter key={cell.iso} cell={cell} onClick={cell.onClick} />

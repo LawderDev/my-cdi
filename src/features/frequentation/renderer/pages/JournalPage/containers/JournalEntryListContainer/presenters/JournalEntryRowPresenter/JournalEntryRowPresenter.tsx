@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Avatar } from '@ui/components/Avatar'
 import { IconButton } from '@ui/components/IconButton'
+import type { ActivityTone } from '@ui/theme'
 import { ActivityChipPresenter } from '@frequentation/presenters/ActivityChipPresenter'
 import {
   ACTIONS_CLASS,
@@ -21,8 +22,8 @@ export interface JournalEntryRowPresenterProps {
   classe: string
   time: string
   periodLabel: string
-  periodClass: string
-  activityCssClass: string
+  period: 'morning' | 'afternoon'
+  activityTone: ActivityTone
   activityLabel: string
   selected: boolean
   onRowClick: (event: React.MouseEvent) => void
@@ -37,8 +38,8 @@ export function JournalEntryRowPresenter({
   classe,
   time,
   periodLabel,
-  periodClass,
-  activityCssClass,
+  period,
+  activityTone,
   activityLabel,
   selected,
   onRowClick,
@@ -57,8 +58,10 @@ export function JournalEntryRowPresenter({
         </StudentName>
         <MetaRow>
           <TimeText>{time}</TimeText>
-          <PeriodTag className={periodClass}>{periodLabel}</PeriodTag>
-          <ActivityChipPresenter cssClass={activityCssClass} label={activityLabel} />
+          <PeriodTag variant="overline" $period={period} data-period={period}>
+            {periodLabel}
+          </PeriodTag>
+          <ActivityChipPresenter tone={activityTone} label={activityLabel} />
         </MetaRow>
       </RowMain>
       <RowActions className={ACTIONS_CLASS}>

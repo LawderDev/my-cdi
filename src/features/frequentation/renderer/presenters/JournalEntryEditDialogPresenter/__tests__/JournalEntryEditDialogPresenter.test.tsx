@@ -1,7 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
+import { ThemeProvider } from '@mui/material/styles'
 import i18n from '@shared/i18n/config'
+import { theme } from '@ui/theme'
 import { JournalEntryEditDialogPresenter } from '../JournalEntryEditDialogPresenter'
 import { buildActivityTiles } from '@frequentation/presenters/ActivityGridPresenter/helpers/buildActivityTiles'
 import { buildActivityTileNodes } from '@frequentation/presenters/ActivityGridPresenter/helpers/buildActivityTileNodes'
@@ -19,12 +21,14 @@ describe('JournalEntryEditDialogPresenter', () => {
     const tiles = buildActivityTiles(ACTIVITIES, ActivityType.WORK, onActivityChange)
     render(
       <I18nextProvider i18n={i18n}>
-        <JournalEntryEditDialogPresenter
-          open
-          tileNodes={buildActivityTileNodes(tiles)}
-          onSubmit={vi.fn()}
-          onClose={vi.fn()}
-        />
+        <ThemeProvider theme={theme}>
+          <JournalEntryEditDialogPresenter
+            open
+            tileNodes={buildActivityTileNodes(tiles)}
+            onSubmit={vi.fn()}
+            onClose={vi.fn()}
+          />
+        </ThemeProvider>
       </I18nextProvider>
     )
     fireEvent.click(screen.getByRole('button', { name: 'Lecture' }))
@@ -36,12 +40,14 @@ describe('JournalEntryEditDialogPresenter', () => {
     const tiles = buildActivityTiles(ACTIVITIES, ActivityType.WORK, vi.fn())
     render(
       <I18nextProvider i18n={i18n}>
-        <JournalEntryEditDialogPresenter
-          open
-          tileNodes={buildActivityTileNodes(tiles)}
-          onSubmit={onSubmit}
-          onClose={vi.fn()}
-        />
+        <ThemeProvider theme={theme}>
+          <JournalEntryEditDialogPresenter
+            open
+            tileNodes={buildActivityTileNodes(tiles)}
+            onSubmit={onSubmit}
+            onClose={vi.fn()}
+          />
+        </ThemeProvider>
       </I18nextProvider>
     )
     fireEvent.click(screen.getByRole('button', { name: /enregistrer/i }))

@@ -87,58 +87,6 @@ textarea {
   background: var(--border-light);
 }
 
-.act-ordinateur {
-  background: rgba(96, 165, 250, 0.12);
-  color: #60a5fa;
-}
-.act-ordinateur .act-dot {
-  background: #60a5fa;
-}
-.act-travail {
-  background: rgba(74, 222, 128, 0.12);
-  color: #4ade80;
-}
-.act-travail .act-dot {
-  background: #4ade80;
-}
-.act-lecture {
-  background: rgba(251, 191, 36, 0.12);
-  color: #fbbf24;
-}
-.act-lecture .act-dot {
-  background: #fbbf24;
-}
-.act-detente {
-  background: rgba(192, 132, 252, 0.12);
-  color: #c084fc;
-}
-.act-detente .act-dot {
-  background: #c084fc;
-}
-.act-jeu {
-  background: rgba(248, 113, 113, 0.12);
-  color: #f87171;
-}
-.act-jeu .act-dot {
-  background: #f87171;
-}
-.act-autre {
-  background: rgba(148, 163, 184, 0.12);
-  color: #94a3b8;
-}
-.act-autre .act-dot {
-  background: #94a3b8;
-}
-
-.period-morning {
-  background: rgba(251, 191, 36, 0.12);
-  color: #fbbf24;
-}
-.period-afternoon {
-  background: rgba(96, 165, 250, 0.12);
-  color: #60a5fa;
-}
-
 .data-table table {
   width: 100%;
   border-collapse: collapse;
@@ -195,47 +143,4 @@ textarea {
 }
 .data-table tbody tr:hover .td-actions {
   opacity: 1;
-}
-
-.field {
-  margin-bottom: 16px;
-}
-.field label {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: 6px;
-}
-.field input,
-.field select {
-  width: 100%;
-  height: 40px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0 12px;
-  font-size: 13px;
-  outline: none;
-  transition: border 0.2s;
-}
-.field input:focus,
-.field select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-bg);
-}
-.field select {
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%235e6580' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-}
-.field-error {
-  margin-top: 4px;
-  font-size: 11px;
-  color: var(--danger);
 }

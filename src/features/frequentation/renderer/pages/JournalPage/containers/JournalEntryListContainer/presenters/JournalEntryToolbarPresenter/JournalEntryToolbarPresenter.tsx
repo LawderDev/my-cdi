@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import InputAdornment from '@mui/material/InputAdornment'
 import MenuItem from '@mui/material/MenuItem'
 import { Icon } from '@ui/components/Icon'
+import { theme } from '@ui/theme'
 import type { EntryPeriodFilter } from '../../helpers/filterEntriesByPeriod'
 import {
   CountBadge,
@@ -37,7 +38,7 @@ export function JournalEntryToolbarPresenter({
       <ToolbarTitle>
         <Icon
           name="groups"
-          style={{ fontSize: `${TITLE_ICON_FONT_SIZE_PX}px`, color: 'var(--accent)' }}
+          style={{ fontSize: TITLE_ICON_FONT_SIZE_PX, color: theme.palette.primary.main }}
         />
         {t('present')}
         <CountBadge>{entryCount}</CountBadge>
@@ -58,8 +59,8 @@ export function JournalEntryToolbarPresenter({
                   <Icon
                     name="search"
                     style={{
-                      color: 'var(--text-dim)',
-                      fontSize: `${SEARCH_ICON_FONT_SIZE_PX}px`
+                      color: theme.palette.text.disabled,
+                      fontSize: SEARCH_ICON_FONT_SIZE_PX
                     }}
                   />
                 </InputAdornment>

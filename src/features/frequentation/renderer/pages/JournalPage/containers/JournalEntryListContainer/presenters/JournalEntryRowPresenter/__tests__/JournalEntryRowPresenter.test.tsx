@@ -1,7 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
+import { ThemeProvider } from '@mui/material/styles'
 import i18n from '@shared/i18n/config'
+import { theme } from '@ui/theme'
 import { JournalEntryRowPresenter } from '../JournalEntryRowPresenter'
 
 const STUDENT_ID = 7
@@ -15,8 +17,8 @@ const baseProps = {
   classe: '3ème A',
   time: ENTRY_TIME,
   periodLabel: PERIOD_LABEL,
-  periodClass: 'period-morning',
-  activityCssClass: 'act-travail',
+  period: 'morning' as const,
+  activityTone: 'work' as const,
   activityLabel: 'Travail',
   selected: false,
   onRowClick: vi.fn(),
@@ -27,7 +29,9 @@ const baseProps = {
 function renderRow(props: Partial<Parameters<typeof JournalEntryRowPresenter>[0]> = {}) {
   return render(
     <I18nextProvider i18n={i18n}>
-      <JournalEntryRowPresenter {...baseProps} {...props} />
+      <ThemeProvider theme={theme}>
+        <JournalEntryRowPresenter {...baseProps} {...props} />
+      </ThemeProvider>
     </I18nextProvider>
   )
 }
@@ -53,6 +57,12 @@ describe('JournalEntryRowPresenter', () => {
   it('renders the initials avatar', () => {
     const { container } = renderRow()
     expect(container.textContent).toContain('JD')
+  })
+
+  it('exposes the period and activity tone through data attributes', () => {
+    renderRow({ period: 'morning', activityTone: 'work' })
+    expect(document.querySelector('[data-period="morning"]')).not.toBeNull()
+    expect(document.querySelector('[data-tone="work"]')).not.toBeNull()
   })
 
   it('clicking the row triggers onRowClick', () => {

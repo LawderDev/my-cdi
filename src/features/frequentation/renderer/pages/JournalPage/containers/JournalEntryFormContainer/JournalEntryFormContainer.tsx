@@ -86,7 +86,7 @@ export function JournalEntryFormContainer({
 
   return (
     <Card>
-      <SectionLabel>{t('form.newEntry')}</SectionLabel>
+      <SectionLabel variant="overline">{t('form.newEntry')}</SectionLabel>
       <Controller
         control={form.control}
         name="time"

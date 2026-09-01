@@ -51,8 +51,8 @@ export function JournalEntryEditDialogPresenter({
         <EntrySummary>
           <Avatar initials={entry.initials} colorSeed={entry.colorSeed} />
           <div>
-            <StudentName>{entry.displayName}</StudentName>
-            <StudentClasse>{entry.classe}</StudentClasse>
+            <StudentName variant="body1">{entry.displayName}</StudentName>
+            <StudentClasse variant="caption">{entry.classe}</StudentClasse>
           </div>
         </EntrySummary>
       ) : null}

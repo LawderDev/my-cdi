@@ -1,28 +1,21 @@
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
-export const LABEL_FONT_SIZE_PX = 11
-export const LABEL_FONT_WEIGHT = 600
-export const LOADING_FONT_SIZE_PX = 12
 export const CHIPS_MIN_HEIGHT_PX = 28
 
-export const FieldLabel = styled('span', {
+export const FieldLabel = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
   display: 'block',
-  fontSize: `${LABEL_FONT_SIZE_PX}px`,
-  fontWeight: LABEL_FONT_WEIGHT,
-  textTransform: 'uppercase',
-  letterSpacing: '0.8px',
-  color: 'var(--text-dim)',
+  color: theme.palette.text.disabled,
   marginBottom: theme.spacing(0.75)
 }))
 
-export const LoadingText = styled('div', {
+export const LoadingText = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  fontSize: `${LOADING_FONT_SIZE_PX}px`,
-  color: 'var(--text-dim)',
+  color: theme.palette.text.disabled,
   marginBottom: theme.spacing(1)
 }))
 

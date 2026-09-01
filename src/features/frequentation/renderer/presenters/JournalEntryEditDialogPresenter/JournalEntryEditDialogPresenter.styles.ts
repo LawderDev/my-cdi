@@ -1,9 +1,7 @@
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
-
-export const NAME_FONT_SIZE_PX = 13
-export const CLASSE_FONT_SIZE_PX = 11
-export const NAME_FONT_WEIGHT = 500
+import { FONT_WEIGHTS, RADII } from '@ui/theme'
 
 export const EntrySummary = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
@@ -13,20 +11,19 @@ export const EntrySummary = styled('div', {
   gap: theme.spacing(1.25),
   marginBottom: theme.spacing(2),
   padding: theme.spacing(1.25),
-  backgroundColor: 'var(--surface)',
-  borderRadius: 'var(--radius-sm)'
+  backgroundColor: theme.palette.surface,
+  borderRadius: RADII.small
 }))
 
-export const StudentName = styled('div', {
+export const StudentName = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  fontWeight: NAME_FONT_WEIGHT,
-  fontSize: `${NAME_FONT_SIZE_PX}px`
-})
+})(({ theme }) => ({
+  fontWeight: FONT_WEIGHTS.medium,
+  color: theme.palette.text.primary
+}))
 
-export const StudentClasse = styled('div', {
+export const StudentClasse = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  fontSize: `${CLASSE_FONT_SIZE_PX}px`,
-  color: 'var(--text-dim)'
-})
+})(({ theme }) => ({
+  color: theme.palette.text.disabled
+}))

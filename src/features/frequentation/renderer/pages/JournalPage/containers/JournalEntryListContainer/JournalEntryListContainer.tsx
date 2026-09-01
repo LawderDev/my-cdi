@@ -9,7 +9,7 @@ import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useJournalEntries } from '@frequentation/api/useFrequentationQueries'
 import { useActivityLabels } from '@frequentation/hooks/useActivityLabels'
 import { toJournalEntryViewModel } from '@frequentation/helpers/journalEntryTransformers'
-import { getActivityCssClass } from '@frequentation/helpers/activityFormatters'
+import { getActivityTone } from '@frequentation/helpers/activityFormatters'
 import { buildInitials } from '@frequentation/helpers/buildInitials'
 import { useDeleteFrequentation } from '@frequentation/api/useFrequentationMutations'
 import { useJournalEntrySelection } from './hooks/useJournalEntrySelection'
@@ -122,8 +122,8 @@ export function JournalEntryListContainer({
       classe: entry.student.classe,
       time: dayjs(entry.startsAt).format(TIME_FORMAT),
       periodLabel: period === 'morning' ? t('period.morning') : t('period.afternoon'),
-      periodClass: period === 'morning' ? 'period-morning' : 'period-afternoon',
-      activityCssClass: getActivityCssClass(entry.activity),
+      period,
+      activityTone: getActivityTone(entry.activity),
       activityLabel: entry.activityLabel,
       selected: selectedIds.includes(entry.id),
       onRowClick: (event) => handleRowClick(entry, event),

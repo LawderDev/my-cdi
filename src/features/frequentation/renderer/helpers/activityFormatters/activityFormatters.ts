@@ -1,12 +1,14 @@
+import type { ActivityTone } from '@ui/theme'
+import { theme } from '@ui/theme'
 import { ActivityType } from '@types'
 
-const ACTIVITY_COLOR_MAP: Record<ActivityType, string> = {
-  [ActivityType.COMPUTER]: '#60a5fa',
-  [ActivityType.WORK]: '#4ade80',
-  [ActivityType.READING]: '#fbbf24',
-  [ActivityType.RELAXATION]: '#c084fc',
-  [ActivityType.GAME]: '#f87171',
-  [ActivityType.OTHER]: '#94a3b8'
+const ACTIVITY_TONE_MAP: Record<ActivityType, ActivityTone> = {
+  [ActivityType.COMPUTER]: 'computer',
+  [ActivityType.WORK]: 'work',
+  [ActivityType.READING]: 'reading',
+  [ActivityType.RELAXATION]: 'relaxation',
+  [ActivityType.GAME]: 'game',
+  [ActivityType.OTHER]: 'other'
 }
 
 const ACTIVITY_ICON_MAP: Record<ActivityType, string> = {
@@ -18,23 +20,14 @@ const ACTIVITY_ICON_MAP: Record<ActivityType, string> = {
   [ActivityType.OTHER]: 'more_horiz'
 }
 
-const ACTIVITY_CSS_CLASS_MAP: Record<ActivityType, string> = {
-  [ActivityType.COMPUTER]: 'act-ordinateur',
-  [ActivityType.WORK]: 'act-travail',
-  [ActivityType.READING]: 'act-lecture',
-  [ActivityType.RELAXATION]: 'act-detente',
-  [ActivityType.GAME]: 'act-jeu',
-  [ActivityType.OTHER]: 'act-autre'
+export function getActivityTone(activity: ActivityType): ActivityTone {
+  return ACTIVITY_TONE_MAP[activity]
 }
 
 export function getActivityColor(activity: ActivityType): string {
-  return ACTIVITY_COLOR_MAP[activity]
+  return theme.palette.activity[getActivityTone(activity)]
 }
 
 export function getActivityIcon(activity: ActivityType): string {
   return ACTIVITY_ICON_MAP[activity]
-}
-
-export function getActivityCssClass(activity: ActivityType): string {
-  return ACTIVITY_CSS_CLASS_MAP[activity]
 }

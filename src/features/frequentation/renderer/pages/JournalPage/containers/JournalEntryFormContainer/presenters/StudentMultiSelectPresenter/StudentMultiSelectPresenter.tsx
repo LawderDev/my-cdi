@@ -29,8 +29,8 @@ export function StudentMultiSelectPresenter({
 
   return (
     <Box>
-      <FieldLabel>{t('form.selectStudents')}</FieldLabel>
-      {loading ? <LoadingText>{t('loading')}</LoadingText> : null}
+      <FieldLabel variant="overline">{t('form.selectStudents')}</FieldLabel>
+      {loading ? <LoadingText variant="body2">{t('loading')}</LoadingText> : null}
       <Autocomplete<number>
         placeholder={t('form.searchStudent')}
         options={options}

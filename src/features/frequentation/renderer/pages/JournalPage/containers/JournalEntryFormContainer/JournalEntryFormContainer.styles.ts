@@ -1,18 +1,13 @@
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
-export const SECTION_LABEL_FONT_SIZE_PX = 11
-export const SECTION_LABEL_FONT_WEIGHT = 600
 export const FEEDBACK_AUTO_HIDE_MS = 4000
 
-export const SectionLabel = styled('div', {
+export const SectionLabel = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  fontSize: `${SECTION_LABEL_FONT_SIZE_PX}px`,
-  fontWeight: SECTION_LABEL_FONT_WEIGHT,
-  textTransform: 'uppercase',
-  letterSpacing: '0.8px',
-  color: 'var(--text-dim)',
+  color: theme.palette.text.disabled,
   marginBottom: theme.spacing(1.25)
 }))
 

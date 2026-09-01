@@ -69,7 +69,7 @@ export function JournalBatchActionsContainer(props: JournalBatchActionsContainer
         <Button variant="danger" disabled={!hasSelection} onClick={openConfirmDelete}>
           {deleteSelectionLabel}
         </Button>
-        {hasSelection ? <CountText>{selectedCountLabel}</CountText> : null}
+        {hasSelection ? <CountText variant="body2">{selectedCountLabel}</CountText> : null}
       </BatchActionsRoot>
 
       <ConfirmDialog

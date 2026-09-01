@@ -1,10 +1,7 @@
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
-export const TITLE_FONT_SIZE_PX = 15
-export const TITLE_FONT_WEIGHT = 600
-export const DOW_FONT_SIZE_PX = 11
-export const DOW_FONT_WEIGHT = 600
 export const WEEK_DAYS_COUNT = 7
 
 export const CalendarHeader = styled('div', {
@@ -16,11 +13,10 @@ export const CalendarHeader = styled('div', {
   marginBottom: theme.spacing(2)
 }))
 
-export const MonthTitle = styled('div', {
+export const MonthTitle = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })({
-  fontSize: `${TITLE_FONT_SIZE_PX}px`,
-  fontWeight: TITLE_FONT_WEIGHT
+  margin: 0
 })
 
 export const NavGroup = styled('div', {

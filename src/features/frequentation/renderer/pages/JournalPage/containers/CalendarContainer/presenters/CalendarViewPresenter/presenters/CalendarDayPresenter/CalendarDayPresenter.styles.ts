@@ -1,18 +1,15 @@
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
+import { FONT_WEIGHTS } from '@ui/theme'
 
-export const DAY_FONT_SIZE_PX = 13
-export const DAY_TODAY_FONT_WEIGHT = 600
-export const DAY_SIZE_PX = 36
-export const OTHER_MONTH_OPACITY = 0.4
-export const TODAY_SHADOW = '0 2px 8px rgba(124,77,255,0.35)'
-export const DAY_TRANSITION = 'all 0.15s'
-export const VISITS_DOT_SIZE_PX = 4
-export const VISITS_DOT_BOTTOM_PX = 3
+const DAY_SIZE_PX = 36
+const VISITS_DOT_SIZE_PX = 4
+const VISITS_DOT_BOTTOM_PX = 3
+const OTHER_MONTH_OPACITY = 0.4
 
 export const DayCell = styled('button', {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   position: 'relative',
   width: `${DAY_SIZE_PX}px`,
   height: `${DAY_SIZE_PX}px`,
@@ -21,27 +18,27 @@ export const DayCell = styled('button', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: `${DAY_FONT_SIZE_PX}px`,
+  fontSize: theme.typography.body1.fontSize,
   cursor: 'pointer',
-  transition: DAY_TRANSITION,
+  transition: theme.transitions.create(['background-color', 'box-shadow']),
   border: 'none',
   backgroundColor: 'transparent',
-  color: 'var(--title)',
+  color: theme.palette.text.primary,
   outline: 'none',
   '&:hover': {
-    backgroundColor: 'var(--surface)'
+    backgroundColor: theme.palette.surface
   },
   '&[data-today="true"]': {
-    backgroundColor: 'var(--accent)',
-    color: '#fff',
-    fontWeight: DAY_TODAY_FONT_WEIGHT,
-    boxShadow: TODAY_SHADOW,
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.getContrastText(theme.palette.primary.main),
+    fontWeight: FONT_WEIGHTS.semibold,
+    boxShadow: theme.shadows[3],
     '&:hover': {
-      backgroundColor: 'var(--accent)'
+      backgroundColor: theme.palette.primary.main
     }
   },
   '&[data-selected="true"]': {
-    outline: '2px solid var(--accent)',
+    outline: `2px solid ${theme.palette.primary.main}`,
     outlineOffset: '2px'
   },
   '&:not([data-current-month="true"])': {
@@ -56,9 +53,9 @@ export const DayCell = styled('button', {
     width: `${VISITS_DOT_SIZE_PX}px`,
     height: `${VISITS_DOT_SIZE_PX}px`,
     borderRadius: '50%',
-    backgroundColor: 'var(--accent)'
+    backgroundColor: theme.palette.primary.main
   },
   '&[data-today="true"][data-has-visits="true"]::after': {
-    backgroundColor: '#fff'
+    backgroundColor: theme.palette.getContrastText(theme.palette.primary.main)
   }
-})
+}))

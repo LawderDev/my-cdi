@@ -1,5 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { ThemeProvider } from '@mui/material/styles'
+import { theme } from '@ui/theme'
 import { ActivityGridPresenter } from '../ActivityGridPresenter'
 import { buildActivityTiles } from '../helpers/buildActivityTiles'
 import { buildActivityTileNodes } from '../helpers/buildActivityTileNodes'
@@ -15,7 +17,11 @@ const OPTIONS: ActivityGridOption[] = [
 describe('ActivityGridPresenter', () => {
   it('renders one tile per option', () => {
     const tiles = buildActivityTiles(OPTIONS, ActivityType.COMPUTER, vi.fn())
-    render(<ActivityGridPresenter tileNodes={buildActivityTileNodes(tiles)} />)
+    render(
+      <ThemeProvider theme={theme}>
+        <ActivityGridPresenter tileNodes={buildActivityTileNodes(tiles)} />
+      </ThemeProvider>
+    )
     expect(screen.getByRole('button', { name: 'Ordinateur' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Travail' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Lecture' })).toBeInTheDocument()
@@ -23,7 +29,11 @@ describe('ActivityGridPresenter', () => {
 
   it('marks the active tile with data-selected="true"', () => {
     const tiles = buildActivityTiles(OPTIONS, ActivityType.WORK, vi.fn())
-    render(<ActivityGridPresenter tileNodes={buildActivityTileNodes(tiles)} />)
+    render(
+      <ThemeProvider theme={theme}>
+        <ActivityGridPresenter tileNodes={buildActivityTileNodes(tiles)} />
+      </ThemeProvider>
+    )
     expect(screen.getByRole('button', { name: 'Travail' })).toHaveAttribute('data-selected', 'true')
     expect(screen.getByRole('button', { name: 'Ordinateur' })).toHaveAttribute(
       'data-selected',
@@ -34,7 +44,11 @@ describe('ActivityGridPresenter', () => {
   it('calls onChange with the clicked tile value', () => {
     const onChange = vi.fn()
     const tiles = buildActivityTiles(OPTIONS, ActivityType.COMPUTER, onChange)
-    render(<ActivityGridPresenter tileNodes={buildActivityTileNodes(tiles)} />)
+    render(
+      <ThemeProvider theme={theme}>
+        <ActivityGridPresenter tileNodes={buildActivityTileNodes(tiles)} />
+      </ThemeProvider>
+    )
     fireEvent.click(screen.getByRole('button', { name: 'Lecture' }))
     expect(onChange).toHaveBeenCalledWith(ActivityType.READING)
   })

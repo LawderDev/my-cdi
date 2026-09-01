@@ -2,7 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { I18nextProvider } from 'react-i18next'
+import { ThemeProvider } from '@mui/material/styles'
 import i18n from '@shared/i18n/config'
+import { theme } from '@ui/theme'
 import type { ReactNode } from 'react'
 import { JournalEntryListContainer } from '../JournalEntryListContainer'
 import { ActivityType } from '@types'
@@ -15,7 +17,9 @@ function withProviders(ui: ReactNode) {
   })
   return (
     <I18nextProvider i18n={i18n}>
-      <QueryClientProvider client={client}>{ui}</QueryClientProvider>
+      <QueryClientProvider client={client}>
+        <ThemeProvider theme={theme}>{ui}</ThemeProvider>
+      </QueryClientProvider>
     </I18nextProvider>
   )
 }
