@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import LinearProgress from '@mui/material/LinearProgress'
 import { Button } from '@ui/components/Button'
 import { IconButton } from '@ui/components/IconButton'
-import type { UpdateBannerViewProps } from './types/UpdateBannerViewProps'
+import type { UpdateBannerPresenterProps } from './types/UpdateBannerPresenterProps'
 import {
   ACTIONS_SX,
   BASE_BANNER_SX,
@@ -12,9 +12,9 @@ import {
   INFO_SX,
   PROGRESS_SX,
   SUCCESS_SX
-} from './UpdateBannerView.styles'
+} from './UpdateBannerPresenter.styles'
 
-export function UpdateBannerView({
+export function UpdateBannerPresenter({
   status,
   versionAvailable,
   versionDownloaded,
@@ -23,7 +23,7 @@ export function UpdateBannerView({
   errorMessage,
   onInstall,
   onDismiss
-}: UpdateBannerViewProps) {
+}: UpdateBannerPresenterProps) {
   const { t } = useTranslation('common')
 
   if (status === 'idle') {

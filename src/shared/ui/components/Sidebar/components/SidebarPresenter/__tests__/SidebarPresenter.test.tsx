@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '@shared/i18n/config'
 import { ROUTES } from '@lib/routes'
-import { SidebarView } from '../SidebarView'
+import { SidebarPresenter } from '../SidebarPresenter'
 import { NavButton } from '../components/NavButton'
 import { buildSidebarItems } from '../../../helpers/buildSidebarItems'
 
@@ -21,7 +21,7 @@ function Harness(props: { onStatisticsClick: () => void; onSettingsClick: () => 
     />
   ))
 
-  return <SidebarView navButtonNodes={navButtonNodes} onSettingsClick={props.onSettingsClick} />
+  return <SidebarPresenter navButtonNodes={navButtonNodes} onSettingsClick={props.onSettingsClick} />
 }
 
 function renderView() {
@@ -35,7 +35,7 @@ function renderView() {
   return { onNavigate, onSettingsClick }
 }
 
-describe('SidebarView', () => {
+describe('SidebarPresenter', () => {
   it('renders the CDI logo and three nav items + settings button', () => {
     renderView()
     expect(screen.getByText('CDI')).toBeInTheDocument()

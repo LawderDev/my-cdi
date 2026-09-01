@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-export interface SidebarViewProps {
+export interface SidebarPresenterProps {
   navButtonNodes: ReactNode[]
   onSettingsClick: () => void
 }

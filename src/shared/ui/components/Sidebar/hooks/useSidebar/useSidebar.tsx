@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
 import { ROUTES } from '@lib/routes'
 import { buildSidebarItems } from '../../helpers/buildSidebarItems'
-import { NavButton } from '../../components/SidebarView/components/NavButton'
+import { NavButton } from '../../components/SidebarPresenter/components/NavButton'
 
 const SETTINGS_PLACEHOLDER_HASH = '#'
 

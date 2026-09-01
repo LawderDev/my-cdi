@@ -3,23 +3,23 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '@shared/i18n/config'
-import { UpdateBannerView } from '../UpdateBannerView'
-import type { UpdateBannerViewProps } from '../types/UpdateBannerViewProps'
+import { UpdateBannerPresenter } from '../UpdateBannerPresenter'
+import type { UpdateBannerPresenterProps } from '../types/UpdateBannerPresenterProps'
 
 const PROGRESS_PERCENT_42 = 42
 
 function renderWithStatus(
-  props: Omit<UpdateBannerViewProps, 'fillPercent' | 'percentDisplay'> &
-    Partial<Pick<UpdateBannerViewProps, 'fillPercent' | 'percentDisplay'>>
+  props: Omit<UpdateBannerPresenterProps, 'fillPercent' | 'percentDisplay'> &
+    Partial<Pick<UpdateBannerPresenterProps, 'fillPercent' | 'percentDisplay'>>
 ) {
   return render(
     <I18nextProvider i18n={i18n}>
-      <UpdateBannerView fillPercent={0} percentDisplay="0" {...props} />
+      <UpdateBannerPresenter fillPercent={0} percentDisplay="0" {...props} />
     </I18nextProvider>
   )
 }
 
-describe('UpdateBannerView', () => {
+describe('UpdateBannerPresenter', () => {
   it('renders nothing for idle status', () => {
     const { container } = renderWithStatus({
       status: 'idle',

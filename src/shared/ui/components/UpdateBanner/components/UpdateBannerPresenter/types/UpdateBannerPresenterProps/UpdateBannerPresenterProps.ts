@@ -1,6 +1,6 @@
 import type { UpdaterStatus } from '../../../../../../hooks/useAutoUpdater'
 
-export interface UpdateBannerViewProps {
+export interface UpdateBannerPresenterProps {
   status: UpdaterStatus
   versionAvailable?: string
   versionDownloaded?: string

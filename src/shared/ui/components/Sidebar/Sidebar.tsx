@@ -1,8 +1,8 @@
 import { useSidebar } from './hooks/useSidebar'
-import { SidebarView } from './components/SidebarView'
+import { SidebarPresenter } from './components/SidebarPresenter'
 
 export function Sidebar() {
   const { navButtonNodes, onSettingsClick } = useSidebar()
 
-  return <SidebarView navButtonNodes={navButtonNodes} onSettingsClick={onSettingsClick} />
+  return <SidebarPresenter navButtonNodes={navButtonNodes} onSettingsClick={onSettingsClick} />
 }

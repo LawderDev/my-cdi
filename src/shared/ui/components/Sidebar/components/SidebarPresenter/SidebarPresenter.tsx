@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { NavButton } from './components/NavButton'
-import type { SidebarViewProps } from './types/SidebarViewProps'
+import type { SidebarPresenterProps } from './types/SidebarPresenterProps'
 import {
   LOGO_BG,
   LOGO_BORDER_RADIUS_PX,
@@ -13,9 +13,9 @@ import {
   SETTINGS_LABEL_KEY,
   SIDEBAR_WIDTH_PX,
   SIDEBAR_Z_INDEX
-} from './SidebarView.styles'
+} from './SidebarPresenter.styles'
 
-export function SidebarView({ navButtonNodes, onSettingsClick }: SidebarViewProps) {
+export function SidebarPresenter({ navButtonNodes, onSettingsClick }: SidebarPresenterProps) {
   const { t } = useTranslation('common')
 
   return (

@@ -1,4 +1,4 @@
-export interface HeaderViewProps {
+export interface HeaderPresenterProps {
   title: string
   subtitle: string
   time: string

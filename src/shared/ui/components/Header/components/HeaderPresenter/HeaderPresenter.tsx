@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import type { HeaderViewProps } from './types/HeaderViewProps'
+import type { HeaderPresenterProps } from './types/HeaderPresenterProps'
 import {
   CLOCK_AREA_SX,
   CLOCK_SX,
@@ -7,9 +7,9 @@ import {
   SUBTITLE_SX,
   TITLE_BLOCK_SX,
   TITLE_SX
-} from './HeaderView.styles'
+} from './HeaderPresenter.styles'
 
-export function HeaderView({ title, subtitle, time }: HeaderViewProps) {
+export function HeaderPresenter({ title, subtitle, time }: HeaderPresenterProps) {
   return (
     <Box component="header" sx={HEADER_SX}>
       <Box sx={TITLE_BLOCK_SX}>
