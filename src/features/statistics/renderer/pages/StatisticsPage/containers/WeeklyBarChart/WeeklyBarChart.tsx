@@ -12,12 +12,12 @@ import {
   VALUE_FONT_SIZE_PX,
   VALUE_FONT_WEIGHT
 } from './WeeklyBarChart.styles'
-import { buildWeeklyBars } from './helpers/buildWeeklyBars'
+import { useWeeklyBarChart } from './hooks/useWeeklyBarChart'
 import type { WeeklyBarChartProps } from './types/WeeklyBarChartProps'
 
 export function WeeklyBarChart({ dailyCounts }: WeeklyBarChartProps) {
   const { t } = useTranslation('statistics')
-  const bars = buildWeeklyBars(dailyCounts)
+  const { bars } = useWeeklyBarChart(dailyCounts)
   return (
     <ChartCard titleIcon="bar_chart" title={t('charts.weekly')}>
       <Box

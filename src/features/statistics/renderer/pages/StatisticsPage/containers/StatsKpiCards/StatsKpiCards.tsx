@@ -1,25 +1,11 @@
-import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { StatCard } from '@statistics/components/StatCard'
-import {
-  ACCENT_BG,
-  ACCENT_COLOR,
-  INFO_BG,
-  INFO_COLOR,
-  RESPONSIVE_BREAKPOINT_PX,
-  SUCCESS_BG,
-  SUCCESS_COLOR,
-  WARNING_BG,
-  WARNING_COLOR
-} from './StatsKpiCards.styles'
+import { RESPONSIVE_BREAKPOINT_PX } from './StatsKpiCards.styles'
+import { useStatsKpiCards } from './hooks/useStatsKpiCards'
 import type { StatsKpiCardsProps } from './types/StatsKpiCardsProps'
 
 export function StatsKpiCards({ stats }: StatsKpiCardsProps) {
-  const { t } = useTranslation('statistics')
-  const totalDisplay = stats.totalVisits.toLocaleString('fr-FR')
-  const averageDisplay = stats.averagePerDay.toLocaleString('fr-FR')
-  const morningDisplay = `${stats.morningRate}%`
-  const afternoonDisplay = `${stats.afternoonRate}%`
+  const kpis = useStatsKpiCards(stats)
   return (
     <Box
       sx={{
@@ -31,34 +17,16 @@ export function StatsKpiCards({ stats }: StatsKpiCardsProps) {
         }
       }}
     >
-      <StatCard
-        iconName="people"
-        iconBg={ACCENT_BG}
-        iconColor={ACCENT_COLOR}
-        label={t('kpi.totalVisits')}
-        value={totalDisplay}
-      />
-      <StatCard
-        iconName="trending_up"
-        iconBg={SUCCESS_BG}
-        iconColor={SUCCESS_COLOR}
-        label={t('kpi.averagePerDay')}
-        value={averageDisplay}
-      />
-      <StatCard
-        iconName="wb_sunny"
-        iconBg={WARNING_BG}
-        iconColor={WARNING_COLOR}
-        label={t('kpi.morningRate')}
-        value={morningDisplay}
-      />
-      <StatCard
-        iconName="nights_stay"
-        iconBg={INFO_BG}
-        iconColor={INFO_COLOR}
-        label={t('kpi.afternoonRate')}
-        value={afternoonDisplay}
-      />
+      {kpis.map((kpi) => (
+        <StatCard
+          key={kpi.label}
+          iconName={kpi.iconName}
+          iconBg={kpi.iconBg}
+          iconColor={kpi.iconColor}
+          label={kpi.label}
+          value={kpi.value}
+        />
+      ))}
     </Box>
   )
 }

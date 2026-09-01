@@ -8,6 +8,7 @@ const FIVE = 5
 const TEN = 10
 const TOTAL = 15
 const TWO = 2
+const LEGEND_VALUE = 12
 
 describe('ActivityDonutChart', () => {
   it('renders the chart title', () => {
@@ -28,8 +29,16 @@ describe('ActivityDonutChart', () => {
   })
 
   it('renders the legend with translated activity labels', () => {
-    render(<ActivityDonutChart activityCounts={[{ activity: ActivityType.WORK, count: FIVE }]} />)
+    render(
+      <ActivityDonutChart
+        activityCounts={[
+          { activity: ActivityType.WORK, count: LEGEND_VALUE },
+          { activity: ActivityType.READING, count: FIVE }
+        ]}
+      />
+    )
     expect(screen.getByText('Travail')).toBeInTheDocument()
+    expect(screen.getByText(String(LEGEND_VALUE))).toBeInTheDocument()
   })
 
   it('renders an SVG path for each non-empty slice', () => {

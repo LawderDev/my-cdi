@@ -11,18 +11,13 @@ import {
   Y_LABEL_FONT_SIZE,
   Y_LABEL_TEXT_OFFSET
 } from './MonthlyTrendChart.styles'
-import {
-  buildTrendPath,
-  DEFAULT_TREND_DIMENSIONS,
-  Y_LABEL_OFFSET_X
-} from './helpers/buildTrendPath'
+import { Y_LABEL_OFFSET_X } from './helpers/buildTrendPath'
+import { useMonthlyTrendChart } from './hooks/useMonthlyTrendChart'
 import type { MonthlyTrendChartProps } from './types/MonthlyTrendChartProps'
 
 export function MonthlyTrendChart({ dailyCounts }: MonthlyTrendChartProps) {
   const { t } = useTranslation('statistics')
-  const trend = buildTrendPath(dailyCounts)
-  const { paddingLeft, paddingRight, width } = DEFAULT_TREND_DIMENSIONS
-  const innerRight = width - paddingRight
+  const { trend, paddingLeft, innerRight } = useMonthlyTrendChart(dailyCounts)
 
   return (
     <ChartCard titleIcon="show_chart" title={t('charts.trend')}>

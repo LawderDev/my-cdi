@@ -1,9 +1,5 @@
-export interface ChartLegendItem {
-  color: string
-  label: string
-  value: number
-}
+import type { ReactNode } from 'react'
 
 export interface ChartLegendProps {
-  items: ChartLegendItem[]
+  legendNodes: ReactNode[]
 }

@@ -1,7 +1,5 @@
-import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { Icon } from '@ui/components/Icon'
-import type { PeriodKey } from '@statistics/types'
 import {
   ACTIVE_FONT_WEIGHT,
   BTN_FONT_SIZE_PX,
@@ -9,75 +7,53 @@ import {
   BTN_HEIGHT_PX,
   ICON_FONT_SIZE_PX
 } from './PeriodFilter.styles'
+import { usePeriodFilter } from './hooks/usePeriodFilter'
 import type { PeriodFilterProps } from './types/PeriodFilterProps'
 
-interface PeriodButtonConfig {
-  key: PeriodKey
-  labelKey: string
-  iconName?: string
-  disabled?: boolean
-}
-
-const BUTTONS: PeriodButtonConfig[] = [
-  { key: 'week', labelKey: 'period.week' },
-  { key: 'month', labelKey: 'period.month' },
-  { key: 'quarter', labelKey: 'period.quarter' },
-  { key: 'semester', labelKey: 'period.semester' },
-  { key: 'year', labelKey: 'period.year' },
-  { key: 'custom', labelKey: 'period.custom', iconName: 'date_range', disabled: true }
-]
-
 export function PeriodFilter({ value, onChange }: PeriodFilterProps) {
-  const { t } = useTranslation('statistics')
+  const periodButtons = usePeriodFilter(value, onChange)
 
   return (
     <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-      {BUTTONS.map((button) => {
-        const isActive = button.key === value
-        return (
-          <Box
-            component="button"
-            key={button.key}
-            type="button"
-            disabled={button.disabled}
-            data-active={isActive}
-            onClick={() => {
-              if (!button.disabled) {
-                onChange(button.key)
-              }
-            }}
-            sx={{
-              height: `${BTN_HEIGHT_PX}px`,
-              px: 1.75,
-              borderRadius: 'var(--radius-xs)',
-              fontSize: `${BTN_FONT_SIZE_PX}px`,
-              fontWeight: isActive ? ACTIVE_FONT_WEIGHT : BTN_FONT_WEIGHT,
-              border: '1px solid',
-              borderColor: isActive ? 'var(--accent-border)' : 'var(--border)',
-              transition: 'all 0.2s',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 0.5,
-              cursor: 'pointer',
-              bgcolor: isActive ? 'var(--accent-bg)' : 'transparent',
-              color: isActive ? 'var(--accent)' : 'var(--text-dim)',
-              '&:hover': {
-                borderColor: isActive ? 'var(--accent-border)' : 'var(--border-light)',
-                color: isActive ? 'var(--accent)' : 'var(--title)'
-              },
-              '&:disabled': {
-                opacity: 0.5,
-                cursor: 'not-allowed'
-              }
-            }}
-          >
-            {button.iconName ? (
-              <Icon name={button.iconName} style={{ fontSize: `${ICON_FONT_SIZE_PX}px` }} />
-            ) : null}
-            {t(button.labelKey)}
-          </Box>
-        )
-      })}
+      {periodButtons.map((button) => (
+        <Box
+          component="button"
+          key={button.key}
+          type="button"
+          disabled={button.disabled}
+          data-active={button.isActive}
+          onClick={button.onSelect}
+          sx={{
+            height: `${BTN_HEIGHT_PX}px`,
+            px: 1.75,
+            borderRadius: 'var(--radius-xs)',
+            fontSize: `${BTN_FONT_SIZE_PX}px`,
+            fontWeight: button.isActive ? ACTIVE_FONT_WEIGHT : BTN_FONT_WEIGHT,
+            border: '1px solid',
+            borderColor: button.isActive ? 'var(--accent-border)' : 'var(--border)',
+            transition: 'all 0.2s',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 0.5,
+            cursor: 'pointer',
+            bgcolor: button.isActive ? 'var(--accent-bg)' : 'transparent',
+            color: button.isActive ? 'var(--accent)' : 'var(--text-dim)',
+            '&:hover': {
+              borderColor: button.isActive ? 'var(--accent-border)' : 'var(--border-light)',
+              color: button.isActive ? 'var(--accent)' : 'var(--title)'
+            },
+            '&:disabled': {
+              opacity: 0.5,
+              cursor: 'not-allowed'
+            }
+          }}
+        >
+          {button.iconName ? (
+            <Icon name={button.iconName} style={{ fontSize: `${ICON_FONT_SIZE_PX}px` }} />
+          ) : null}
+          {button.label}
+        </Box>
+      ))}
     </Box>
   )
 }
