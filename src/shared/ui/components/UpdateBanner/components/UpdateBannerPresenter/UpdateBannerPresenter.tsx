@@ -1,18 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import Box from '@mui/material/Box'
-import LinearProgress from '@mui/material/LinearProgress'
 import { Button } from '@ui/components/Button'
 import { IconButton } from '@ui/components/IconButton'
 import type { UpdateBannerPresenterProps } from './types/UpdateBannerPresenterProps'
-import {
-  ACTIONS_SX,
-  BASE_BANNER_SX,
-  CONTENT_SX,
-  ERROR_SX,
-  INFO_SX,
-  PROGRESS_SX,
-  SUCCESS_SX
-} from './UpdateBannerPresenter.styles'
+import { ActionsRow, Banner, ContentText, ProgressBar } from './UpdateBannerPresenter.styles'
 
 export function UpdateBannerPresenter({
   status,
@@ -32,44 +22,44 @@ export function UpdateBannerPresenter({
 
   if (status === 'available') {
     return (
-      <Box role="status" sx={[BASE_BANNER_SX, INFO_SX]}>
-        <Box sx={CONTENT_SX}>{t('updater.available', { version: versionAvailable ?? '' })}</Box>
+      <Banner role="status" $status="available">
+        <ContentText>{t('updater.available', { version: versionAvailable ?? '' })}</ContentText>
         <IconButton iconName="close" aria-label={t('app.close')} onClick={onDismiss} />
-      </Box>
+      </Banner>
     )
   }
 
   if (status === 'downloading') {
     return (
-      <Box role="status" sx={[BASE_BANNER_SX, INFO_SX]}>
-        <Box sx={CONTENT_SX}>
+      <Banner role="status" $status="downloading">
+        <ContentText>
           {t('updater.downloading', { percent: percentDisplay })}
-          <LinearProgress variant="determinate" value={fillPercent} sx={PROGRESS_SX} />
-        </Box>
-      </Box>
+          <ProgressBar variant="determinate" value={fillPercent} />
+        </ContentText>
+      </Banner>
     )
   }
 
   if (status === 'downloaded') {
     return (
-      <Box role="status" sx={[BASE_BANNER_SX, SUCCESS_SX]}>
-        <Box sx={CONTENT_SX}>{t('updater.downloaded', { version: versionDownloaded ?? '' })}</Box>
-        <Box sx={ACTIONS_SX}>
+      <Banner role="status" $status="downloaded">
+        <ContentText>{t('updater.downloaded', { version: versionDownloaded ?? '' })}</ContentText>
+        <ActionsRow>
           <Button variant="primary" onClick={onInstall}>
             {t('updater.installNow')}
           </Button>
           <Button variant="secondary" onClick={onDismiss}>
             {t('updater.dismiss')}
           </Button>
-        </Box>
-      </Box>
+        </ActionsRow>
+      </Banner>
     )
   }
 
   return (
-    <Box role="alert" sx={[BASE_BANNER_SX, ERROR_SX]}>
-      <Box sx={CONTENT_SX}>{t('updater.error', { message: errorMessage ?? '' })}</Box>
+    <Banner role="alert" $status="error">
+      <ContentText>{t('updater.error', { message: errorMessage ?? '' })}</ContentText>
       <IconButton iconName="close" aria-label={t('app.close')} onClick={onDismiss} />
-    </Box>
+    </Banner>
   )
 }

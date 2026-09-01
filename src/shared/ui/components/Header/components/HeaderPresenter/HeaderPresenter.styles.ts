@@ -1,3 +1,6 @@
+import Box from '@mui/material/Box'
+import { styled } from '@mui/material/styles'
+import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 
 const HEADER_HEIGHT_PX = 56
@@ -9,7 +12,9 @@ const PX_SPACING = 3.5
 const GAP_MEDIUM = 2
 const GAP_SMALL = 1.5
 
-export const HEADER_SX = {
+export const HeaderRoot = styled(Box, {
+  shouldForwardProp: shouldForwardStyledProp
+})({
   height: `${HEADER_HEIGHT_PX}px`,
   display: 'flex',
   alignItems: 'center',
@@ -18,23 +23,44 @@ export const HEADER_SX = {
   borderBottom: '1px solid var(--border)',
   flexShrink: 0,
   bgcolor: 'var(--bg)'
-}
+})
 
-export const TITLE_BLOCK_SX = { display: 'flex', alignItems: 'center', gap: GAP_MEDIUM }
+export const TitleBlock = styled(Box, {
+  shouldForwardProp: shouldForwardStyledProp
+})({
+  display: 'flex',
+  alignItems: 'center',
+  gap: GAP_MEDIUM
+})
 
-export const TITLE_SX = {
+export const Title = styled(Box, {
+  shouldForwardProp: shouldForwardStyledProp
+})({
   fontSize: `${TITLE_FONT_SIZE_PX}px`,
   fontWeight: TITLE_FONT_WEIGHT,
   letterSpacing: '-0.3px',
   color: 'var(--title)'
-}
+})
 
-export const SUBTITLE_SX = { fontSize: `${SUBTITLE_FONT_SIZE_PX}px`, color: 'var(--text-dim)' }
+export const Subtitle = styled(Box, {
+  shouldForwardProp: shouldForwardStyledProp
+})({
+  fontSize: `${SUBTITLE_FONT_SIZE_PX}px`,
+  color: 'var(--text-dim)'
+})
 
-export const CLOCK_AREA_SX = { display: 'flex', alignItems: 'center', gap: GAP_SMALL }
+export const ClockArea = styled(Box, {
+  shouldForwardProp: shouldForwardStyledProp
+})({
+  display: 'flex',
+  alignItems: 'center',
+  gap: GAP_SMALL
+})
 
-export const CLOCK_SX = {
+export const Clock = styled(Box, {
+  shouldForwardProp: shouldForwardStyledProp
+})({
   fontFamily: MONO_FONT_FAMILY,
   fontSize: `${CLOCK_FONT_SIZE_PX}px`,
   color: 'var(--text-dim)'
-}
+})

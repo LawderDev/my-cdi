@@ -1,3 +1,6 @@
+import MuiAvatar from '@mui/material/Avatar'
+import { styled } from '@mui/material/styles'
+import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import type { AvatarSize } from './types/AvatarProps'
 
 const LOW_OPACITY_HEX_SUFFIX = '22'
@@ -24,14 +27,14 @@ const FONT_SIZE_PX: Record<AvatarSize, number> = {
   lg: AVATAR_FONT_LG_PX
 }
 
-export function buildAvatarSx(colorSeedBg: string, size: AvatarSize) {
-  return {
-    width: `${SIZE_PX[size]}px`,
-    height: `${SIZE_PX[size]}px`,
-    fontSize: `${FONT_SIZE_PX[size]}px`,
-    fontWeight: FONT_WEIGHT_SEMIBOLD,
-    backgroundColor: `${colorSeedBg}${LOW_OPACITY_HEX_SUFFIX}`,
-    color: colorSeedBg,
-    flexShrink: 0
-  }
-}
+export const AvatarRoot = styled(MuiAvatar, {
+  shouldForwardProp: shouldForwardStyledProp
+})<{ $bg: string; $size: AvatarSize }>(({ $bg, $size }) => ({
+  width: `${SIZE_PX[$size]}px`,
+  height: `${SIZE_PX[$size]}px`,
+  fontSize: `${FONT_SIZE_PX[$size]}px`,
+  fontWeight: FONT_WEIGHT_SEMIBOLD,
+  backgroundColor: `${$bg}${LOW_OPACITY_HEX_SUFFIX}`,
+  color: $bg,
+  flexShrink: 0
+}))

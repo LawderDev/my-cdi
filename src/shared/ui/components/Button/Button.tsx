@@ -1,6 +1,5 @@
-import MuiButton from '@mui/material/Button'
 import type { ButtonProps, ButtonVariant } from './types/ButtonProps'
-import { SX_BY_VARIANT } from './Button.styles'
+import { ButtonRoot } from './Button.styles'
 
 interface MuiButtonStyle {
   variant: 'contained' | 'outlined'
@@ -24,7 +23,7 @@ export function Button({
 }: ButtonProps) {
   const muiStyle = VARIANT_MAP[variant]
   return (
-    <MuiButton
+    <ButtonRoot
       {...rest}
       className={className}
       variant={muiStyle.variant}
@@ -33,9 +32,8 @@ export function Button({
       startIcon={iconLeft}
       endIcon={iconRight}
       data-variant={variant}
-      sx={SX_BY_VARIANT[variant]}
     >
       {children}
-    </MuiButton>
+    </ButtonRoot>
   )
 }

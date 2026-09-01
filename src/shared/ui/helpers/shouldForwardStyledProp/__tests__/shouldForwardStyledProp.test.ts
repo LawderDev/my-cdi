@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { shouldForwardStyledProp } from '../shouldForwardStyledProp'
 
+const NON_STRING_PROP_KEY = 42
+
 describe('shouldForwardStyledProp', () => {
   it('forwards regular props to the DOM', () => {
     expect(shouldForwardStyledProp('data-selected')).toBe(true)
@@ -21,7 +23,7 @@ describe('shouldForwardStyledProp', () => {
   })
 
   it('rejects non-string prop keys', () => {
-    expect(shouldForwardStyledProp(42)).toBe(false)
+    expect(shouldForwardStyledProp(NON_STRING_PROP_KEY)).toBe(false)
     expect(shouldForwardStyledProp(Symbol('x'))).toBe(false)
   })
 })
