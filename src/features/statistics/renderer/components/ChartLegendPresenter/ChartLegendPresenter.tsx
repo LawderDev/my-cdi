@@ -1,6 +1,6 @@
-import Box from '@mui/material/Box'
+import { ChartLegendRoot } from './ChartLegendPresenter.styles'
 import type { ChartLegendPresenterProps } from './types/ChartLegendPresenterProps'
 
 export function ChartLegendPresenter({ legendNodes }: ChartLegendPresenterProps) {
-  return <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>{legendNodes}</Box>
+  return <ChartLegendRoot>{legendNodes}</ChartLegendRoot>
 }

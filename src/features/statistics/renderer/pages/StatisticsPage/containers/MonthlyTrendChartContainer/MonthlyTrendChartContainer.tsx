@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next'
-import Box from '@mui/material/Box'
 import { ChartCardPresenter } from '@statistics/components/ChartCardPresenter'
 import {
   ACCENT_COLOR,
-  CHART_HEIGHT_PX,
   DASH_PATTERN,
   DOT_RADIUS,
   GRADIENT_OPACITY_TOP,
   STROKE_WIDTH,
   Y_LABEL_FONT_SIZE,
-  Y_LABEL_TEXT_OFFSET
+  Y_LABEL_TEXT_OFFSET,
+  ChartArea,
+  ChartSvg
 } from './MonthlyTrendChartContainer.styles'
 import { Y_LABEL_OFFSET_X } from './helpers/buildTrendPath'
 import { useMonthlyTrendChart } from './hooks/useMonthlyTrendChart'
@@ -21,14 +21,8 @@ export function MonthlyTrendChartContainer({ dailyCounts }: MonthlyTrendChartCon
 
   return (
     <ChartCardPresenter titleIcon="show_chart" title={t('charts.trend')}>
-      <Box sx={{ position: 'relative', height: `${CHART_HEIGHT_PX}px` }}>
-        <Box
-          component="svg"
-          sx={{ width: '100%', height: '100%' }}
-          viewBox={trend.viewBox}
-          preserveAspectRatio="none"
-          aria-label={t('charts.trend')}
-        >
+      <ChartArea>
+        <ChartSvg viewBox={trend.viewBox} preserveAspectRatio="none" aria-label={t('charts.trend')}>
           <defs>
             <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={ACCENT_COLOR} stopOpacity={GRADIENT_OPACITY_TOP} />
@@ -80,8 +74,8 @@ export function MonthlyTrendChartContainer({ dailyCounts }: MonthlyTrendChartCon
               strokeWidth={STROKE_WIDTH}
             />
           ))}
-        </Box>
-      </Box>
+        </ChartSvg>
+      </ChartArea>
     </ChartCardPresenter>
   )
 }

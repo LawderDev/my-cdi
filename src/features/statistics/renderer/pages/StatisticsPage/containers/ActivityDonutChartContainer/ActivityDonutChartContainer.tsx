@@ -1,9 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { ReactNode } from 'react'
-import Box from '@mui/material/Box'
 import { ChartCardPresenter } from '@statistics/components/ChartCardPresenter'
 import { ChartLegendPresenter } from '@statistics/components/ChartLegendPresenter'
-import { MONO_FONT_FAMILY } from '@ui/theme'
 import {
   CX,
   CY,
@@ -11,15 +9,16 @@ import {
   LABEL_FONT_SIZE,
   LABEL_FONT_WEIGHT,
   LABEL_OFFSET,
-  LEGEND_DOT_BORDER_RADIUS_PX,
-  LEGEND_DOT_SIZE_PX,
-  LEGEND_ITEM_FONT_SIZE_PX,
-  LEGEND_VALUE_FONT_SIZE_PX,
-  LEGEND_VALUE_FONT_WEIGHT,
   SIZE,
   VALUE_FONT_SIZE,
   VALUE_FONT_WEIGHT,
-  VALUE_OFFSET
+  VALUE_OFFSET,
+  ChartBody,
+  ChartSvg,
+  LegendDot,
+  LegendItem,
+  LegendLabel,
+  LegendValue
 } from './ActivityDonutChartContainer.styles'
 import { useActivityDonutChart } from './hooks/useActivityDonutChart'
 import type { ActivityDonutChartContainerProps } from './types/ActivityDonutChartContainerProps'
@@ -28,47 +27,16 @@ export function ActivityDonutChartContainer({ activityCounts }: ActivityDonutCha
   const { t } = useTranslation('statistics')
   const { slices, total, legendItems } = useActivityDonutChart(activityCounts)
   const legendNodes: ReactNode[] = legendItems.map((item) => (
-    <Box
-      key={item.label}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 1,
-        fontSize: `${LEGEND_ITEM_FONT_SIZE_PX}px`
-      }}
-    >
-      <Box
-        component="span"
-        sx={{
-          width: `${LEGEND_DOT_SIZE_PX}px`,
-          height: `${LEGEND_DOT_SIZE_PX}px`,
-          borderRadius: `${LEGEND_DOT_BORDER_RADIUS_PX}px`,
-          flexShrink: 0,
-          background: item.color
-        }}
-      />
-      <Box component="span" sx={{ color: 'var(--text)', flex: 1 }}>
-        {item.label}
-      </Box>
-      <Box
-        component="span"
-        sx={{
-          fontFamily: MONO_FONT_FAMILY,
-          fontWeight: LEGEND_VALUE_FONT_WEIGHT,
-          color: 'var(--title)',
-          fontSize: `${LEGEND_VALUE_FONT_SIZE_PX}px`
-        }}
-      >
-        {item.value}
-      </Box>
-    </Box>
+    <LegendItem key={item.label}>
+      <LegendDot as="span" $color={item.color} />
+      <LegendLabel as="span">{item.label}</LegendLabel>
+      <LegendValue as="span">{item.value}</LegendValue>
+    </LegendItem>
   ))
   return (
     <ChartCardPresenter titleIcon="donut_small" title={t('charts.activities')}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-        <Box
-          component="svg"
-          sx={{ flexShrink: 0 }}
+      <ChartBody>
+        <ChartSvg
           width={SIZE}
           height={SIZE}
           viewBox={`0 0 ${SIZE} ${SIZE}`}
@@ -99,9 +67,9 @@ export function ActivityDonutChartContainer({ activityCounts }: ActivityDonutCha
           >
             {t('charts.visits')}
           </text>
-        </Box>
+        </ChartSvg>
         <ChartLegendPresenter legendNodes={legendNodes} />
-      </Box>
+      </ChartBody>
     </ChartCardPresenter>
   )
 }

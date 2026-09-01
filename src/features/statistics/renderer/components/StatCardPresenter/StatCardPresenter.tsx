@@ -1,16 +1,10 @@
-import Box from '@mui/material/Box'
 import { Card } from '@ui/components/Card'
 import { Icon } from '@ui/components/Icon'
-import { MONO_FONT_FAMILY } from '@ui/theme'
 import {
-  DELTA_FONT_SIZE_PX,
-  DELTA_FONT_WEIGHT,
-  ICON_FONT_SIZE_PX,
-  ICON_SIZE_PX,
-  LABEL_FONT_SIZE_PX,
-  LABEL_FONT_WEIGHT,
-  VALUE_FONT_SIZE_PX,
-  VALUE_FONT_WEIGHT
+  StatCardDelta,
+  StatCardIcon,
+  StatCardLabel,
+  StatCardValue
 } from './StatCardPresenter.styles'
 import type { StatCardPresenterProps } from './types/StatCardPresenterProps'
 
@@ -22,62 +16,14 @@ export function StatCardPresenter({
   value,
   delta
 }: StatCardPresenterProps) {
-  const deltaColor = delta?.sign === 'up' ? 'var(--success)' : 'var(--danger)'
   return (
     <Card>
-      <Box
-        sx={{
-          width: `${ICON_SIZE_PX}px`,
-          height: `${ICON_SIZE_PX}px`,
-          borderRadius: 'var(--radius-sm)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          mb: 1.5,
-          fontSize: `${ICON_FONT_SIZE_PX}px`,
-          flexShrink: 0,
-          bgcolor: iconBg,
-          color: iconColor
-        }}
-      >
+      <StatCardIcon $bg={iconBg} $color={iconColor}>
         <Icon name={iconName} />
-      </Box>
-      <Box
-        sx={{
-          fontSize: `${LABEL_FONT_SIZE_PX}px`,
-          fontWeight: LABEL_FONT_WEIGHT,
-          color: 'var(--text-dim)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.8px',
-          mb: 1
-        }}
-      >
-        {label}
-      </Box>
-      <Box
-        sx={{
-          fontFamily: MONO_FONT_FAMILY,
-          fontSize: `${VALUE_FONT_SIZE_PX}px`,
-          fontWeight: VALUE_FONT_WEIGHT,
-          letterSpacing: '-1px',
-          lineHeight: 1
-        }}
-      >
-        {value}
-      </Box>
-      {delta ? (
-        <Box
-          data-sign={delta.sign}
-          sx={{
-            fontSize: `${DELTA_FONT_SIZE_PX}px`,
-            mt: 0.75,
-            fontWeight: DELTA_FONT_WEIGHT,
-            color: deltaColor
-          }}
-        >
-          {delta.text}
-        </Box>
-      ) : null}
+      </StatCardIcon>
+      <StatCardLabel>{label}</StatCardLabel>
+      <StatCardValue>{value}</StatCardValue>
+      {delta ? <StatCardDelta data-sign={delta.sign}>{delta.text}</StatCardDelta> : null}
     </Card>
   )
 }
