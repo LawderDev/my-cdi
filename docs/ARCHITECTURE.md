@@ -289,27 +289,33 @@ export function CalendarViewPresenter({ dayNodes }: CalendarViewPresenterProps) 
 
 Conditional rendering (`cond ? <A/> : null`) and early returns choosing *what* to render stay in presenters; everything else derived moves up.
 
-### Styling: `styled()` in `.styles.ts`
+### Styling: `styled()` in `.styles.ts`, theme as single source of truth
 
 - **Zero inline `sx={{...}}`** in feature or shared/ui components. All styling lives in `XPresenter.styles.ts` (or `XContainer.styles.ts`) as `styled()` components from `@mui/material/styles`.
+- **The MUI theme (`@ui/theme`) is the only source of design tokens.** `global.css` contains nothing but the font `@import` lines; element resets, scrollbar styling and the base body styles live in the `MuiCssBaseline` overrides in `theme.ts`. Never use CSS custom properties (`var(--...)`), hardcoded hex/rgba colors or raw px `fontSize` in components — resolve everything from the theme.
 - MUI v9's `styled()` serialises style objects with emotion's raw CSS serializer and does **not** resolve MUI system props (`mt`, `px`, `gap`, `bgcolor`, …) — they would reach the stylesheet unprocessed and be silently dropped. Style objects therefore use **real CSS properties** and `theme.spacing()` for spacing-scale values (`paddingInline: theme.spacing(1)`, `backgroundColor`, `gap: theme.spacing(0.75)`), never system-prop shorthands.
 - Every styled call passes the shared prop filter:
 
 ```tsx
 // XPresenter.styles.ts
-import { styled } from '@mui/material/styles'
+import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 export const TileButton = styled('button', { shouldForwardProp: shouldForwardStyledProp })<{
   $isSelected: boolean
 }>(({ theme, $isSelected }) => ({
-  borderColor: $isSelected ? 'var(--accent)' : 'var(--border)',
+  borderColor: $isSelected ? theme.palette.primary.main : theme.palette.divider,
   paddingInline: theme.spacing(1),
-  '&[data-selected="true"]': { backgroundColor: 'var(--accent-bg)' }
+  '&[data-selected="true"]': {
+    backgroundColor: alpha(theme.palette.primary.main, TINT_ALPHAS.surface)
+  }
 }))
 ```
 
+- **Text slots render as `Typography`.** Plain text becomes `styled(Typography)` with the variant chosen at the call site (`<Label variant="overline">`, `<Value variant="h4">`). Non-text elements that need a font size (icons, chart-adjacent bits) use `theme.typography.<variant>.fontSize` or the numeric `TYPE_SCALE` export — never raw px. The scale lives in `TYPE_SCALE` (caption 11 / body2 12 / body1 13 / subtitle2 14 / subtitle1 16 / h6 18 / h5 20 / h4 28 / h3 40 / h2 48) and weights in `FONT_WEIGHTS`; both are re-exported from `@ui/theme`.
+- **Tinted colors** (soft backgrounds/borders derived from a palette color) use `alpha()` with the shared `TINT_ALPHAS` steps (surface 0.1 / hover 0.2 / border 0.25). Custom palette slots added via module augmentation: `palette.sidebar`, `palette.surface`, `palette.dividerStrong`, `palette.activity.<tone>` (activity accents shared by chips, tiles and charts). Activity/period coloring is data-attribute driven (`data-tone`, `data-period`) — no CSS classes.
 - Conditional styles via transient `$props` (typed in the generic) or attribute selectors when the state is already in the DOM (`'&[data-active="true"]'`, `'&[data-sign="up"]'`) — never conditional object spreads
+- Transitions use `theme.transitions.create([...props], { duration: theme.transitions.duration.* })`; shadows use `theme.shadows[1..4]` (1 = soft card, 2 = large modal, 3/4 = accent glow); breakpoints use `theme.breakpoints.down('lg')` (lg = 1100px) — never `@media` with hardcoded px.
 - px values > 12 are hoisted to `*_PX` constants; spacing-scale values use `theme.spacing()` (constants holding spacing steps are named `*_STEPS`)
 - The one exception: `Card` forwards its callers' `sx` prop to its styled root (MUI applies caller `sx` after the base styles)
 
@@ -688,10 +694,10 @@ Use full words. `v` → `version`, `num` → `number`, `msg` → `message`.
 
 ### Enum-to-Display Metadata
 
-Presentation metadata for enum values is stored as parallel `Record<Enum, X>` maps (color, icon, CSS class) in `renderer/helpers/`. This keeps domain types clean while allowing presenters to resolve visual attributes:
+Presentation metadata for enum values is stored as parallel `Record<Enum, X>` maps (tone, icon) in `renderer/helpers/`. This keeps domain types clean while allowing presenters to resolve visual attributes — colors resolve through the theme (`getActivityTone` maps `ActivityType` to a `theme.palette.activity` tone), never through CSS classes:
 
 ```ts
-const activityColors: Record<ActivityType, string> = { ... }
+const activityTone: Record<ActivityType, ActivityTone> = { ... }
 const activityIcons: Record<ActivityType, string> = { ... }
 ```
 
@@ -710,7 +716,7 @@ The design system in `shared/ui/components/` wraps MUI primitives with applicati
 | `Modal`         | Dialog wrapper with custom width mapping       |
 | `ErrorBoundary` | Global render-error catch + fallback UI        |
 
-`.styles.ts` files export `styled()` components (plus `*_PX` size constants) built with `@mui/material/styles` `styled()` using plain CSS properties and `theme.spacing()` — never MUI system props — and the shared `shouldForwardStyledProp` filter; not MUI `sx`. CSS custom properties in `shared/ui/styles/global.css` (`--bg`, `--card`, `--accent`, `--radius`) coexist with the MUI theme.
+`.styles.ts` files export `styled()` components (plus `*_PX` size constants) built with `@mui/material/styles` `styled()` using plain CSS properties and `theme.spacing()` — never MUI system props — and the shared `shouldForwardStyledProp` filter; not MUI `sx`. All design tokens come from the MUI theme (`@ui/theme`): palette (including the custom `sidebar`/`surface`/`dividerStrong`/`activity` slots), `TYPE_SCALE` + `FONT_WEIGHTS` for typography, `RADII`, `TINT_ALPHAS` and `theme.shadows[1..4]`. `global.css` contains only the font imports.
 
 ---
 
