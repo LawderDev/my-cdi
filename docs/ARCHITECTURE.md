@@ -218,60 +218,105 @@ A single class-component `ErrorBoundary` wraps the route tree below `BrowserRout
 
 ## 8. Frontend Container/Presenter Pattern
 
-### Containers
+### Containers (`…Container`)
 
-- Import hooks, manage state, pass data to presenters via props
+- Folder == file == component name: `containers/XContainer/XContainer.tsx`, re-exported by `index.ts`
+- Import hooks, manage state, build view models, pass data to presenters via props
 - May nest other containers
-- **All logic lives here**
+- **All logic lives here** — in `hooks/useX/` or `helpers/helperName/` sub-units, each with `index.ts` + `__tests__/`
+- Containers may call `.map()` / `.filter()` / `.reduce()` and render JSX
 
-### Presenters
+### Presenters (`…Presenter`)
 
-- Pure `props → JSX` components
+- Pure `props → JSX` components, named `XPresenter`
 - **Zero hooks** except `useTranslation` (read-only context consumer)
 - **Zero state, zero logic, zero inline functions**
-- Every presenter has a dedicated `.styles.ts` file
+- **Zero `.map()` / `.filter()` / `.reduce()`** — lists arrive as pre-built `ReactNode[]` or the container maps a flat view model array in the container itself
+- Zero arithmetic (`Math.min`, `parseInt`, `dayjs`, `toFixed`), zero string/class building, no non-`t` function calls
+- Every presenter has a dedicated `XPresenter.styles.ts` file with `styled()` components
 
 ### Page → Container → Presenter Hierarchy
 
 ```
 Page (pages/XPage/XPage.tsx)
-  └── Container (containers/X/X.tsx)
-        └── Presenter (components/X/X.tsx)
+  └── Container (containers/XContainer/XContainer.tsx)
+        └── Presenter (components/XPresenter/XPresenter.tsx)
 ```
 
 Pages orchestrate dialog state and compose containers. Containers manage data, selection, and batch actions, then pass props to presenters. Presenters are pure `props → JSX`.
 
 ### Naming
 
-- Containers and presenters share the same base name
-- **Location** determines the role, not a suffix
-- Optional `View` suffix when a container needs a dedicated display component
+- The suffix is explicit and mandatory: `XContainer` / `XPresenter` (folder == file == component name)
+- Shared/ui primitives (`Button`, `Card`, `Icon`, `Modal`…), pages, `ErrorBoundary`, and `src/renderer/` units keep unsuffixed names
+
+### The two legal prop shapes
+
+1. **Flat view models** for fixed slots — `initials`, `periodLabel`, `rowCount`, `percentDisplay`… all derivation done in the container:
 
 ```tsx
-// ✅ Container — hooks, state, logic
-export function JournalEntryForm() {
-  const form = useJournalEntryForm()
-  return <JournalEntryFormView form={form} />
+// ✅ Container — derives everything, builds flat view models
+export function JournalEntryListContainer({ selectedDate, onEditEntry }: Props) {
+  const rows = entries.map((entry) => ({
+    initials: buildInitials(entry.student.prenom, entry.student.nom),
+    periodLabel: getEntryPeriod(entry.time),
+    selected: selectedIds.includes(entry.id),
+    onRowClick: () => selectEntry(entry.id)
+  }))
+  return rows.map((row) => <JournalEntryRowPresenter key={row.id} {...row} />)
 }
 
-// ✅ Presenter — pure display
-export function JournalEntryFormView({ form }: JournalEntryFormViewProps) {
-  return <Box>...</Box>
-}
-
-// ✅ Also valid — container composes presenters directly
-export function StudentList() {
-  const { students } = useStudentListData()
-  return <StudentTable rows={students} />
+// ✅ Presenter — pure display of flat props, zero derivation
+export function JournalEntryRowPresenter({ initials, periodLabel }: Props) {
+  return <RowRoot>...</RowRoot>
 }
 ```
+
+2. **Node arrays** (`ReactNode[]`) for lists the container renders once:
+
+```tsx
+// ✅ Container builds the nodes
+const dayNodes: ReactNode[] = cells.map((cell) => (
+  <CalendarDayPresenter key={cell.iso} cell={cell} onClick={() => selectDay(cell.iso)} />
+))
+return <CalendarViewPresenter dayNodes={dayNodes} />
+
+// ✅ Presenter renders them without mapping
+export function CalendarViewPresenter({ dayNodes }: CalendarViewPresenterProps) {
+  return <Grid>{dayNodes}</Grid>
+}
+```
+
+Conditional rendering (`cond ? <A/> : null`) and early returns choosing *what* to render stay in presenters; everything else derived moves up.
+
+### Styling: `styled()` in `.styles.ts`
+
+- **Zero inline `sx={{...}}`** in feature or shared/ui components. All styling lives in `XPresenter.styles.ts` (or `XContainer.styles.ts`) as `styled()` components from `@mui/material/styles`.
+- Every styled call passes the shared prop filter:
+
+```tsx
+// XPresenter.styles.ts
+import { styled } from '@mui/material/styles'
+import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
+
+export const TileButton = styled('button', { shouldForwardProp: shouldForwardStyledProp })<{
+  $isSelected: boolean
+}>(({ $isSelected }) => ({
+  borderColor: $isSelected ? 'var(--accent)' : 'var(--border)',
+  '&[data-selected="true"]': { bgcolor: 'var(--accent-bg)' }
+}))
+```
+
+- Conditional styles via transient `$props` (typed in the generic) or attribute selectors when the state is already in the DOM (`'&[data-active="true"]'`, `'&[data-sign="up"]'`) — never conditional object spreads
+- px values > 12 are hoisted to `*_PX` constants; MUI spacing steps (`mb: 2`, `gap: 1`) stay numeric
+- The one exception: `Card` forwards its callers' `sx` prop to its styled root (MUI applies caller `sx` after the base styles)
 
 ### List & Table Patterns
 
 **No shared `DataTable` abstraction.** Each feature builds its own list:
 
-- Student list: raw HTML `<table>` (`StudentTable` + `StudentTableRow`)
-- Journal list: flex `Box` rows (`JournalEntryRow`)
+- Student list: raw HTML `<table>` (`StudentTablePresenter` + `StudentTableRowPresenter`); the container passes `headerNodes` / `rowNodes` / `countLabel`
+- Journal list: flex `Box` rows (`JournalEntryRowPresenter`)
 
 **Sorting** is client-side via pure helpers:
 
@@ -298,7 +343,7 @@ Consistent 3-layer architecture for any list with multi-select:
    - `useState<number[]>` for `selectedIds`
    - `toggle(id)`, `selectAll(ids)`, `clearSelection()`, `isSelected(id)`
 
-2. **Batch actions container** (`StudentBatchActions` / `JournalBatchActions`)
+2. **Batch actions container** (`StudentBatchActionsContainer` / `JournalBatchActionsContainer`)
    - Renders a strip with "Select All / Deselect All", "Delete", "Change Activity"
    - Uses `ConfirmDialog` for destructive confirmation
    - Calls `onAfterDelete` / `onAfterUpdate` to clear selection after mutation
@@ -355,7 +400,7 @@ export default JournalPageImpl
 
 ### Suspense Fallback
 
-Lazy-loaded pages are wrapped in `Suspense` with a `RouteSuspenseFallback` spinner inside `AppRoutes`.
+Lazy-loaded pages are wrapped in `Suspense` with a `RouteSuspenseFallback` spinner (own unit under `src/renderer/routes/RouteSuspenseFallback/`). A local `SuspenseRoute` helper in `AppRoutes` composes the `Suspense` boundary so each route declaration stays one line.
 
 ---
 
@@ -438,8 +483,8 @@ Per [React docs](https://react.dev/learn/you-might-not-need-an-effect), `useEffe
 
 ### Hooks Location
 
-- **Containers** and **hooks/** folders only
-- **Presenters** must have zero hooks (except `useTranslation`)
+- **Containers** (`…Container`) and **hooks/** folders only
+- **Presenters** (`…Presenter`) must have zero hooks (except `useTranslation`) and zero `.map()`
 - **Helpers** must have zero React imports
 
 ### No Inline Components
@@ -456,7 +501,7 @@ Shared primitives in `shared/ui/components/`:
 - **ConfirmDialog** — pre-built confirmation with a `destructive` prop for danger styling.
 - **useDialog** — `{ isOpen, open, close }` hook for local dialog state.
 
-Feature dialogs (e.g., `JournalEntryEditDialog`) use `Modal` directly. Forms inside modals embed a `<form>` and pass actions via the `footer` prop.
+Feature dialogs (e.g., `JournalEntryEditDialogPresenter`) use `Modal` directly. Forms inside modals embed a `<form>` and pass actions via the `footer` prop.
 
 ---
 
@@ -662,9 +707,8 @@ The design system in `shared/ui/components/` wraps MUI primitives with applicati
 | `Autocomplete`  | MUI Autocomplete with custom filtering helpers |
 | `Modal`         | Dialog wrapper with custom width mapping       |
 | `ErrorBoundary` | Global render-error catch + fallback UI        |
-| `AppVersion`    | App version string display                     |
 
-`.styles.ts` files export named constants (spacing, colors, sizes) used alongside MUI `sx`. CSS custom properties in `shared/ui/styles/global.css` (`--bg`, `--card`, `--accent`, `--radius`) coexist with the MUI theme.
+`.styles.ts` files export `styled()` components (plus `*_PX` size constants) built with `@mui/material/styles` `styled()` and the shared `shouldForwardStyledProp` filter — not MUI `sx`. CSS custom properties in `shared/ui/styles/global.css` (`--bg`, `--card`, `--accent`, `--radius`) coexist with the MUI theme.
 
 ---
 
