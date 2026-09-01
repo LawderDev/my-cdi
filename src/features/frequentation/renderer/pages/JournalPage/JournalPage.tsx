@@ -3,6 +3,7 @@ import { Calendar } from './containers/Calendar'
 import { JournalEntryForm } from './containers/JournalEntryForm'
 import { JournalEntryList } from './containers/JournalEntryList'
 import { JournalEntryEditDialog } from '@frequentation/components/JournalEntryEditDialog'
+import { buildActivityTiles } from '@frequentation/components/ActivityGrid/helpers/buildActivityTiles'
 import { useJournalPage } from './hooks/useJournalPage'
 
 export function JournalPage() {
@@ -38,9 +39,7 @@ export function JournalPage() {
       {editingEntry && editingActivity ? (
         <JournalEntryEditDialog
           open
-          activity={editingActivity}
-          activities={activityOptions}
-          onActivityChange={setEditingActivity}
+          tiles={buildActivityTiles(activityOptions, editingActivity, setEditingActivity)}
           onSubmit={submitEdit}
           onClose={closeEditDialog}
           entry={editingEntry}

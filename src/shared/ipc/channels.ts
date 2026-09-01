@@ -1,3 +1,7 @@
+export const APP_CHANNELS = {
+  GET_VERSION: 'app:getVersion'
+} as const
+
 export const STUDENT_CHANNELS = {
   CREATE: 'student.create',
   GET: 'student.get',
@@ -21,6 +25,7 @@ export const STATISTICS_CHANNELS = {
   GET_STATS: 'statistics.getStats'
 } as const
 
+export type AppChannel = (typeof APP_CHANNELS)[keyof typeof APP_CHANNELS]
 export type StudentChannel = (typeof STUDENT_CHANNELS)[keyof typeof STUDENT_CHANNELS]
 export type FrequentationChannel =
   (typeof FREQUENTATION_CHANNELS)[keyof typeof FREQUENTATION_CHANNELS]

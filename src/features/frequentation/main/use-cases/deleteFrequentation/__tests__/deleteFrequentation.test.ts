@@ -3,6 +3,7 @@ import { ActivityType } from '@types'
 import { deleteFrequentation } from '../deleteFrequentation'
 import type { FrequentationGateway } from '@frequentation/gateways/frequentation'
 import type { FrequentationEntity } from '@frequentation/entities/frequentation'
+import { ErrorCode } from '@lib/errors'
 
 const NONEXISTENT_ID = 999
 
@@ -47,7 +48,7 @@ describe('deleteFrequentation', () => {
     const result = await deleteFrequentation(gateway, NONEXISTENT_ID)
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('introuvable')
+      expect(result.code).toBe(ErrorCode.FREQUENTATION_NOT_FOUND)
     }
   })
 

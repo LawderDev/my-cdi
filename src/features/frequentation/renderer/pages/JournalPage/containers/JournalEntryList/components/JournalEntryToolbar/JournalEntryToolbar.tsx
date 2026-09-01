@@ -26,13 +26,9 @@ import {
 interface JournalEntryToolbarProps {
   entryCount: number
   period: EntryPeriodFilter
-  onPeriodChange: (next: EntryPeriodFilter) => void
+  onPeriodChange: (event: SelectChangeEvent<EntryPeriodFilter>) => void
   searchTerm: string
-  onSearchChange: (value: string) => void
-}
-
-function isPeriodFilter(value: string): value is EntryPeriodFilter {
-  return value === 'all' || value === 'morning' || value === 'afternoon'
+  onSearchChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
 export function JournalEntryToolbar({
@@ -43,17 +39,6 @@ export function JournalEntryToolbar({
   onSearchChange
 }: JournalEntryToolbarProps) {
   const { t } = useTranslation('frequentation')
-
-  function handlePeriodChange(event: SelectChangeEvent<EntryPeriodFilter>) {
-    const next = event.target.value
-    if (isPeriodFilter(next)) {
-      onPeriodChange(next)
-    }
-  }
-
-  function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
-    onSearchChange(event.target.value)
-  }
 
   return (
     <Box
@@ -101,7 +86,7 @@ export function JournalEntryToolbar({
         <TextField
           type="search"
           value={searchTerm}
-          onChange={handleSearchChange}
+          onChange={onSearchChange}
           placeholder={t('searchPlaceholder')}
           size="small"
           variant="outlined"
@@ -145,7 +130,7 @@ export function JournalEntryToolbar({
         />
         <Select
           value={period}
-          onChange={handlePeriodChange}
+          onChange={onPeriodChange}
           size="small"
           inputProps={{ 'aria-label': t('period.label') }}
           sx={{

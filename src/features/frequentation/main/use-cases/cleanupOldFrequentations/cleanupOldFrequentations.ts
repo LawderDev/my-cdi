@@ -1,5 +1,5 @@
 import type { FrequentationGateway } from '@frequentation/gateways/frequentation'
-import type { UseCaseResult } from '../types/UseCaseResult'
+import type { UseCaseResult } from '@lib/use-case'
 
 export const CLEANUP_RETENTION_YEARS = 2
 

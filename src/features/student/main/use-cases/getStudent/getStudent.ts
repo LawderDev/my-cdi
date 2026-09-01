@@ -1,5 +1,6 @@
 import { formatStudentResponse } from '../helpers/formatStudentResponse'
-import type { UseCaseResult } from '../types/UseCaseResult'
+import { ErrorCode } from '@lib/errors'
+import type { UseCaseResult } from '@lib/use-case'
 import type { StudentGateway } from '@student/gateways/student'
 import type { StudentResponseDto } from '@student-shared'
 
@@ -17,7 +18,7 @@ export async function getStudent(
 ): Promise<UseCaseResult<StudentResponseDto>> {
   const entity = await deps.gateway.getById(input.id)
   if (!entity) {
-    return { success: false, error: 'Élève introuvable' }
+    return { success: false, error: 'Student not found', code: ErrorCode.STUDENT_NOT_FOUND }
   }
 
   return { success: true, data: formatStudentResponse(entity) }

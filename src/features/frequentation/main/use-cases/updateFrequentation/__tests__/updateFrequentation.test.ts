@@ -3,6 +3,7 @@ import { ActivityType } from '@types'
 import { updateFrequentation } from '../updateFrequentation'
 import type { FrequentationGateway } from '@frequentation/gateways/frequentation'
 import type { FrequentationEntity } from '@frequentation/entities/frequentation'
+import { ErrorCode } from '@lib/errors'
 
 const NONEXISTENT_ID = 999
 
@@ -55,7 +56,7 @@ describe('updateFrequentation', () => {
     })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('introuvable')
+      expect(result.code).toBe(ErrorCode.FREQUENTATION_NOT_FOUND)
     }
   })
 
@@ -64,7 +65,7 @@ describe('updateFrequentation', () => {
     const result = await updateFrequentation(gateway, 1, { studentId: 0 })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('élève')
+      expect(result.code).toBe(ErrorCode.VALIDATION_ERROR)
     }
   })
 

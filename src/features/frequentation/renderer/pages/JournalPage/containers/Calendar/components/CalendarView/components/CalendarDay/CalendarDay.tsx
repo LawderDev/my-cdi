@@ -13,10 +13,10 @@ import {
 
 interface CalendarDayProps {
   cell: CalendarCell
-  onSelect: (iso: string) => void
+  onClick: () => void
 }
 
-export function CalendarDay({ cell, onSelect }: CalendarDayProps) {
+export function CalendarDay({ cell, onClick }: CalendarDayProps) {
   return (
     <Box
       component="button"
@@ -26,7 +26,7 @@ export function CalendarDay({ cell, onSelect }: CalendarDayProps) {
       data-today={cell.isToday}
       data-selected={cell.isSelected}
       data-has-visits={cell.hasVisits}
-      onClick={() => onSelect(cell.iso)}
+      onClick={onClick}
       sx={{
         position: 'relative',
         width: `${DAY_SIZE_PX}px`,

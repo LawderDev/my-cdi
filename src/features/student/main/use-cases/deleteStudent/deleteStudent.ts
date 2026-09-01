@@ -1,4 +1,5 @@
-import type { UseCaseResult } from '../types/UseCaseResult'
+import { ErrorCode } from '@lib/errors'
+import type { UseCaseResult } from '@lib/use-case'
 import type { StudentGateway } from '@student/gateways/student'
 
 interface DeleteStudentDeps {
@@ -15,12 +16,12 @@ export async function deleteStudent(
 ): Promise<UseCaseResult<{ id: number }>> {
   const existingStudent = await deps.gateway.getById(input.id)
   if (!existingStudent) {
-    return { success: false, error: 'Élève introuvable' }
+    return { success: false, error: 'Student not found', code: ErrorCode.STUDENT_NOT_FOUND }
   }
 
   const deleted = await deps.gateway.delete(input.id)
   if (!deleted) {
-    return { success: false, error: 'Erreur lors de la suppression' }
+    return { success: false, error: 'Failed to delete student', code: ErrorCode.DATABASE_ERROR }
   }
 
   return { success: true, data: { id: input.id } }

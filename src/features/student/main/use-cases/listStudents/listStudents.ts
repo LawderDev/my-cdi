@@ -1,5 +1,5 @@
 import { formatStudentResponse } from '../helpers/formatStudentResponse'
-import type { UseCaseResult } from '../types/UseCaseResult'
+import type { UseCaseResult } from '@lib/use-case'
 import type { StudentGateway } from '@student/gateways/student'
 import type { StudentListResponseDto } from '@student-shared'
 

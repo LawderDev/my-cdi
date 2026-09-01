@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import { Modal } from '@ui/components/Modal'
 import { Button } from '@ui/components/Button'
 import type { ConfirmDialogProps } from './types/ConfirmDialogProps'
+import { MESSAGE_SX } from './ConfirmDialog.styles'
 
 export function ConfirmDialog({
   open,
@@ -34,7 +35,7 @@ export function ConfirmDialog({
         </>
       }
     >
-      <Box sx={{ color: 'var(--text)' }}>{message}</Box>
+      <Box sx={MESSAGE_SX}>{message}</Box>
     </Modal>
   )
 }

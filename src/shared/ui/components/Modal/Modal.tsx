@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -5,6 +6,7 @@ import DialogActions from '@mui/material/DialogActions'
 import Box from '@mui/material/Box'
 import { IconButton } from '../IconButton'
 import type { ModalMaxWidth, ModalProps } from './types/ModalProps'
+import { BODY_SX, FOOTER_SX, PAPER_SX, TITLE_SX } from './Modal.styles'
 
 const MAX_WIDTH_MAP: Record<ModalMaxWidth, 'xs' | 'sm' | 'md'> = {
   sm: 'xs',
@@ -12,13 +14,8 @@ const MAX_WIDTH_MAP: Record<ModalMaxWidth, 'xs' | 'sm' | 'md'> = {
   lg: 'md'
 }
 
-const PX_SPACING = 3
-const PT_SPACING = 2.5
-const PY_BODY_SPACING = 2.5
-const PB_FOOTER_SPACING = 2.5
-const FONT_WEIGHT_SEMIBOLD = 600
-
 export function Modal({ open, onClose, title, children, footer, maxWidth = 'md' }: ModalProps) {
+  const { t } = useTranslation('common')
   return (
     <Dialog
       open={open}
@@ -26,39 +23,14 @@ export function Modal({ open, onClose, title, children, footer, maxWidth = 'md' 
       maxWidth={MAX_WIDTH_MAP[maxWidth]}
       fullWidth
       aria-label={title}
-      slotProps={{
-        paper: {
-          sx: {
-            backgroundColor: 'var(--card)',
-            backgroundImage: 'none',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius)',
-            boxShadow: 'var(--shadow-lg)'
-          }
-        }
-      }}
+      slotProps={{ paper: { sx: PAPER_SX } }}
     >
-      <DialogTitle
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          px: PX_SPACING,
-          pt: PT_SPACING,
-          pb: 0,
-          fontSize: '16px',
-          fontWeight: FONT_WEIGHT_SEMIBOLD
-        }}
-      >
+      <DialogTitle sx={TITLE_SX}>
         <Box component="span">{title}</Box>
-        <IconButton iconName="close" aria-label="close" onClick={onClose} />
+        <IconButton iconName="close" aria-label={t('app.close')} onClick={onClose} />
       </DialogTitle>
-      <DialogContent sx={{ px: PX_SPACING, py: PY_BODY_SPACING }}>{children}</DialogContent>
-      {footer ? (
-        <DialogActions sx={{ px: PX_SPACING, pb: PB_FOOTER_SPACING, gap: 1 }}>
-          {footer}
-        </DialogActions>
-      ) : null}
+      <DialogContent sx={BODY_SX}>{children}</DialogContent>
+      {footer ? <DialogActions sx={FOOTER_SX}>{footer}</DialogActions> : null}
     </Dialog>
   )
 }

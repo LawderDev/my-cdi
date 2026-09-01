@@ -1,7 +1,7 @@
 import type { FrequentationGateway } from '@frequentation/gateways/frequentation'
 import type { FrequentationWithStudentEntity } from '@frequentation/entities/frequentation'
 import type { DateRangeDto } from '@frequentation-shared'
-import type { UseCaseResult } from '../types/UseCaseResult'
+import type { UseCaseResult } from '@lib/use-case'
 
 export interface ListFrequentationsFilters {
   studentId?: number

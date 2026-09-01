@@ -8,12 +8,13 @@ import { StudentAvatar } from '@student/components/StudentAvatar'
 import type { StudentViewModel } from '@student/types'
 import { NUMERIC_FONT_SIZE_PX, NUMERIC_FONT_WEIGHT } from './StudentTableRow.styles'
 
-interface StudentTableRowProps {
+export interface StudentTableRowProps {
   student: StudentViewModel
   selected: boolean
-  onToggleSelection: (id: number) => void
-  onEdit: (student: StudentViewModel) => void
-  onDelete: (id: number) => void
+  onCheckboxChange: () => void
+  onCheckboxClick: (event: MouseEvent<HTMLButtonElement>) => void
+  onEditClick: (event: MouseEvent<HTMLButtonElement>) => void
+  onDeleteClick: (event: MouseEvent<HTMLButtonElement>) => void
 }
 
 const VISITS_PLACEHOLDER = '—'
@@ -21,37 +22,20 @@ const VISITS_PLACEHOLDER = '—'
 export function StudentTableRow({
   student,
   selected,
-  onToggleSelection,
-  onEdit,
-  onDelete
+  onCheckboxChange,
+  onCheckboxClick,
+  onEditClick,
+  onDeleteClick
 }: StudentTableRowProps) {
   const { t } = useTranslation('common')
-
-  function handleCheckboxChange() {
-    onToggleSelection(student.id)
-  }
-
-  function handleCheckboxClick(event: MouseEvent<HTMLButtonElement>) {
-    event.stopPropagation()
-  }
-
-  function handleEditClick(event: MouseEvent<HTMLButtonElement>) {
-    event.stopPropagation()
-    onEdit(student)
-  }
-
-  function handleDeleteClick(event: MouseEvent<HTMLButtonElement>) {
-    event.stopPropagation()
-    onDelete(student.id)
-  }
 
   return (
     <tr data-selected={selected}>
       <td>
         <Checkbox
           checked={selected}
-          onChange={handleCheckboxChange}
-          onClick={handleCheckboxClick}
+          onChange={onCheckboxChange}
+          onClick={onCheckboxClick}
           size="small"
           aria-label={t('app.select')}
           sx={{
@@ -98,12 +82,12 @@ export function StudentTableRow({
       </Box>
       <td>
         <Box className="td-actions">
-          <IconButton iconName="edit" aria-label={t('app.edit')} onClick={handleEditClick} />
+          <IconButton iconName="edit" aria-label={t('app.edit')} onClick={onEditClick} />
           <IconButton
             iconName="delete"
             tone="danger"
             aria-label={t('app.delete')}
-            onClick={handleDeleteClick}
+            onClick={onDeleteClick}
           />
         </Box>
       </td>

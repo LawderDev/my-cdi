@@ -1,8 +1,7 @@
 {
   "app": {
-    "title": "My CDI",
     "loading": "Loading...",
-    "error": "An error occurred",
+    "unknownError": "An unknown error occurred",
     "confirm": "Confirm",
     "cancel": "Cancel",
     "save": "Save",
@@ -10,12 +9,9 @@
     "edit": "Edit",
     "add": "Add",
     "close": "Close",
-    "search": "Search",
-    "noResults": "No results",
     "select": "Select",
     "selectAll": "Select all",
     "deselectAll": "Deselect all",
-    "selected": "{{count}} selected",
     "batchDelete": "Delete selection",
     "confirmDelete": "Confirm deletion"
   },
@@ -50,6 +46,13 @@
     "description": "The application encountered an unexpected problem. You can try reloading the page.",
     "reload": "Reload application",
     "details": "Technical details"
+  },
+  "errors": {
+    "studentNotFound": "Student not found",
+    "duplicateIne": "A student with this INE already exists",
+    "frequentationNotFound": "Attendance entry not found",
+    "validation": "The submitted data is invalid",
+    "generic": "An error occurred"
   },
   "updater": {
     "available": "A new version ({{version}}) is available.",

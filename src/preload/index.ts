@@ -1,8 +1,11 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
-import { STUDENT_CHANNELS, FREQUENTATION_CHANNELS, STATISTICS_CHANNELS } from '@shared/ipc/channels'
+import {
+  APP_CHANNELS,
+  STUDENT_CHANNELS,
+  FREQUENTATION_CHANNELS,
+  STATISTICS_CHANNELS
+} from '@shared/ipc/channels'
 import { UPDATER_CHANNELS, type UpdaterChannel } from '@shared/ipc/updaterChannels'
-
-const APP_VERSION_CHANNEL = 'app:getVersion'
 
 function invoke<Output>(channel: string, input: unknown): Promise<Output> {
   return ipcRenderer.invoke(channel, input)
@@ -40,7 +43,7 @@ const electronAPI = {
     getStats: (input: unknown) => invoke(STATISTICS_CHANNELS.GET_STATS, input)
   },
   getAppVersion: async (): Promise<string> => {
-    const result = await ipcRenderer.invoke(APP_VERSION_CHANNEL)
+    const result = await ipcRenderer.invoke(APP_CHANNELS.GET_VERSION)
     if (
       typeof result === 'object' &&
       result !== null &&

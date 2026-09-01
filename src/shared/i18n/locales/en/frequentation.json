@@ -1,18 +1,7 @@
 {
-  "title": "Attendance journal",
-  "add": "Mark attendance",
-  "addEntries": "Add entries",
   "noEntries": "No entries for this date",
-  "today": "Today",
-  "previousDay": "Previous day",
-  "nextDay": "Next day",
-  "deleteConfirm": "Are you sure you want to delete {{count}} attendance(s)?",
   "fields": {
-    "student": "Student",
-    "classe": "Class",
-    "activity": "Activity",
-    "actions": "Actions",
-    "date": "Date"
+    "actions": "Actions"
   },
   "activity": {
     "work": "Work",
@@ -27,11 +16,8 @@
     "startsAt": "Date and time",
     "selectStudents": "Student(s)",
     "searchStudent": "Search for a student…",
-    "selectActivity": "Choose an activity",
     "submit": "Save",
     "cancel": "Cancel",
-    "noStudentsSelected": "Select at least one student",
-    "noActivitySelected": "Select an activity",
     "successMessage": "Attendance(s) saved"
   },
   "loading": "Loading…",

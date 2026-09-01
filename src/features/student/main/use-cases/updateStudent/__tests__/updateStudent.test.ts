@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { updateStudent } from '../updateStudent'
 import type { StudentGateway } from '@student/gateways/student'
 import type { StudentEntity } from '@student/entities/student'
+import { ErrorCode } from '@lib/errors'
 
 const STUDENT_ID = 1
 const OTHER_STUDENT_ID = 2
@@ -50,7 +51,7 @@ describe('updateStudent', () => {
     const result = await updateStudent({ gateway }, { id: NONEXISTENT_ID, dto: { nom: 'Martin' } })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('introuvable')
+      expect(result.code).toBe(ErrorCode.STUDENT_NOT_FOUND)
     }
   })
 

@@ -19,7 +19,7 @@ import {
 interface StudentListToolbarProps {
   searchTerm: string
   totalCount: number
-  onSearchChange: (value: string) => void
+  onSearchChange: (event: ChangeEvent<HTMLInputElement>) => void
   onAddStudent: () => void
 }
 
@@ -31,16 +31,12 @@ export function StudentListToolbar({
 }: StudentListToolbarProps) {
   const { t } = useTranslation('student')
 
-  function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
-    onSearchChange(event.target.value)
-  }
-
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2.5 }}>
       <TextField
         type="search"
         value={searchTerm}
-        onChange={handleSearchChange}
+        onChange={onSearchChange}
         placeholder={t('searchPlaceholder')}
         size="small"
         variant="outlined"

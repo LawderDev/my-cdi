@@ -1,5 +1,4 @@
 {
-  "title": "Gestion des élèves",
   "add": "Ajouter un élève",
   "edit": "Modifier l'élève",
   "delete": "Supprimer l'élève",
@@ -12,13 +11,11 @@
     "classe": "Classe",
     "ine": "INE",
     "visits": "Visites",
-    "actions": "Actions",
-    "search": "Rechercher des élèves..."
+    "actions": "Actions"
   },
   "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{count}} élève(s) ?",
   "row.confirmDelete": "Voulez-vous vraiment supprimer cet élève ?",
   "deleteSuccess": "Élève supprimé",
-  "duplicateIne": "Un élève avec cet INE existe déjà",
   "csvImport": {
     "title": "Importer la base élèves",
     "dropzoneTitle": "Glisser-déposer le fichier CSV ici",

@@ -25,6 +25,7 @@ export interface CsvImportButtonActions {
 
 export function useCsvImportButton(): CsvImportButtonState & CsvImportButtonActions {
   const { t: tCommon } = useTranslation('common')
+  const { t: tStudent } = useTranslation('student')
   const inputRef = useRef<HTMLInputElement>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [pendingFile, setPendingFile] = useState<File | null>(null)
@@ -91,8 +92,8 @@ export function useCsvImportButton(): CsvImportButtonState & CsvImportButtonActi
           }
         }
       )
-    } catch (err) {
-      setError(err instanceof Error ? err.message : tCommon('app.unknownError'))
+    } catch {
+      setError(tStudent('csvImport.fileReadError'))
     }
   }
 

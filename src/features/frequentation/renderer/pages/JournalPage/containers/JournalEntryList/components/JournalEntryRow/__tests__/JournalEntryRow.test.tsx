@@ -31,12 +31,21 @@ function renderRow(props: Partial<Parameters<typeof JournalEntryRow>[0]> = {}) {
       <JournalEntryRow
         entry={entry}
         selected={false}
-        onEdit={vi.fn()}
-        onDelete={vi.fn()}
+        onRowClick={vi.fn()}
+        onEditClick={vi.fn()}
+        onDeleteClick={vi.fn()}
         {...props}
       />
     </I18nextProvider>
   )
+}
+
+function findRow(): Element {
+  const row = document.querySelector('[role="row"]')
+  if (!row) {
+    throw new Error('Row not found')
+  }
+  return row
 }
 
 describe('JournalEntryRow', () => {
@@ -48,58 +57,24 @@ describe('JournalEntryRow', () => {
     expect(screen.getByText('09:00')).toBeInTheDocument()
   })
 
-  it('clicking the row triggers onEdit', () => {
-    const onEdit = vi.fn()
-    const { container } = renderRow({ onEdit })
-    const row = container.querySelector('[role="row"]')
-    if (!row) {
-      throw new Error('Row not found')
-    }
-    fireEvent.click(row)
-    expect(onEdit).toHaveBeenCalled()
+  it('clicking the row triggers onRowClick', () => {
+    const onRowClick = vi.fn()
+    renderRow({ onRowClick })
+    fireEvent.click(findRow())
+    expect(onRowClick).toHaveBeenCalledTimes(1)
   })
 
-  it('ctrl+clicking the row triggers onToggleSelect and prevents onEdit', () => {
-    const onEdit = vi.fn()
-    const onToggleSelect = vi.fn()
-    const { container } = renderRow({ onEdit, onToggleSelect })
-    const row = container.querySelector('[role="row"]')
-    if (!row) {
-      throw new Error('Row not found')
-    }
-    fireEvent.click(row, { ctrlKey: true })
-    expect(onToggleSelect).toHaveBeenCalled()
-    expect(onEdit).not.toHaveBeenCalled()
-  })
-
-  it('meta+clicking the row triggers onToggleSelect and prevents onEdit', () => {
-    const onEdit = vi.fn()
-    const onToggleSelect = vi.fn()
-    const { container } = renderRow({ onEdit, onToggleSelect })
-    const row = container.querySelector('[role="row"]')
-    if (!row) {
-      throw new Error('Row not found')
-    }
-    fireEvent.click(row, { metaKey: true })
-    expect(onToggleSelect).toHaveBeenCalled()
-    expect(onEdit).not.toHaveBeenCalled()
-  })
-
-  it('clicking the delete IconButton triggers onDelete and stops propagation', () => {
-    const onEdit = vi.fn()
-    const onDelete = vi.fn()
-    renderRow({ onEdit, onDelete })
+  it('clicking the delete IconButton triggers onDeleteClick', () => {
+    const onDeleteClick = vi.fn()
+    renderRow({ onDeleteClick })
     fireEvent.click(screen.getByRole('button', { name: /supprimer/i }))
-    expect(onDelete).toHaveBeenCalledTimes(1)
-    expect(onEdit).not.toHaveBeenCalled()
+    expect(onDeleteClick).toHaveBeenCalledTimes(1)
   })
 
-  it('clicking the edit IconButton triggers onEdit and stops propagation', () => {
-    const onEdit = vi.fn()
-    renderRow({ onEdit })
+  it('clicking the edit IconButton triggers onEditClick', () => {
+    const onEditClick = vi.fn()
+    renderRow({ onEditClick })
     fireEvent.click(screen.getByRole('button', { name: /modifier/i }))
-    // It is called once via the button click; the row click handler is also onEdit but
-    // stopPropagation prevents double-firing.
-    expect(onEdit).toHaveBeenCalledTimes(1)
+    expect(onEditClick).toHaveBeenCalledTimes(1)
   })
 })

@@ -1,7 +1,7 @@
 import type { IpcMain } from 'electron'
 import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3'
 import type { StudentGateway } from '@student/gateways/student'
-import { FrequentationGatewayDrizzle } from './gateways/frequentation/frequentation.gateway.drizzle'
+import { FrequentationGatewayDrizzle } from './gateways/frequentation'
 import { registerFrequentationController } from './controllers/frequentation'
 
 export function initializeFrequentationModule(

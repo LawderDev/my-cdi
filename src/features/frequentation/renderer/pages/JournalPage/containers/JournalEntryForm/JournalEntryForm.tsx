@@ -8,8 +8,10 @@ import { Card } from '@ui/components/Card'
 import { Button } from '@ui/components/Button'
 import { Icon } from '@ui/components/Icon'
 import { ActivityGrid } from '@frequentation/components/ActivityGrid'
+import { buildActivityTiles } from '@frequentation/components/ActivityGrid/helpers/buildActivityTiles'
 import { useJournalEntryForm } from './hooks/useJournalEntryForm'
 import { StudentMultiSelect } from './components/StudentMultiSelect'
+import type { StudentChip } from './components/StudentMultiSelect'
 import { TimeRow } from './components/TimeRow'
 
 import {
@@ -44,6 +46,18 @@ export function JournalEntryForm({ selectedDate, onSubmitted }: JournalEntryForm
 
   const isDisabled = isSubmitting || !form.formState.isValid
   const showSuccess = submitSuccess && submitError === null
+
+  function buildStudentChips(selectedIds: number[]): StudentChip[] {
+    return studentOptions
+      .filter((student) => selectedIds.includes(student.id))
+      .map((student) => ({
+        id: student.id,
+        label: student.displayName,
+        onRemove: () => {
+          handleStudentRemove(selectedIds, student.id)
+        }
+      }))
+  }
 
   return (
     <Card>
@@ -85,10 +99,10 @@ export function JournalEntryForm({ selectedDate, onSubmitted }: JournalEntryForm
             <StudentMultiSelect
               students={studentOptions}
               selectedIds={field.value}
+              chips={buildStudentChips(field.value)}
               inputValue={studentInputValue}
               onInputChange={setStudentInputValue}
               onSelect={(option) => handleStudentSelect(field.value, option.value)}
-              onRemove={(id) => handleStudentRemove(field.value, id)}
               loading={isStudentLoading}
             />
           )}
@@ -97,7 +111,9 @@ export function JournalEntryForm({ selectedDate, onSubmitted }: JournalEntryForm
           control={form.control}
           name="activity"
           render={({ field }) => (
-            <ActivityGrid options={activityOptions} value={field.value} onChange={field.onChange} />
+            <ActivityGrid
+              tiles={buildActivityTiles(activityOptions, field.value, field.onChange)}
+            />
           )}
         />
         <Button

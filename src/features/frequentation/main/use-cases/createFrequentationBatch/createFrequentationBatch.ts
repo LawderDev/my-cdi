@@ -1,6 +1,6 @@
 import type { FrequentationGateway } from '@frequentation/gateways/frequentation'
 import type { CreateFrequentationBatchDto } from '@frequentation-shared'
-import type { UseCaseResult } from '../types/UseCaseResult'
+import type { UseCaseResult } from '@lib/use-case'
 import type { BatchResult } from './types/BatchResult'
 import { createFrequentationBatchSchema } from './validations/createFrequentationBatchSchema'
 import { validateBatchItem } from './helpers/validateBatchItem'

@@ -59,6 +59,31 @@ describe('useCreateFrequentationBatch', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(window.electronAPI.frequentation.createBatch).toHaveBeenCalledOnce()
   })
+
+  it('surfaces the ipc error when creation fails', async () => {
+    vi.stubGlobal('electronAPI', {
+      frequentation: {
+        createBatch: vi.fn().mockResolvedValue({ success: false, error: 'boom' })
+      }
+    })
+    const { result } = renderHook(() => useCreateFrequentationBatch(), {
+      wrapper: createWrapper()
+    })
+
+    act(() => {
+      result.current.mutate({
+        frequentations: [
+          {
+            startsAt: '2026-04-01T09:00:00.000Z',
+            activity: ActivityType.WORK,
+            studentId: STUDENT_ID_FIRST
+          }
+        ]
+      })
+    })
+    await waitFor(() => expect(result.current.isError).toBe(true))
+    expect(result.current.error?.message).toBe('boom')
+  })
 })
 
 describe('useDeleteFrequentation', () => {
@@ -78,6 +103,19 @@ describe('useDeleteFrequentation', () => {
     expect(window.electronAPI.frequentation.delete).toHaveBeenCalledWith({
       id: FREQUENTATION_ID_TARGET
     })
+  })
+
+  it('surfaces the ipc error when deletion fails', async () => {
+    vi.stubGlobal('electronAPI', {
+      frequentation: {
+        delete: vi.fn().mockResolvedValue({ success: false, error: 'boom' })
+      }
+    })
+    const { result } = renderHook(() => useDeleteFrequentation(), { wrapper: createWrapper() })
+
+    act(() => result.current.mutate({ id: FREQUENTATION_ID_TARGET }))
+    await waitFor(() => expect(result.current.isError).toBe(true))
+    expect(result.current.error?.message).toBe('boom')
   })
 })
 
@@ -101,5 +139,20 @@ describe('useUpdateFrequentation', () => {
       id: FREQUENTATION_ID_UPDATE,
       activity: ActivityType.READING
     })
+  })
+
+  it('surfaces the ipc error when update fails', async () => {
+    vi.stubGlobal('electronAPI', {
+      frequentation: {
+        update: vi.fn().mockResolvedValue({ success: false, error: 'boom' })
+      }
+    })
+    const { result } = renderHook(() => useUpdateFrequentation(), { wrapper: createWrapper() })
+
+    act(() =>
+      result.current.mutate({ id: FREQUENTATION_ID_UPDATE, activity: ActivityType.READING })
+    )
+    await waitFor(() => expect(result.current.isError).toBe(true))
+    expect(result.current.error?.message).toBe('boom')
   })
 })

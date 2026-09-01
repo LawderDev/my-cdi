@@ -18,7 +18,6 @@ export function CalendarView({
   onPrev,
   onToday,
   onNext,
-  onSelectDay,
   prevLabel,
   todayLabel,
   nextLabel
@@ -59,7 +58,7 @@ export function CalendarView({
           </Box>
         ))}
         {cells.map((cell) => (
-          <CalendarDay key={cell.iso} cell={cell} onSelect={onSelectDay} />
+          <CalendarDay key={cell.iso} cell={cell} onClick={cell.onClick} />
         ))}
       </Box>
     </Card>

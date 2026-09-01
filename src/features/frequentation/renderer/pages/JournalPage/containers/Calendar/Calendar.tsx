@@ -17,7 +17,14 @@ export function Calendar({ selectedDate, onSelectDate }: CalendarProps) {
     }
   )
   const { daysWithVisits } = useMonthEntryCounts(viewMonth)
-  const cells = buildCalendarMonth(viewMonth, dayjs(), selectedDate, daysWithVisits)
+  const cells = buildCalendarMonth(viewMonth, dayjs(), selectedDate, daysWithVisits).map(
+    (cell) => ({
+      ...cell,
+      onClick: () => {
+        selectDay(cell.iso)
+      }
+    })
+  )
 
   return (
     <CalendarView
@@ -27,7 +34,6 @@ export function Calendar({ selectedDate, onSelectDate }: CalendarProps) {
       onPrev={goToPrevMonth}
       onNext={goToNextMonth}
       onToday={goToToday}
-      onSelectDay={selectDay}
       prevLabel={t('calendar.previousMonth')}
       todayLabel={t('calendar.today')}
       nextLabel={t('calendar.nextMonth')}

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
-import { useJournalEntries } from '../useFrequentationQueries'
+import { useJournalEntries, useFrequentationDetail } from '../useFrequentationQueries'
 import { ActivityType } from '@types'
 
 const STUDENT_ID = 7
@@ -70,6 +70,21 @@ describe('useJournalEntries', () => {
       () => useJournalEntries({ startDate: '2026-04-01', endDate: '2026-04-01' }),
       { wrapper: createWrapper() }
     )
+    await waitFor(() => expect(result.current.isError).toBe(true))
+    expect(result.current.error).toBeInstanceOf(Error)
+  })
+})
+
+describe('useFrequentationDetail', () => {
+  it('throws when ipc result indicates failure', async () => {
+    vi.stubGlobal('electronAPI', {
+      frequentation: {
+        get: vi.fn().mockResolvedValue({ success: false, error: 'boom' })
+      }
+    })
+    const { result } = renderHook(() => useFrequentationDetail(STUDENT_ID), {
+      wrapper: createWrapper()
+    })
     await waitFor(() => expect(result.current.isError).toBe(true))
     expect(result.current.error).toBeInstanceOf(Error)
   })

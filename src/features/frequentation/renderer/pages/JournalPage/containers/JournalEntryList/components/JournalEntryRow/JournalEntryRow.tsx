@@ -19,12 +19,12 @@ import {
   TIME_FORMAT
 } from './JournalEntryRow.styles'
 
-interface JournalEntryRowProps {
+export interface JournalEntryRowProps {
   entry: JournalEntryViewModel
   selected: boolean
-  onToggleSelect?: () => void
-  onEdit: () => void
-  onDelete: () => void
+  onRowClick: (event: React.MouseEvent) => void
+  onEditClick: (event: React.MouseEvent) => void
+  onDeleteClick: (event: React.MouseEvent) => void
 }
 
 function buildInitials(prenom: string, nom: string): string {
@@ -34,9 +34,9 @@ function buildInitials(prenom: string, nom: string): string {
 export function JournalEntryRow({
   entry,
   selected,
-  onToggleSelect,
-  onEdit,
-  onDelete
+  onRowClick,
+  onEditClick,
+  onDeleteClick
 }: JournalEntryRowProps) {
   const { t } = useTranslation('frequentation')
   const period = getEntryPeriod(entry.startsAt)
@@ -44,29 +44,10 @@ export function JournalEntryRow({
   const periodClass = period === 'morning' ? 'period-morning' : 'period-afternoon'
   const time = dayjs(entry.startsAt).format(TIME_FORMAT)
 
-  function handleClick(event: React.MouseEvent) {
-    if ((event.metaKey || event.ctrlKey) && onToggleSelect) {
-      event.preventDefault()
-      onToggleSelect()
-      return
-    }
-    onEdit()
-  }
-
-  function handleEditClick(event: React.MouseEvent) {
-    event.stopPropagation()
-    onEdit()
-  }
-
-  function handleDeleteClick(event: React.MouseEvent) {
-    event.stopPropagation()
-    onDelete()
-  }
-
   return (
     <Box
       role="row"
-      onClick={handleClick}
+      onClick={onRowClick}
       sx={{
         position: 'relative',
         display: 'flex',
@@ -147,12 +128,12 @@ export function JournalEntryRow({
         className={ACTIONS_CLASS}
         sx={{ display: 'flex', gap: 0.25, opacity: 0, transition: 'opacity 0.15s' }}
       >
-        <IconButton iconName="edit" aria-label={t('row.edit')} onClick={handleEditClick} />
+        <IconButton iconName="edit" aria-label={t('row.edit')} onClick={onEditClick} />
         <IconButton
           iconName="delete"
           tone="danger"
           aria-label={t('row.delete')}
-          onClick={handleDeleteClick}
+          onClick={onDeleteClick}
         />
       </Box>
     </Box>

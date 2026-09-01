@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { deleteStudent } from '../deleteStudent'
 import type { StudentGateway } from '@student/gateways/student'
 import type { StudentEntity } from '@student/entities/student'
+import { ErrorCode } from '@lib/errors'
 
 const STUDENT_ID = 1
 const NONEXISTENT_ID = 9999
@@ -45,7 +46,7 @@ describe('deleteStudent', () => {
     const result = await deleteStudent({ gateway }, { id: NONEXISTENT_ID })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('introuvable')
+      expect(result.code).toBe(ErrorCode.STUDENT_NOT_FOUND)
     }
   })
 })

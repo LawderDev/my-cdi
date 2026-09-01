@@ -10,6 +10,12 @@ interface StudentOption {
   classe: string
 }
 
+export interface StudentChip {
+  id: number
+  label: string
+  onRemove: () => void
+}
+
 import {
   LABEL_FONT_SIZE_PX,
   LABEL_FONT_WEIGHT,
@@ -20,20 +26,20 @@ import {
 interface StudentMultiSelectProps {
   students: StudentOption[]
   selectedIds: number[]
+  chips: StudentChip[]
   inputValue: string
   onInputChange: (value: string) => void
   onSelect: (option: AutocompleteOption<number>) => void
-  onRemove: (id: number) => void
   loading: boolean
 }
 
 export function StudentMultiSelect({
   students,
   selectedIds,
+  chips,
   inputValue,
   onInputChange,
   onSelect,
-  onRemove,
   loading
 }: StudentMultiSelectProps) {
   const { t } = useTranslation('frequentation')
@@ -43,8 +49,6 @@ export function StudentMultiSelect({
     label: student.displayName,
     badge: student.classe
   }))
-
-  const selectedStudents = students.filter((student) => selectedIds.includes(student.id))
 
   return (
     <Box>
@@ -85,12 +89,8 @@ export function StudentMultiSelect({
           mt: 1
         }}
       >
-        {selectedStudents.map((student) => (
-          <Chip
-            key={student.id}
-            label={student.displayName}
-            onRemove={() => onRemove(student.id)}
-          />
+        {chips.map((chip) => (
+          <Chip key={chip.id} label={chip.label} onRemove={chip.onRemove} />
         ))}
       </Box>
     </Box>

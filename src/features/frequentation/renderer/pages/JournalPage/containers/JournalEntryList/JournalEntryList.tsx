@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import type { ChangeEvent, MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
+import type { SelectChangeEvent } from '@mui/material/Select'
 import { Card } from '@ui/components/Card'
 import { EmptyState } from '@ui/components/EmptyState'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
@@ -18,6 +20,8 @@ import { filterJournalEntriesBySearchTerm } from './helpers/filterJournalEntries
 import { JournalEntryToolbar } from './components/JournalEntryToolbar'
 import { JournalEntryRow } from './components/JournalEntryRow'
 import { JournalBatchActions } from './containers/JournalBatchActions'
+import type { JournalEntryRowProps } from './components/JournalEntryRow'
+import type { EntryPeriodFilter } from './helpers/filterEntriesByPeriod'
 import type { JournalEntryViewModel } from '@frequentation/types'
 
 interface JournalEntryListProps {
@@ -70,6 +74,50 @@ export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryList
     setDeleteSuccess(false)
   }
 
+  function isPeriodFilter(value: string): value is EntryPeriodFilter {
+    return value === 'all' || value === 'morning' || value === 'afternoon'
+  }
+
+  function handlePeriodChange(event: SelectChangeEvent<EntryPeriodFilter>) {
+    const next = event.target.value
+    if (isPeriodFilter(next)) {
+      setPeriod(next)
+    }
+  }
+
+  function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
+    setSearchTerm(event.target.value)
+  }
+
+  function handleRowClick(entry: JournalEntryViewModel, event: MouseEvent) {
+    if (event.metaKey || event.ctrlKey) {
+      event.preventDefault()
+      toggle(entry.id)
+      return
+    }
+    onEditEntry(entry)
+  }
+
+  function handleRowEditClick(entry: JournalEntryViewModel, event: MouseEvent) {
+    event.stopPropagation()
+    onEditEntry(entry)
+  }
+
+  function handleRowDeleteClick(entry: JournalEntryViewModel, event: MouseEvent) {
+    event.stopPropagation()
+    handleDeleteClick(entry)
+  }
+
+  function buildRowProps(entry: JournalEntryViewModel): JournalEntryRowProps {
+    return {
+      entry,
+      selected: selectedIds.includes(entry.id),
+      onRowClick: (event) => handleRowClick(entry, event),
+      onEditClick: (event) => handleRowEditClick(entry, event),
+      onDeleteClick: (event) => handleRowDeleteClick(entry, event)
+    }
+  }
+
   return (
     <Card
       padding="none"
@@ -84,9 +132,9 @@ export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryList
       <JournalEntryToolbar
         entryCount={filtered.length}
         period={period}
-        onPeriodChange={setPeriod}
+        onPeriodChange={handlePeriodChange}
         searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
+        onSearchChange={handleSearchChange}
       />
       <JournalBatchActions
         selectedIds={selectedIds}
@@ -104,16 +152,7 @@ export function JournalEntryList({ selectedDate, onEditEntry }: JournalEntryList
             description={t('emptyHint')}
           />
         ) : (
-          filtered.map((entry) => (
-            <JournalEntryRow
-              key={entry.id}
-              entry={entry}
-              selected={selectedIds.includes(entry.id)}
-              onToggleSelect={() => toggle(entry.id)}
-              onEdit={() => onEditEntry(entry)}
-              onDelete={() => handleDeleteClick(entry)}
-            />
-          ))
+          filtered.map((entry) => <JournalEntryRow key={entry.id} {...buildRowProps(entry)} />)
         )}
       </Box>
       <ConfirmDialog

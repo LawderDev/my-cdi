@@ -4,9 +4,8 @@ import { Modal } from '@ui/components/Modal'
 import { Button } from '@ui/components/Button'
 import { Avatar } from '@ui/components/Avatar'
 import { ActivityGrid } from '@frequentation/components/ActivityGrid'
-import type { ActivityGridOption } from '@frequentation/components/ActivityGrid'
+import type { ActivityGridTile } from '@frequentation/components/ActivityGrid'
 import type { JournalEntryViewModel } from '@frequentation/types'
-import type { ActivityType } from '@types'
 import { buildInitials } from './helpers/buildInitials'
 import {
   CLASSE_FONT_SIZE_PX,
@@ -16,9 +15,7 @@ import {
 
 interface JournalEntryEditDialogProps {
   open: boolean
-  activity: ActivityType
-  activities: ActivityGridOption[]
-  onActivityChange: (next: ActivityType) => void
+  tiles: ActivityGridTile[]
   onSubmit: () => void
   onClose: () => void
   entry?: JournalEntryViewModel
@@ -26,9 +23,7 @@ interface JournalEntryEditDialogProps {
 
 export function JournalEntryEditDialog({
   open,
-  activity,
-  activities,
-  onActivityChange,
+  tiles,
   onSubmit,
   onClose,
   entry
@@ -78,7 +73,7 @@ export function JournalEntryEditDialog({
           </Box>
         </Box>
       ) : null}
-      <ActivityGrid options={activities} value={activity} onChange={onActivityChange} />
+      <ActivityGrid tiles={tiles} />
     </Modal>
   )
 }

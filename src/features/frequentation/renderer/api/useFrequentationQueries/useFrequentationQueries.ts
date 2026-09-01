@@ -1,15 +1,18 @@
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import { resolveIpcErrorMessage } from '@lib/ipc/resolveIpcErrorMessage'
 import { frequentationKeys } from '../frequentationKeys'
 import type { JournalEntryDto, FrequentationResponseDto } from '@frequentation-shared'
 import type { DateRangeFilter } from '@frequentation/types'
 
 export function useJournalEntries(dateRange: DateRangeFilter) {
+  const { t } = useTranslation('common')
   return useQuery({
     queryKey: frequentationKeys.journalEntries(dateRange),
     queryFn: async (): Promise<JournalEntryDto[]> => {
       const result = await window.electronAPI.frequentation.getJournalEntries(dateRange)
       if (!result.success) {
-        throw new Error(result.error ?? 'Erreur lors du chargement du journal')
+        throw new Error(resolveIpcErrorMessage(result, t))
       }
       return result.data
     },
@@ -18,6 +21,7 @@ export function useJournalEntries(dateRange: DateRangeFilter) {
 }
 
 export function useFrequentationDetail(id: number | null) {
+  const { t } = useTranslation('common')
   return useQuery({
     queryKey: id !== null ? frequentationKeys.detail(id) : frequentationKeys.details(),
     queryFn: async (): Promise<FrequentationResponseDto> => {
@@ -26,7 +30,7 @@ export function useFrequentationDetail(id: number | null) {
       }
       const result = await window.electronAPI.frequentation.get({ id })
       if (!result.success) {
-        throw new Error(result.error ?? 'Erreur')
+        throw new Error(resolveIpcErrorMessage(result, t))
       }
       return result.data
     },

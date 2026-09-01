@@ -40,6 +40,6 @@ describe('JournalEntryToolbar', () => {
     await user.click(select)
     const listbox = await screen.findByRole('listbox')
     await user.click(within(listbox).getByRole('option', { name: 'Matin' }))
-    expect(onPeriodChange).toHaveBeenCalledWith('morning')
+    expect(onPeriodChange).toHaveBeenCalledTimes(1)
   })
 })

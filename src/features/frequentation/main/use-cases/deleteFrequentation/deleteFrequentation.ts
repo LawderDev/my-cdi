@@ -1,5 +1,6 @@
 import type { FrequentationGateway } from '@frequentation/gateways/frequentation'
-import type { UseCaseResult } from '../types/UseCaseResult'
+import { ErrorCode } from '@lib/errors'
+import type { UseCaseResult } from '@lib/use-case'
 
 export async function deleteFrequentation(
   gateway: FrequentationGateway,
@@ -7,7 +8,11 @@ export async function deleteFrequentation(
 ): Promise<UseCaseResult<boolean>> {
   const existingFrequentation = await gateway.getById(id)
   if (!existingFrequentation) {
-    return { success: false, error: 'Fréquentation introuvable' }
+    return {
+      success: false,
+      error: 'Frequentation not found',
+      code: ErrorCode.FREQUENTATION_NOT_FOUND
+    }
   }
 
   try {
@@ -15,6 +20,6 @@ export async function deleteFrequentation(
     return { success: true, data: deleted }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error'
-    return { success: false, error: message }
+    return { success: false, error: message, code: ErrorCode.DATABASE_ERROR }
   }
 }

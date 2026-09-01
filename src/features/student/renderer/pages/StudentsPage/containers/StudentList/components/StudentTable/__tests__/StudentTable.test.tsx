@@ -2,7 +2,8 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '@shared/i18n/config'
-import { StudentTable } from '../StudentTable'
+import { StudentTable, type StudentSortHeader } from '../StudentTable'
+import type { StudentTableRowProps } from '../../StudentTableRow'
 import type { StudentViewModel } from '@student/types'
 
 const ID_FIRST = 1
@@ -36,6 +37,24 @@ const STUDENTS: StudentViewModel[] = [
   }
 ]
 
+function buildRowProps(student: StudentViewModel, selected = false): StudentTableRowProps {
+  return {
+    student,
+    selected,
+    onCheckboxChange: vi.fn(),
+    onCheckboxClick: vi.fn(),
+    onEditClick: vi.fn(),
+    onDeleteClick: vi.fn()
+  }
+}
+
+function buildSortHeaders(): StudentSortHeader[] {
+  return (['nom', 'prenom', 'classe', 'ine'] as const).map((field) => ({
+    field,
+    onClick: vi.fn()
+  }))
+}
+
 function renderWithI18n(ui: React.ReactElement) {
   return render(<I18nextProvider i18n={i18n}>{ui}</I18nextProvider>)
 }
@@ -44,13 +63,8 @@ describe('StudentTable', () => {
   it('renders student rows', () => {
     renderWithI18n(
       <StudentTable
-        students={STUDENTS}
-        selectedIds={[]}
-        onToggleSelection={vi.fn()}
-        onEdit={vi.fn()}
-        onDelete={vi.fn()}
-        sortConfig={{ field: 'nom', direction: 'asc' }}
-        onSort={vi.fn()}
+        rows={STUDENTS.map((student) => buildRowProps(student))}
+        sortHeaders={buildSortHeaders()}
       />
     )
 
@@ -61,17 +75,7 @@ describe('StudentTable', () => {
   })
 
   it('renders column headers', () => {
-    renderWithI18n(
-      <StudentTable
-        students={[]}
-        selectedIds={[]}
-        onToggleSelection={vi.fn()}
-        onEdit={vi.fn()}
-        onDelete={vi.fn()}
-        sortConfig={{ field: 'nom', direction: 'asc' }}
-        onSort={vi.fn()}
-      />
-    )
+    renderWithI18n(<StudentTable rows={[]} sortHeaders={buildSortHeaders()} />)
 
     expect(screen.getByText('Nom')).toBeInTheDocument()
     expect(screen.getByText('Prénom')).toBeInTheDocument()
@@ -82,13 +86,8 @@ describe('StudentTable', () => {
   it('shows checkboxes for selected rows', () => {
     renderWithI18n(
       <StudentTable
-        students={STUDENTS}
-        selectedIds={[ID_FIRST]}
-        onToggleSelection={vi.fn()}
-        onEdit={vi.fn()}
-        onDelete={vi.fn()}
-        sortConfig={{ field: 'nom', direction: 'asc' }}
-        onSort={vi.fn()}
+        rows={STUDENTS.map((student) => buildRowProps(student, student.id === ID_FIRST))}
+        sortHeaders={buildSortHeaders()}
       />
     )
 

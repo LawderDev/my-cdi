@@ -1,1 +1,0 @@
-export { AppVersion } from './AppVersion'

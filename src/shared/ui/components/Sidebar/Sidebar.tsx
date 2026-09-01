@@ -4,7 +4,7 @@ import { SidebarView } from './components/SidebarView'
 const SETTINGS_PLACEHOLDER_HASH = '#'
 
 export function Sidebar() {
-  const { items, activePath, navigate } = useSidebar()
+  const { navItems, activePath } = useSidebar()
 
   function handleSettingsClick() {
     window.location.hash = SETTINGS_PLACEHOLDER_HASH
@@ -12,9 +12,8 @@ export function Sidebar() {
 
   return (
     <SidebarView
-      items={items}
+      navItems={navItems}
       activePath={activePath}
-      onNavigate={navigate}
       onSettingsClick={handleSettingsClick}
     />
   )

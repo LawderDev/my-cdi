@@ -1,8 +1,7 @@
 {
   "app": {
-    "title": "Mon CDI",
     "loading": "Chargement...",
-    "error": "Une erreur est survenue",
+    "unknownError": "Une erreur inconnue est survenue",
     "confirm": "Confirmer",
     "cancel": "Annuler",
     "save": "Enregistrer",
@@ -10,12 +9,9 @@
     "edit": "Modifier",
     "add": "Ajouter",
     "close": "Fermer",
-    "search": "Rechercher",
-    "noResults": "Aucun résultat",
     "select": "Sélectionner",
     "selectAll": "Tout sélectionner",
     "deselectAll": "Tout désélectionner",
-    "selected": "{{count}} sélectionné(s)",
     "batchDelete": "Supprimer la sélection",
     "confirmDelete": "Confirmer la suppression"
   },
@@ -50,6 +46,13 @@
     "description": "L'application a rencontré un problème inattendu. Vous pouvez essayer de recharger la page.",
     "reload": "Recharger l'application",
     "details": "Détails techniques"
+  },
+  "errors": {
+    "studentNotFound": "Élève introuvable",
+    "duplicateIne": "Un élève avec cet INE existe déjà",
+    "frequentationNotFound": "Fréquentation introuvable",
+    "validation": "Les données envoyées sont invalides",
+    "generic": "Une erreur est survenue"
   },
   "updater": {
     "available": "Une nouvelle version ({{version}}) est disponible.",

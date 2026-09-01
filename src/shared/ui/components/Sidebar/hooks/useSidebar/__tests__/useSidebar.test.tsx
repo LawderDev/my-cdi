@@ -14,11 +14,11 @@ function makeWrapper(initialPath: string) {
 const EXPECTED_ITEM_COUNT = 3
 
 describe('useSidebar', () => {
-  it('exposes the sidebar items and journal active path on the journal route', () => {
+  it('exposes the sidebar nav items and journal active path on the journal route', () => {
     const { result } = renderHook(() => useSidebar(), {
       wrapper: makeWrapper(ROUTES.JOURNAL)
     })
-    expect(result.current.items).toHaveLength(EXPECTED_ITEM_COUNT)
+    expect(result.current.navItems).toHaveLength(EXPECTED_ITEM_COUNT)
     expect(result.current.activePath).toBe(ROUTES.JOURNAL)
   })
 
@@ -36,10 +36,12 @@ describe('useSidebar', () => {
     expect(result.current.activePath).toBe(ROUTES.STATISTICS)
   })
 
-  it('exposes a navigate function', () => {
+  it('builds an onClick handler per nav item that navigates to its path', () => {
     const { result } = renderHook(() => useSidebar(), {
       wrapper: makeWrapper(ROUTES.JOURNAL)
     })
-    expect(typeof result.current.navigate).toBe('function')
+    const statisticsItem = result.current.navItems.find((item) => item.path === ROUTES.STATISTICS)
+    expect(statisticsItem).toBeDefined()
+    expect(typeof statisticsItem?.onClick).toBe('function')
   })
 })

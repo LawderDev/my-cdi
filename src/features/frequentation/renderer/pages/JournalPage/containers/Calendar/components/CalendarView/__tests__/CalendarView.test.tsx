@@ -1,12 +1,25 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { CalendarView } from '../CalendarView'
+import type { CalendarDayCell } from '../types/CalendarViewProps'
 import type { CalendarCell } from '../../../helpers/buildCalendarMonth'
 
 const WEEKDAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
 const DAY_FIRST = 1
 const DAY_TODAY = 15
 const DAY_LATER = 20
+
+function buildDayCells(
+  cells: CalendarCell[],
+  onSelectCell: (iso: string) => void
+): CalendarDayCell[] {
+  return cells.map((cell) => ({
+    ...cell,
+    onClick: () => {
+      onSelectCell(cell.iso)
+    }
+  }))
+}
 
 const SAMPLE_CELLS: CalendarCell[] = [
   {
@@ -36,20 +49,20 @@ const SAMPLE_CELLS: CalendarCell[] = [
 ]
 
 function renderView(overrides: Partial<Parameters<typeof CalendarView>[0]> = {}) {
+  const onSelectDay = vi.fn()
   const props = {
     monthLabel: 'Avril 2026',
-    cells: SAMPLE_CELLS,
+    cells: buildDayCells(SAMPLE_CELLS, onSelectDay),
     weekdayLabels: WEEKDAYS,
     onPrev: vi.fn(),
     onToday: vi.fn(),
     onNext: vi.fn(),
-    onSelectDay: vi.fn(),
     prevLabel: 'Mois précédent',
     todayLabel: "Aujourd'hui",
     nextLabel: 'Mois suivant',
     ...overrides
   }
-  return { ...props, ...render(<CalendarView {...props} />) }
+  return { onSelectDay, ...props, ...render(<CalendarView {...props} />) }
 }
 
 describe('CalendarView', () => {
@@ -74,8 +87,7 @@ describe('CalendarView', () => {
   })
 
   it('calls onSelectDay with the iso of the clicked day', () => {
-    const onSelectDay = vi.fn()
-    const { container } = renderView({ onSelectDay })
+    const { onSelectDay, container } = renderView()
     const button = container.querySelector('[data-iso="2026-04-20"]')
     if (button === null) {
       throw new Error('Calendar cell not found')

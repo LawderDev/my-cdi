@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import { resolveIpcErrorMessage } from '@lib/ipc/resolveIpcErrorMessage'
 import { studentKeys } from '@student/api/studentKeys'
-
-const DEFAULT_ERROR_MESSAGE = 'Erreur lors de la suppression'
 
 interface UseBatchDeleteOptions {
   onSuccess?: () => void
@@ -13,13 +13,14 @@ interface BatchDeleteResult {
 
 export function useBatchDelete({ onSuccess }: UseBatchDeleteOptions = {}) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('common')
 
   return useMutation({
     mutationFn: async (ids: number[]): Promise<BatchDeleteResult> => {
       for (const id of ids) {
         const result = await window.electronAPI.student.delete({ id })
         if (!result.success) {
-          throw new Error(result.error ?? DEFAULT_ERROR_MESSAGE)
+          throw new Error(resolveIpcErrorMessage(result, t))
         }
       }
       return { deletedCount: ids.length }

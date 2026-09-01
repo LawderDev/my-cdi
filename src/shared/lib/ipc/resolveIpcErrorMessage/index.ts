@@ -1,0 +1,1 @@
+export { resolveIpcErrorMessage } from './resolveIpcErrorMessage'

@@ -38,4 +38,22 @@ describe('useBatchDelete (frequentation)', () => {
     expect(window.electronAPI.frequentation.delete).toHaveBeenCalledTimes(EXPECTED_CALL_COUNT)
     expect(onSuccess).toHaveBeenCalled()
   })
+
+  it('stops and surfaces the ipc error when a delete fails', async () => {
+    vi.stubGlobal('electronAPI', {
+      frequentation: {
+        delete: vi.fn().mockResolvedValue({ success: false, error: 'boom' })
+      }
+    })
+    const onSuccess = vi.fn()
+    const { result } = renderHook(() => useBatchDelete({ onSuccess }), {
+      wrapper: createWrapper()
+    })
+
+    act(() => result.current.mutate([ID_FIRST, ID_SECOND, ID_THIRD]))
+    await waitFor(() => expect(result.current.isError).toBe(true))
+    expect(result.current.error?.message).toBe('boom')
+    expect(window.electronAPI.frequentation.delete).toHaveBeenCalledOnce()
+    expect(onSuccess).not.toHaveBeenCalled()
+  })
 })

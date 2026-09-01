@@ -1,4 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import { resolveIpcErrorMessage } from '@lib/ipc/resolveIpcErrorMessage'
 import { studentKeys } from '../studentKeys'
 import type { CreateStudentDto, UpdateStudentDto } from '@student-shared'
 
@@ -15,42 +17,17 @@ interface ImportStudentsCsvInput {
   csv: string
 }
 
-async function createStudent(dto: CreateStudentDto) {
-  const result = await window.electronAPI.student.create(dto)
-  if (!result.success) {
-    throw new Error(result.error)
-  }
-  return result.data
-}
-
-async function updateStudent(input: UpdateStudentInput) {
-  const result = await window.electronAPI.student.update({ id: input.id, ...input.data })
-  if (!result.success) {
-    throw new Error(result.error)
-  }
-  return result.data
-}
-
-async function deleteStudent(input: DeleteStudentInput) {
-  const result = await window.electronAPI.student.delete(input)
-  if (!result.success) {
-    throw new Error(result.error)
-  }
-  return result.data
-}
-
-async function importStudentsCsv(input: ImportStudentsCsvInput) {
-  const result = await window.electronAPI.student.importCsv(input)
-  if (!result.success) {
-    throw new Error(result.error)
-  }
-  return result.data
-}
-
 export function useCreateStudent() {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('common')
   return useMutation({
-    mutationFn: createStudent,
+    mutationFn: async (dto: CreateStudentDto) => {
+      const result = await window.electronAPI.student.create(dto)
+      if (!result.success) {
+        throw new Error(resolveIpcErrorMessage(result, t))
+      }
+      return result.data
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: studentKeys.all })
     }
@@ -59,8 +36,15 @@ export function useCreateStudent() {
 
 export function useUpdateStudent() {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('common')
   return useMutation({
-    mutationFn: updateStudent,
+    mutationFn: async (input: UpdateStudentInput) => {
+      const result = await window.electronAPI.student.update({ id: input.id, ...input.data })
+      if (!result.success) {
+        throw new Error(resolveIpcErrorMessage(result, t))
+      }
+      return result.data
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: studentKeys.all })
     }
@@ -73,8 +57,15 @@ interface UseDeleteStudentOptions {
 
 export function useDeleteStudent(options: UseDeleteStudentOptions = {}) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('common')
   return useMutation({
-    mutationFn: deleteStudent,
+    mutationFn: async (input: DeleteStudentInput) => {
+      const result = await window.electronAPI.student.delete(input)
+      if (!result.success) {
+        throw new Error(resolveIpcErrorMessage(result, t))
+      }
+      return result.data
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: studentKeys.all })
       options.onSuccess?.()
@@ -84,8 +75,15 @@ export function useDeleteStudent(options: UseDeleteStudentOptions = {}) {
 
 export function useImportStudentsCsv() {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('common')
   return useMutation({
-    mutationFn: importStudentsCsv,
+    mutationFn: async (input: ImportStudentsCsvInput) => {
+      const result = await window.electronAPI.student.importCsv(input)
+      if (!result.success) {
+        throw new Error(resolveIpcErrorMessage(result, t))
+      }
+      return result.data
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: studentKeys.all })
     }

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { ActivityGrid } from '../ActivityGrid'
+import { buildActivityTiles } from '../helpers/buildActivityTiles'
 import { ActivityType } from '@types'
 import type { ActivityGridOption } from '../types/ActivityGridProps'
 
@@ -12,14 +13,16 @@ const OPTIONS: ActivityGridOption[] = [
 
 describe('ActivityGrid', () => {
   it('renders one tile per option', () => {
-    render(<ActivityGrid options={OPTIONS} value={ActivityType.COMPUTER} onChange={vi.fn()} />)
+    const tiles = buildActivityTiles(OPTIONS, ActivityType.COMPUTER, vi.fn())
+    render(<ActivityGrid tiles={tiles} />)
     expect(screen.getByRole('button', { name: 'Ordinateur' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Travail' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Lecture' })).toBeInTheDocument()
   })
 
   it('marks the active tile with data-selected="true"', () => {
-    render(<ActivityGrid options={OPTIONS} value={ActivityType.WORK} onChange={vi.fn()} />)
+    const tiles = buildActivityTiles(OPTIONS, ActivityType.WORK, vi.fn())
+    render(<ActivityGrid tiles={tiles} />)
     expect(screen.getByRole('button', { name: 'Travail' })).toHaveAttribute('data-selected', 'true')
     expect(screen.getByRole('button', { name: 'Ordinateur' })).toHaveAttribute(
       'data-selected',
@@ -29,7 +32,8 @@ describe('ActivityGrid', () => {
 
   it('calls onChange with the clicked tile value', () => {
     const onChange = vi.fn()
-    render(<ActivityGrid options={OPTIONS} value={ActivityType.COMPUTER} onChange={onChange} />)
+    const tiles = buildActivityTiles(OPTIONS, ActivityType.COMPUTER, onChange)
+    render(<ActivityGrid tiles={tiles} />)
     fireEvent.click(screen.getByRole('button', { name: 'Lecture' }))
     expect(onChange).toHaveBeenCalledWith(ActivityType.READING)
   })

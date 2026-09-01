@@ -103,4 +103,19 @@ describe('useStudentById', () => {
 
     expect(result.current.fetchStatus).toBe('idle')
   })
+
+  it('throws when ipc result indicates failure', async () => {
+    vi.stubGlobal('electronAPI', {
+      student: {
+        get: vi.fn().mockResolvedValue({ success: false, error: 'boom' })
+      }
+    })
+
+    const { result } = renderHook(() => useStudentById(STUDENT_ID_FIRST), {
+      wrapper: createWrapper()
+    })
+
+    await waitFor(() => expect(result.current.isError).toBe(true))
+    expect(result.current.error).toBeInstanceOf(Error)
+  })
 })

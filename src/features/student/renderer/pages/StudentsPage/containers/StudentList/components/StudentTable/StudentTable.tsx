@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { Icon } from '@ui/components/Icon'
-import { StudentTableRow } from '../StudentTableRow'
-import { buildNextSortConfig } from './helpers/buildNextSortConfig'
-import type { StudentViewModel, StudentSortConfig, StudentSortField } from '@student/types'
+import { StudentTableRow, type StudentTableRowProps } from '../StudentTableRow'
+import type { StudentSortField } from '@student/types'
 import {
   FOOTER_FONT_SIZE_PX,
   CHECKBOX_CELL_STYLE,
@@ -11,32 +10,18 @@ import {
   SORT_ICON_STYLE
 } from './StudentTable.styles'
 
-interface StudentTableProps {
-  students: StudentViewModel[]
-  selectedIds: number[]
-  onToggleSelection: (id: number) => void
-  onEdit: (student: StudentViewModel) => void
-  onDelete: (id: number) => void
-  sortConfig: StudentSortConfig
-  onSort: (config: StudentSortConfig) => void
+export interface StudentSortHeader {
+  field: StudentSortField
+  onClick: () => void
 }
 
-const SORT_COLUMNS: readonly StudentSortField[] = ['nom', 'prenom', 'classe', 'ine']
+export interface StudentTableProps {
+  rows: StudentTableRowProps[]
+  sortHeaders: StudentSortHeader[]
+}
 
-export function StudentTable({
-  students,
-  selectedIds,
-  onToggleSelection,
-  onEdit,
-  onDelete,
-  sortConfig,
-  onSort
-}: StudentTableProps) {
+export function StudentTable({ rows, sortHeaders }: StudentTableProps) {
   const { t } = useTranslation('student')
-
-  function handleSort(field: StudentSortField) {
-    onSort(buildNextSortConfig(sortConfig, field))
-  }
 
   return (
     <Box
@@ -54,9 +39,9 @@ export function StudentTable({
         <thead>
           <tr>
             <th style={CHECKBOX_CELL_STYLE} />
-            {SORT_COLUMNS.map((field) => (
-              <th key={field} onClick={() => handleSort(field)}>
-                {t(`fields.${field}`)}
+            {sortHeaders.map((header) => (
+              <th key={header.field} onClick={header.onClick}>
+                {t(`fields.${header.field}`)}
                 <Icon name="unfold_more" style={SORT_ICON_STYLE} />
               </th>
             ))}
@@ -68,15 +53,8 @@ export function StudentTable({
           </tr>
         </thead>
         <tbody>
-          {students.map((student) => (
-            <StudentTableRow
-              key={student.id}
-              student={student}
-              selected={selectedIds.includes(student.id)}
-              onToggleSelection={onToggleSelection}
-              onEdit={onEdit}
-              onDelete={onDelete}
-            />
+          {rows.map((row) => (
+            <StudentTableRow key={row.student.id} {...row} />
           ))}
         </tbody>
       </Box>
@@ -92,7 +70,7 @@ export function StudentTable({
           color: 'var(--text-dim)'
         }}
       >
-        <Box component="span">{t('count', { count: students.length })}</Box>
+        <Box component="span">{t('count', { count: rows.length })}</Box>
       </Box>
     </Box>
   )

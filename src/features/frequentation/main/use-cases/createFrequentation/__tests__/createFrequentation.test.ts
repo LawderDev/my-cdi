@@ -4,6 +4,7 @@ import { createFrequentation } from '../createFrequentation'
 import type { FrequentationGateway } from '@frequentation/gateways/frequentation'
 import type { FrequentationEntity } from '@frequentation/entities/frequentation'
 import type { CreateFrequentationDto } from '@frequentation-shared'
+import { ErrorCode } from '@lib/errors'
 
 const VALID_ENTITY: FrequentationEntity = {
   id: 1,
@@ -52,7 +53,7 @@ describe('createFrequentation', () => {
     })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('date de début')
+      expect(result.code).toBe(ErrorCode.VALIDATION_ERROR)
     }
   })
 
@@ -68,7 +69,7 @@ describe('createFrequentation', () => {
     const result = await createFrequentation(gateway, invalidDto)
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('activité')
+      expect(result.code).toBe(ErrorCode.VALIDATION_ERROR)
     }
   })
 
@@ -81,7 +82,7 @@ describe('createFrequentation', () => {
     })
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toContain('élève')
+      expect(result.code).toBe(ErrorCode.VALIDATION_ERROR)
     }
   })
 

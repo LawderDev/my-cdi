@@ -38,4 +38,22 @@ describe('useBatchUpdateActivity', () => {
     expect(window.electronAPI.frequentation.update).toHaveBeenCalledTimes(EXPECTED_CALL_COUNT)
     expect(onSuccess).toHaveBeenCalled()
   })
+
+  it('stops and surfaces the ipc error when an update fails', async () => {
+    vi.stubGlobal('electronAPI', {
+      frequentation: {
+        update: vi.fn().mockResolvedValue({ success: false, error: 'boom' })
+      }
+    })
+    const onSuccess = vi.fn()
+    const { result } = renderHook(() => useBatchUpdateActivity({ onSuccess }), {
+      wrapper: createWrapper()
+    })
+
+    act(() => result.current.mutate({ ids: [ID_FIRST, ID_SECOND], activity: ActivityType.READING }))
+    await waitFor(() => expect(result.current.isError).toBe(true))
+    expect(result.current.error?.message).toBe('boom')
+    expect(window.electronAPI.frequentation.update).toHaveBeenCalledOnce()
+    expect(onSuccess).not.toHaveBeenCalled()
+  })
 })

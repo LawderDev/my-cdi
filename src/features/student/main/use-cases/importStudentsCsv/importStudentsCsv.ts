@@ -1,7 +1,7 @@
 import type { StudentGateway } from '@student/gateways/student'
 import { parseStudentCsv } from './helpers/parseStudentCsv'
 import type { CsvImportError, CsvImportResult } from '@student-shared'
-import type { UseCaseResult } from '../types/UseCaseResult'
+import type { UseCaseResult } from '@lib/use-case'
 
 interface ImportStudentsCsvDeps {
   gateway: StudentGateway

@@ -1,2 +1,6 @@
 export { ActivityGrid } from './ActivityGrid'
-export type { ActivityGridProps, ActivityGridOption } from './types/ActivityGridProps'
+export type {
+  ActivityGridProps,
+  ActivityGridOption,
+  ActivityGridTile
+} from './types/ActivityGridProps'

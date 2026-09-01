@@ -6,7 +6,9 @@ import { autoUpdater } from 'electron-updater'
 import log from 'electron-log/main'
 import { createDbConnection, closeDbConnection } from '@shared/db/connection'
 import { runMigrations } from '@shared/db/migrate'
+import { APP_CHANNELS } from '@shared/ipc/channels'
 import { UPDATER_CHANNELS } from '@shared/ipc/updaterChannels'
+import { createMainRouter } from '@shared/ipc/router'
 import type {
   UpdateAvailableInfo,
   DownloadProgressInfo,
@@ -23,7 +25,6 @@ const WINDOW_WIDTH_PX = 1200
 const WINDOW_HEIGHT_PX = 800
 const WINDOW_MIN_WIDTH_PX = 800
 const WINDOW_MIN_HEIGHT_PX = 600
-const APP_VERSION_CHANNEL = 'app:getVersion'
 
 process.on('uncaughtException', (err) => {
   log.error('Uncaught exception:', err)
@@ -80,11 +81,9 @@ function registerAutoUpdater(): void {
     sendToAllWindows(UPDATER_CHANNELS.UPDATE_ERROR, payload)
   })
 
-  ipcMain.handle(UPDATER_CHANNELS.CHECK_FOR_UPDATES, async () => {
-    return autoUpdater.checkForUpdates()
-  })
-
-  ipcMain.handle(UPDATER_CHANNELS.QUIT_AND_INSTALL, () => {
+  const router = createMainRouter(ipcMain)
+  router.procedure(UPDATER_CHANNELS.CHECK_FOR_UPDATES, async () => autoUpdater.checkForUpdates())
+  router.procedure(UPDATER_CHANNELS.QUIT_AND_INSTALL, async () => {
     autoUpdater.quitAndInstall()
   })
 
@@ -135,7 +134,9 @@ if (!gotTheLock) {
   app.on('second-instance', () => {
     const mainWindow = BrowserWindow.getAllWindows()[0]
     if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore()
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore()
+      }
       mainWindow.focus()
     }
   })
@@ -175,9 +176,7 @@ if (!gotTheLock) {
       })
     }
 
-    ipcMain.handle(APP_VERSION_CHANNEL, () => {
-      return { success: true, data: app.getVersion() }
-    })
+    createMainRouter(ipcMain).procedure(APP_CHANNELS.GET_VERSION, async () => app.getVersion())
 
     createWindow()
 

@@ -1,7 +1,7 @@
 import type { FrequentationGateway } from '@frequentation/gateways/frequentation'
 import type { StudentGateway } from '@student/gateways/student'
 import type { DateRangeDto, JournalEntryDto } from '@frequentation-shared'
-import type { UseCaseResult } from '../types/UseCaseResult'
+import type { UseCaseResult } from '@lib/use-case'
 import { formatFrequentationResponse } from '../helpers/formatFrequentationResponse'
 
 export async function getJournalEntries(

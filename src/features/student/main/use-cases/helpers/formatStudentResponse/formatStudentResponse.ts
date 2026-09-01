@@ -1,6 +1,6 @@
 import type { StudentResponseDto } from '@student-shared'
 import type { StudentEntity } from '@student/entities/student'
-import { computeStudentFields } from '@student/entities/student'
+import { computeStudentFields } from '@student/entities/student/helpers/computeStudentFields'
 
 export function formatStudentResponse(entity: StudentEntity): StudentResponseDto {
   const { fullName } = computeStudentFields(entity)

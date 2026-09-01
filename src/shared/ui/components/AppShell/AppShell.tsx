@@ -7,13 +7,11 @@ import { UpdateBanner } from '../UpdateBanner'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts'
 import type { KeyboardShortcut } from '../../hooks/useKeyboardShortcuts'
+import { CONTENT_COLUMN_SX, MAIN_SX, SHELL_SX } from './AppShell.styles'
 
 const SHORTCUT_KEY_JOURNAL = '1'
 const SHORTCUT_KEY_STATISTICS = '2'
 const SHORTCUT_KEY_STUDENTS = '3'
-
-const MAIN_PADDING_X = 3.5
-const MAIN_PADDING_Y = 3
 
 export function AppShell() {
   const navigate = useNavigate()
@@ -27,15 +25,12 @@ export function AppShell() {
   useKeyboardShortcuts(shortcuts)
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+    <Box sx={SHELL_SX}>
       <Sidebar />
-      <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', overflow: 'hidden' }}>
+      <Box sx={CONTENT_COLUMN_SX}>
         <Header />
         <UpdateBanner />
-        <Box
-          component="main"
-          sx={{ flex: 1, overflowY: 'auto', px: MAIN_PADDING_X, py: MAIN_PADDING_Y }}
-        >
+        <Box component="main" sx={MAIN_SX}>
           <Outlet />
         </Box>
       </Box>

@@ -6,8 +6,16 @@ import i18n from '@shared/i18n/config'
 import { ROUTES } from '@lib/routes'
 import { SidebarView } from '../SidebarView'
 import { buildSidebarItems } from '../../../helpers/buildSidebarItems'
+import type { SidebarNavItem } from '../../../types/SidebarProps'
 
-const items = buildSidebarItems()
+function buildNavItems(): SidebarNavItem[] {
+  return buildSidebarItems().map((item) => ({
+    ...item,
+    onClick: () => undefined
+  }))
+}
+
+const navItems = buildNavItems()
 
 function renderView(activePath: string) {
   const onNavigate = vi.fn()
@@ -15,9 +23,10 @@ function renderView(activePath: string) {
   render(
     <I18nextProvider i18n={i18n}>
       <SidebarView
-        items={items}
+        navItems={navItems.map((item) =>
+          item.path === ROUTES.STATISTICS ? { ...item, onClick: onNavigate } : item
+        )}
         activePath={activePath}
-        onNavigate={onNavigate}
         onSettingsClick={onSettingsClick}
       />
     </I18nextProvider>
@@ -44,10 +53,10 @@ describe('SidebarView', () => {
     expect(screen.getByRole('button', { name: /Journal/i })).not.toHaveAttribute('aria-current')
   })
 
-  it('calls onNavigate with the clicked item path', async () => {
+  it('invokes the clicked item onClick', async () => {
     const { onNavigate } = renderView(ROUTES.JOURNAL)
     await userEvent.click(screen.getByRole('button', { name: /Statistiques/i }))
-    expect(onNavigate).toHaveBeenCalledWith(ROUTES.STATISTICS)
+    expect(onNavigate).toHaveBeenCalledTimes(1)
   })
 
   it('calls onSettingsClick when the settings button is clicked', async () => {
