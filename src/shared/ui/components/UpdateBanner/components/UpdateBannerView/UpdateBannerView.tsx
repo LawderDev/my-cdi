@@ -14,15 +14,12 @@ import {
   SUCCESS_SX
 } from './UpdateBannerView.styles'
 
-const PROGRESS_PERCENT_DECIMAL_DIGITS = 0
-const FALLBACK_PROGRESS_PERCENT = 0
-const PERCENT_MAX = 100
-
 export function UpdateBannerView({
   status,
   versionAvailable,
   versionDownloaded,
-  progressPercent,
+  fillPercent,
+  percentDisplay,
   errorMessage,
   onInstall,
   onDismiss
@@ -43,10 +40,6 @@ export function UpdateBannerView({
   }
 
   if (status === 'downloading') {
-    const fillPercent = Math.min(progressPercent ?? FALLBACK_PROGRESS_PERCENT, PERCENT_MAX)
-    const percentDisplay = (progressPercent ?? FALLBACK_PROGRESS_PERCENT).toFixed(
-      PROGRESS_PERCENT_DECIMAL_DIGITS
-    )
     return (
       <Box role="status" sx={[BASE_BANNER_SX, INFO_SX]}>
         <Box sx={CONTENT_SX}>

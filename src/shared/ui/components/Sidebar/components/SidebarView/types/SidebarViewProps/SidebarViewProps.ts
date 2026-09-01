@@ -1,7 +1,6 @@
-import type { SidebarNavItem } from '../../../../types/SidebarProps'
+import type { ReactNode } from 'react'
 
 export interface SidebarViewProps {
-  navItems: SidebarNavItem[]
-  activePath: string
+  navButtonNodes: ReactNode[]
   onSettingsClick: () => void
 }

@@ -4,7 +4,8 @@ export interface UpdateBannerViewProps {
   status: UpdaterStatus
   versionAvailable?: string
   versionDownloaded?: string
-  progressPercent?: number
+  fillPercent: number
+  percentDisplay: string
   errorMessage?: string
   onInstall: () => void
   onDismiss: () => void

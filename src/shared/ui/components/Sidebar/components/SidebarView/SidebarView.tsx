@@ -15,7 +15,7 @@ import {
   SIDEBAR_Z_INDEX
 } from './SidebarView.styles'
 
-export function SidebarView({ navItems, activePath, onSettingsClick }: SidebarViewProps) {
+export function SidebarView({ navButtonNodes, onSettingsClick }: SidebarViewProps) {
   const { t } = useTranslation('common')
 
   return (
@@ -63,19 +63,7 @@ export function SidebarView({ navItems, activePath, onSettingsClick }: SidebarVi
           flex: 1
         }}
       >
-        {navItems.map((item) => {
-          const isActive = item.path === activePath
-          return (
-            <NavButton
-              key={item.path}
-              active={isActive}
-              iconName={item.iconName}
-              label={t(item.labelKey)}
-              ariaCurrent={isActive ? 'page' : undefined}
-              onClick={item.onClick}
-            />
-          )
-        })}
+        {navButtonNodes}
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, px: 1, pb: 0.5 }}>
         <NavButton
