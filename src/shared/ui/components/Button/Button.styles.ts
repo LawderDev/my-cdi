@@ -1,60 +1,59 @@
 import MuiButton from '@mui/material/Button'
-import { styled } from '@mui/material/styles'
+import { alpha, styled } from '@mui/material/styles'
+import { FONT_WEIGHTS, TINT_ALPHAS } from '@ui/theme'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 const PRIMARY_HEIGHT_PX = 40
 const SECONDARY_HEIGHT_PX = 36
 const DANGER_HEIGHT_PX = 36
-const PRIMARY_FONT_SIZE_PX = 13
-const PRIMARY_FONT_WEIGHT = 600
-const SECONDARY_FONT_WEIGHT = 500
 const DISABLED_OPACITY = 0.5
+const DANGER_BORDER_ALPHA = TINT_ALPHAS.border
+const DANGER_HOVER_ALPHA = TINT_ALPHAS.hover
 
 export const ButtonRoot = styled(MuiButton, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
   height: `${PRIMARY_HEIGHT_PX}px`,
-  borderRadius: 'var(--radius-sm)',
-  fontSize: `${PRIMARY_FONT_SIZE_PX}px`,
-  textTransform: 'none',
+  borderRadius: theme.shape.borderRadius,
+  fontSize: theme.typography.body1.fontSize,
   '&[data-variant="primary"]': {
-    fontWeight: PRIMARY_FONT_WEIGHT,
+    fontWeight: FONT_WEIGHTS.semibold,
     paddingInline: theme.spacing(2.5),
-    backgroundColor: 'var(--accent)',
-    color: '#fff',
-    boxShadow: '0 2px 8px rgba(124,77,255,0.3)',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    boxShadow: theme.shadows[3],
     '&:hover': {
-      backgroundColor: 'var(--accent-hover)',
-      boxShadow: '0 4px 16px rgba(124,77,255,0.4)'
+      backgroundColor: theme.palette.primary.light,
+      boxShadow: theme.shadows[4]
     },
     '&.Mui-disabled': {
       opacity: DISABLED_OPACITY,
-      color: '#fff',
-      backgroundColor: 'var(--accent)'
+      color: theme.palette.primary.contrastText,
+      backgroundColor: theme.palette.primary.main
     }
   },
   '&[data-variant="secondary"]': {
     height: `${SECONDARY_HEIGHT_PX}px`,
-    fontWeight: SECONDARY_FONT_WEIGHT,
+    fontWeight: FONT_WEIGHTS.medium,
     paddingInline: theme.spacing(2),
-    backgroundColor: 'var(--surface)',
-    color: 'var(--title)',
-    borderColor: 'var(--border)',
+    backgroundColor: theme.palette.surface,
+    color: theme.palette.text.primary,
+    borderColor: theme.palette.divider,
     '&:hover': {
-      backgroundColor: 'var(--card)',
-      borderColor: 'var(--border-light)'
+      backgroundColor: theme.palette.background.paper,
+      borderColor: theme.palette.dividerStrong
     }
   },
   '&[data-variant="danger"]': {
     height: `${DANGER_HEIGHT_PX}px`,
-    fontWeight: SECONDARY_FONT_WEIGHT,
+    fontWeight: FONT_WEIGHTS.medium,
     paddingInline: theme.spacing(2),
-    backgroundColor: 'var(--danger-bg)',
-    color: 'var(--danger)',
-    border: '1px solid rgba(248,113,113,0.25)',
+    backgroundColor: alpha(theme.palette.error.main, TINT_ALPHAS.surface),
+    color: theme.palette.error.main,
+    border: `1px solid ${alpha(theme.palette.error.main, DANGER_BORDER_ALPHA)}`,
     boxShadow: 'none',
     '&:hover': {
-      backgroundColor: 'rgba(248,113,113,0.2)',
+      backgroundColor: alpha(theme.palette.error.main, DANGER_HOVER_ALPHA),
       boxShadow: 'none'
     }
   }

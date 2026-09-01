@@ -9,22 +9,19 @@ const PADDING_X_STEPS = 3
 const PT_SPACING = 2.5
 const PY_BODY_SPACING = 2.5
 const PB_FOOTER_SPACING = 2.5
-const FONT_WEIGHT_SEMIBOLD = 600
-const TITLE_FONT_SIZE = '16px'
-const TITLE_PB = 0
 const FOOTER_GAP = 1
 
 export const DialogRoot = styled(Dialog, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   '& .MuiPaper-root': {
-    backgroundColor: 'var(--card)',
+    backgroundColor: theme.palette.background.paper,
     backgroundImage: 'none',
-    border: '1px solid var(--border)',
-    borderRadius: 'var(--radius)',
-    boxShadow: 'var(--shadow-lg)'
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    boxShadow: theme.shadows[2]
   }
-})
+}))
 
 export const DialogHeader = styled(DialogTitle, {
   shouldForwardProp: shouldForwardStyledProp
@@ -34,9 +31,7 @@ export const DialogHeader = styled(DialogTitle, {
   justifyContent: 'space-between',
   paddingInline: theme.spacing(PADDING_X_STEPS),
   paddingTop: theme.spacing(PT_SPACING),
-  paddingBottom: TITLE_PB,
-  fontSize: TITLE_FONT_SIZE,
-  fontWeight: FONT_WEIGHT_SEMIBOLD
+  paddingBottom: 0
 }))
 
 export const DialogBody = styled(DialogContent, {

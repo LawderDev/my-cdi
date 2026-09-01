@@ -1,13 +1,10 @@
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 
 const HEADER_HEIGHT_PX = 56
-const TITLE_FONT_SIZE_PX = 17
-const SUBTITLE_FONT_SIZE_PX = 12
-const CLOCK_FONT_SIZE_PX = 13
-const TITLE_FONT_WEIGHT = 600
 const PADDING_X_STEPS = 3.5
 const GAP_MEDIUM = 2
 const GAP_SMALL = 1.5
@@ -20,9 +17,9 @@ export const HeaderRoot = styled(Box, {
   alignItems: 'center',
   justifyContent: 'space-between',
   paddingInline: theme.spacing(PADDING_X_STEPS),
-  borderBottom: '1px solid var(--border)',
+  borderBottom: `1px solid ${theme.palette.divider}`,
   flexShrink: 0,
-  backgroundColor: 'var(--bg)'
+  backgroundColor: theme.palette.background.default
 }))
 
 export const TitleBlock = styled(Box, {
@@ -33,21 +30,18 @@ export const TitleBlock = styled(Box, {
   gap: theme.spacing(GAP_MEDIUM)
 }))
 
-export const Title = styled(Box, {
+export const Title = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  fontSize: `${TITLE_FONT_SIZE_PX}px`,
-  fontWeight: TITLE_FONT_WEIGHT,
+})(({ theme }) => ({
   letterSpacing: '-0.3px',
-  color: 'var(--title)'
-})
+  color: theme.palette.text.primary
+}))
 
-export const Subtitle = styled(Box, {
+export const Subtitle = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  fontSize: `${SUBTITLE_FONT_SIZE_PX}px`,
-  color: 'var(--text-dim)'
-})
+})(({ theme }) => ({
+  color: theme.palette.text.disabled
+}))
 
 export const ClockArea = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
@@ -59,8 +53,8 @@ export const ClockArea = styled(Box, {
 
 export const Clock = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   fontFamily: MONO_FONT_FAMILY,
-  fontSize: `${CLOCK_FONT_SIZE_PX}px`,
-  color: 'var(--text-dim)'
-})
+  fontSize: theme.typography.body1.fontSize,
+  color: theme.palette.text.disabled
+}))

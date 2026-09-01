@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { avatarColor, AVATAR_COLOR_PAIRS } from '../avatarColor'
+import { avatarColor, AVATAR_COLORS } from '../avatarColor'
 
 describe('avatarColor', () => {
   it('exposes a fixed-length color palette', () => {
     const expectedPaletteSize = 12
-    expect(AVATAR_COLOR_PAIRS).toHaveLength(expectedPaletteSize)
+    expect(AVATAR_COLORS).toHaveLength(expectedPaletteSize)
   })
 
   it('returns deterministic { bg, fg } for the same id', () => {
@@ -16,20 +16,18 @@ describe('avatarColor', () => {
 
   it('cycles through the palette by id modulo length', () => {
     const seed = 0
-    const offset = AVATAR_COLOR_PAIRS.length
+    const offset = AVATAR_COLORS.length
     expect(avatarColor(seed)).toEqual(avatarColor(seed + offset))
   })
 
-  it('returns the first pair for id 0', () => {
+  it('returns the first color for id 0', () => {
     const result = avatarColor(0)
-    const firstBg = AVATAR_COLOR_PAIRS[0][0]
-    const firstFg = AVATAR_COLOR_PAIRS[0][1]
-    expect(result.bg).toBe(firstBg)
-    expect(result.fg).toBe(firstFg)
+    expect(result.bg).toBe(AVATAR_COLORS[0])
+    expect(result.fg).toBe('#fff')
   })
 
   it('returns each result with bg and fg keys typed as string', () => {
-    const sampleSeed = AVATAR_COLOR_PAIRS.length - 1
+    const sampleSeed = AVATAR_COLORS.length - 1
     const result = avatarColor(sampleSeed)
     expect(typeof result.bg).toBe('string')
     expect(typeof result.fg).toBe('string')

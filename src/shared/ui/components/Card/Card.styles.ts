@@ -3,24 +3,22 @@ import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import type { CardPadding } from './types/CardProps'
 
-const PADDING_NONE_PX = 0
-const PADDING_COMPACT_PX = 16
-const PADDING_DEFAULT_PX = 20
+const PADDING_NONE_STEPS = 0
+const PADDING_COMPACT_STEPS = 2
+const PADDING_DEFAULT_STEPS = 2.5
 
-const PADDING_PX: Record<CardPadding, number> = {
-  none: PADDING_NONE_PX,
-  compact: PADDING_COMPACT_PX,
-  default: PADDING_DEFAULT_PX
+const PADDING_STEPS: Record<CardPadding, number> = {
+  none: PADDING_NONE_STEPS,
+  compact: PADDING_COMPACT_STEPS,
+  default: PADDING_DEFAULT_STEPS
 }
-
-const SHADOW = 'var(--shadow)'
 
 export const CardRoot = styled(Paper, {
   shouldForwardProp: shouldForwardStyledProp
-})<{ $padding: CardPadding }>(({ $padding }) => ({
-  backgroundColor: 'var(--card)',
-  border: '1px solid var(--border)',
-  borderRadius: 'var(--radius)',
-  padding: `${PADDING_PX[$padding]}px`,
-  boxShadow: SHADOW
+})<{ $padding: CardPadding }>(({ theme, $padding }) => ({
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
+  padding: theme.spacing(PADDING_STEPS[$padding]),
+  boxShadow: theme.shadows[1]
 }))

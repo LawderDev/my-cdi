@@ -34,7 +34,7 @@ export function ConfirmDialog({
         </>
       }
     >
-      <MessageText>{message}</MessageText>
+      <MessageText variant="body1">{message}</MessageText>
     </Modal>
   )
 }

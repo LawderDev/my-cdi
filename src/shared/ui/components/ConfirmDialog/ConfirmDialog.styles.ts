@@ -1,9 +1,9 @@
-import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
-export const MessageText = styled(Box, {
+export const MessageText = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
-})({
-  color: 'var(--text)'
-})
+})(({ theme }) => ({
+  color: theme.palette.text.secondary
+}))

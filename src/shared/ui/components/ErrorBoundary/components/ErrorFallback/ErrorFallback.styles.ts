@@ -3,24 +3,21 @@ import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 import type { CSSProperties } from 'react'
+import { theme } from '@ui/theme'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 import { Card } from '@ui/components/Card'
 
 const CARD_MAX_WIDTH_PX = 600
-const ICON_FONT_SIZE_PX = 48
-const FONT_WEIGHT_SEMIBOLD = 600
-const TITLE_FONT_SIZE = '20px'
 const PAGE_MIN_HEIGHT = '60vh'
 const PAGE_PADDING = 3
 const GAP_SMALL = 1.5
 const MB_MEDIUM = 2
 const MB_LARGE = 2.5
-const DETAILS_FONT_SIZE = '12px'
 const PRE_MARGIN_TOP = 0.5
 
 export const ICON_CSS: CSSProperties = {
-  color: 'var(--danger)',
-  fontSize: `${ICON_FONT_SIZE_PX}px`
+  color: theme.palette.error.main,
+  fontSize: theme.typography.h2.fontSize
 }
 
 export const PageRoot = styled(Box, {
@@ -52,16 +49,13 @@ export const TitleRow = styled(Box, {
 export const Heading = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })({
-  margin: 0,
-  lineHeight: 1.5,
-  fontSize: TITLE_FONT_SIZE,
-  fontWeight: FONT_WEIGHT_SEMIBOLD
+  margin: 0
 })
 
 export const DescriptionText = styled(Typography, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  color: 'var(--text)',
+  color: theme.palette.text.secondary,
   marginBottom: theme.spacing(MB_LARGE)
 }))
 
@@ -70,8 +64,8 @@ export const DetailsBox = styled(Box, {
 })(({ theme }) => ({
   marginBottom: theme.spacing(MB_LARGE),
   fontFamily: MONO_FONT_FAMILY,
-  fontSize: DETAILS_FONT_SIZE,
-  color: 'var(--text-dim)'
+  fontSize: theme.typography.body2.fontSize,
+  color: theme.palette.text.disabled
 }))
 
 export const PreBlock = styled(Box, {

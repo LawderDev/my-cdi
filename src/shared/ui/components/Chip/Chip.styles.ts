@@ -1,27 +1,26 @@
 import MuiChip from '@mui/material/Chip'
-import { styled } from '@mui/material/styles'
+import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
+import { FONT_WEIGHTS, TINT_ALPHAS } from '@ui/theme'
 
 const CHIP_HEIGHT_PX = 28
-const CHIP_BORDER_RADIUS_PX = 14
-const FONT_WEIGHT_MEDIUM = 500
-const CHIP_FONT_SIZE_PX = 12
+const CHIP_BORDER_ALPHA = TINT_ALPHAS.border
 
 export const ChipRoot = styled(MuiChip, {
   shouldForwardProp: shouldForwardStyledProp
-})({
+})(({ theme }) => ({
   height: `${CHIP_HEIGHT_PX}px`,
-  borderRadius: `${CHIP_BORDER_RADIUS_PX}px`,
-  fontWeight: FONT_WEIGHT_MEDIUM,
-  fontSize: `${CHIP_FONT_SIZE_PX}px`,
+  borderRadius: CHIP_HEIGHT_PX / 2,
+  fontWeight: FONT_WEIGHTS.medium,
+  fontSize: theme.typography.body2.fontSize,
   '&[data-tone="accent"]': {
-    backgroundColor: 'var(--accent-bg)',
-    border: '1px solid var(--accent-border)',
-    color: 'var(--accent)'
+    backgroundColor: alpha(theme.palette.primary.main, TINT_ALPHAS.surface),
+    border: `1px solid ${alpha(theme.palette.primary.main, CHIP_BORDER_ALPHA)}`,
+    color: theme.palette.primary.main
   },
   '&[data-tone="neutral"]': {
-    backgroundColor: 'var(--surface)',
-    border: '1px solid var(--border)',
-    color: 'var(--text)'
+    backgroundColor: theme.palette.surface,
+    border: `1px solid ${theme.palette.divider}`,
+    color: theme.palette.text.secondary
   }
-})
+}))

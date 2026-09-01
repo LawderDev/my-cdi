@@ -1,16 +1,18 @@
-export const AVATAR_COLOR_PAIRS = [
-  ['#7C4DFF', '#fff'],
-  ['#60a5fa', '#fff'],
-  ['#4ade80', '#111'],
-  ['#fbbf24', '#111'],
-  ['#f87171', '#fff'],
-  ['#c084fc', '#fff'],
-  ['#fb923c', '#111'],
-  ['#2dd4bf', '#111'],
-  ['#818cf8', '#fff'],
-  ['#a78bfa', '#fff'],
-  ['#34d399', '#111'],
-  ['#f472b6', '#fff']
+import { theme } from '@ui/theme'
+
+export const AVATAR_COLORS = [
+  theme.palette.primary.main,
+  theme.palette.info.main,
+  theme.palette.success.main,
+  theme.palette.warning.main,
+  theme.palette.error.main,
+  theme.palette.activity.relaxation,
+  '#fb923c',
+  '#2dd4bf',
+  '#818cf8',
+  '#a78bfa',
+  '#34d399',
+  '#f472b6'
 ] as const
 
 export interface AvatarColorPair {
@@ -19,8 +21,7 @@ export interface AvatarColorPair {
 }
 
 export function avatarColor(id: number): AvatarColorPair {
-  const index =
-    ((id % AVATAR_COLOR_PAIRS.length) + AVATAR_COLOR_PAIRS.length) % AVATAR_COLOR_PAIRS.length
-  const pair = AVATAR_COLOR_PAIRS[index] ?? AVATAR_COLOR_PAIRS[0]
-  return { bg: pair[0], fg: pair[1] }
+  const index = ((id % AVATAR_COLORS.length) + AVATAR_COLORS.length) % AVATAR_COLORS.length
+  const bg = AVATAR_COLORS[index] ?? AVATAR_COLORS[0]
+  return { bg, fg: theme.palette.getContrastText(bg) }
 }

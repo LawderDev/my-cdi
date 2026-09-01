@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import { styled } from '@mui/material/styles'
+import { RADII } from '@ui/theme'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 const OPTION_GAP_SPACING = 1.25
@@ -17,10 +18,10 @@ export const OptionBadge = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
   marginLeft: 'auto',
-  fontSize: '11px',
-  color: 'var(--text-dim)',
-  backgroundColor: 'var(--surface)',
+  fontSize: theme.typography.caption.fontSize,
+  color: theme.palette.text.disabled,
+  backgroundColor: theme.palette.surface,
   paddingInline: theme.spacing(1),
   paddingBlock: theme.spacing(BADGE_PY_SPACING),
-  borderRadius: 'var(--radius-xs)'
+  borderRadius: RADII.small
 }))

@@ -4,11 +4,7 @@ import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
 const SIDEBAR_WIDTH_PX = 68
 const LOGO_SIZE_PX = 36
-const LOGO_FONT_SIZE_PX = 13
 const LOGO_BORDER_RADIUS_PX = 10
-const LOGO_FONT_WEIGHT = 700
-const LOGO_BG = 'linear-gradient(135deg, var(--accent), #b388ff)'
-const LOGO_SHADOW = '0 2px 8px rgba(var(--accent-rgb), 0.4)'
 const SIDEBAR_Z_INDEX = 10
 
 export const SETTINGS_ICON_NAME = 'settings'
@@ -18,12 +14,12 @@ export const SidebarRoot = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
   width: `${SIDEBAR_WIDTH_PX}px`,
-  backgroundColor: 'var(--bg-nav)',
+  backgroundColor: theme.palette.sidebar,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   paddingBlock: theme.spacing(1.5),
-  borderRight: '1px solid var(--border)',
+  borderRight: `1px solid ${theme.palette.divider}`,
   flexShrink: 0,
   position: 'relative',
   zIndex: SIDEBAR_Z_INDEX
@@ -39,12 +35,12 @@ export const Logo = styled(Box, {
   alignItems: 'center',
   justifyContent: 'center',
   marginBottom: theme.spacing(3),
-  fontWeight: LOGO_FONT_WEIGHT,
-  fontSize: `${LOGO_FONT_SIZE_PX}px`,
-  color: '#fff',
+  fontWeight: theme.typography.fontWeightBold,
+  fontSize: theme.typography.body1.fontSize,
+  color: theme.palette.common.white,
   letterSpacing: '-0.5px',
-  background: LOGO_BG,
-  boxShadow: LOGO_SHADOW
+  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+  boxShadow: theme.shadows[3]
 }))
 
 export const NavList = styled(Box, {

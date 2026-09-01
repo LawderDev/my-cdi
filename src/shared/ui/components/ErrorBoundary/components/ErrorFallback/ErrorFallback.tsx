@@ -21,9 +21,9 @@ export function ErrorFallback({ error, onReload }: ErrorFallbackProps) {
       <FallbackCard>
         <TitleRow>
           <Icon name="error_outline" style={ICON_CSS} />
-          <Heading as="h1">{t('errorBoundary.title')}</Heading>
+          <Heading variant="h5">{t('errorBoundary.title')}</Heading>
         </TitleRow>
-        <DescriptionText>{t('errorBoundary.description')}</DescriptionText>
+        <DescriptionText variant="body1">{t('errorBoundary.description')}</DescriptionText>
         <DetailsBox as="details">
           <Box component="summary">{t('errorBoundary.details')}</Box>
           <PreBlock as="pre">{error.message}</PreBlock>

@@ -6,8 +6,8 @@ export function EmptyState({ iconName, message, description, className }: EmptyS
   return (
     <Root className={className}>
       <Icon name={iconName} style={ICON_CSS} />
-      <MessageText>{message}</MessageText>
-      {description ? <DescriptionText>{description}</DescriptionText> : null}
+      <MessageText variant="subtitle2">{message}</MessageText>
+      {description ? <DescriptionText variant="body2">{description}</DescriptionText> : null}
     </Root>
   )
 }
