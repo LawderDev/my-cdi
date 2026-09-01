@@ -8,10 +8,13 @@ import type { UpdateBannerViewProps } from '../types/UpdateBannerViewProps'
 
 const PROGRESS_PERCENT_42 = 42
 
-function renderWithStatus(props: UpdateBannerViewProps) {
+function renderWithStatus(
+  props: Omit<UpdateBannerViewProps, 'fillPercent' | 'percentDisplay'> &
+    Partial<Pick<UpdateBannerViewProps, 'fillPercent' | 'percentDisplay'>>
+) {
   return render(
     <I18nextProvider i18n={i18n}>
-      <UpdateBannerView {...props} />
+      <UpdateBannerView fillPercent={0} percentDisplay="0" {...props} />
     </I18nextProvider>
   )
 }
@@ -39,8 +42,7 @@ describe('UpdateBannerView', () => {
   it('renders the downloading message with percent', () => {
     renderWithStatus({
       status: 'downloading',
-      fillPercent: PROGRESS_PERCENT_42,
-      percentDisplay: '42',
+      percentDisplay: String(PROGRESS_PERCENT_42),
       onInstall: vi.fn(),
       onDismiss: vi.fn()
     })
@@ -51,8 +53,6 @@ describe('UpdateBannerView', () => {
     const onInstall = vi.fn()
     renderWithStatus({
       status: 'downloaded',
-      fillPercent: 0,
-      percentDisplay: '0',
       versionDownloaded: '2.0.0',
       onInstall,
       onDismiss: vi.fn()
@@ -64,8 +64,6 @@ describe('UpdateBannerView', () => {
   it('renders error message', () => {
     renderWithStatus({
       status: 'error',
-      fillPercent: 0,
-      percentDisplay: '0',
       errorMessage: 'network failure',
       onInstall: vi.fn(),
       onDismiss: vi.fn()
