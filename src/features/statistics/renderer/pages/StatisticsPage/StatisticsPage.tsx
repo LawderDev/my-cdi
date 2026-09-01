@@ -2,11 +2,11 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { RESPONSIVE_BREAKPOINT_PX } from './StatisticsPage.styles'
 import { useStatisticsPage } from './hooks/useStatisticsPage'
-import { StatsKpiCards } from './containers/StatsKpiCards'
-import { PeriodFilter } from './containers/PeriodFilter'
-import { WeeklyBarChart } from './containers/WeeklyBarChart'
-import { ActivityDonutChart } from './containers/ActivityDonutChart'
-import { MonthlyTrendChart } from './containers/MonthlyTrendChart'
+import { StatsKpiCardsContainer } from './containers/StatsKpiCardsContainer'
+import { PeriodFilterContainer } from './containers/PeriodFilterContainer'
+import { WeeklyBarChartContainer } from './containers/WeeklyBarChartContainer'
+import { ActivityDonutChartContainer } from './containers/ActivityDonutChartContainer'
+import { MonthlyTrendChartContainer } from './containers/MonthlyTrendChartContainer'
 
 export function StatisticsPage() {
   const { period, setPeriod, stats, isLoading } = useStatisticsPage()
@@ -16,8 +16,8 @@ export function StatisticsPage() {
   }
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <StatsKpiCards stats={stats} />
-      <PeriodFilter value={period} onChange={setPeriod} />
+      <StatsKpiCardsContainer stats={stats} />
+      <PeriodFilterContainer value={period} onChange={setPeriod} />
       <Box
         sx={{
           display: 'grid',
@@ -28,8 +28,8 @@ export function StatisticsPage() {
           }
         }}
       >
-        <WeeklyBarChart dailyCounts={stats.dailyCounts} />
-        <ActivityDonutChart activityCounts={stats.activityCounts} />
+        <WeeklyBarChartContainer dailyCounts={stats.dailyCounts} />
+        <ActivityDonutChartContainer activityCounts={stats.activityCounts} />
       </Box>
       <Box
         sx={{
@@ -41,7 +41,7 @@ export function StatisticsPage() {
           }
         }}
       >
-        <MonthlyTrendChart dailyCounts={stats.dailyCounts} />
+        <MonthlyTrendChartContainer dailyCounts={stats.dailyCounts} />
       </Box>
     </Box>
   )
