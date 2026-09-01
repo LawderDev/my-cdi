@@ -1,0 +1,1 @@
+export { StudentAvatarPresenter } from './StudentAvatarPresenter'

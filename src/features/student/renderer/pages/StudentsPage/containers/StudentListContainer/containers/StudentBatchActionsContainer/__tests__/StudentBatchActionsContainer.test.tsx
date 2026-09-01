@@ -1,0 +1,89 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { I18nextProvider } from 'react-i18next'
+import i18n from '@shared/i18n/config'
+import type { ReactNode } from 'react'
+import { StudentBatchActionsContainer } from '../StudentBatchActionsContainer'
+
+const STUDENT_ID_FIRST = 1
+const STUDENT_ID_SECOND = 2
+const STUDENT_ID_THIRD = 3
+const SELECTED_COUNT = 2
+const ZERO_SELECTED = 0
+const TOTAL_COUNT = 10
+const THREE_SELECTED = 3
+const SELECTED_IDS_PAIR = [STUDENT_ID_FIRST, STUDENT_ID_SECOND]
+const SELECTED_IDS_TRIPLE = [STUDENT_ID_FIRST, STUDENT_ID_SECOND, STUDENT_ID_THIRD]
+
+function renderWithClient(node: ReactNode) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } }
+  })
+  return render(
+    <I18nextProvider i18n={i18n}>
+      <QueryClientProvider client={queryClient}>{node}</QueryClientProvider>
+    </I18nextProvider>
+  )
+}
+
+describe('StudentBatchActionsContainer', () => {
+  beforeEach(() => {
+    vi.stubGlobal('electronAPI', {
+      student: {
+        delete: vi.fn().mockResolvedValue({ success: true, data: undefined })
+      }
+    })
+  })
+
+  it('renders select all and delete buttons', () => {
+    renderWithClient(
+      <StudentBatchActionsContainer
+        selectedIds={SELECTED_IDS_PAIR}
+        selectedCount={SELECTED_COUNT}
+        totalCount={TOTAL_COUNT}
+        onSelectAll={vi.fn()}
+        onClearSelection={vi.fn()}
+        onAfterDelete={vi.fn()}
+      />
+    )
+
+    expect(screen.getByText('Tout sélectionner')).toBeInTheDocument()
+    expect(screen.getByText('Supprimer la sélection')).toBeInTheDocument()
+    expect(screen.getByText(/sélectionné/)).toBeInTheDocument()
+  })
+
+  it('disables delete button when nothing selected', () => {
+    renderWithClient(
+      <StudentBatchActionsContainer
+        selectedIds={[]}
+        selectedCount={ZERO_SELECTED}
+        totalCount={TOTAL_COUNT}
+        onSelectAll={vi.fn()}
+        onClearSelection={vi.fn()}
+        onAfterDelete={vi.fn()}
+      />
+    )
+
+    const deleteButton = screen.getByText('Supprimer la sélection')
+    expect(deleteButton).toBeDisabled()
+  })
+
+  it('shows confirmation dialog when delete is clicked', () => {
+    renderWithClient(
+      <StudentBatchActionsContainer
+        selectedIds={SELECTED_IDS_TRIPLE}
+        selectedCount={THREE_SELECTED}
+        totalCount={TOTAL_COUNT}
+        onSelectAll={vi.fn()}
+        onClearSelection={vi.fn()}
+        onAfterDelete={vi.fn()}
+      />
+    )
+
+    const deleteButton = screen.getByText('Supprimer la sélection')
+    fireEvent.click(deleteButton)
+
+    expect(screen.getByText('Confirmer la suppression')).toBeInTheDocument()
+  })
+})

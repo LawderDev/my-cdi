@@ -1,1 +1,0 @@
-export { StudentList } from './StudentList'

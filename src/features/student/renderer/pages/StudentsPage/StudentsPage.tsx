@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import { useStudentsPage } from './hooks/useStudentsPage'
-import { StudentList } from './containers/StudentList'
-import { StudentForm } from './containers/StudentForm'
+import { StudentListContainer } from './containers/StudentListContainer'
+import { StudentFormContainer } from './containers/StudentFormContainer'
 
 export function StudentsPage() {
   const {
@@ -15,11 +15,16 @@ export function StudentsPage() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-      <StudentList onEditStudent={setEditingStudent} onAddStudent={openAddDialog} />
+      <StudentListContainer onEditStudent={setEditingStudent} onAddStudent={openAddDialog} />
 
-      <StudentForm mode="create" student={null} open={isAddDialogOpen} onClose={closeAddDialog} />
+      <StudentFormContainer
+        mode="create"
+        student={null}
+        open={isAddDialogOpen}
+        onClose={closeAddDialog}
+      />
 
-      <StudentForm
+      <StudentFormContainer
         mode="edit"
         student={editingStudent}
         open={editingStudent !== null}
