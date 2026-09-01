@@ -10,6 +10,7 @@ import { NUMERIC_FONT_SIZE_PX, NUMERIC_FONT_WEIGHT } from './StudentTableRow.sty
 
 export interface StudentTableRowProps {
   student: StudentViewModel
+  initials: string
   selected: boolean
   onCheckboxChange: () => void
   onCheckboxClick: (event: MouseEvent<HTMLButtonElement>) => void
@@ -21,6 +22,7 @@ const VISITS_PLACEHOLDER = '—'
 
 export function StudentTableRow({
   student,
+  initials,
   selected,
   onCheckboxChange,
   onCheckboxClick,
@@ -47,7 +49,7 @@ export function StudentTableRow({
       </td>
       <td>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
-          <StudentAvatar id={student.id} prenom={student.prenom} nom={student.nom} size="sm" />
+          <StudentAvatar id={student.id} initials={initials} size="sm" />
           <Box component="span" className="td-name">
             {student.nom}
           </Box>

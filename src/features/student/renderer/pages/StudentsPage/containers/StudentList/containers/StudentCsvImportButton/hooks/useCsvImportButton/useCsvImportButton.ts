@@ -4,11 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { useImportStudentsCsv } from '@student/api/useStudentMutations'
 import type { CsvImportResult } from '@student-shared'
 import { readFileBuffer, decodeText } from '../../helpers/decodeCsvFile'
+import { formatImportError } from '../../helpers/formatImportError'
 
 export interface CsvImportButtonState {
   isModalOpen: boolean
   pendingFile: File | null
   result: CsvImportResult | null
+  errorLines: string[]
   error: string | null
   isPending: boolean
   inputRef: RefObject<HTMLInputElement | null>
@@ -97,10 +99,15 @@ export function useCsvImportButton(): CsvImportButtonState & CsvImportButtonActi
     }
   }
 
+  const errorLines: string[] = result
+    ? result.errorDetails.map((errorDetail) => formatImportError(errorDetail, tStudent))
+    : []
+
   return {
     isModalOpen,
     pendingFile,
     result,
+    errorLines,
     error,
     isPending,
     inputRef,

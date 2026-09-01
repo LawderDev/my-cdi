@@ -1,1 +1,0 @@
-export { renderSortIndicator } from './renderSortIndicator'

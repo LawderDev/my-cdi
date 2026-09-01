@@ -6,7 +6,6 @@ import { Button } from '@ui/components/Button'
 import { Modal } from '@ui/components/Modal'
 import { Icon } from '@ui/components/Icon'
 import type { CsvImportResult } from '@student-shared'
-import { formatImportError } from './helpers/formatImportError'
 import {
   VISUALLY_HIDDEN_STYLE,
   TRIGGER_ICON_STYLE,
@@ -27,6 +26,7 @@ interface StudentCsvImportButtonProps {
   isModalOpen: boolean
   pendingFile: File | null
   result: CsvImportResult | null
+  errorLines: string[]
   error: string | null
   isPending: boolean
   inputRef: RefObject<HTMLInputElement | null>
@@ -46,6 +46,7 @@ export function StudentCsvImportButton(props: StudentCsvImportButtonProps) {
     isModalOpen,
     pendingFile,
     result,
+    errorLines,
     error,
     isPending,
     inputRef,
@@ -183,9 +184,9 @@ export function StudentCsvImportButton(props: StudentCsvImportButtonProps) {
               overflowY: 'auto'
             }}
           >
-            {result.errorDetails.map((errorDetail, index) => (
+            {errorLines.map((errorLine, index) => (
               <Box key={index} sx={{ color: 'var(--danger)', mb: 0.5 }}>
-                {formatImportError(errorDetail, t)}
+                {errorLine}
               </Box>
             ))}
           </Box>

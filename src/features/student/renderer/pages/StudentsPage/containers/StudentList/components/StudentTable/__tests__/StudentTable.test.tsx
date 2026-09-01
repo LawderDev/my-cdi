@@ -1,14 +1,13 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
+import type { ReactNode } from 'react'
 import { render, screen } from '@testing-library/react'
-import { I18nextProvider } from 'react-i18next'
-import i18n from '@shared/i18n/config'
-import { StudentTable, type StudentSortHeader } from '../StudentTable'
+import { StudentTable } from '../StudentTable'
+import { StudentTableRow } from '../../StudentTableRow'
 import type { StudentTableRowProps } from '../../StudentTableRow'
 import type { StudentViewModel } from '@student/types'
 
 const ID_FIRST = 1
 const ID_SECOND = 2
-const SELECTED_ROW_CHECKBOX_INDEX = 0
 
 const STUDENTS: StudentViewModel[] = [
   {
@@ -40,58 +39,51 @@ const STUDENTS: StudentViewModel[] = [
 function buildRowProps(student: StudentViewModel, selected = false): StudentTableRowProps {
   return {
     student,
+    initials: 'JD',
     selected,
-    onCheckboxChange: vi.fn(),
-    onCheckboxClick: vi.fn(),
-    onEditClick: vi.fn(),
-    onDeleteClick: vi.fn()
+    onCheckboxChange: () => {},
+    onCheckboxClick: () => {},
+    onEditClick: () => {},
+    onDeleteClick: () => {}
   }
 }
 
-function buildSortHeaders(): StudentSortHeader[] {
-  return (['nom', 'prenom', 'classe', 'ine'] as const).map((field) => ({
-    field,
-    onClick: vi.fn()
-  }))
-}
-
-function renderWithI18n(ui: React.ReactElement) {
-  return render(<I18nextProvider i18n={i18n}>{ui}</I18nextProvider>)
+function buildHeaderNodes(): ReactNode[] {
+  return [
+    <th key="checkbox" />,
+    <th key="nom">Nom</th>,
+    <th key="prenom">Prénom</th>,
+    <th key="classe">Classe</th>,
+    <th key="ine">INE</th>,
+    <th key="visits">Visites</th>,
+    <th key="actions">Actions</th>
+  ]
 }
 
 describe('StudentTable', () => {
-  it('renders student rows', () => {
-    renderWithI18n(
+  it('renders student row nodes', () => {
+    render(
       <StudentTable
-        rows={STUDENTS.map((student) => buildRowProps(student))}
-        sortHeaders={buildSortHeaders()}
+        headerNodes={buildHeaderNodes()}
+        rowNodes={STUDENTS.map((student) => (
+          <StudentTableRow key={student.id} {...buildRowProps(student)} />
+        ))}
+        countLabel="2 élèves"
       />
     )
 
     expect(screen.getByText('Dupont')).toBeInTheDocument()
     expect(screen.getByText('Jean')).toBeInTheDocument()
-    expect(screen.getByText('Martin')).toBeInTheDocument()
     expect(screen.getByText('3ème A')).toBeInTheDocument()
+    expect(screen.getByText('2 élèves')).toBeInTheDocument()
   })
 
-  it('renders column headers', () => {
-    renderWithI18n(<StudentTable rows={[]} sortHeaders={buildSortHeaders()} />)
+  it('renders the header nodes it receives', () => {
+    render(<StudentTable headerNodes={buildHeaderNodes()} rowNodes={[]} countLabel="0 élève" />)
 
     expect(screen.getByText('Nom')).toBeInTheDocument()
     expect(screen.getByText('Prénom')).toBeInTheDocument()
     expect(screen.getByText('Classe')).toBeInTheDocument()
     expect(screen.getByText('INE')).toBeInTheDocument()
-  })
-
-  it('shows checkboxes for selected rows', () => {
-    renderWithI18n(
-      <StudentTable
-        rows={STUDENTS.map((student) => buildRowProps(student, student.id === ID_FIRST))}
-        sortHeaders={buildSortHeaders()}
-      />
-    )
-
-    const checkboxes = screen.getAllByRole('checkbox')
-    expect(checkboxes[SELECTED_ROW_CHECKBOX_INDEX]).toBeChecked()
   })
 })

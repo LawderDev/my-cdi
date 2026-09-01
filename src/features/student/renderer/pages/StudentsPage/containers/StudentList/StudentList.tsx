@@ -1,19 +1,21 @@
 import { useState } from 'react'
-import type { ChangeEvent } from 'react'
+import type { ChangeEvent, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
+import { Icon } from '@ui/components/Icon'
 import { useStudentListData } from './hooks/useStudentListData'
 import { useStudentSelection } from './hooks/useStudentSelection'
 import { useDeleteStudent } from '@student/api/useStudentMutations'
+import { buildStudentInitials } from '@student/helpers/studentFormatters'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { StudentTable } from './components/StudentTable'
-import type { StudentSortHeader } from './components/StudentTable'
-import { buildNextSortConfig } from './components/StudentTable/helpers/buildNextSortConfig'
+import { StudentTableRow } from './components/StudentTableRow'
+import { buildNextSortConfig } from './helpers/buildNextSortConfig'
 import { StudentListToolbar } from './components/StudentListToolbar'
 import { StudentBatchActions } from './containers/StudentBatchActions'
-import type { StudentTableRowProps } from './components/StudentTableRow'
+import { CHECKBOX_CELL_STYLE, ACTIONS_CELL_STYLE, SORT_ICON_STYLE } from './StudentList.styles'
 import type { StudentListProps } from './types/StudentListProps'
 import type { StudentSortField, StudentViewModel } from '@student/types'
 
@@ -44,36 +46,6 @@ export function StudentList({ onEditStudent, onAddStudent }: StudentListProps) {
     setSearchTerm(event.target.value)
   }
 
-  function buildRowProps(student: StudentViewModel): StudentTableRowProps {
-    return {
-      student,
-      selected: selectedIds.includes(student.id),
-      onCheckboxChange: () => {
-        toggle(student.id)
-      },
-      onCheckboxClick: (event) => {
-        event.stopPropagation()
-      },
-      onEditClick: (event) => {
-        event.stopPropagation()
-        onEditStudent(student)
-      },
-      onDeleteClick: (event) => {
-        event.stopPropagation()
-        handleDeleteClick(student.id)
-      }
-    }
-  }
-
-  function buildSortHeaders(): StudentSortHeader[] {
-    return SORTABLE_FIELDS.map((field) => ({
-      field,
-      onClick: () => {
-        setSortConfig(buildNextSortConfig(sortConfig, field))
-      }
-    }))
-  }
-
   function handleDeleteClick(id: number) {
     setPendingDeleteId(id)
   }
@@ -91,6 +63,56 @@ export function StudentList({ onEditStudent, onAddStudent }: StudentListProps) {
 
   function dismissDeleteSuccess() {
     setDeleteSuccess(false)
+  }
+
+  function buildRowNodes(students: StudentViewModel[]): ReactNode[] {
+    return students.map((student) => (
+      <StudentTableRow
+        key={student.id}
+        student={student}
+        initials={buildStudentInitials(student.prenom, student.nom)}
+        selected={selectedIds.includes(student.id)}
+        onCheckboxChange={() => {
+          toggle(student.id)
+        }}
+        onCheckboxClick={(event) => {
+          event.stopPropagation()
+        }}
+        onEditClick={(event) => {
+          event.stopPropagation()
+          onEditStudent(student)
+        }}
+        onDeleteClick={(event) => {
+          event.stopPropagation()
+          handleDeleteClick(student.id)
+        }}
+      />
+    ))
+  }
+
+  function buildHeaderNodes(): ReactNode[] {
+    const sortNodes: ReactNode[] = SORTABLE_FIELDS.map((field) => (
+      <th
+        key={field}
+        onClick={() => {
+          setSortConfig(buildNextSortConfig(sortConfig, field))
+        }}
+      >
+        {tStudent(`fields.${field}`)}
+        <Icon name="unfold_more" style={SORT_ICON_STYLE} />
+      </th>
+    ))
+    return [
+      <th key="checkbox" style={CHECKBOX_CELL_STYLE} />,
+      ...sortNodes,
+      <th key="visits">
+        {tStudent('fields.visits')}
+        <Icon name="unfold_more" style={SORT_ICON_STYLE} />
+      </th>,
+      <th key="actions" style={ACTIONS_CELL_STYLE}>
+        {tStudent('fields.actions')}
+      </th>
+    ]
   }
 
   if (isLoading) {
@@ -115,7 +137,11 @@ export function StudentList({ onEditStudent, onAddStudent }: StudentListProps) {
         onAfterDelete={clearSelection}
       />
 
-      <StudentTable rows={filteredStudents.map(buildRowProps)} sortHeaders={buildSortHeaders()} />
+      <StudentTable
+        headerNodes={buildHeaderNodes()}
+        rowNodes={buildRowNodes(filteredStudents)}
+        countLabel={tStudent('count', { count: filteredStudents.length })}
+      />
 
       <ConfirmDialog
         open={pendingDeleteId !== null}

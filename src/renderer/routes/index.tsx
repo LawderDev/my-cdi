@@ -1,27 +1,15 @@
 import { Suspense } from 'react'
+import type { ReactNode } from 'react'
 import { Routes, Route } from 'react-router'
-import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
 import { ROUTES } from '@lib/routes'
 import { AppShell } from '@ui/components/AppShell'
+import { RouteSuspenseFallback } from './RouteSuspenseFallback'
 import JournalPage from './JournalPage'
 import StudentsPage from './StudentsPage'
 import StatisticsPage from './StatisticsPage'
 
-function RouteSuspenseFallback() {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100%',
-        p: 4
-      }}
-    >
-      <CircularProgress color="primary" />
-    </Box>
-  )
+function SuspenseRoute({ children }: { children: ReactNode }) {
+  return <Suspense fallback={<RouteSuspenseFallback />}>{children}</Suspense>
 }
 
 export function AppRoutes() {
@@ -31,25 +19,25 @@ export function AppRoutes() {
         <Route
           path={ROUTES.JOURNAL}
           element={
-            <Suspense fallback={<RouteSuspenseFallback />}>
+            <SuspenseRoute>
               <JournalPage />
-            </Suspense>
+            </SuspenseRoute>
           }
         />
         <Route
           path={ROUTES.STUDENTS}
           element={
-            <Suspense fallback={<RouteSuspenseFallback />}>
+            <SuspenseRoute>
               <StudentsPage />
-            </Suspense>
+            </SuspenseRoute>
           }
         />
         <Route
           path={ROUTES.STATISTICS}
           element={
-            <Suspense fallback={<RouteSuspenseFallback />}>
+            <SuspenseRoute>
               <StatisticsPage />
-            </Suspense>
+            </SuspenseRoute>
           }
         />
       </Route>

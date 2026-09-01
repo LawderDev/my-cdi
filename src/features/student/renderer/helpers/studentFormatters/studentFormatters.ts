@@ -1,5 +1,10 @@
 const DISPLAY_NAME_SEPARATOR = ' '
 const SINGULAR_COUNT = 1
+const FIRST_CHAR_INDEX = 0
+
+export function buildStudentInitials(prenom: string, nom: string): string {
+  return `${prenom.charAt(FIRST_CHAR_INDEX)}${nom.charAt(FIRST_CHAR_INDEX)}`.toUpperCase()
+}
 
 export function formatStudentDisplayName(prenom: string, nom: string): string {
   return `${prenom.trim()}${DISPLAY_NAME_SEPARATOR}${nom.trim()}`

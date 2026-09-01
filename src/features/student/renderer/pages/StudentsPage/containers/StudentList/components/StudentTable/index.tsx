@@ -1,2 +1,2 @@
 export { StudentTable } from './StudentTable'
-export type { StudentTableProps, StudentSortHeader } from './StudentTable'
+export type { StudentTableProps } from './StudentTable'

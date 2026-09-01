@@ -1,28 +1,14 @@
-import { useTranslation } from 'react-i18next'
+import type { ReactNode } from 'react'
 import Box from '@mui/material/Box'
-import { Icon } from '@ui/components/Icon'
-import { StudentTableRow, type StudentTableRowProps } from '../StudentTableRow'
-import type { StudentSortField } from '@student/types'
-import {
-  FOOTER_FONT_SIZE_PX,
-  CHECKBOX_CELL_STYLE,
-  ACTIONS_CELL_STYLE,
-  SORT_ICON_STYLE
-} from './StudentTable.styles'
-
-export interface StudentSortHeader {
-  field: StudentSortField
-  onClick: () => void
-}
+import { FOOTER_FONT_SIZE_PX } from './StudentTable.styles'
 
 export interface StudentTableProps {
-  rows: StudentTableRowProps[]
-  sortHeaders: StudentSortHeader[]
+  headerNodes: ReactNode[]
+  rowNodes: ReactNode[]
+  countLabel: string
 }
 
-export function StudentTable({ rows, sortHeaders }: StudentTableProps) {
-  const { t } = useTranslation('student')
-
+export function StudentTable({ headerNodes, rowNodes, countLabel }: StudentTableProps) {
   return (
     <Box
       className="data-table"
@@ -37,26 +23,9 @@ export function StudentTable({ rows, sortHeaders }: StudentTableProps) {
     >
       <Box component="table" sx={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
-          <tr>
-            <th style={CHECKBOX_CELL_STYLE} />
-            {sortHeaders.map((header) => (
-              <th key={header.field} onClick={header.onClick}>
-                {t(`fields.${header.field}`)}
-                <Icon name="unfold_more" style={SORT_ICON_STYLE} />
-              </th>
-            ))}
-            <th>
-              {t('fields.visits')}
-              <Icon name="unfold_more" style={SORT_ICON_STYLE} />
-            </th>
-            <th style={ACTIONS_CELL_STYLE}>{t('fields.actions')}</th>
-          </tr>
+          <tr>{headerNodes}</tr>
         </thead>
-        <tbody>
-          {rows.map((row) => (
-            <StudentTableRow key={row.student.id} {...row} />
-          ))}
-        </tbody>
+        <tbody>{rowNodes}</tbody>
       </Box>
       <Box
         sx={{
@@ -70,7 +39,7 @@ export function StudentTable({ rows, sortHeaders }: StudentTableProps) {
           color: 'var(--text-dim)'
         }}
       >
-        <Box component="span">{t('count', { count: rows.length })}</Box>
+        <Box component="span">{countLabel}</Box>
       </Box>
     </Box>
   )
