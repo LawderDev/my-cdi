@@ -30,6 +30,12 @@ export default tseslint.config(
       'react/prop-types': 'off'
     }
   },
+  {
+    files: ['**/*.mjs'],
+    rules: {
+      '@typescript-eslint/explicit-function-return-type': 'off'
+    }
+  },
   eslintConfigPrettier,
   {
     files: ['**/*.{ts,tsx}'],
