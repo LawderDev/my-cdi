@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller } from 'react-hook-form'
@@ -7,6 +7,7 @@ import { Card } from '@ui/components/Card'
 import { Button } from '@ui/components/Button'
 import { Icon } from '@ui/components/Icon'
 import { Toast } from '@ui/components/Toast'
+import { useTypeToSearch } from '@ui/hooks/useTypeToSearch'
 import { ActivityGridPresenter } from '@frequentation/presenters/ActivityGridPresenter'
 import { buildActivityTiles } from '@frequentation/presenters/ActivityGridPresenter/helpers/buildActivityTiles'
 import { buildActivityTileNodes } from '@frequentation/presenters/ActivityGridPresenter/helpers/buildActivityTileNodes'
@@ -38,6 +39,8 @@ export function JournalEntryFormContainer({
 }: JournalEntryFormContainerProps) {
   const { t } = useTranslation('frequentation')
   const [timePickerOpen, setTimePickerOpen] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement | null>(null)
+  useTypeToSearch(searchInputRef)
   const {
     form,
     handleSubmit,
@@ -121,6 +124,7 @@ export function JournalEntryFormContainer({
               onInputChange={setStudentInputValue}
               onSelect={(option) => handleStudentSelect(field.value, option.value)}
               loading={isStudentLoading}
+              inputRef={searchInputRef}
             />
           )}
         />

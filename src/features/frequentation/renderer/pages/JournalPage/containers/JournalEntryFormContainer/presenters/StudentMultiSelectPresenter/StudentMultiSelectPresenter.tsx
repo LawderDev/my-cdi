@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import type { ReactNode } from 'react'
+import type { ReactNode, RefObject } from 'react'
 import Box from '@mui/material/Box'
 import { Autocomplete } from '@ui/components/Autocomplete'
 import type { AutocompleteOption } from '@ui/components/Autocomplete'
@@ -15,6 +15,7 @@ interface StudentMultiSelectPresenterProps {
   onInputChange: (value: string) => void
   onSelect: (option: AutocompleteOption<number>) => void
   loading: boolean
+  inputRef?: RefObject<HTMLInputElement | null>
 }
 
 export function StudentMultiSelectPresenter({
@@ -24,7 +25,8 @@ export function StudentMultiSelectPresenter({
   inputValue,
   onInputChange,
   onSelect,
-  loading
+  loading,
+  inputRef
 }: StudentMultiSelectPresenterProps) {
   const { t } = useTranslation('frequentation')
 
@@ -40,6 +42,7 @@ export function StudentMultiSelectPresenter({
         onInputChange={onInputChange}
         excludedValues={selectedIds}
         disableCloseOnSelect
+        inputRef={inputRef}
       />
       {chipNodes.length > 0 ? <ChipsRow>{chipNodes}</ChipsRow> : null}
     </Box>

@@ -66,4 +66,26 @@ describe('JournalEntryFormContainer', () => {
     const submitButton = screen.getByRole('button', { name: /enregistrer/i })
     expect(submitButton).toBeDisabled()
   })
+
+  it('focuses the student search when the user types with nothing focused', () => {
+    render(withProviders(<JournalEntryFormContainer selectedDate="2026-04-01" />))
+    const searchInput = screen.getByRole('combobox')
+    expect(document.activeElement).toBe(document.body)
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'j', bubbles: true }))
+
+    expect(document.activeElement).toBe(searchInput)
+  })
+
+  it('does not hijack typing inside an editable target', () => {
+    render(withProviders(<JournalEntryFormContainer selectedDate="2026-04-01" />))
+    const searchInput = screen.getByRole('combobox')
+    searchInput.focus()
+
+    window.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'x', bubbles: true, cancelable: true })
+    )
+
+    expect(document.activeElement).toBe(searchInput)
+  })
 })

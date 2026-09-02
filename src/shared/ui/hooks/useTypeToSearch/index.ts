@@ -1,0 +1,1 @@
+export { useTypeToSearch } from './useTypeToSearch'

@@ -32,7 +32,8 @@ export function useAutocomplete<T>(props: UiAutocompleteProps<T>): MuiProps<T> {
     onInputChange,
     excludedValues,
     maxResults = DEFAULT_MAX_RESULTS,
-    disableCloseOnSelect = false
+    disableCloseOnSelect = false,
+    inputRef
   } = props
 
   const filteredOptions = filterExcludedOptions(options, excludedValues)
@@ -63,6 +64,8 @@ export function useAutocomplete<T>(props: UiAutocompleteProps<T>): MuiProps<T> {
     renderOption: (renderProps, option) => (
       <AutocompleteOptionItem {...renderProps} option={option} />
     ),
-    renderInput: (params) => <AutocompleteInput placeholder={placeholder} params={params} />
+    renderInput: (params) => (
+      <AutocompleteInput placeholder={placeholder} params={params} inputRef={inputRef} />
+    )
   }
 }

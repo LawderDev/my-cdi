@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useRef } from 'react'
 import { Autocomplete } from '../Autocomplete'
 import type { AutocompleteOption } from '../types/AutocompleteProps'
 
@@ -85,5 +86,28 @@ describe('Autocomplete', () => {
     const labels = screen.getAllByRole('option').map((o) => o.textContent ?? '')
     expect(labels.some((label) => label.includes('Alice'))).toBe(false)
     expect(labels.some((label) => label.includes('Bob'))).toBe(true)
+  })
+
+  it('assigns the passed inputRef to the native input element', () => {
+    function Harness() {
+      const inputRef = useRef<HTMLInputElement | null>(null)
+      return (
+        <>
+          <Autocomplete options={STUDENT_OPTIONS} onSelect={vi.fn()} inputRef={inputRef} />
+          <button
+            type="button"
+            onClick={() => {
+              inputRef.current?.focus()
+            }}
+          >
+            focus search
+          </button>
+        </>
+      )
+    }
+    render(<Harness />)
+    const input = screen.getByRole('combobox')
+    screen.getByRole('button', { name: 'focus search' }).click()
+    expect(document.activeElement).toBe(input)
   })
 })

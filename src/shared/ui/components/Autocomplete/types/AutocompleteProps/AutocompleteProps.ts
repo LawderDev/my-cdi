@@ -1,3 +1,5 @@
+import type { RefObject } from 'react'
+
 export interface AutocompleteOption<T> {
   value: T
   label: string
@@ -13,4 +15,5 @@ export interface AutocompleteProps<T> {
   excludedValues?: T[]
   maxResults?: number
   disableCloseOnSelect?: boolean
+  inputRef?: RefObject<HTMLInputElement | null>
 }
