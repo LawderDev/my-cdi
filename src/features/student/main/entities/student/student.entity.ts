@@ -8,6 +8,10 @@ export const studentTable = sqliteTable(
     nom: text('nom').notNull(),
     prenom: text('prenom').notNull(),
     classe: text('classe').notNull(),
+    // Uniqueness of `ine` is enforced by the idx_students_ine unique index,
+    // created by the guarded helper src/shared/db/helpers/ensureStudentsIneUniqueIndex
+    // at startup — not declared here, so a future drizzle-kit generate never
+    // emits a second CREATE UNIQUE INDEX that could fail on legacy databases.
     ine: text('ine').notNull(),
     createdAt: text('created_at')
       .notNull()
