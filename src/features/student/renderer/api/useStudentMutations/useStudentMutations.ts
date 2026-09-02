@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { resolveIpcErrorMessage } from '@lib/ipc/resolveIpcErrorMessage'
 import { studentKeys } from '../studentKeys'
+import { statisticsKeys } from '@statistics/api/statisticsKeys'
 import type { CreateStudentDto, UpdateStudentDto, ImportStudentsCsvPayload } from '@student-shared'
 
 interface DeleteStudentInput {
@@ -26,6 +27,7 @@ export function useCreateStudent() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: studentKeys.all })
+      queryClient.invalidateQueries({ queryKey: statisticsKeys.all })
     }
   })
 }
@@ -43,6 +45,7 @@ export function useUpdateStudent() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: studentKeys.all })
+      queryClient.invalidateQueries({ queryKey: statisticsKeys.all })
     }
   })
 }
@@ -64,6 +67,7 @@ export function useDeleteStudent(options: UseDeleteStudentOptions = {}) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: studentKeys.all })
+      queryClient.invalidateQueries({ queryKey: statisticsKeys.all })
       options.onSuccess?.()
     }
   })
@@ -82,6 +86,7 @@ export function useImportStudentsCsv() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: studentKeys.all })
+      queryClient.invalidateQueries({ queryKey: statisticsKeys.all })
     }
   })
 }

@@ -60,4 +60,23 @@ describe('useStatsForPeriod', () => {
     await waitFor(() => expect(result.current.isError).toBe(true))
     expect(result.current.error).toBeInstanceOf(Error)
   })
+
+  it('refetches when remounted on a still-fresh cache (refetchOnMount always)', async () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    function Wrapper({ children }: { children: ReactNode }) {
+      return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    }
+
+    const first = renderHook(
+      () => useStatsForPeriod({ startDate: '2026-04-01', endDate: '2026-04-30' }),
+      { wrapper: Wrapper }
+    )
+    await waitFor(() => expect(first.result.current.isSuccess).toBe(true))
+    first.unmount()
+
+    renderHook(() => useStatsForPeriod({ startDate: '2026-04-01', endDate: '2026-04-30' }), {
+      wrapper: Wrapper
+    })
+    await waitFor(() => expect(window.electronAPI.statistics.getStats).toHaveBeenCalledTimes(2))
+  })
 })

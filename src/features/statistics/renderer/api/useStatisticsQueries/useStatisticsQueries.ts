@@ -15,6 +15,9 @@ export function useStatsForPeriod(range: PeriodRangeDto) {
       }
       return result.data
     },
-    enabled: Boolean(range.startDate && range.endDate)
+    enabled: Boolean(range.startDate && range.endDate),
+    // Route components unmount on navigation; remounting the statistics page
+    // must refetch even when cached data is still fresh (staleTime 60s).
+    refetchOnMount: 'always'
   })
 }

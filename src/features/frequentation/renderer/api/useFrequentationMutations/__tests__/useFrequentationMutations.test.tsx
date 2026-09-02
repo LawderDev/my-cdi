@@ -8,12 +8,24 @@ import {
   useDeleteFrequentation
 } from '../useFrequentationMutations'
 import { ActivityType } from '@types'
+import { statisticsKeys } from '@statistics/api/statisticsKeys'
 
 const FREQUENTATION_ID_TARGET = 5
 const FREQUENTATION_ID_UPDATE = 1
 const STUDENT_ID_FIRST = 1
 const STUDENT_ID_SECOND = 2
 const BATCH_CREATED_COUNT = 2
+
+function createInvalidationSpiedWrapper() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } }
+  })
+  const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries')
+  function Wrapper({ children }: { children: ReactNode }) {
+    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  }
+  return { wrapper: Wrapper, invalidateSpy }
+}
 
 function createWrapper() {
   const queryClient = new QueryClient({
@@ -58,6 +70,25 @@ describe('useCreateFrequentationBatch', () => {
     })
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(window.electronAPI.frequentation.createBatch).toHaveBeenCalledOnce()
+  })
+
+  it('invalidates statistics queries after a successful batch creation', async () => {
+    const { wrapper, invalidateSpy } = createInvalidationSpiedWrapper()
+    const { result } = renderHook(() => useCreateFrequentationBatch(), { wrapper })
+
+    act(() => {
+      result.current.mutate({
+        frequentations: [
+          {
+            startsAt: '2026-04-01T09:00:00.000Z',
+            activity: ActivityType.WORK,
+            studentId: STUDENT_ID_FIRST
+          }
+        ]
+      })
+    })
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: statisticsKeys.all })
   })
 
   it('surfaces the ipc error when creation fails', async () => {
@@ -105,6 +136,15 @@ describe('useDeleteFrequentation', () => {
     })
   })
 
+  it('invalidates statistics queries after a successful delete', async () => {
+    const { wrapper, invalidateSpy } = createInvalidationSpiedWrapper()
+    const { result } = renderHook(() => useDeleteFrequentation(), { wrapper })
+
+    act(() => result.current.mutate({ id: FREQUENTATION_ID_TARGET }))
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: statisticsKeys.all })
+  })
+
   it('surfaces the ipc error when deletion fails', async () => {
     vi.stubGlobal('electronAPI', {
       frequentation: {
@@ -139,6 +179,17 @@ describe('useUpdateFrequentation', () => {
       id: FREQUENTATION_ID_UPDATE,
       activity: ActivityType.READING
     })
+  })
+
+  it('invalidates statistics queries after a successful update', async () => {
+    const { wrapper, invalidateSpy } = createInvalidationSpiedWrapper()
+    const { result } = renderHook(() => useUpdateFrequentation(), { wrapper })
+
+    act(() =>
+      result.current.mutate({ id: FREQUENTATION_ID_UPDATE, activity: ActivityType.READING })
+    )
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: statisticsKeys.all })
   })
 
   it('surfaces the ipc error when update fails', async () => {

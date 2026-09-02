@@ -7,6 +7,7 @@ const QUARTER_LENGTH = 3
 const SEMESTER_FIRST_END_MONTH = 5
 const SEMESTER_SECOND_START_MONTH = 6
 const SEMESTER_SECOND_END_MONTH = 11
+const YEAR_END_MONTH = 11
 const DAYS_IN_WEEK = 7
 const SUNDAY = 0
 const PADDING = 2
@@ -80,7 +81,7 @@ function buildYearRange(today: Date): PeriodRangeDto {
   const year = today.getUTCFullYear()
   return {
     startDate: toIsoDate(year, 0, 1),
-    endDate: toIsoDate(year, SEMESTER_SECOND_END_MONTH, getLastDay(year, SEMESTER_SECOND_END_MONTH))
+    endDate: toIsoDate(year, YEAR_END_MONTH, getLastDay(year, YEAR_END_MONTH))
   }
 }
 

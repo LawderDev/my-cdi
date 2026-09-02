@@ -9,6 +9,7 @@ import {
   useImportStudentsCsv
 } from '../useStudentMutations'
 import type { CreateStudentDto, UpdateStudentDto } from '@student-shared'
+import { statisticsKeys } from '@statistics/api/statisticsKeys'
 
 const STUDENT_ID = 1
 
@@ -19,6 +20,17 @@ function createWrapper() {
   return function Wrapper({ children }: { children: ReactNode }) {
     return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   }
+}
+
+function createInvalidationSpiedWrapper() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } }
+  })
+  const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries')
+  function Wrapper({ children }: { children: ReactNode }) {
+    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  }
+  return { wrapper: Wrapper, invalidateSpy }
 }
 
 describe('useCreateStudent', () => {
@@ -44,6 +56,18 @@ describe('useCreateStudent', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(window.electronAPI.student.create).toHaveBeenCalledWith(createDto)
+  })
+
+  it('invalidates statistics queries after a successful create', async () => {
+    const { wrapper, invalidateSpy } = createInvalidationSpiedWrapper()
+    const { result } = renderHook(() => useCreateStudent(), { wrapper })
+
+    act(() => {
+      result.current.mutate(createDto)
+    })
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: statisticsKeys.all })
   })
 
   it('throws when ipc result indicates failure', async () => {
@@ -96,6 +120,18 @@ describe('useUpdateStudent', () => {
       ...updateData
     })
   })
+
+  it('invalidates statistics queries after a successful update', async () => {
+    const { wrapper, invalidateSpy } = createInvalidationSpiedWrapper()
+    const { result } = renderHook(() => useUpdateStudent(), { wrapper })
+
+    act(() => {
+      result.current.mutate({ id: STUDENT_ID, data: updateData })
+    })
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: statisticsKeys.all })
+  })
 })
 
 describe('useDeleteStudent', () => {
@@ -116,6 +152,18 @@ describe('useDeleteStudent', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(window.electronAPI.student.delete).toHaveBeenCalledWith({ id: STUDENT_ID })
+  })
+
+  it('invalidates statistics queries after a successful delete', async () => {
+    const { wrapper, invalidateSpy } = createInvalidationSpiedWrapper()
+    const { result } = renderHook(() => useDeleteStudent(), { wrapper })
+
+    act(() => {
+      result.current.mutate({ id: STUDENT_ID })
+    })
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: statisticsKeys.all })
   })
 })
 
@@ -142,5 +190,17 @@ describe('useImportStudentsCsv', () => {
     expect(window.electronAPI.student.importCsv).toHaveBeenCalledWith({
       csv: 'nom,prenom,classe,ine\nA,B,1,11\n'
     })
+  })
+
+  it('invalidates statistics queries after a successful import', async () => {
+    const { wrapper, invalidateSpy } = createInvalidationSpiedWrapper()
+    const { result } = renderHook(() => useImportStudentsCsv(), { wrapper })
+
+    act(() => {
+      result.current.mutate({ csv: 'nom,prenom,classe,ine\nA,B,1,11\n' })
+    })
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: statisticsKeys.all })
   })
 })

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { resolveIpcErrorMessage } from '@lib/ipc/resolveIpcErrorMessage'
 import { frequentationKeys } from '../frequentationKeys'
+import { statisticsKeys } from '@statistics/api/statisticsKeys'
 import type { CreateFrequentationBatchDto, UpdateFrequentationDto } from '@frequentation-shared'
 
 export function useCreateFrequentationBatch() {
@@ -17,6 +18,7 @@ export function useCreateFrequentationBatch() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: frequentationKeys.all })
+      queryClient.invalidateQueries({ queryKey: statisticsKeys.all })
     }
   })
 }
@@ -34,6 +36,7 @@ export function useUpdateFrequentation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: frequentationKeys.all })
+      queryClient.invalidateQueries({ queryKey: statisticsKeys.all })
     }
   })
 }
@@ -55,6 +58,7 @@ export function useDeleteFrequentation(options: UseDeleteFrequentationOptions = 
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: frequentationKeys.all })
+      queryClient.invalidateQueries({ queryKey: statisticsKeys.all })
       options.onSuccess?.()
     }
   })
