@@ -1,45 +1,17 @@
-import { Suspense } from 'react'
-import type { ReactNode } from 'react'
 import { Routes, Route } from 'react-router'
 import { ROUTES } from '@lib/routes'
 import { AppShell } from '@ui/components/AppShell'
-import { RouteSuspenseFallback } from './RouteSuspenseFallback'
-import JournalPage from './JournalPage'
-import StudentsPage from './StudentsPage'
-import StatisticsPage from './StatisticsPage'
-
-function SuspenseRoute({ children }: { children: ReactNode }) {
-  return <Suspense fallback={<RouteSuspenseFallback />}>{children}</Suspense>
-}
+import { JournalPage } from '@frequentation/pages/JournalPage'
+import { StudentsPage } from '@student/pages/StudentsPage'
+import { StatisticsPage } from '@statistics/pages/StatisticsPage'
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route element={<AppShell />}>
-        <Route
-          path={ROUTES.JOURNAL}
-          element={
-            <SuspenseRoute>
-              <JournalPage />
-            </SuspenseRoute>
-          }
-        />
-        <Route
-          path={ROUTES.STUDENTS}
-          element={
-            <SuspenseRoute>
-              <StudentsPage />
-            </SuspenseRoute>
-          }
-        />
-        <Route
-          path={ROUTES.STATISTICS}
-          element={
-            <SuspenseRoute>
-              <StatisticsPage />
-            </SuspenseRoute>
-          }
-        />
+        <Route path={ROUTES.JOURNAL} element={<JournalPage />} />
+        <Route path={ROUTES.STUDENTS} element={<StudentsPage />} />
+        <Route path={ROUTES.STATISTICS} element={<StatisticsPage />} />
       </Route>
     </Routes>
   )
