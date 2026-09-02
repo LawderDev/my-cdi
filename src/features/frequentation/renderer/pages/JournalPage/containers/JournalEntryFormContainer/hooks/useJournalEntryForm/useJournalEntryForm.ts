@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
+import { useTranslation } from 'react-i18next'
+import { useToast } from '@ui/hooks/useToast'
 import { useCreateFrequentationBatch } from '@frequentation/api/useFrequentationMutations'
 import { useActivityLabels } from '@frequentation/hooks/useActivityLabels'
 import { useStudentList } from '@student/api/useStudentQueries'
@@ -31,11 +33,11 @@ function buildDefaultValues(): JournalEntryFormData {
 }
 
 export function useJournalEntryForm({ selectedDate, onSubmitted }: UseJournalEntryFormOptions) {
+  const { t } = useTranslation('frequentation')
   const { mutate, isPending } = useCreateFrequentationBatch()
   const { allActivities, getLabel } = useActivityLabels()
   const { data: students, isLoading: isStudentLoading } = useStudentList()
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const [submitSuccess, setSubmitSuccess] = useState<boolean>(false)
+  const { toast, show, dismiss } = useToast()
   const [studentInputValue, setStudentInputValue] = useState('')
 
   const form = useForm<JournalEntryFormData>({
@@ -52,24 +54,17 @@ export function useJournalEntryForm({ selectedDate, onSubmitted }: UseJournalEnt
     classe: student.classe
   }))
 
-  function dismissFeedback() {
-    setSubmitError(null)
-    setSubmitSuccess(false)
-  }
-
   function handleSubmit(values: JournalEntryFormData) {
-    setSubmitError(null)
-    setSubmitSuccess(false)
     mutate(mapFormToBatchDto(values, selectedDate), {
       onSuccess: () => {
         form.reset(buildDefaultValues())
-        setSubmitSuccess(true)
+        show(t('form.successMessage'))
         if (onSubmitted) {
           onSubmitted()
         }
       },
       onError: (error: Error) => {
-        setSubmitError(error.message)
+        show(error.message, 'error')
       }
     })
   }
@@ -101,8 +96,7 @@ export function useJournalEntryForm({ selectedDate, onSubmitted }: UseJournalEnt
     handleStudentRemove,
     isStudentLoading,
     isSubmitting: isPending,
-    submitError,
-    submitSuccess,
-    dismissFeedback
+    toast,
+    dismissToast: dismiss
   } as const
 }

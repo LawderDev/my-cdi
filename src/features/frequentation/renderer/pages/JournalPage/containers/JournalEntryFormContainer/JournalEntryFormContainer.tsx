@@ -3,11 +3,10 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller } from 'react-hook-form'
 import dayjs from 'dayjs'
-import Snackbar from '@mui/material/Snackbar'
-import Alert from '@mui/material/Alert'
 import { Card } from '@ui/components/Card'
 import { Button } from '@ui/components/Button'
 import { Icon } from '@ui/components/Icon'
+import { Toast } from '@ui/components/Toast'
 import { ActivityGridPresenter } from '@frequentation/presenters/ActivityGridPresenter'
 import { buildActivityTiles } from '@frequentation/presenters/ActivityGridPresenter/helpers/buildActivityTiles'
 import { buildActivityTileNodes } from '@frequentation/presenters/ActivityGridPresenter/helpers/buildActivityTileNodes'
@@ -18,7 +17,7 @@ import type { AutocompleteOption } from '@ui/components/Autocomplete'
 import { TimeRowPresenter } from './presenters/TimeRowPresenter'
 import { periodFromTime } from './presenters/TimeRowPresenter/helpers/periodFromTime'
 
-import { EntryForm, SectionLabel, FEEDBACK_AUTO_HIDE_MS } from './JournalEntryFormContainer.styles'
+import { EntryForm, SectionLabel } from './JournalEntryFormContainer.styles'
 
 const TIME_FORMAT = 'HH:mm'
 
@@ -50,13 +49,11 @@ export function JournalEntryFormContainer({
     handleStudentRemove,
     isStudentLoading,
     isSubmitting,
-    submitError,
-    submitSuccess,
-    dismissFeedback
+    toast,
+    dismissToast
   } = useJournalEntryForm({ selectedDate, onSubmitted })
 
   const isDisabled = isSubmitting || !form.formState.isValid
-  const showSuccess = submitSuccess && submitError === null
 
   function buildStudentChips(selectedIds: number[]): StudentChip[] {
     return studentOptions
@@ -148,26 +145,7 @@ export function JournalEntryFormContainer({
           {t('form.submit')}
         </Button>
       </EntryForm>
-      <Snackbar
-        open={showSuccess}
-        autoHideDuration={FEEDBACK_AUTO_HIDE_MS}
-        onClose={dismissFeedback}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert severity="success" onClose={dismissFeedback} variant="filled">
-          {t('form.successMessage')}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={submitError !== null}
-        autoHideDuration={FEEDBACK_AUTO_HIDE_MS}
-        onClose={dismissFeedback}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert severity="error" onClose={dismissFeedback} variant="filled">
-          {submitError ?? ''}
-        </Alert>
-      </Snackbar>
+      <Toast toast={toast} onClose={dismissToast} />
     </Card>
   )
 }

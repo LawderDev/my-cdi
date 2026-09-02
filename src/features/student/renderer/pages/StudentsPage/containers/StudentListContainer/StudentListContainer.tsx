@@ -2,13 +2,13 @@ import { useState } from 'react'
 import type { ChangeEvent, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
-import Snackbar from '@mui/material/Snackbar'
-import Alert from '@mui/material/Alert'
+import { Toast } from '@ui/components/Toast'
+import { ConfirmDialog } from '@ui/components/ConfirmDialog'
+import { useToast } from '@ui/hooks/useToast'
 import { useStudentListData } from './hooks/useStudentListData'
 import { useStudentSelection } from './hooks/useStudentSelection'
 import { useDeleteStudent } from '@student/api/useStudentMutations'
 import { buildStudentInitials } from '@student/helpers/studentFormatters'
-import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { StudentTablePresenter } from './presenters/StudentTablePresenter'
 import { StudentTableRowPresenter } from './presenters/StudentTableRowPresenter'
 import { buildNextSortConfig } from './helpers/buildNextSortConfig'
@@ -23,8 +23,6 @@ import {
 import type { StudentListContainerProps } from './types/StudentListContainerProps'
 import type { StudentSortField, StudentViewModel } from '@student/types'
 
-const FEEDBACK_AUTO_HIDE_MS = 4000
-
 const SORTABLE_FIELDS: readonly StudentSortField[] = ['nom', 'prenom', 'classe', 'ine']
 
 export function StudentListContainer({ onEditStudent, onAddStudent }: StudentListContainerProps) {
@@ -34,11 +32,11 @@ export function StudentListContainer({ onEditStudent, onAddStudent }: StudentLis
     useStudentListData()
 
   const { selectedIds, selectedCount, toggle, selectAll, clearSelection } = useStudentSelection()
+  const { toast, show, dismiss } = useToast()
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null)
-  const [deleteSuccess, setDeleteSuccess] = useState(false)
   const { mutate: deleteStudent } = useDeleteStudent({
     onSuccess: () => {
-      setDeleteSuccess(true)
+      show(tStudent('deleteSuccess'))
     }
   })
 
@@ -63,10 +61,6 @@ export function StudentListContainer({ onEditStudent, onAddStudent }: StudentLis
 
   function closeConfirmDelete() {
     setPendingDeleteId(null)
-  }
-
-  function dismissDeleteSuccess() {
-    setDeleteSuccess(false)
   }
 
   function buildRowNodes(students: StudentViewModel[]): ReactNode[] {
@@ -155,16 +149,7 @@ export function StudentListContainer({ onEditStudent, onAddStudent }: StudentLis
         onConfirm={handleConfirmDelete}
         onClose={closeConfirmDelete}
       />
-      <Snackbar
-        open={deleteSuccess}
-        autoHideDuration={FEEDBACK_AUTO_HIDE_MS}
-        onClose={dismissDeleteSuccess}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert severity="success" onClose={dismissDeleteSuccess} variant="filled">
-          {tStudent('deleteSuccess')}
-        </Alert>
-      </Snackbar>
+      <Toast toast={toast} onClose={dismiss} />
     </StudentListLayout>
   )
 }

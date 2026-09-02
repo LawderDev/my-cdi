@@ -2,10 +2,10 @@ import { useState } from 'react'
 import type { ChangeEvent, MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
-import Snackbar from '@mui/material/Snackbar'
-import Alert from '@mui/material/Alert'
 import { EmptyState } from '@ui/components/EmptyState'
+import { Toast } from '@ui/components/Toast'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
+import { useToast } from '@ui/hooks/useToast'
 import { useJournalEntries } from '@frequentation/api/useFrequentationQueries'
 import { useActivityLabels } from '@frequentation/hooks/useActivityLabels'
 import { toJournalEntryViewModel } from '@frequentation/helpers/journalEntryTransformers'
@@ -31,7 +31,6 @@ interface JournalEntryListContainerProps {
   onEditEntry: (entry: JournalEntryViewModel) => void
 }
 
-const FEEDBACK_AUTO_HIDE_MS = 4000
 const TIME_FORMAT = 'HH:mm'
 
 export function JournalEntryListContainer({
@@ -43,11 +42,11 @@ export function JournalEntryListContainer({
   const { period, setPeriod } = useEntryPeriodFilter()
   const { searchTerm, setSearchTerm } = useSearchFilter()
   const { data } = useJournalEntries({ startDate: selectedDate, endDate: selectedDate })
+  const { toast, show, dismiss } = useToast()
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null)
-  const [deleteSuccess, setDeleteSuccess] = useState(false)
   const { mutate: deleteOne } = useDeleteFrequentation({
     onSuccess: () => {
-      setDeleteSuccess(true)
+      show(t('deleteSuccess'))
     }
   })
   const { getLabel } = useActivityLabels()
@@ -74,10 +73,6 @@ export function JournalEntryListContainer({
 
   function closeConfirmDelete() {
     setPendingDeleteId(null)
-  }
-
-  function dismissDeleteSuccess() {
-    setDeleteSuccess(false)
   }
 
   function isPeriodFilter(value: string): value is EntryPeriodFilter {
@@ -170,16 +165,7 @@ export function JournalEntryListContainer({
         onConfirm={handleConfirmDelete}
         onClose={closeConfirmDelete}
       />
-      <Snackbar
-        open={deleteSuccess}
-        autoHideDuration={FEEDBACK_AUTO_HIDE_MS}
-        onClose={dismissDeleteSuccess}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert severity="success" onClose={dismissDeleteSuccess} variant="filled">
-          {t('deleteSuccess')}
-        </Alert>
-      </Snackbar>
+      <Toast toast={toast} onClose={dismiss} />
     </ListCard>
   )
 }
