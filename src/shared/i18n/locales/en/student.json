@@ -33,15 +33,17 @@
     "expectedColumnsList": "Last name, First name, INE, Division (class)",
     "expectedColumnsHint": "Address, City, ZIP, Phone, Email columns are imported but optional",
     "submit": "Import",
-    "success_one": "{{count}} student imported",
-    "success_other": "{{count}} students imported",
-    "noStudentsCreated": "No students imported",
-    "errors": "error(s)",
+    "summary_one": "{{count}} student imported, {{updated}} updated, {{errors}} failed",
+    "summary_other": "{{count}} students imported, {{updated}} updated, {{errors}} failed",
+    "updateExisting": "Update existing students",
+    "downloadReport": "Download error report",
+    "reportTitle": "CSV import report — failed students",
     "fileReadError": "Unable to read file",
     "error": {
       "missingColumns": "Missing columns: {{columns}}",
       "rowValidation": "Row {{rowNumber}}: {{message}}",
       "duplicateIne": "{{studentName}}: INE already exists",
+      "duplicateIneExisting": "{{studentName}}: INE already exists (registered student: {{existingName}}, in {{existingClasse}})",
       "databaseError": "{{studentName}}: {{message}}"
     }
   },

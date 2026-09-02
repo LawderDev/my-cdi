@@ -1,9 +1,13 @@
 import type { RefObject, ChangeEvent, KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import { Button } from '@ui/components/Button'
 import { Modal } from '@ui/components/Modal'
 import { Icon } from '@ui/components/Icon'
+import { Toast } from '@ui/components/Toast'
 import type { CsvImportResult } from '@student-shared'
+import type { ToastContent } from '@ui/components/Toast'
 import {
   VISUALLY_HIDDEN_STYLE,
   TRIGGER_ICON_STYLE,
@@ -16,6 +20,7 @@ import {
   HintPanel,
   HintSmall,
   HintTitle,
+  ReportActions,
   ResultAlert,
   SelectedFileName
 } from './StudentCsvImportButtonPresenter.styles'
@@ -30,12 +35,18 @@ interface StudentCsvImportButtonPresenterProps {
   error: string | null
   isPending: boolean
   inputRef: RefObject<HTMLInputElement | null>
+  toast: ToastContent | null
+  canDownloadReport: boolean
+  updateExisting: boolean
   openModal: () => void
   closeModal: () => void
   handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void
   handleDropzoneClick: () => void
   handleDropzoneKeyDown: (event: KeyboardEvent) => void
   handleSubmit: () => void
+  handleToggleUpdateExisting: () => void
+  handleDownloadReport: () => void
+  dismissToast: () => void
 }
 
 export function StudentCsvImportButtonPresenter(props: StudentCsvImportButtonPresenterProps) {
@@ -50,12 +61,18 @@ export function StudentCsvImportButtonPresenter(props: StudentCsvImportButtonPre
     error,
     isPending,
     inputRef,
+    toast,
+    canDownloadReport,
+    updateExisting,
     openModal,
     closeModal,
     handleFileChange,
     handleDropzoneClick,
     handleDropzoneKeyDown,
-    handleSubmit
+    handleSubmit,
+    handleToggleUpdateExisting,
+    handleDownloadReport,
+    dismissToast
   } = props
 
   return (
@@ -114,23 +131,41 @@ export function StudentCsvImportButtonPresenter(props: StudentCsvImportButtonPre
           style={VISUALLY_HIDDEN_STYLE}
         />
 
+        <FormControlLabel
+          control={<Checkbox checked={updateExisting} onChange={handleToggleUpdateExisting} />}
+          label={t('csvImport.updateExisting')}
+        />
+
         {error ? <ResultAlert severity="error">{error}</ResultAlert> : null}
 
-        {result ? (
-          <ResultAlert severity={result.errors > 0 ? 'warning' : 'success'}>
-            {result.created > 0
-              ? t('csvImport.success', { count: result.created })
-              : t('csvImport.noStudentsCreated')}
-            {result.errors > 0 ? ` (${result.errors} ${t('csvImport.errors')})` : ''}
+        {result && result.errors > 0 ? (
+          <ResultAlert severity="warning">
+            {t('csvImport.summary', {
+              count: result.created,
+              updated: result.updated,
+              errors: result.errors
+            })}
           </ResultAlert>
         ) : null}
 
         {result && result.errorDetails.length > 0 ? (
-          <ErrorLinesPanel>
-            {errorLines.map((errorLine, index) => (
-              <ErrorLine key={index}>{errorLine}</ErrorLine>
-            ))}
-          </ErrorLinesPanel>
+          <>
+            <ErrorLinesPanel>
+              {errorLines.map((errorLine, index) => (
+                <ErrorLine key={index}>{errorLine}</ErrorLine>
+              ))}
+            </ErrorLinesPanel>
+            <ReportActions>
+              <Button
+                variant="secondary"
+                iconLeft={<Icon name="download" style={TRIGGER_ICON_STYLE} />}
+                onClick={handleDownloadReport}
+                disabled={!canDownloadReport}
+              >
+                {t('csvImport.downloadReport')}
+              </Button>
+            </ReportActions>
+          </>
         ) : null}
 
         <HintPanel>
@@ -139,6 +174,8 @@ export function StudentCsvImportButtonPresenter(props: StudentCsvImportButtonPre
           <HintSmall>{t('csvImport.expectedColumnsHint')}</HintSmall>
         </HintPanel>
       </Modal>
+
+      <Toast toast={toast} onClose={dismissToast} />
     </>
   )
 }

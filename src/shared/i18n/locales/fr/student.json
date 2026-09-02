@@ -33,15 +33,17 @@
     "expectedColumnsList": "Nom de famille, Prénom 1, INE, Division (classe)",
     "expectedColumnsHint": "Les colonnes Adresse, Commune, CP, Tel, Courriel sont importées mais optionnelles",
     "submit": "Importer",
-    "success_one": "{{count}} élève importé",
-    "success_other": "{{count}} élèves importés",
-    "noStudentsCreated": "Aucun élève importé",
-    "errors": "erreur(s)",
+    "summary_one": "{{count}} élève importé, {{updated}} mis à jour, {{errors}} en échec",
+    "summary_other": "{{count}} élèves importés, {{updated}} mis à jour, {{errors}} en échec",
+    "updateExisting": "Mettre à jour les élèves existants",
+    "downloadReport": "Télécharger le rapport d'erreurs",
+    "reportTitle": "Rapport d'import CSV — élèves en échec",
     "fileReadError": "Impossible de lire le fichier",
     "error": {
       "missingColumns": "Colonnes manquantes : {{columns}}",
       "rowValidation": "Ligne {{rowNumber}} : {{message}}",
       "duplicateIne": "{{studentName}} : INE déjà existant",
+      "duplicateIneExisting": "{{studentName}} : INE déjà existant (élève enregistré : {{existingName}}, en {{existingClasse}})",
       "databaseError": "{{studentName}} : {{message}}"
     }
   },

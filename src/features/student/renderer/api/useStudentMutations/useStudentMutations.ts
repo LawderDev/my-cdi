@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { resolveIpcErrorMessage } from '@lib/ipc/resolveIpcErrorMessage'
 import { studentKeys } from '../studentKeys'
-import type { CreateStudentDto, UpdateStudentDto } from '@student-shared'
+import type { CreateStudentDto, UpdateStudentDto, ImportStudentsCsvPayload } from '@student-shared'
 
 interface DeleteStudentInput {
   id: number
@@ -11,10 +11,6 @@ interface DeleteStudentInput {
 interface UpdateStudentInput {
   id: number
   data: UpdateStudentDto
-}
-
-interface ImportStudentsCsvInput {
-  csv: string
 }
 
 export function useCreateStudent() {
@@ -77,7 +73,7 @@ export function useImportStudentsCsv() {
   const queryClient = useQueryClient()
   const { t } = useTranslation('common')
   return useMutation({
-    mutationFn: async (input: ImportStudentsCsvInput) => {
+    mutationFn: async (input: ImportStudentsCsvPayload) => {
       const result = await window.electronAPI.student.importCsv(input)
       if (!result.success) {
         throw new Error(resolveIpcErrorMessage(result, t))

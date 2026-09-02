@@ -2,9 +2,14 @@ import { useRef, useState } from 'react'
 import type { ChangeEvent, KeyboardEvent, RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useImportStudentsCsv } from '@student/api/useStudentMutations'
+import { useToast } from '@ui/hooks/useToast'
+import { downloadTextFile } from '@ui/helpers/downloadTextFile'
 import type { CsvImportResult } from '@student-shared'
+import type { ToastContent } from '@ui/components/Toast'
 import { readFileBuffer, decodeText } from '../../helpers/decodeCsvFile'
 import { formatImportError } from '../../helpers/formatImportError'
+import { buildErrorReport } from '../../helpers/buildErrorReport'
+import { buildReportFileName } from '../../helpers/buildReportFileName'
 
 export interface CsvImportButtonState {
   isModalOpen: boolean
@@ -14,6 +19,9 @@ export interface CsvImportButtonState {
   error: string | null
   isPending: boolean
   inputRef: RefObject<HTMLInputElement | null>
+  toast: ToastContent | null
+  canDownloadReport: boolean
+  updateExisting: boolean
 }
 
 export interface CsvImportButtonActions {
@@ -23,16 +31,21 @@ export interface CsvImportButtonActions {
   handleDropzoneClick: () => void
   handleDropzoneKeyDown: (event: KeyboardEvent) => void
   handleSubmit: () => void
+  handleToggleUpdateExisting: () => void
+  handleDownloadReport: () => void
+  dismissToast: () => void
 }
 
 export function useCsvImportButton(): CsvImportButtonState & CsvImportButtonActions {
   const { t: tCommon } = useTranslation('common')
   const { t: tStudent } = useTranslation('student')
+  const { toast, show, dismiss } = useToast()
   const inputRef = useRef<HTMLInputElement>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [pendingFile, setPendingFile] = useState<File | null>(null)
   const [result, setResult] = useState<CsvImportResult | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [updateExisting, setUpdateExisting] = useState(false)
   const { mutate: importStudents, isPending } = useImportStudentsCsv()
 
   function openModal() {
@@ -71,6 +84,26 @@ export function useCsvImportButton(): CsvImportButtonState & CsvImportButtonActi
     }
   }
 
+  function handleToggleUpdateExisting() {
+    setUpdateExisting((previous) => !previous)
+  }
+
+  function handleDownloadReport() {
+    if (!result || !pendingFile) {
+      return
+    }
+    const report = buildErrorReport({
+      fileName: pendingFile.name,
+      created: result.created,
+      updated: result.updated,
+      errorLines: result.errorDetails.map((errorDetail) =>
+        formatImportError(errorDetail, tStudent)
+      ),
+      translate: tStudent
+    })
+    downloadTextFile(report, buildReportFileName(pendingFile.name, new Date()))
+  }
+
   async function handleSubmit() {
     if (!pendingFile) {
       return
@@ -81,12 +114,19 @@ export function useCsvImportButton(): CsvImportButtonState & CsvImportButtonActi
       const csv = decodeText(buffer)
 
       importStudents(
-        { csv },
+        { csv, onDuplicateIne: updateExisting ? 'replace' : 'skip' },
         {
           onSuccess: (data) => {
             setResult(data)
             if (data.errors === 0) {
               closeModal()
+              show(
+                tStudent('csvImport.summary', {
+                  count: data.created,
+                  updated: data.updated,
+                  errors: 0
+                })
+              )
             }
           },
           onError: (err) => {
@@ -111,11 +151,17 @@ export function useCsvImportButton(): CsvImportButtonState & CsvImportButtonActi
     error,
     isPending,
     inputRef,
+    toast,
+    canDownloadReport: result !== null && pendingFile !== null,
+    updateExisting,
     openModal,
     closeModal,
     handleFileChange,
     handleDropzoneClick,
     handleDropzoneKeyDown,
-    handleSubmit
+    handleSubmit,
+    handleToggleUpdateExisting,
+    handleDownloadReport,
+    dismissToast: dismiss
   }
 }

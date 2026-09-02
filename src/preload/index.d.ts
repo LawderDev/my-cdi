@@ -4,7 +4,8 @@ import type {
   UpdateStudentDto,
   StudentResponseDto,
   StudentListResponseDto,
-  BulkStudentResponseDto
+  ImportStudentsCsvPayload,
+  CsvImportResult
 } from '@student-shared'
 import type {
   CreateFrequentationDto,
@@ -29,7 +30,7 @@ export interface StudentApi {
   list: (input: { classe?: string }) => Promise<IpcResult<StudentListResponseDto>>
   update: (input: { id: number } & UpdateStudentDto) => Promise<IpcResult<StudentResponseDto>>
   delete: (input: { id: number }) => Promise<IpcResult<void>>
-  importCsv: (input: { csv: string }) => Promise<IpcResult<BulkStudentResponseDto>>
+  importCsv: (input: ImportStudentsCsvPayload) => Promise<IpcResult<CsvImportResult>>
 }
 
 export interface FrequentationApi {

@@ -96,6 +96,14 @@ export const ErrorLine = styled(Box, {
   marginBottom: theme.spacing(0.5)
 }))
 
+export const ReportActions = styled(Box, {
+  shouldForwardProp: shouldForwardStyledProp
+})(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  marginBottom: theme.spacing(2)
+}))
+
 export const HintPanel = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({

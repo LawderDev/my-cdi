@@ -24,6 +24,13 @@ export function formatImportError(
         message: formatRowIssues(error.issues, translate)
       })
     case 'DUPLICATE_INE':
+      if (error.existingName !== undefined && error.existingClasse !== undefined) {
+        return translate('csvImport.error.duplicateIneExisting', {
+          studentName: error.studentName,
+          existingName: error.existingName,
+          existingClasse: error.existingClasse
+        })
+      }
       return translate('csvImport.error.duplicateIne', { studentName: error.studentName })
     case 'DATABASE_ERROR':
       return translate('csvImport.error.databaseError', {

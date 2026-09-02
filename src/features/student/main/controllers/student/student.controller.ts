@@ -9,6 +9,7 @@ import { deleteStudent } from '@student/use-cases/deleteStudent'
 import { getStudent } from '@student/use-cases/getStudent'
 import { listStudents } from '@student/use-cases/listStudents'
 import { importStudentsCsv } from '@student/use-cases/importStudentsCsv'
+import type { ImportStudentsCsvPayload } from '@student-shared'
 
 interface CreateStudentInput {
   nom: string
@@ -35,10 +36,6 @@ interface UpdateStudentInput {
 
 interface DeleteStudentInput {
   id: number
-}
-
-interface ImportStudentsCsvInput {
-  csv: string
 }
 
 export type IpcMainHandle = Pick<IpcMain, 'handle'>
@@ -68,7 +65,7 @@ export function registerStudentController(ipcMain: IpcMainHandle, gateway: Stude
     return unwrap(await deleteStudent(deps, input))
   })
 
-  router.procedure(STUDENT_CHANNELS.IMPORT_CSV, async (input: ImportStudentsCsvInput) => {
+  router.procedure(STUDENT_CHANNELS.IMPORT_CSV, async (input: ImportStudentsCsvPayload) => {
     return unwrap(await importStudentsCsv(deps, input))
   })
 }

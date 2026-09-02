@@ -68,9 +68,10 @@ describe('useCsvImportButton', () => {
   beforeEach(() => {
     vi.stubGlobal('electronAPI', {
       student: {
-        importCsv: vi
-          .fn()
-          .mockResolvedValue({ success: true, data: { created: 1, errors: 0, errorDetails: [] } })
+        importCsv: vi.fn().mockResolvedValue({
+          success: true,
+          data: { created: 1, updated: 0, errors: 0, errorDetails: [] }
+        })
       }
     })
   })
@@ -113,7 +114,10 @@ describe('useCsvImportButton', () => {
       latest(states).handleSubmit()
     })
     await waitFor(() =>
-      expect(window.electronAPI.student.importCsv).toHaveBeenCalledWith({ csv: CSV_CONTENT })
+      expect(window.electronAPI.student.importCsv).toHaveBeenCalledWith({
+        csv: CSV_CONTENT,
+        onDuplicateIne: 'skip'
+      })
     )
     expect(latest(states).error).toBeNull()
     expect(latest(states).isModalOpen).toBe(false)
@@ -141,6 +145,7 @@ describe('useCsvImportButton', () => {
           success: true,
           data: {
             created: 0,
+            updated: 0,
             errors: 1,
             errorDetails: [{ type: 'DUPLICATE_INE', studentName: 'Jean Dupont' }]
           }
@@ -158,6 +163,93 @@ describe('useCsvImportButton', () => {
     })
     await waitFor(() => expect(latest(states).result).not.toBeNull())
     expect(latest(states).isModalOpen).toBe(true)
+  })
+
+  it('sends onDuplicateIne replace when update existing is toggled on', async () => {
+    const { states, selectFile } = setup()
+    act(() => {
+      latest(states).openModal()
+    })
+    expect(latest(states).updateExisting).toBe(false)
+
+    act(() => {
+      latest(states).handleToggleUpdateExisting()
+    })
+    expect(latest(states).updateExisting).toBe(true)
+    selectFile()
+
+    await act(async () => {
+      latest(states).handleSubmit()
+    })
+    await waitFor(() =>
+      expect(window.electronAPI.student.importCsv).toHaveBeenCalledWith({
+        csv: CSV_CONTENT,
+        onDuplicateIne: 'replace'
+      })
+    )
+  })
+
+  it('shows a success toast and closes the modal on a fully successful import', async () => {
+    const { states, selectFile } = setup()
+    act(() => {
+      latest(states).openModal()
+    })
+    selectFile()
+
+    await act(async () => {
+      latest(states).handleSubmit()
+    })
+    await waitFor(() => expect(latest(states).toast).not.toBeNull())
+    expect(latest(states).toast?.severity).toBe('success')
+    expect(latest(states).isModalOpen).toBe(false)
+  })
+
+  it('downloads an error report when handleDownloadReport is called', async () => {
+    vi.stubGlobal('electronAPI', {
+      student: {
+        importCsv: vi.fn().mockResolvedValue({
+          success: true,
+          data: {
+            created: 0,
+            updated: 0,
+            errors: 1,
+            errorDetails: [{ type: 'DUPLICATE_INE', studentName: 'Jean Dupont' }]
+          }
+        })
+      }
+    })
+    const { states, selectFile } = setup()
+    act(() => {
+      latest(states).openModal()
+    })
+    selectFile()
+
+    await act(async () => {
+      latest(states).handleSubmit()
+    })
+    await waitFor(() => expect(latest(states).result).not.toBeNull())
+    expect(latest(states).canDownloadReport).toBe(true)
+
+    const createObjectURL = vi.fn().mockReturnValue('blob:report-url')
+    const revokeObjectURL = vi.fn()
+    vi.stubGlobal('URL', { ...URL, createObjectURL, revokeObjectURL })
+    const click = vi.fn()
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(click)
+
+    act(() => {
+      latest(states).handleDownloadReport()
+    })
+
+    expect(click).toHaveBeenCalledOnce()
+    expect(revokeObjectURL).toHaveBeenCalledWith('blob:report-url')
+
+    clickSpy.mockRestore()
+    vi.unstubAllGlobals()
+  })
+
+  it('does not allow downloading a report without a result', () => {
+    const { states } = setup()
+    expect(latest(states).canDownloadReport).toBe(false)
   })
 
   it('surfaces the ipc error when the import fails', async () => {

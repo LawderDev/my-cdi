@@ -125,7 +125,7 @@ describe('StudentFormContainer', () => {
     await waitFor(() => expect(window.electronAPI.student.list).toHaveBeenCalled())
     await fillForm({ nom: 'Martin', prenom: 'Léa', classe: '5B', ine: '123A' })
 
-    expect(screen.getByText('Remplacer les informations de l\'élève ?')).toBeInTheDocument()
+    expect(screen.getByText("Remplacer les informations de l'élève ?")).toBeInTheDocument()
     expect(
       screen.getByText(
         'Un élève existe déjà avec cet INE (Jean Dupont, actuellement en 3A). Remplacer ses informations ?'
@@ -136,7 +136,7 @@ describe('StudentFormContainer', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Remplacer' }))
 
     await waitFor(() =>
-      expect(screen.getByText('Les informations de l\'élève ont été remplacées')).toBeInTheDocument()
+      expect(screen.getByText("Les informations de l'élève ont été remplacées")).toBeInTheDocument()
     )
     expect(window.electronAPI.student.update).toHaveBeenCalledWith({
       id: STUDENT_ID,
@@ -157,7 +157,7 @@ describe('StudentFormContainer', () => {
     await fillForm({ nom: 'Martin', prenom: 'Léa', classe: '5B', ine: '123A' })
 
     const confirmDialog = screen.getByRole('dialog', {
-      name: 'Remplacer les informations de l\'élève ?'
+      name: "Remplacer les informations de l'élève ?"
     })
     await userEvent.click(within(confirmDialog).getByRole('button', { name: 'Annuler' }))
 
@@ -194,7 +194,9 @@ describe('StudentFormContainer', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Enregistrer' }))
 
     await waitFor(() =>
-      expect(screen.getByText('Les informations de l\'élève ont été mises à jour')).toBeInTheDocument()
+      expect(
+        screen.getByText("Les informations de l'élève ont été mises à jour")
+      ).toBeInTheDocument()
     )
     expect(onClose).toHaveBeenCalledTimes(1)
   })

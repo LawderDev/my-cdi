@@ -38,11 +38,6 @@ export interface StudentListResponseDto {
   students: StudentResponseDto[]
 }
 
-export interface BulkStudentResponseDto {
-  created: number
-  errors: number
-}
-
 export interface CsvRowIssue {
   field: string
   code: string
@@ -51,11 +46,24 @@ export interface CsvRowIssue {
 export type CsvImportError =
   | { type: 'MISSING_COLUMNS'; columns: string[] }
   | { type: 'ROW_VALIDATION'; rowNumber: number; issues: CsvRowIssue[] }
-  | { type: 'DUPLICATE_INE'; studentName: string }
+  | {
+      type: 'DUPLICATE_INE'
+      studentName: string
+      existingName?: string
+      existingClasse?: string
+    }
   | { type: 'DATABASE_ERROR'; studentName: string; message: string }
 
 export interface CsvImportResult {
   created: number
+  updated: number
   errors: number
   errorDetails: CsvImportError[]
+}
+
+export type CsvDuplicateInePolicy = 'skip' | 'replace'
+
+export interface ImportStudentsCsvPayload {
+  csv: string
+  onDuplicateIne?: CsvDuplicateInePolicy
 }

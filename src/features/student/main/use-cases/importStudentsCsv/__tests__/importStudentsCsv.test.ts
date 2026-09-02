@@ -62,7 +62,7 @@ Martin;Pierre;3A;INE_DUP`
 
   it('skips rows with INE that already exists in database', async () => {
     const gateway = createMockGateway({
-      getAll: vi.fn().mockResolvedValue([{ ...CREATED_ENTITY, ine: 'EXISTING_INE' }])
+      getAll: vi.fn().mockResolvedValue([{ ...CREATED_ENTITY, id: 7, ine: 'EXISTING_INE' }])
     })
     const csv = `nom;prenom;classe;ine
 Dupont;Jean;3B;EXISTING_INE`
@@ -70,6 +70,50 @@ Dupont;Jean;3B;EXISTING_INE`
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.data.created).toBe(EXPECTED_ZERO_CREATED)
+      expect(result.data.updated).toBe(EXPECTED_ZERO_CREATED)
+      const duplicateError = result.data.errorDetails[0]
+      expect(duplicateError?.type).toBe('DUPLICATE_INE')
+      if (duplicateError?.type === 'DUPLICATE_INE') {
+        expect(duplicateError.existingName).toBe('Jean Dupont')
+        expect(duplicateError.existingClasse).toBe('3B')
+      }
+    }
+    expect(gateway.update).not.toHaveBeenCalled()
+  })
+
+  it('updates existing students when onDuplicateIne is replace', async () => {
+    const gateway = createMockGateway({
+      getAll: vi.fn().mockResolvedValue([{ ...CREATED_ENTITY, id: 7, ine: 'EXISTING_INE' }])
+    })
+    const csv = `nom;prenom;classe;ine
+Dupont;Jean;3B;EXISTING_INE`
+    const result = await importStudentsCsv({ gateway }, { csv, onDuplicateIne: 'replace' })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.created).toBe(EXPECTED_ZERO_CREATED)
+      expect(result.data.updated).toBe(EXPECTED_ONE_CREATED)
+      expect(result.data.errors).toBe(EXPECTED_ZERO_CREATED)
+    }
+    expect(gateway.update).toHaveBeenCalledWith(7, {
+      nom: 'Dupont',
+      prenom: 'Jean',
+      classe: '3B'
+    })
+    expect(gateway.create).not.toHaveBeenCalled()
+  })
+
+  it('still skips in-file duplicates when onDuplicateIne is replace', async () => {
+    const gateway = createMockGateway({
+      getAll: vi.fn().mockResolvedValue([])
+    })
+    const csv = `nom;prenom;classe;ine
+Dupont;Jean;3B;INE_DUP
+Martin;Pierre;3A;INE_DUP`
+    const result = await importStudentsCsv({ gateway }, { csv, onDuplicateIne: 'replace' })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.created).toBe(EXPECTED_ONE_CREATED)
+      expect(result.data.updated).toBe(EXPECTED_ZERO_CREATED)
       expect(result.data.errorDetails[0]?.type).toBe('DUPLICATE_INE')
     }
   })
