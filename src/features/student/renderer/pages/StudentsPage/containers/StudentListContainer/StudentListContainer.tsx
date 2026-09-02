@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { ChangeEvent, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import Box from '@mui/material/Box'
+import { Loader } from '@ui/components/Loader'
 import { Toast } from '@ui/components/Toast'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useToast } from '@ui/hooks/useToast'
@@ -114,7 +114,7 @@ export function StudentListContainer({ onEditStudent, onAddStudent }: StudentLis
   }
 
   if (isLoading) {
-    return <Box>{tCommon('app.loading')}</Box>
+    return <Loader message={tCommon('app.loading')} />
   }
 
   return (

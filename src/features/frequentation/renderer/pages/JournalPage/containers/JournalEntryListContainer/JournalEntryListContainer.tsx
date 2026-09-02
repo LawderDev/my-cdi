@@ -3,6 +3,7 @@ import type { ChangeEvent, MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import { EmptyState } from '@ui/components/EmptyState'
+import { Loader } from '@ui/components/Loader'
 import { Toast } from '@ui/components/Toast'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { useToast } from '@ui/hooks/useToast'
@@ -41,7 +42,7 @@ export function JournalEntryListContainer({
   const { selectedIds, toggle, selectAll, clearSelection } = useJournalEntrySelection()
   const { period, setPeriod } = useEntryPeriodFilter()
   const { searchTerm, setSearchTerm } = useSearchFilter()
-  const { data } = useJournalEntries({ startDate: selectedDate, endDate: selectedDate })
+  const { data, isLoading } = useJournalEntries({ startDate: selectedDate, endDate: selectedDate })
   const { toast, show, dismiss } = useToast()
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null)
   const { mutate: deleteOne } = useDeleteFrequentation({
@@ -145,7 +146,9 @@ export function JournalEntryListContainer({
         onAfterUpdate={clearSelection}
       />
       <EntriesScroll>
-        {filtered.length === 0 ? (
+        {isLoading ? (
+          <Loader message={t('loading')} />
+        ) : filtered.length === 0 ? (
           <EmptyState
             iconName="event_available"
             message={t('noEntries')}

@@ -12,13 +12,6 @@ export const FieldLabel = styled(Typography, {
   marginBottom: theme.spacing(0.75)
 }))
 
-export const LoadingText = styled(Typography, {
-  shouldForwardProp: shouldForwardStyledProp
-})(({ theme }) => ({
-  color: theme.palette.text.disabled,
-  marginBottom: theme.spacing(1)
-}))
-
 export const ChipsRow = styled('div', {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({

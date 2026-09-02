@@ -1,12 +1,16 @@
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
-export const StatisticsLoading = styled(Typography, {
+const LOADING_MIN_HEIGHT_VH = 40
+
+export const StatisticsLoadingShell = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
-})(({ theme }) => ({
-  color: theme.palette.text.disabled
+})(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: `${LOADING_MIN_HEIGHT_VH}vh`
 }))
 
 export const StatisticsLayout = styled(Box, {

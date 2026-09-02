@@ -3,8 +3,9 @@ import type { ReactNode } from 'react'
 import Box from '@mui/material/Box'
 import { Autocomplete } from '@ui/components/Autocomplete'
 import type { AutocompleteOption } from '@ui/components/Autocomplete'
+import { Loader } from '@ui/components/Loader'
 
-import { ChipsRow, FieldLabel, LoadingText } from './StudentMultiSelectPresenter.styles'
+import { ChipsRow, FieldLabel } from './StudentMultiSelectPresenter.styles'
 
 interface StudentMultiSelectPresenterProps {
   options: AutocompleteOption<number>[]
@@ -30,7 +31,7 @@ export function StudentMultiSelectPresenter({
   return (
     <Box>
       <FieldLabel variant="overline">{t('form.selectStudents')}</FieldLabel>
-      {loading ? <LoadingText variant="body2">{t('loading')}</LoadingText> : null}
+      {loading ? <Loader message={t('loading')} /> : null}
       <Autocomplete<number>
         placeholder={t('form.searchStudent')}
         options={options}

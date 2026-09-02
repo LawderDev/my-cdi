@@ -3,20 +3,23 @@ import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
 
-const CALENDAR_LOADING_MIN_HEIGHT_PX = 220
+const LOADER_GAP = 1.5
+const LOADER_PADDING = 3
 
-export const CalendarLoading = styled(Box, {
-  shouldForwardProp: shouldForwardStyledProp
-})(() => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: CALENDAR_LOADING_MIN_HEIGHT_PX
-}))
-
-export const WeekdayLabel = styled(Typography, {
+export const LoaderRoot = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({
-  paddingBlock: theme.spacing(0.75),
-  color: theme.palette.text.disabled
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: theme.spacing(LOADER_GAP),
+  padding: theme.spacing(LOADER_PADDING),
+  color: theme.palette.text.secondary
+}))
+
+export const LoaderMessage = styled(Typography, {
+  shouldForwardProp: shouldForwardStyledProp
+})(({ theme }) => ({
+  color: theme.palette.text.secondary
 }))

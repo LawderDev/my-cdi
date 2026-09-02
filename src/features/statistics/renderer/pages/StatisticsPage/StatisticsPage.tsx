@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
+import { Loader } from '@ui/components/Loader'
 import {
   StatisticsChartGrid,
   StatisticsFullGrid,
   StatisticsLayout,
-  StatisticsLoading
+  StatisticsLoadingShell
 } from './StatisticsPage.styles'
 import { useStatisticsPage } from './hooks/useStatisticsPage'
 import { StatsKpiCardsContainer } from './containers/StatsKpiCardsContainer'
@@ -16,7 +17,11 @@ export function StatisticsPage() {
   const { period, setPeriod, stats, isLoading } = useStatisticsPage()
   const { t } = useTranslation('statistics')
   if (isLoading || !stats) {
-    return <StatisticsLoading variant="subtitle2">{t('loading')}</StatisticsLoading>
+    return (
+      <StatisticsLoadingShell>
+        <Loader message={t('loading')} />
+      </StatisticsLoadingShell>
+    )
   }
   return (
     <StatisticsLayout>
