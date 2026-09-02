@@ -18,6 +18,13 @@
   "deleteConfirm_other": "Êtes-vous sûr de vouloir supprimer {{count}} élèves ?",
   "row.confirmDelete": "Voulez-vous vraiment supprimer cet élève ?",
   "deleteSuccess": "Élève supprimé",
+  "createSuccess": "Un élève a bien été ajouté",
+  "updateSuccess": "Les informations de l'élève ont été mises à jour",
+  "replaceSuccess": "Les informations de l'élève ont été remplacées",
+  "duplicateInfo": "Élève déjà enregistré : {{name}}",
+  "replaceConfirmTitle": "Remplacer les informations de l'élève ?",
+  "replaceConfirmMessage": "Un élève existe déjà avec cet INE ({{name}}, actuellement en {{classe}}). Remplacer ses informations ?",
+  "replaceConfirmConfirm": "Remplacer",
   "csvImport": {
     "title": "Importer la base élèves",
     "dropzoneTitle": "Glisser-déposer le fichier CSV ici",

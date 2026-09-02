@@ -44,8 +44,10 @@ describe('JournalPage', () => {
 
   it('renders the calendar, in-place form, and the attendance list shell', async () => {
     render(withQuery(<JournalPage />))
-    // CalendarContainer renders weekday headers
-    expect(screen.getByText('Lun')).toBeInTheDocument()
+    // CalendarContainer renders weekday headers once the month query resolves
+    await waitFor(() => {
+      expect(screen.getByText('Lun')).toBeInTheDocument()
+    })
     // Attendance list header (Présents) rendered
     await waitFor(() => {
       expect(screen.getByText('Présents')).toBeInTheDocument()

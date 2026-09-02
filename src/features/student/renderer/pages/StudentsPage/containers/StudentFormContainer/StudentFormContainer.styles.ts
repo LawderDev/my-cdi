@@ -32,6 +32,14 @@ export const FieldError = styled(Box, {
   color: theme.palette.error.main
 }))
 
+export const FieldInfo = styled(Box, {
+  shouldForwardProp: shouldForwardStyledProp
+})(({ theme }) => ({
+  marginTop: theme.spacing(0.5),
+  fontSize: theme.typography.caption.fontSize,
+  color: theme.palette.info.main
+}))
+
 export const FieldInput = styled(TextField, {
   shouldForwardProp: shouldForwardStyledProp
 })(({ theme }) => ({

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { I18nextProvider } from 'react-i18next'
 import { ThemeProvider } from '@mui/material/styles'
@@ -24,6 +25,24 @@ const STUDENT: StudentViewModel = {
   classLabel: '3A'
 }
 
+const FIELD_IDS = ['nom', 'prenom', 'classe', 'ine'] as const
+
+const FIELD_LABELS: Record<(typeof FIELD_IDS)[number], string> = {
+  nom: 'Nom',
+  prenom: 'Prénom',
+  classe: 'Classe',
+  ine: 'INE'
+}
+
+async function fillForm(values: Record<(typeof FIELD_IDS)[number], string>) {
+  for (const key of FIELD_IDS) {
+    const input = screen.getByLabelText(FIELD_LABELS[key])
+    input.focus()
+    await userEvent.type(input, values[key])
+  }
+  await userEvent.click(screen.getByRole('button', { name: 'Ajouter' }))
+}
+
 function createWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } }
@@ -43,6 +62,7 @@ describe('StudentFormContainer', () => {
   beforeEach(() => {
     vi.stubGlobal('electronAPI', {
       student: {
+        list: vi.fn().mockResolvedValue({ success: true, data: { students: [STUDENT] } }),
         create: vi.fn().mockResolvedValue({ success: true, data: STUDENT }),
         update: vi.fn().mockResolvedValue({ success: true, data: STUDENT })
       }
@@ -63,5 +83,119 @@ describe('StudentFormContainer', () => {
     })
 
     expect(screen.getByText("Modifier l'élève")).toBeInTheDocument()
+  })
+
+  it('shows a success toast and closes after a successful create', async () => {
+    const onClose = vi.fn()
+    render(<StudentFormContainer mode="create" student={null} open onClose={onClose} />, {
+      wrapper: createWrapper()
+    })
+
+    await fillForm({ nom: 'Martin', prenom: 'Léa', classe: '5B', ine: '999Z' })
+
+    await waitFor(() => expect(screen.getByText('Un élève a bien été ajouté')).toBeInTheDocument())
+    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(window.electronAPI.student.create).toHaveBeenCalledWith({
+      nom: 'Martin',
+      prenom: 'Léa',
+      classe: '5B',
+      ine: '999Z'
+    })
+  })
+
+  it('shows the live duplicate info while typing an existing INE', async () => {
+    render(<StudentFormContainer mode="create" student={null} open onClose={vi.fn()} />, {
+      wrapper: createWrapper()
+    })
+
+    const ineInput = screen.getByLabelText('INE')
+    await waitFor(() => expect(window.electronAPI.student.list).toHaveBeenCalled())
+    ineInput.focus()
+    await userEvent.type(ineInput, '123A')
+
+    expect(screen.getByText('Élève déjà enregistré : Jean Dupont')).toBeInTheDocument()
+  })
+
+  it('asks for confirmation instead of creating when the INE already exists, then replaces', async () => {
+    const onClose = vi.fn()
+    render(<StudentFormContainer mode="create" student={null} open onClose={onClose} />, {
+      wrapper: createWrapper()
+    })
+
+    await waitFor(() => expect(window.electronAPI.student.list).toHaveBeenCalled())
+    await fillForm({ nom: 'Martin', prenom: 'Léa', classe: '5B', ine: '123A' })
+
+    expect(screen.getByText('Remplacer les informations de l\'élève ?')).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'Un élève existe déjà avec cet INE (Jean Dupont, actuellement en 3A). Remplacer ses informations ?'
+      )
+    ).toBeInTheDocument()
+    expect(window.electronAPI.student.create).not.toHaveBeenCalled()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Remplacer' }))
+
+    await waitFor(() =>
+      expect(screen.getByText('Les informations de l\'élève ont été remplacées')).toBeInTheDocument()
+    )
+    expect(window.electronAPI.student.update).toHaveBeenCalledWith({
+      id: STUDENT_ID,
+      nom: 'Martin',
+      prenom: 'Léa',
+      classe: '5B'
+    })
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps the form open when the replace is cancelled', async () => {
+    const onClose = vi.fn()
+    render(<StudentFormContainer mode="create" student={null} open onClose={onClose} />, {
+      wrapper: createWrapper()
+    })
+
+    await waitFor(() => expect(window.electronAPI.student.list).toHaveBeenCalled())
+    await fillForm({ nom: 'Martin', prenom: 'Léa', classe: '5B', ine: '123A' })
+
+    const confirmDialog = screen.getByRole('dialog', {
+      name: 'Remplacer les informations de l\'élève ?'
+    })
+    await userEvent.click(within(confirmDialog).getByRole('button', { name: 'Annuler' }))
+
+    // MUI keeps the closing dialog in the DOM in jsdom (transitionend never fires),
+    // so we assert the behaviour instead of its removal: nothing is updated or closed,
+    // and the form keeps the values the user typed.
+    expect(onClose).not.toHaveBeenCalled()
+    expect(window.electronAPI.student.update).not.toHaveBeenCalled()
+    expect(screen.getByLabelText('INE')).toHaveValue('123A')
+  })
+
+  it('shows an error toast when the create fails', async () => {
+    vi.stubGlobal('electronAPI', {
+      student: {
+        list: vi.fn().mockResolvedValue({ success: true, data: { students: [] } }),
+        create: vi.fn().mockResolvedValue({ success: false, error: 'boom' })
+      }
+    })
+    render(<StudentFormContainer mode="create" student={null} open onClose={vi.fn()} />, {
+      wrapper: createWrapper()
+    })
+
+    await fillForm({ nom: 'Martin', prenom: 'Léa', classe: '5B', ine: '999Z' })
+
+    await waitFor(() => expect(screen.getByText('boom')).toBeInTheDocument())
+  })
+
+  it('shows an update toast and closes after a successful edit', async () => {
+    const onClose = vi.fn()
+    render(<StudentFormContainer mode="edit" student={STUDENT} open onClose={onClose} />, {
+      wrapper: createWrapper()
+    })
+
+    await userEvent.click(screen.getByRole('button', { name: 'Enregistrer' }))
+
+    await waitFor(() =>
+      expect(screen.getByText('Les informations de l\'élève ont été mises à jour')).toBeInTheDocument()
+    )
+    expect(onClose).toHaveBeenCalledTimes(1)
   })
 })

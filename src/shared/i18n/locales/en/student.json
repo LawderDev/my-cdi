@@ -18,6 +18,13 @@
   "deleteConfirm_other": "Are you sure you want to delete {{count}} students?",
   "row.confirmDelete": "Are you sure you want to delete this student?",
   "deleteSuccess": "Student deleted",
+  "createSuccess": "Student added successfully",
+  "updateSuccess": "Student information updated",
+  "replaceSuccess": "Student information replaced",
+  "duplicateInfo": "Student already registered: {{name}}",
+  "replaceConfirmTitle": "Replace student information?",
+  "replaceConfirmMessage": "A student already exists with this INE ({{name}}, currently in {{classe}}). Replace their information?",
+  "replaceConfirmConfirm": "Replace",
   "csvImport": {
     "title": "Import student database",
     "dropzoneTitle": "Drag and drop the CSV file here",
