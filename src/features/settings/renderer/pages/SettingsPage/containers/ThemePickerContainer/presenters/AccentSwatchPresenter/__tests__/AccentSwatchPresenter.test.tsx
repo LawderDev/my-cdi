@@ -11,7 +11,7 @@ function renderSwatch(props: Partial<Parameters<typeof AccentSwatchPresenter>[0]
     <ThemeProvider theme={theme}>
       <AccentSwatchPresenter
         label="Violet"
-        swatch="#7c4dff"
+        swatch={{ main: '#7c4dff', background: '#0f172a' }}
         isActive={false}
         onSelect={onSelect}
         {...props}

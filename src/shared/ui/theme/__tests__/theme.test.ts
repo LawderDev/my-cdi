@@ -5,6 +5,23 @@ import { THEME_ACCENTS, THEME_MODES, DEFAULT_THEME_PREFERENCE, THEME_BACKGROUNDS
 
 const ACCENT_GLOW_ALPHA = 0.35
 
+type NeutralSlot = 'sidebar' | 'surface' | 'background.paper' | 'divider' | 'dividerStrong'
+
+function paletteSlot(appTheme: ReturnType<typeof createAppTheme>, slot: NeutralSlot): string {
+  switch (slot) {
+    case 'sidebar':
+      return appTheme.palette.sidebar
+    case 'surface':
+      return appTheme.palette.surface
+    case 'background.paper':
+      return appTheme.palette.background.paper
+    case 'divider':
+      return appTheme.palette.divider
+    case 'dividerStrong':
+      return appTheme.palette.dividerStrong
+  }
+}
+
 const ALL_PREFERENCES = THEME_ACCENTS.flatMap((accent) =>
   THEME_MODES.map((mode) => ({ accent, mode }))
 )
@@ -36,11 +53,97 @@ describe('createAppTheme', () => {
     }
   })
 
-  it('uses the mode background from the shared theme constants', () => {
+  it('uses the per-theme background from the shared theme constants', () => {
+    const backgrounds = new Set(
+      ALL_PREFERENCES.map((preference) => THEME_BACKGROUNDS[preference.accent][preference.mode])
+    )
+    expect(backgrounds.size).toBe(ALL_PREFERENCES.length)
+    for (const preference of ALL_PREFERENCES) {
+      const appTheme = createAppTheme(preference)
+      expect(appTheme.palette.background.default).toBe(
+        THEME_BACKGROUNDS[preference.accent][preference.mode]
+      )
+    }
+  })
+
+  it('keeps the default purple palette identical to the original values', () => {
+    const purpleDark = createAppTheme({ accent: 'purple', mode: 'dark' })
+    const purpleLight = createAppTheme({ accent: 'purple', mode: 'light' })
+    expect(purpleDark.palette.sidebar).toBe('#080f1e')
+    expect(purpleDark.palette.surface).toBe('#172033')
+    expect(purpleDark.palette.background.paper).toBe('#1e293b')
+    expect(purpleDark.palette.text.primary).toBe('#e2e8f0')
+    expect(purpleDark.palette.text.secondary).toBe('#94a3b8')
+    expect(purpleDark.palette.text.disabled).toBe('#64748b')
+    expect(purpleDark.palette.divider).toBe('#334155')
+    expect(purpleDark.palette.dividerStrong).toBe('#475569')
+    expect(purpleDark.shadows[1]).toBe('0 2px 12px rgba(0, 0, 0, 0.3)')
+    expect(purpleDark.shadows[2]).toBe('0 8px 32px rgba(0, 0, 0, 0.4)')
+    expect(purpleLight.palette.sidebar).toBe('#e2e8f0')
+    expect(purpleLight.palette.surface).toBe('#e8edf5')
+    expect(purpleLight.palette.background.paper).toBe('#ffffff')
+    expect(purpleLight.palette.text.primary).toBe('#0f172a')
+    expect(purpleLight.palette.text.secondary).toBe('#475569')
+    expect(purpleLight.palette.divider).toBe('#cbd5e1')
+    expect(purpleLight.palette.dividerStrong).toBe('#94a3b8')
+    expect(purpleLight.shadows[1]).toBe('0 2px 12px rgba(15, 23, 42, 0.12)')
+    expect(purpleLight.shadows[2]).toBe('0 8px 32px rgba(15, 23, 42, 0.18)')
+    expect(THEME_BACKGROUNDS.purple).toEqual({ dark: '#0f172a', light: '#f1f5f9' })
+  })
+
+  it('recolors the whole chrome per accent, not only the primary', () => {
+    const neutralSlots = [
+      'sidebar',
+      'surface',
+      'background.paper',
+      'divider',
+      'dividerStrong'
+    ] as const
+    const lightNeutralSlots = ['sidebar', 'surface', 'divider', 'dividerStrong'] as const
     for (const mode of THEME_MODES) {
-      for (const accent of THEME_ACCENTS) {
+      const purpleTheme = createAppTheme({ accent: 'purple', mode })
+      for (const accent of THEME_ACCENTS.filter((candidate) => candidate !== 'purple')) {
         const appTheme = createAppTheme({ accent, mode })
-        expect(appTheme.palette.background.default).toBe(THEME_BACKGROUNDS[mode])
+        for (const slot of mode === 'dark' ? neutralSlots : lightNeutralSlots) {
+          expect(
+            paletteSlot(appTheme, slot),
+            `${accent}/${mode} ${slot} should differ from purple`
+          ).not.toBe(paletteSlot(purpleTheme, slot))
+        }
+      }
+    }
+  })
+
+  it('keeps status colors semantic per mode across accents', () => {
+    for (const mode of THEME_MODES) {
+      const statusSlots = ['info', 'success', 'warning', 'error'] as const
+      for (const slot of statusSlots) {
+        const values = THEME_ACCENTS.map(
+          (accent) => createAppTheme({ accent, mode }).palette[slot].main
+        )
+        expect(new Set(values).size).toBe(1)
+      }
+    }
+  })
+
+  it('keeps text readable against the card and background in every combination', () => {
+    for (const preference of ALL_PREFERENCES) {
+      const appTheme = createAppTheme(preference)
+      const backdropColors = [
+        appTheme.palette.background.paper,
+        appTheme.palette.background.default
+      ]
+      for (const textColor of [
+        appTheme.palette.text.primary,
+        appTheme.palette.text.secondary,
+        appTheme.palette.text.disabled
+      ]) {
+        for (const backdropColor of backdropColors) {
+          expect(
+            textColor,
+            `${JSON.stringify(preference)} ${textColor} on ${backdropColor}`
+          ).not.toBe(backdropColor)
+        }
       }
     }
   })

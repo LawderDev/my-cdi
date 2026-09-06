@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '@shared/i18n/config'
 import { ACCENT_COLORS } from '@ui/theme'
-import { DEFAULT_THEME_PREFERENCE } from '@types'
+import { DEFAULT_THEME_PREFERENCE, THEME_BACKGROUNDS } from '@types'
 import { useThemePicker } from '../useThemePicker'
 
 const ACCENT_COUNT = 5
@@ -75,12 +75,14 @@ describe('useThemePicker', () => {
     expect(activeModes.map((option) => option.key)).toEqual(['light'])
   })
 
-  it('uses the accent main color as the swatch', async () => {
+  it('previews each theme as a two-tone swatch', async () => {
     const { result } = renderHook(() => useThemePicker(), { wrapper: makeWrapper() })
 
     await waitFor(() => expect(result.current.accentOptions).toHaveLength(ACCENT_COUNT))
     for (const option of result.current.accentOptions) {
-      expect(option.swatch).toBe(ACCENT_COLORS[option.key].dark.main)
+      expect(option.swatch.main).toBe(ACCENT_COLORS[option.key].dark.main)
+      expect(option.swatch.background).toBe(THEME_BACKGROUNDS[option.key].dark)
+      expect(option.swatch.background).not.toBe(option.swatch.main)
     }
   })
 

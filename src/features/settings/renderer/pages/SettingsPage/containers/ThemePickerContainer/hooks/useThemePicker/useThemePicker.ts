@@ -1,13 +1,20 @@
 import { useTranslation } from 'react-i18next'
 import { ACCENT_COLORS } from '@ui/theme'
-import { THEME_ACCENTS, THEME_MODES, type ThemeAccent, type ThemeMode } from '@types'
+import {
+  THEME_ACCENTS,
+  THEME_BACKGROUNDS,
+  THEME_MODES,
+  type ThemeAccent,
+  type ThemeMode
+} from '@types'
 import { useThemePreference } from '@settings/api/useThemePreference'
 import { useSetThemePreference } from '@settings/api/useSetThemePreference'
 
 export interface AccentOptionViewModel {
   key: ThemeAccent
   label: string
-  swatch: string
+  /** Two-tone preview: theme background with the accent color on top. */
+  swatch: { main: string; background: string }
   isActive: boolean
   onSelect: () => void
 }
@@ -35,7 +42,10 @@ export function useThemePicker(): UseThemePickerReturn {
   const accentOptions: AccentOptionViewModel[] = THEME_ACCENTS.map((accent) => ({
     key: accent,
     label: t(`settings.color.${accent}`),
-    swatch: ACCENT_COLORS[accent].dark.main,
+    swatch: {
+      main: ACCENT_COLORS[accent].dark.main,
+      background: THEME_BACKGROUNDS[accent].dark
+    },
     isActive: accent === activeAccent,
     onSelect: () => {
       setThemePreference({ accent, mode: activeMode })

@@ -124,7 +124,7 @@ function createWindow(themePreference: ThemePreference): void {
     minHeight: WINDOW_MIN_HEIGHT_PX,
     show: false,
     autoHideMenuBar: true,
-    backgroundColor: THEME_BACKGROUNDS[themePreference.mode],
+    backgroundColor: THEME_BACKGROUNDS[themePreference.accent][themePreference.mode],
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,

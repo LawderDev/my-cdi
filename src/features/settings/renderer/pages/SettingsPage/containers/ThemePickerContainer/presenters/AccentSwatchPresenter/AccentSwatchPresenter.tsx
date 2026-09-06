@@ -10,7 +10,8 @@ export function AccentSwatchPresenter({
   return (
     <AccentSwatchButton
       type="button"
-      $swatch={swatch}
+      $swatchMain={swatch.main}
+      $swatchBackground={swatch.background}
       data-active={isActive}
       aria-pressed={isActive}
       aria-label={label}

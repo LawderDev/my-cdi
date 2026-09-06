@@ -22,7 +22,10 @@ export const DEFAULT_THEME_PREFERENCE: ThemePreference = {
 export const THEME_ARG_PREFIX = '--theme='
 export const THEME_STORAGE_KEY = 'theme'
 
-export const THEME_BACKGROUNDS: Record<ThemeMode, string> = {
-  dark: '#0f172a',
-  light: '#f1f5f9'
+export const THEME_BACKGROUNDS: Record<ThemeAccent, Record<ThemeMode, string>> = {
+  purple: { dark: '#0f172a', light: '#f1f5f9' },
+  pink: { dark: '#2a1224', light: '#fbf3f7' },
+  blue: { dark: '#0c1526', light: '#f1f5fb' },
+  red: { dark: '#27110f', light: '#fbf3f1' },
+  yellow: { dark: '#241d0d', light: '#faf6ee' }
 }

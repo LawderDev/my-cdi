@@ -42,7 +42,7 @@ export const ACCENT_COLORS: Record<ThemeAccent, Record<ThemeMode, AccentColors>>
   }
 }
 
-interface ModeColors {
+interface ThemePaletteTokens {
   sidebar: string
   surface: string
   card: string
@@ -59,38 +59,183 @@ interface ModeColors {
   largeShadow: string
 }
 
-const MODE_COLORS: Record<ThemeMode, ModeColors> = {
-  dark: {
-    sidebar: '#080f1e',
-    surface: '#172033',
-    card: '#1e293b',
-    title: '#e2e8f0',
-    text: '#94a3b8',
-    textDim: '#64748b',
-    border: '#334155',
-    borderStrong: '#475569',
-    info: '#60a5fa',
-    success: '#4ade80',
-    warning: '#fbbf24',
-    danger: '#f87171',
-    softShadow: '0 2px 12px rgba(0, 0, 0, 0.3)',
-    largeShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
+/**
+ * Complete per-theme palettes: every accent brings its own hue-tinted
+ * neutrals (backgrounds, sidebar, cards, borders, text, shadows), so
+ * switching theme recolors the whole chrome, not only the accent.
+ * Status colors stay semantic: they follow the mode, never the brand hue.
+ * The purple entries are the original default palette, unchanged.
+ */
+const THEME_PALETTES: Record<ThemeAccent, Record<ThemeMode, ThemePaletteTokens>> = {
+  purple: {
+    dark: {
+      sidebar: '#080f1e',
+      surface: '#172033',
+      card: '#1e293b',
+      title: '#e2e8f0',
+      text: '#94a3b8',
+      textDim: '#64748b',
+      border: '#334155',
+      borderStrong: '#475569',
+      info: '#60a5fa',
+      success: '#4ade80',
+      warning: '#fbbf24',
+      danger: '#f87171',
+      softShadow: '0 2px 12px rgba(0, 0, 0, 0.3)',
+      largeShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
+    },
+    light: {
+      sidebar: '#e2e8f0',
+      surface: '#e8edf5',
+      card: '#ffffff',
+      title: '#0f172a',
+      text: '#475569',
+      textDim: '#64748b',
+      border: '#cbd5e1',
+      borderStrong: '#94a3b8',
+      info: '#2563eb',
+      success: '#16a34a',
+      warning: '#d97706',
+      danger: '#dc2626',
+      softShadow: '0 2px 12px rgba(15, 23, 42, 0.12)',
+      largeShadow: '0 8px 32px rgba(15, 23, 42, 0.18)'
+    }
   },
-  light: {
-    sidebar: '#e2e8f0',
-    surface: '#e8edf5',
-    card: '#ffffff',
-    title: '#0f172a',
-    text: '#475569',
-    textDim: '#64748b',
-    border: '#cbd5e1',
-    borderStrong: '#94a3b8',
-    info: '#2563eb',
-    success: '#16a34a',
-    warning: '#d97706',
-    danger: '#dc2626',
-    softShadow: '0 2px 12px rgba(15, 23, 42, 0.12)',
-    largeShadow: '0 8px 32px rgba(15, 23, 42, 0.18)'
+  pink: {
+    dark: {
+      sidebar: '#200d1a',
+      surface: '#37182e',
+      card: '#40203a',
+      title: '#f2e2ec',
+      text: '#b593a8',
+      textDim: '#8a6480',
+      border: '#6d3d5c',
+      borderStrong: '#8a557a',
+      info: '#60a5fa',
+      success: '#4ade80',
+      warning: '#fbbf24',
+      danger: '#f87171',
+      softShadow: '0 2px 12px rgba(16, 7, 13, 0.35)',
+      largeShadow: '0 8px 32px rgba(16, 7, 13, 0.45)'
+    },
+    light: {
+      sidebar: '#f5e4ed',
+      surface: '#f9ecf3',
+      card: '#ffffff',
+      title: '#2a1224',
+      text: '#6d4a5e',
+      textDim: '#93707f',
+      border: '#ecd2df',
+      borderStrong: '#d3a6ba',
+      info: '#2563eb',
+      success: '#16a34a',
+      warning: '#d97706',
+      danger: '#dc2626',
+      softShadow: '0 2px 12px rgba(42, 18, 36, 0.12)',
+      largeShadow: '0 8px 32px rgba(42, 18, 36, 0.18)'
+    }
+  },
+  blue: {
+    dark: {
+      sidebar: '#081020',
+      surface: '#16223a',
+      card: '#1c2b45',
+      title: '#e0e7f2',
+      text: '#8fa0bd',
+      textDim: '#64789a',
+      border: '#33456a',
+      borderStrong: '#475d8a',
+      info: '#60a5fa',
+      success: '#4ade80',
+      warning: '#fbbf24',
+      danger: '#f87171',
+      softShadow: '0 2px 12px rgba(5, 10, 20, 0.35)',
+      largeShadow: '0 8px 32px rgba(5, 10, 20, 0.45)'
+    },
+    light: {
+      sidebar: '#e3e9f5',
+      surface: '#eaeff8',
+      card: '#ffffff',
+      title: '#0c1526',
+      text: '#4a5a75',
+      textDim: '#64789a',
+      border: '#ccd8ea',
+      borderStrong: '#93a8c8',
+      info: '#2563eb',
+      success: '#16a34a',
+      warning: '#d97706',
+      danger: '#dc2626',
+      softShadow: '0 2px 12px rgba(12, 21, 38, 0.12)',
+      largeShadow: '0 8px 32px rgba(12, 21, 38, 0.18)'
+    }
+  },
+  red: {
+    dark: {
+      sidebar: '#1c0b0a',
+      surface: '#371a16',
+      card: '#43211c',
+      title: '#f2e2df',
+      text: '#b59189',
+      textDim: '#8a645c',
+      border: '#6d3a31',
+      borderStrong: '#8a5146',
+      info: '#60a5fa',
+      success: '#4ade80',
+      warning: '#fbbf24',
+      danger: '#f87171',
+      softShadow: '0 2px 12px rgba(14, 6, 5, 0.35)',
+      largeShadow: '0 8px 32px rgba(14, 6, 5, 0.45)'
+    },
+    light: {
+      sidebar: '#f5e6e3',
+      surface: '#f9ece9',
+      card: '#ffffff',
+      title: '#27110f',
+      text: '#70504a',
+      textDim: '#967067',
+      border: '#ecd4ce',
+      borderStrong: '#d6a79d',
+      info: '#2563eb',
+      success: '#16a34a',
+      warning: '#d97706',
+      danger: '#dc2626',
+      softShadow: '0 2px 12px rgba(39, 17, 15, 0.12)',
+      largeShadow: '0 8px 32px rgba(39, 17, 15, 0.18)'
+    }
+  },
+  yellow: {
+    dark: {
+      sidebar: '#191408',
+      surface: '#362d16',
+      card: '#423818',
+      title: '#f0e9d8',
+      text: '#b0a485',
+      textDim: '#857a5e',
+      border: '#6b5f38',
+      borderStrong: '#887a4d',
+      info: '#60a5fa',
+      success: '#4ade80',
+      warning: '#fbbf24',
+      danger: '#f87171',
+      softShadow: '0 2px 12px rgba(12, 9, 4, 0.35)',
+      largeShadow: '0 8px 32px rgba(12, 9, 4, 0.45)'
+    },
+    light: {
+      sidebar: '#f2ecd9',
+      surface: '#f7f1e2',
+      card: '#ffffff',
+      title: '#241d0d',
+      text: '#6b6148',
+      textDim: '#8f8464',
+      border: '#e9dfc6',
+      borderStrong: '#ccbd95',
+      info: '#2563eb',
+      success: '#16a34a',
+      warning: '#d97706',
+      danger: '#dc2626',
+      softShadow: '0 2px 12px rgba(36, 29, 13, 0.12)',
+      largeShadow: '0 8px 32px rgba(36, 29, 13, 0.18)'
+    }
   }
 }
 
@@ -197,7 +342,7 @@ declare module '@mui/material/styles' {
 }
 
 function buildPaletteOptions(accent: ThemeAccent, mode: ThemeMode): PaletteOptions {
-  const modeColors = MODE_COLORS[mode]
+  const paletteTokens = THEME_PALETTES[accent][mode]
   const accentColors = ACCENT_COLORS[accent][mode]
   return {
     mode,
@@ -207,37 +352,37 @@ function buildPaletteOptions(accent: ThemeAccent, mode: ThemeMode): PaletteOptio
       contrastText: accentColors.contrastText
     },
     info: {
-      main: modeColors.info
+      main: paletteTokens.info
     },
     success: {
-      main: modeColors.success
+      main: paletteTokens.success
     },
     warning: {
-      main: modeColors.warning
+      main: paletteTokens.warning
     },
     error: {
-      main: modeColors.danger
+      main: paletteTokens.danger
     },
     background: {
-      default: THEME_BACKGROUNDS[mode],
-      paper: modeColors.card
+      default: THEME_BACKGROUNDS[accent][mode],
+      paper: paletteTokens.card
     },
     text: {
-      primary: modeColors.title,
-      secondary: modeColors.text,
-      disabled: modeColors.textDim
+      primary: paletteTokens.title,
+      secondary: paletteTokens.text,
+      disabled: paletteTokens.textDim
     },
-    divider: modeColors.border,
-    sidebar: modeColors.sidebar,
-    surface: modeColors.surface,
-    dividerStrong: modeColors.borderStrong,
+    divider: paletteTokens.border,
+    sidebar: paletteTokens.sidebar,
+    surface: paletteTokens.surface,
+    dividerStrong: paletteTokens.borderStrong,
     activity: {
-      computer: modeColors.info,
-      work: modeColors.success,
-      reading: modeColors.warning,
+      computer: paletteTokens.info,
+      work: paletteTokens.success,
+      reading: paletteTokens.warning,
       relaxation: accentColors.soft,
-      game: modeColors.danger,
-      other: modeColors.text
+      game: paletteTokens.danger,
+      other: paletteTokens.text
     }
   }
 }
@@ -250,7 +395,7 @@ export function createAppTheme(preference: ThemePreference): Theme {
   if (cachedTheme) {
     return cachedTheme
   }
-  const modeColors = MODE_COLORS[preference.mode]
+  const paletteTokens = THEME_PALETTES[preference.accent][preference.mode]
   const accentColors = ACCENT_COLORS[preference.accent][preference.mode]
   const appTheme = createTheme({
     palette: buildPaletteOptions(preference.accent, preference.mode),
@@ -370,11 +515,11 @@ export function createAppTheme(preference: ThemePreference): Theme {
             background: 'transparent'
           },
           '*::-webkit-scrollbar-thumb': {
-            background: modeColors.border,
+            background: paletteTokens.border,
             borderRadius: SCROLLBAR_THUMB_RADIUS_PX
           },
           '*::-webkit-scrollbar-thumb:hover': {
-            background: modeColors.borderStrong
+            background: paletteTokens.borderStrong
           }
         }
       },
@@ -390,8 +535,8 @@ export function createAppTheme(preference: ThemePreference): Theme {
 
   // Elevation ramp: 1 = soft card shadow, 2 = large modal shadow,
   // 3/4 = accent glow for emphasized primary elements.
-  appTheme.shadows[1] = modeColors.softShadow
-  appTheme.shadows[2] = modeColors.largeShadow
+  appTheme.shadows[1] = paletteTokens.softShadow
+  appTheme.shadows[2] = paletteTokens.largeShadow
   appTheme.shadows[3] = `0 2px 8px ${alpha(accentColors.main, ACCENT_GLOW_ALPHA)}`
   appTheme.shadows[4] = `0 4px 16px ${alpha(accentColors.main, ACCENT_LARGE_GLOW_ALPHA)}`
 
