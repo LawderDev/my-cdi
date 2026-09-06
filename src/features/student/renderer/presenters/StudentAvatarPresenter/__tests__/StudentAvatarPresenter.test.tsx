@@ -20,7 +20,9 @@ describe('StudentAvatarPresenter', () => {
 
   it('renders uppercase initials built by buildStudentInitials', () => {
     render(
-      withTheme(<StudentAvatarPresenter id={STUDENT_ID} initials={buildStudentInitials('A', 'B')} />)
+      withTheme(
+        <StudentAvatarPresenter id={STUDENT_ID} initials={buildStudentInitials('A', 'B')} />
+      )
     )
     expect(screen.getByText('AB')).toBeInTheDocument()
   })

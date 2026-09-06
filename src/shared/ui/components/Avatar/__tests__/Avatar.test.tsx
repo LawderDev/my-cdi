@@ -29,7 +29,9 @@ describe('Avatar', () => {
   })
 
   it('appends custom className', () => {
-    const { container } = render(withTheme(<Avatar initials="X" colorSeed={0} className="my-extra" />))
+    const { container } = render(
+      withTheme(<Avatar initials="X" colorSeed={0} className="my-extra" />)
+    )
     const root = container.firstElementChild
     expect(root?.className).toContain('my-extra')
   })

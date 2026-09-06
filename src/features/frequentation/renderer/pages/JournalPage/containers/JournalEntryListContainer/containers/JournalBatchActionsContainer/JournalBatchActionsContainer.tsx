@@ -66,7 +66,9 @@ export function JournalBatchActionsContainer(props: JournalBatchActionsContainer
         <ActivityMenu anchorEl={anchorEl} open={activityMenuOpen} onClose={closeActivityMenu}>
           {activityOptions.map((option) => (
             <MenuItem key={option.value} onClick={() => handleActivityClick(option.value)}>
-              <MenuDot style={{ backgroundColor: getActivityColor(option.value, theme.palette.activity) }} />
+              <MenuDot
+                style={{ backgroundColor: getActivityColor(option.value, theme.palette.activity) }}
+              />
               {option.label}
             </MenuItem>
           ))}
