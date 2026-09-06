@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal } from '@ui/components/Modal'
-import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { Toast } from '@ui/components/Toast'
 import { StudentFormActionsPresenter } from './presenters/StudentFormActionsPresenter'
 import { StudentFormFieldsPresenter } from './presenters/StudentFormFieldsPresenter'
+import { StudentFormReplacePresenter } from './presenters/StudentFormReplacePresenter'
 import { useStudentForm } from './hooks/useStudentForm'
 import { getValidationErrorMessage } from './presenters/StudentFormFieldsPresenter/helpers/getValidationErrorMessage'
 import {
@@ -39,6 +39,7 @@ export function StudentFormContainer({ mode, student, open, onClose }: StudentFo
     handleClose,
     title,
     submitLabel,
+    confirmLabel,
     duplicateStudent,
     pendingReplaceStudent,
     confirmReplace,
@@ -80,36 +81,42 @@ export function StudentFormContainer({ mode, student, open, onClose }: StudentFo
     )
   })
 
+  const isConfirmingReplace = pendingReplaceStudent !== null
+  const modalTitle = isConfirmingReplace ? t('replaceConfirmTitle') : title
+  const modalOnClose = isConfirmingReplace ? cancelReplace : handleClose
+  const bodyNode = isConfirmingReplace ? (
+    <StudentFormReplacePresenter
+      message={t('replaceConfirmMessage', {
+        name: pendingReplaceStudent.displayName,
+        classe: pendingReplaceStudent.classe
+      })}
+    />
+  ) : (
+    <form onSubmit={onSubmit}>
+      <StudentFormFieldsPresenter fieldRowNodes={fieldRowNodes} />
+    </form>
+  )
+  const footerNode = isConfirmingReplace ? (
+    <StudentFormActionsPresenter
+      isSubmitting={isSubmitting}
+      submitLabel={confirmLabel}
+      onCancel={cancelReplace}
+      onSubmit={confirmReplace}
+    />
+  ) : (
+    <StudentFormActionsPresenter
+      isSubmitting={isSubmitting}
+      submitLabel={submitLabel}
+      onCancel={handleClose}
+      onSubmit={onSubmit}
+    />
+  )
+
   return (
     <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        title={title}
-        footer={
-          <StudentFormActionsPresenter
-            isSubmitting={isSubmitting}
-            submitLabel={submitLabel}
-            onCancel={handleClose}
-            onSubmit={onSubmit}
-          />
-        }
-      >
-        <form onSubmit={onSubmit}>
-          <StudentFormFieldsPresenter fieldRowNodes={fieldRowNodes} />
-        </form>
+      <Modal open={open} onClose={modalOnClose} title={modalTitle} footer={footerNode}>
+        {bodyNode}
       </Modal>
-      <ConfirmDialog
-        open={pendingReplaceStudent !== null}
-        title={t('replaceConfirmTitle')}
-        message={t('replaceConfirmMessage', {
-          name: pendingReplaceStudent?.displayName ?? '',
-          classe: pendingReplaceStudent?.classe ?? ''
-        })}
-        confirmLabel={t('replaceConfirmConfirm')}
-        onConfirm={confirmReplace}
-        onClose={cancelReplace}
-      />
       <Toast toast={toast} onClose={dismissToast} />
     </>
   )

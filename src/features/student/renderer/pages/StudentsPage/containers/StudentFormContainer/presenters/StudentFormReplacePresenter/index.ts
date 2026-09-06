@@ -1,0 +1,1 @@
+export { StudentFormReplacePresenter } from './StudentFormReplacePresenter'

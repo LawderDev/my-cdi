@@ -137,7 +137,13 @@ export function useStudentForm({ mode, student, onClose }: UseStudentFormArgs) {
   }
 
   const title = mode === 'create' ? t('add') : t('edit')
-  const submitLabel = mode === 'create' ? tCommon('app.add') : tCommon('app.save')
+  const confirmLabel = tCommon('app.confirm')
+  let submitLabel = tCommon('app.add')
+  if (mode === 'edit') {
+    submitLabel = tCommon('app.save')
+  } else if (duplicateStudent !== null) {
+    submitLabel = t('replaceConfirmConfirm')
+  }
 
   return {
     register,
@@ -147,6 +153,7 @@ export function useStudentForm({ mode, student, onClose }: UseStudentFormArgs) {
     handleClose,
     title,
     submitLabel,
+    confirmLabel,
     duplicateStudent,
     pendingReplaceStudent: pendingReplace?.student ?? null,
     confirmReplace,

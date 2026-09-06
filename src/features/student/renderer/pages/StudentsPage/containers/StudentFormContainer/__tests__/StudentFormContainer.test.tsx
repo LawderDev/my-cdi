@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { I18nextProvider } from 'react-i18next'
@@ -34,13 +34,16 @@ const FIELD_LABELS: Record<(typeof FIELD_IDS)[number], string> = {
   ine: 'INE'
 }
 
-async function fillForm(values: Record<(typeof FIELD_IDS)[number], string>) {
+async function fillForm(
+  values: Record<(typeof FIELD_IDS)[number], string>,
+  submitLabel = 'Ajouter'
+) {
   for (const key of FIELD_IDS) {
     const input = screen.getByLabelText(FIELD_LABELS[key])
     input.focus()
     await userEvent.type(input, values[key])
   }
-  await userEvent.click(screen.getByRole('button', { name: 'Ajouter' }))
+  await userEvent.click(screen.getByRole('button', { name: submitLabel }))
 }
 
 function createWrapper() {
@@ -116,14 +119,28 @@ describe('StudentFormContainer', () => {
     expect(screen.getByText('Élève déjà enregistré : Jean Dupont')).toBeInTheDocument()
   })
 
-  it('asks for confirmation instead of creating when the INE already exists, then replaces', async () => {
+  it('changes the submit button to Remplacer while a duplicate INE is typed', async () => {
+    render(<StudentFormContainer mode="create" student={null} open onClose={vi.fn()} />, {
+      wrapper: createWrapper()
+    })
+
+    await waitFor(() => expect(window.electronAPI.student.list).toHaveBeenCalled())
+    const ineInput = screen.getByLabelText('INE')
+    ineInput.focus()
+    await userEvent.type(ineInput, '123A')
+
+    expect(screen.getByRole('button', { name: 'Remplacer' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Ajouter' })).not.toBeInTheDocument()
+  })
+
+  it('asks for confirmation in the same modal when the INE already exists, then replaces', async () => {
     const onClose = vi.fn()
     render(<StudentFormContainer mode="create" student={null} open onClose={onClose} />, {
       wrapper: createWrapper()
     })
 
     await waitFor(() => expect(window.electronAPI.student.list).toHaveBeenCalled())
-    await fillForm({ nom: 'Martin', prenom: 'Léa', classe: '5B', ine: '123A' })
+    await fillForm({ nom: 'Martin', prenom: 'Léa', classe: '5B', ine: '123A' }, 'Remplacer')
 
     expect(screen.getByText("Remplacer les informations de l'élève ?")).toBeInTheDocument()
     expect(
@@ -133,7 +150,7 @@ describe('StudentFormContainer', () => {
     ).toBeInTheDocument()
     expect(window.electronAPI.student.create).not.toHaveBeenCalled()
 
-    await userEvent.click(screen.getByRole('button', { name: 'Remplacer' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Confirmer' }))
 
     await waitFor(() =>
       expect(screen.getByText("Les informations de l'élève ont été remplacées")).toBeInTheDocument()
@@ -147,23 +164,19 @@ describe('StudentFormContainer', () => {
     expect(onClose).toHaveBeenCalledTimes(1)
   })
 
-  it('keeps the form open when the replace is cancelled', async () => {
+  it('returns to the form when the replace is cancelled', async () => {
     const onClose = vi.fn()
     render(<StudentFormContainer mode="create" student={null} open onClose={onClose} />, {
       wrapper: createWrapper()
     })
 
     await waitFor(() => expect(window.electronAPI.student.list).toHaveBeenCalled())
-    await fillForm({ nom: 'Martin', prenom: 'Léa', classe: '5B', ine: '123A' })
+    await fillForm({ nom: 'Martin', prenom: 'Léa', classe: '5B', ine: '123A' }, 'Remplacer')
 
-    const confirmDialog = screen.getByRole('dialog', {
-      name: "Remplacer les informations de l'élève ?"
-    })
-    await userEvent.click(within(confirmDialog).getByRole('button', { name: 'Annuler' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Annuler' }))
 
-    // MUI keeps the closing dialog in the DOM in jsdom (transitionend never fires),
-    // so we assert the behaviour instead of its removal: nothing is updated or closed,
-    // and the form keeps the values the user typed.
+    // The confirmation step swaps back to the form inside the same modal, keeping
+    // the values the user typed: nothing is updated and the modal stays open.
     expect(onClose).not.toHaveBeenCalled()
     expect(window.electronAPI.student.update).not.toHaveBeenCalled()
     expect(screen.getByLabelText('INE')).toHaveValue('123A')
