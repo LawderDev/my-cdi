@@ -4,7 +4,7 @@ import { mkdirSync } from 'fs'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { autoUpdater } from 'electron-updater'
 import log from 'electron-log/main'
-import { createDbConnection, closeDbConnection } from '@shared/db/connection'
+import { createDbConnection, closeDbConnection, getDb } from '@shared/db/connection'
 import { runMigrations } from '@shared/db/migrate'
 import { APP_CHANNELS } from '@shared/ipc/channels'
 import { UPDATER_CHANNELS } from '@shared/ipc/updaterChannels'
@@ -15,6 +15,15 @@ import type {
   UpdateDownloadedInfo,
   UpdateErrorInfo
 } from '@shared/types/updater'
+import { serializeThemePreference } from '@lib/themePreference'
+import { getThemePreference } from '@settings/use-cases/getThemePreference'
+import { SettingGatewayDrizzle } from '@settings/gateways/setting'
+import {
+  DEFAULT_THEME_PREFERENCE,
+  THEME_ARG_PREFIX,
+  THEME_BACKGROUNDS,
+  type ThemePreference
+} from '@types'
 import { initializeModules } from './modules'
 
 log.initialize()
@@ -92,7 +101,22 @@ function registerAutoUpdater(): void {
   }
 }
 
-function createWindow(): void {
+async function resolveStartupThemePreference(): Promise<ThemePreference> {
+  try {
+    const settingGateway = new SettingGatewayDrizzle(getDb())
+    const result = await getThemePreference(settingGateway)
+    if (result.success) {
+      return result.data
+    }
+    log.warn(`Failed to read the theme preference: ${result.error}`)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    log.warn(`Failed to read the theme preference: ${message}`)
+  }
+  return DEFAULT_THEME_PREFERENCE
+}
+
+function createWindow(themePreference: ThemePreference): void {
   const mainWindow = new BrowserWindow({
     width: WINDOW_WIDTH_PX,
     height: WINDOW_HEIGHT_PX,
@@ -100,10 +124,12 @@ function createWindow(): void {
     minHeight: WINDOW_MIN_HEIGHT_PX,
     show: false,
     autoHideMenuBar: true,
+    backgroundColor: THEME_BACKGROUNDS[themePreference.mode],
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
-      contextIsolation: true
+      contextIsolation: true,
+      additionalArguments: [`${THEME_ARG_PREFIX}${serializeThemePreference(themePreference)}`]
     }
   })
 
@@ -127,6 +153,8 @@ function createWindow(): void {
   }
 }
 
+let startupThemePreference: ThemePreference = DEFAULT_THEME_PREFERENCE
+
 const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
   app.quit()
@@ -141,7 +169,7 @@ if (!gotTheLock) {
     }
   })
 
-  app.whenReady().then(() => {
+  app.whenReady().then(async () => {
     if (process.platform === 'win32') {
       electronApp.setAppUserModelId('com.my-cdi')
     }
@@ -178,7 +206,8 @@ if (!gotTheLock) {
 
     createMainRouter(ipcMain).procedure(APP_CHANNELS.GET_VERSION, async () => app.getVersion())
 
-    createWindow()
+    startupThemePreference = await resolveStartupThemePreference()
+    createWindow(startupThemePreference)
 
     if (process.platform === 'darwin' || process.platform === 'win32') {
       registerAutoUpdater()
@@ -198,7 +227,7 @@ if (!gotTheLock) {
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+      createWindow(startupThemePreference)
     }
   })
 }
