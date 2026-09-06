@@ -1,6 +1,7 @@
 export {
   theme,
   createAppTheme,
+  ACCENT_COLORS,
   TYPE_SCALE,
   FONT_WEIGHTS,
   RADII,

@@ -1,6 +1,12 @@
 import { alpha, createTheme, type PaletteOptions, type Theme } from '@mui/material/styles'
 import { serializeThemePreference } from '@lib/themePreference'
-import { DEFAULT_THEME_PREFERENCE, THEME_BACKGROUNDS, type ThemeAccent, type ThemeMode, type ThemePreference } from '@types'
+import {
+  DEFAULT_THEME_PREFERENCE,
+  THEME_BACKGROUNDS,
+  type ThemeAccent,
+  type ThemeMode,
+  type ThemePreference
+} from '@types'
 
 export const MONO_FONT_FAMILY = '"JetBrains Mono", ui-monospace, monospace'
 
@@ -13,7 +19,7 @@ interface AccentColors {
   soft: string
 }
 
-const ACCENT_COLORS: Record<ThemeAccent, Record<ThemeMode, AccentColors>> = {
+export const ACCENT_COLORS: Record<ThemeAccent, Record<ThemeMode, AccentColors>> = {
   purple: {
     dark: { main: '#7c4dff', light: '#916fff', contrastText: '#ffffff', soft: '#c084fc' },
     light: { main: '#7c4dff', light: '#916fff', contrastText: '#ffffff', soft: '#8b5cf6' }
