@@ -83,4 +83,27 @@ describe('useSidebar', () => {
     })
     expect(locations).toEqual(['/', ROUTES.STATISTICS])
   })
+
+  it('navigates to SETTINGS when the settings button is clicked', () => {
+    const locations: string[] = []
+    const { result } = renderHook(() => useSidebar(), {
+      wrapper: makeWrapper(ROUTES.JOURNAL, (pathname) => locations.push(pathname))
+    })
+    act(() => {
+      result.current.onSettingsClick()
+    })
+    expect(locations).toEqual(['/', ROUTES.SETTINGS])
+  })
+
+  it('marks the settings button as active only on the settings route', () => {
+    const { result } = renderHook(() => useSidebar(), {
+      wrapper: makeWrapper(ROUTES.JOURNAL)
+    })
+    expect(result.current.isSettingsActive).toBe(false)
+
+    const { result: settingsResult } = renderHook(() => useSidebar(), {
+      wrapper: makeWrapper(ROUTES.SETTINGS)
+    })
+    expect(settingsResult.current.isSettingsActive).toBe(true)
+  })
 })

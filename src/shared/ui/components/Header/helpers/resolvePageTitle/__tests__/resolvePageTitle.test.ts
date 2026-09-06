@@ -24,6 +24,13 @@ describe('resolvePageTitle', () => {
     })
   })
 
+  it('returns settings keys for the settings route', () => {
+    expect(resolvePageTitle(ROUTES.SETTINGS)).toEqual({
+      titleKey: 'page.settings.title',
+      subtitleKey: 'page.settings.subtitle'
+    })
+  })
+
   it('falls back to journal keys for an unknown path', () => {
     expect(resolvePageTitle('/some-unknown-path')).toEqual({
       titleKey: 'page.journal.title',

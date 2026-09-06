@@ -22,7 +22,11 @@ function Harness(props: { onStatisticsClick: () => void; onSettingsClick: () => 
   ))
 
   return (
-    <SidebarPresenter navButtonNodes={navButtonNodes} onSettingsClick={props.onSettingsClick} />
+    <SidebarPresenter
+      navButtonNodes={navButtonNodes}
+      isSettingsActive={false}
+      onSettingsClick={props.onSettingsClick}
+    />
   )
 }
 

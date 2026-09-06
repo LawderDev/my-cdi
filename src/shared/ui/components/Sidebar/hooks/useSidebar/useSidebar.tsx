@@ -5,10 +5,9 @@ import { ROUTES } from '@lib/routes'
 import { buildSidebarItems } from '../../helpers/buildSidebarItems'
 import { NavButton } from '../../presenters/SidebarPresenter/components/NavButton'
 
-const SETTINGS_PLACEHOLDER_HASH = '#'
-
 export interface UseSidebarReturn {
   navButtonNodes: ReactNode[]
+  isSettingsActive: boolean
   onSettingsClick: () => void
 }
 
@@ -19,6 +18,9 @@ function resolveActivePath(pathname: string): string {
   if (pathname.startsWith(ROUTES.STUDENTS)) {
     return ROUTES.STUDENTS
   }
+  if (pathname.startsWith(ROUTES.SETTINGS)) {
+    return ROUTES.SETTINGS
+  }
   return ROUTES.JOURNAL
 }
 
@@ -27,6 +29,7 @@ export function useSidebar(): UseSidebarReturn {
   const location = useLocation()
   const { t } = useTranslation('common')
   const activePath = resolveActivePath(location.pathname)
+  const isSettingsActive = activePath === ROUTES.SETTINGS
 
   const navButtonNodes: ReactNode[] = buildSidebarItems().map((item) => {
     const isActive = item.path === activePath
@@ -45,8 +48,8 @@ export function useSidebar(): UseSidebarReturn {
   })
 
   function handleSettingsClick() {
-    window.location.hash = SETTINGS_PLACEHOLDER_HASH
+    reactNavigate(ROUTES.SETTINGS)
   }
 
-  return { navButtonNodes, onSettingsClick: handleSettingsClick }
+  return { navButtonNodes, isSettingsActive, onSettingsClick: handleSettingsClick }
 }

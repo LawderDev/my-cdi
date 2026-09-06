@@ -15,6 +15,10 @@ describe('resolveRouteTitle', () => {
     expect(resolveRouteTitle(ROUTES.STATISTICS)).toBe('pageTitles.statistics')
   })
 
+  it('returns the settings title key for the settings path', () => {
+    expect(resolveRouteTitle(ROUTES.SETTINGS)).toBe('pageTitles.settings')
+  })
+
   it('returns the default title key for unknown paths', () => {
     expect(resolveRouteTitle('/unknown-path')).toBe('pageTitles.default')
   })

@@ -10,7 +10,11 @@ import {
   SidebarRoot
 } from './SidebarPresenter.styles'
 
-export function SidebarPresenter({ navButtonNodes, onSettingsClick }: SidebarPresenterProps) {
+export function SidebarPresenter({
+  navButtonNodes,
+  isSettingsActive,
+  onSettingsClick
+}: SidebarPresenterProps) {
   const { t } = useTranslation('common')
 
   return (
@@ -19,7 +23,7 @@ export function SidebarPresenter({ navButtonNodes, onSettingsClick }: SidebarPre
       <NavList>{navButtonNodes}</NavList>
       <FooterList>
         <NavButton
-          active={false}
+          active={isSettingsActive}
           iconName={SETTINGS_ICON_NAME}
           label={t(SETTINGS_LABEL_KEY)}
           onClick={onSettingsClick}

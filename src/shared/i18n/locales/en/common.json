@@ -33,13 +33,37 @@
     "students": {
       "title": "Student list",
       "subtitle": "Student database management"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Personalize the application appearance"
     }
   },
   "pageTitles": {
     "journal": "Journal — My CDI",
     "students": "Students — My CDI",
     "statistics": "Statistics — My CDI",
+    "settings": "Settings — My CDI",
     "default": "My CDI"
+  },
+  "settings": {
+    "appearance": {
+      "title": "Appearance",
+      "description": "Choose the accent color and the display mode of the application.",
+      "accent": "Accent color",
+      "mode": "Display mode"
+    },
+    "color": {
+      "purple": "Purple",
+      "pink": "Pink",
+      "blue": "Blue",
+      "red": "Red",
+      "yellow": "Yellow"
+    },
+    "mode": {
+      "dark": "Dark",
+      "light": "Light"
+    }
   },
   "errorBoundary": {
     "title": "An error occurred",

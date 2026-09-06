@@ -33,13 +33,37 @@
     "students": {
       "title": "Liste des élèves",
       "subtitle": "Gestion de la base élèves"
+    },
+    "settings": {
+      "title": "Paramètres",
+      "subtitle": "Personnalisez l'apparence de l'application"
     }
   },
   "pageTitles": {
     "journal": "Journal — Mon CDI",
     "students": "Élèves — Mon CDI",
     "statistics": "Statistiques — Mon CDI",
+    "settings": "Paramètres — Mon CDI",
     "default": "Mon CDI"
+  },
+  "settings": {
+    "appearance": {
+      "title": "Apparence",
+      "description": "Choisissez la couleur d'accent et le mode d'affichage de l'application.",
+      "accent": "Couleur d'accent",
+      "mode": "Mode d'affichage"
+    },
+    "color": {
+      "purple": "Violet",
+      "pink": "Rose",
+      "blue": "Bleu",
+      "red": "Rouge",
+      "yellow": "Jaune"
+    },
+    "mode": {
+      "dark": "Sombre",
+      "light": "Clair"
+    }
   },
   "errorBoundary": {
     "title": "Une erreur est survenue",
