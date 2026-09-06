@@ -62,7 +62,8 @@ Renderer ──► Preload (contextBridge) ──► Main (ipcMain.handle)
 1. Instantiate gateways
 2. Inject `studentGateway` into `frequentationModule`
 3. Inject `frequentationGateway` into `statisticsModule`
-4. Invoke `cleanupOldFrequentations()` after all modules initialize
+4. Initialize the `settings` module (gateway + IPC controller, no cross-feature dependency)
+5. Invoke `cleanupOldFrequentations()` after all modules initialize
 
 ### Auto-Updater
 
@@ -84,7 +85,8 @@ src/
 │   │   ├── renderer/    # Frontend
 │   │   └── shared/      # IPC contract types (main ↔ renderer)
 │   ├── frequentation/
-│   └── statistics/
+│   ├── statistics/
+│   └── settings/
 ├── shared/              # Cross-cutting concerns
 │   ├── ipc/             # Type-safe router + client
 │   ├── db/              # Drizzle connection + schema
@@ -190,14 +192,19 @@ Provider stack order in `App.tsx`:
 
 ```
 QueryClientProvider
-  └── ThemeProvider
-        └── CssBaseline
-              └── LocalizationProvider (dayjs/fr)
-                    └── ErrorBoundary
-                          └── BrowserRouter
+  └── AppSurface
+        └── ThemeProvider (theme from useThemePreference + createAppTheme)
+              └── CssBaseline
+                    └── LocalizationProvider (dayjs/fr)
+                          └── ErrorBoundary
+                                └── HashRouter
 ```
 
 Query client defaults: `staleTime: 60s`, `retry: 1`.
+
+### Theme Preference
+
+The theme is **accent × mode** (accents: purple/pink/blue/red/yellow, modes: dark/light), persisted in the SQLite `settings` table via the `settings.getTheme`/`settings.setTheme` IPC channels. `AppSurface` (inside `QueryClientProvider`) calls `useThemePreference()` and builds the theme with the memoized `createAppTheme(preference)` factory in `src/shared/ui/theme/theme.ts` — never import the static `theme` singleton in runtime components (it exists only as the default instance for tests). Theme ids/serializer live in `@types`/`@lib/themePreference`; at startup main passes the persisted preference to the renderer via the `--theme=` `additionalArguments` flag and paints `BrowserWindow.backgroundColor` from `THEME_BACKGROUNDS`, so the first frame already carries the right theme with no flash.
 
 ### Global Layout (`AppShell`)
 
@@ -393,7 +400,9 @@ throw new AppError(ErrorCode.STUDENT_NOT_FOUND, 'Student not found')
 
 ## 10. Route Lazy Loading
 
-Pages are lazy-loaded via `React.lazy()` to keep the initial bundle small.
+> **Divergence note (2026-09):** routes are no longer lazy-loaded — `src/renderer/routes/index.tsx` imports every page statically and registers it inside the `AppShell` route. Static imports removed a first-navigation delay from the Suspense fallback; this section is kept for historical context and the lazy pattern would need re-introducing deliberately.
+
+Previously pages were lazy-loaded via `React.lazy()` to keep the initial bundle small:
 
 ```tsx
 // src/renderer/routes/JournalPage.tsx
@@ -408,7 +417,7 @@ export default JournalPageImpl
 
 ### Suspense Fallback
 
-Lazy-loaded pages are wrapped in `Suspense` with a `RouteSuspenseFallback` spinner (own unit under `src/renderer/routes/RouteSuspenseFallback/`). A local `SuspenseRoute` helper in `AppRoutes` composes the `Suspense` boundary so each route declaration stays one line.
+Lazy-loaded pages were wrapped in `Suspense` with a `RouteSuspenseFallback` spinner (own unit under `src/renderer/routes/RouteSuspenseFallback/`). A local `SuspenseRoute` helper in `AppRoutes` composes the `Suspense` boundary so each route declaration stays one line.
 
 ---
 
@@ -701,7 +710,11 @@ const activityTone: Record<ActivityType, ActivityTone> = { ... }
 const activityIcons: Record<ActivityType, string> = { ... }
 ```
 
-The design system in `shared/ui/components/` wraps MUI primitives with application-specific behavior:
+### Theme Factory (`@ui/theme`)
+
+`src/shared/ui/theme/theme.ts` is a single module (no barrel-file split, §22.6) that owns the whole design system: the `ACCENT_COLORS`/`MODE_COLORS` palette maps, the numeric token exports (`TYPE_SCALE`, `FONT_WEIGHTS`, `RADII`, `CONTROL_HEIGHTS`, `TINT_ALPHAS`, `MONO_FONT_FAMILY`), the palette augmentation (`sidebar`/`surface`/`dividerStrong`/`activity` slots) and the `createAppTheme(preference)` factory. The factory caches instances in a `Map` keyed by `accent:mode`, so switching themes reuses objects instead of rebuilding them. It derives every color from the accent×mode pair — mode colors cover sidebar/surface/card/text/borders/status colors and shadows, accent colors cover primary (with a contrast-safe `contrastText`, e.g. dark text on yellow) and the accent-derived `activity.relaxation` tone. `export const theme` is the default purple/dark instance, kept for consumers outside the React tree (tests, non-hook helpers). Components must receive theme-dependent values through `useTheme()`/styled callbacks, not through module-level constants.
+
+### Enum-to-Display Metadata
 
 | Component       | Purpose                                        |
 | --------------- | ---------------------------------------------- |
@@ -764,9 +777,11 @@ Every artifact lives as close as possible to its consumer. Only hoist when share
 | `@student/*`            | `src/features/student/renderer/*`       | `src/features/student/main/*`       |
 | `@frequentation/*`      | `src/features/frequentation/renderer/*` | `src/features/frequentation/main/*` |
 | `@statistics/*`         | `src/features/statistics/renderer/*`    | `src/features/statistics/main/*`    |
+| `@settings/*`           | `src/features/settings/renderer/*`      | `src/features/settings/main/*`      |
 | `@student-shared`       | `src/features/student/shared`           | `src/features/student/shared`       |
 | `@frequentation-shared` | `src/features/frequentation/shared`     | `src/features/frequentation/shared` |
 | `@statistics-shared`    | `src/features/statistics/shared`        | `src/features/statistics/shared`    |
+| `@settings-shared`      | `src/features/settings/shared`          | `src/features/settings/shared`      |
 | `@shared/*`             | `src/shared/*`                          | `src/shared/*`                      |
 | `@ui/*`                 | `src/shared/ui/*`                       | N/A                                 |
 | `@lib`                  | `src/shared/lib`                        | `src/shared/lib`                    |
