@@ -15,3 +15,10 @@ export type {
   InsertFrequentationEntity,
   SelectFrequentationEntity
 } from '../../features/frequentation/main/entities/frequentation'
+
+export { settingTable, settingEntitySchema } from '../../features/settings/main/entities/setting'
+export type {
+  SettingEntity,
+  InsertSettingEntity,
+  SelectSettingEntity
+} from '../../features/settings/main/entities/setting'
