@@ -2,12 +2,27 @@ import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select'
 import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
+import { Icon } from '@ui/components/Icon'
 import { CONTROL_HEIGHTS, FONT_WEIGHTS, RADII, TINT_ALPHAS, TYPE_SCALE } from '@ui/theme'
 
 const SEARCH_WRAPPER_MAX_WIDTH_PX = 220
 
 export const TITLE_ICON_FONT_SIZE_PX = TYPE_SCALE.h6
 export const SEARCH_ICON_FONT_SIZE_PX = TYPE_SCALE.subtitle1
+
+export const TitleIcon = styled(Icon, {
+  shouldForwardProp: shouldForwardStyledProp
+})(({ theme }) => ({
+  fontSize: TITLE_ICON_FONT_SIZE_PX,
+  color: theme.palette.primary.main
+}))
+
+export const SearchIcon = styled(Icon, {
+  shouldForwardProp: shouldForwardStyledProp
+})(({ theme }) => ({
+  fontSize: SEARCH_ICON_FONT_SIZE_PX,
+  color: theme.palette.text.disabled
+}))
 
 export const ToolbarRoot = styled('div', {
   shouldForwardProp: shouldForwardStyledProp

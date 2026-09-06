@@ -1,4 +1,5 @@
 import MenuItem from '@mui/material/MenuItem'
+import { useTheme } from '@mui/material/styles'
 import { Button } from '@ui/components/Button'
 import { ConfirmDialog } from '@ui/components/ConfirmDialog'
 import { getActivityColor } from '@frequentation/helpers/activityFormatters'
@@ -22,6 +23,7 @@ interface JournalBatchActionsContainerProps {
 }
 
 export function JournalBatchActionsContainer(props: JournalBatchActionsContainerProps) {
+  const theme = useTheme()
   const {
     hasSelection,
     isTotalEmpty,
@@ -64,7 +66,7 @@ export function JournalBatchActionsContainer(props: JournalBatchActionsContainer
         <ActivityMenu anchorEl={anchorEl} open={activityMenuOpen} onClose={closeActivityMenu}>
           {activityOptions.map((option) => (
             <MenuItem key={option.value} onClick={() => handleActivityClick(option.value)}>
-              <MenuDot style={{ backgroundColor: getActivityColor(option.value) }} />
+              <MenuDot style={{ backgroundColor: getActivityColor(option.value, theme.palette.activity) }} />
               {option.label}
             </MenuItem>
           ))}

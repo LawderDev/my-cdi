@@ -1,5 +1,4 @@
 import type { ActivityTone } from '@ui/theme'
-import { theme } from '@ui/theme'
 import { ActivityType } from '@types'
 
 const ACTIVITY_TONE_MAP: Record<ActivityType, ActivityTone> = {
@@ -24,8 +23,11 @@ export function getActivityTone(activity: ActivityType): ActivityTone {
   return ACTIVITY_TONE_MAP[activity]
 }
 
-export function getActivityColor(activity: ActivityType): string {
-  return theme.palette.activity[getActivityTone(activity)]
+export function getActivityColor(
+  activity: ActivityType,
+  activityColors: Record<ActivityTone, string>
+): string {
+  return activityColors[getActivityTone(activity)]
 }
 
 export function getActivityIcon(activity: ActivityType): string {

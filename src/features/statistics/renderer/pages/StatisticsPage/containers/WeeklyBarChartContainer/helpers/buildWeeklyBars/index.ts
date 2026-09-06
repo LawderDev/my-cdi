@@ -1,2 +1,2 @@
 export { buildWeeklyBars } from './buildWeeklyBars'
-export type { WeeklyBar } from './buildWeeklyBars'
+export type { WeeklyBar, WeeklyBarColors } from './buildWeeklyBars'

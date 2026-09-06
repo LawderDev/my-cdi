@@ -3,9 +3,17 @@ import Typography from '@mui/material/Typography'
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker'
 import { alpha, styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
+import { Icon } from '@ui/components/Icon'
 import { FONT_WEIGHTS, MONO_FONT_FAMILY, RADII, TINT_ALPHAS, TYPE_SCALE } from '@ui/theme'
 
 export const TIME_ICON_FONT_SIZE_PX = TYPE_SCALE.h6
+
+export const TimeIcon = styled(Icon, {
+  shouldForwardProp: shouldForwardStyledProp
+})(({ theme }) => ({
+  fontSize: TIME_ICON_FONT_SIZE_PX,
+  color: theme.palette.text.disabled
+}))
 
 export const TimeRow = styled('div', {
   shouldForwardProp: shouldForwardStyledProp

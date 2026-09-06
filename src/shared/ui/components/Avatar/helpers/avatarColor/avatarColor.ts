@@ -1,27 +1,29 @@
-import { theme } from '@ui/theme'
-
-export const AVATAR_COLORS = [
-  theme.palette.primary.main,
-  theme.palette.info.main,
-  theme.palette.success.main,
-  theme.palette.warning.main,
-  theme.palette.error.main,
-  theme.palette.activity.relaxation,
-  '#fb923c',
-  '#2dd4bf',
-  '#818cf8',
-  '#a78bfa',
-  '#34d399',
-  '#f472b6'
-] as const
+import type { Palette } from '@mui/material/styles'
 
 export interface AvatarColorPair {
   bg: string
   fg: string
 }
 
-export function avatarColor(id: number): AvatarColorPair {
-  const index = ((id % AVATAR_COLORS.length) + AVATAR_COLORS.length) % AVATAR_COLORS.length
-  const bg = AVATAR_COLORS[index] ?? AVATAR_COLORS[0]
-  return { bg, fg: theme.palette.getContrastText(bg) }
+export function buildAvatarColors(palette: Palette): AvatarColorPair[] {
+  const backgrounds = [
+    palette.primary.main,
+    palette.info.main,
+    palette.success.main,
+    palette.warning.main,
+    palette.error.main,
+    palette.activity.relaxation
+  ]
+  return backgrounds.map((bg) => ({ bg, fg: palette.getContrastText(bg) }))
+}
+
+export function avatarColor(id: number, palette: Palette): AvatarColorPair {
+  const colors = buildAvatarColors(palette)
+  const index = ((id % colors.length) + colors.length) % colors.length
+  const color = colors[index]
+  if (!color) {
+    const fallback = { bg: palette.primary.main, fg: palette.getContrastText(palette.primary.main) }
+    return fallback
+  }
+  return color
 }

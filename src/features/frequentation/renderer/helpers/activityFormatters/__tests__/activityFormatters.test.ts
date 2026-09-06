@@ -18,31 +18,43 @@ describe('getActivityTone', () => {
 
 describe('getActivityColor', () => {
   it('returns a hex color for each ActivityType', () => {
-    expect(getActivityColor(ActivityType.WORK)).toMatch(HEX_REGEX)
-    expect(getActivityColor(ActivityType.READING)).toMatch(HEX_REGEX)
-    expect(getActivityColor(ActivityType.COMPUTER)).toMatch(HEX_REGEX)
-    expect(getActivityColor(ActivityType.RELAXATION)).toMatch(HEX_REGEX)
-    expect(getActivityColor(ActivityType.GAME)).toMatch(HEX_REGEX)
-    expect(getActivityColor(ActivityType.OTHER)).toMatch(HEX_REGEX)
+    expect(getActivityColor(ActivityType.WORK, theme.palette.activity)).toMatch(HEX_REGEX)
+    expect(getActivityColor(ActivityType.READING, theme.palette.activity)).toMatch(HEX_REGEX)
+    expect(getActivityColor(ActivityType.COMPUTER, theme.palette.activity)).toMatch(HEX_REGEX)
+    expect(getActivityColor(ActivityType.RELAXATION, theme.palette.activity)).toMatch(HEX_REGEX)
+    expect(getActivityColor(ActivityType.GAME, theme.palette.activity)).toMatch(HEX_REGEX)
+    expect(getActivityColor(ActivityType.OTHER, theme.palette.activity)).toMatch(HEX_REGEX)
   })
 
   it('sources each color from the theme activity palette', () => {
-    expect(getActivityColor(ActivityType.COMPUTER)).toBe(theme.palette.activity.computer)
-    expect(getActivityColor(ActivityType.WORK)).toBe(theme.palette.activity.work)
-    expect(getActivityColor(ActivityType.READING)).toBe(theme.palette.activity.reading)
-    expect(getActivityColor(ActivityType.RELAXATION)).toBe(theme.palette.activity.relaxation)
-    expect(getActivityColor(ActivityType.GAME)).toBe(theme.palette.activity.game)
-    expect(getActivityColor(ActivityType.OTHER)).toBe(theme.palette.activity.other)
+    expect(getActivityColor(ActivityType.COMPUTER, theme.palette.activity)).toBe(
+      theme.palette.activity.computer
+    )
+    expect(getActivityColor(ActivityType.WORK, theme.palette.activity)).toBe(
+      theme.palette.activity.work
+    )
+    expect(getActivityColor(ActivityType.READING, theme.palette.activity)).toBe(
+      theme.palette.activity.reading
+    )
+    expect(getActivityColor(ActivityType.RELAXATION, theme.palette.activity)).toBe(
+      theme.palette.activity.relaxation
+    )
+    expect(getActivityColor(ActivityType.GAME, theme.palette.activity)).toBe(
+      theme.palette.activity.game
+    )
+    expect(getActivityColor(ActivityType.OTHER, theme.palette.activity)).toBe(
+      theme.palette.activity.other
+    )
   })
 
   it('returns distinct colors for distinct activities', () => {
     const seen = new Set([
-      getActivityColor(ActivityType.WORK),
-      getActivityColor(ActivityType.READING),
-      getActivityColor(ActivityType.COMPUTER),
-      getActivityColor(ActivityType.RELAXATION),
-      getActivityColor(ActivityType.GAME),
-      getActivityColor(ActivityType.OTHER)
+      getActivityColor(ActivityType.WORK, theme.palette.activity),
+      getActivityColor(ActivityType.READING, theme.palette.activity),
+      getActivityColor(ActivityType.COMPUTER, theme.palette.activity),
+      getActivityColor(ActivityType.RELAXATION, theme.palette.activity),
+      getActivityColor(ActivityType.GAME, theme.palette.activity),
+      getActivityColor(ActivityType.OTHER, theme.palette.activity)
     ])
     const expectedDistinct = 6
     expect(seen.size).toBe(expectedDistinct)

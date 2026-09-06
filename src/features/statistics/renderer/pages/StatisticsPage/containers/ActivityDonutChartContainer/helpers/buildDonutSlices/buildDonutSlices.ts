@@ -1,5 +1,6 @@
 import type { ActivityCountDto } from '@statistics-shared'
 import type { ActivityType } from '@types'
+import type { ActivityTone } from '@ui/theme'
 import { svgArc } from '@statistics/helpers/svgArc'
 import { getActivityColor } from '@frequentation/helpers/activityFormatters'
 
@@ -32,6 +33,7 @@ const START_ANGLE_DEG = -90
 
 export function buildDonutSlices(
   activityCounts: ActivityCountDto[],
+  activityColors: Record<ActivityTone, string>,
   geometry: DonutGeometry = DEFAULT_GEOMETRY
 ): DonutSlice[] {
   const total = activityCounts.reduce((sum, item) => sum + item.count, 0)
@@ -52,7 +54,7 @@ export function buildDonutSlices(
         startAngleDeg: cumulativeAngle,
         endAngleDeg: endAngle
       }),
-      color: getActivityColor(item.activity),
+      color: getActivityColor(item.activity, activityColors),
       activity: item.activity,
       value: item.count
     })

@@ -1,6 +1,6 @@
 import { Icon } from '../Icon'
 import type { IconButtonProps, IconButtonTone } from './types/IconButtonProps'
-import { IconButtonRoot, ICON_FONT_SIZE_CSS } from './IconButton.styles'
+import { IconButtonRoot } from './IconButton.styles'
 
 const TONE_TO_COLOR: Record<IconButtonTone, 'default' | 'error'> = {
   default: 'default',
@@ -17,7 +17,7 @@ export function IconButton({ iconName, tone = 'default', className, ...rest }: I
       data-tone={tone}
       $tone={tone}
     >
-      <Icon name={iconName} style={ICON_FONT_SIZE_CSS} />
+      <Icon name={iconName} />
     </IconButtonRoot>
   )
 }

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import type { ActivityCountDto } from '@statistics-shared'
+import type { ActivityTone } from '@ui/theme'
 import { buildDonutSlices } from '../../helpers/buildDonutSlices'
 
 export interface DonutLegendItem {
@@ -8,9 +9,12 @@ export interface DonutLegendItem {
   value: number
 }
 
-export function useActivityDonutChart(activityCounts: ActivityCountDto[]) {
+export function useActivityDonutChart(
+  activityCounts: ActivityCountDto[],
+  activityColors: Record<ActivityTone, string>
+) {
   const { t: tFreq } = useTranslation('frequentation')
-  const slices = buildDonutSlices(activityCounts)
+  const slices = buildDonutSlices(activityCounts, activityColors)
   const total = activityCounts.reduce((sum, item) => sum + item.count, 0)
   const legendItems: DonutLegendItem[] = slices.map((slice) => ({
     color: slice.color,

@@ -2,18 +2,16 @@ import type { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import InputAdornment from '@mui/material/InputAdornment'
 import MenuItem from '@mui/material/MenuItem'
-import { Icon } from '@ui/components/Icon'
-import { theme } from '@ui/theme'
 import type { EntryPeriodFilter } from '../../helpers/filterEntriesByPeriod'
 import {
   CountBadge,
   PeriodSelect,
   SearchField,
+  SearchIcon,
+  TitleIcon,
   ToolbarControls,
   ToolbarRoot,
-  ToolbarTitle,
-  SEARCH_ICON_FONT_SIZE_PX,
-  TITLE_ICON_FONT_SIZE_PX
+  ToolbarTitle
 } from './JournalEntryToolbarPresenter.styles'
 
 interface JournalEntryToolbarPresenterProps {
@@ -36,10 +34,7 @@ export function JournalEntryToolbarPresenter({
   return (
     <ToolbarRoot>
       <ToolbarTitle>
-        <Icon
-          name="groups"
-          style={{ fontSize: TITLE_ICON_FONT_SIZE_PX, color: theme.palette.primary.main }}
-        />
+        <TitleIcon name="groups" />
         {t('present')}
         <CountBadge>{entryCount}</CountBadge>
       </ToolbarTitle>
@@ -56,13 +51,7 @@ export function JournalEntryToolbarPresenter({
               'aria-label': t('searchPlaceholder'),
               startAdornment: (
                 <InputAdornment position="start">
-                  <Icon
-                    name="search"
-                    style={{
-                      color: theme.palette.text.disabled,
-                      fontSize: SEARCH_ICON_FONT_SIZE_PX
-                    }}
-                  />
+                  <SearchIcon name="search" />
                 </InputAdornment>
               )
             }

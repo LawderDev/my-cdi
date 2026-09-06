@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ThemeProvider } from '@mui/material/styles'
+import { theme } from '@ui/theme'
 import type { ReactNode } from 'react'
 import { ActivityType } from '@types'
 import { StatisticsPage } from '../StatisticsPage'
@@ -14,7 +16,11 @@ const SAMPLE_AFTERNOON = 40
 function createWrapper() {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   return function Wrapper({ children }: { children: ReactNode }) {
-    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    return (
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      </QueryClientProvider>
+    )
   }
 }
 

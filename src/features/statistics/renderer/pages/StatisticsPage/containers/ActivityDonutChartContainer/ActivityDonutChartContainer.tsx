@@ -28,7 +28,7 @@ import type { ActivityDonutChartContainerProps } from './types/ActivityDonutChar
 export function ActivityDonutChartContainer({ activityCounts }: ActivityDonutChartContainerProps) {
   const { t } = useTranslation('statistics')
   const theme = useTheme()
-  const { slices, total, legendItems } = useActivityDonutChart(activityCounts)
+  const { slices, total, legendItems } = useActivityDonutChart(activityCounts, theme.palette.activity)
   const legendNodes: ReactNode[] = legendItems.map((item) => (
     <LegendItem key={item.label}>
       <LegendDot as="span" $color={item.color} />

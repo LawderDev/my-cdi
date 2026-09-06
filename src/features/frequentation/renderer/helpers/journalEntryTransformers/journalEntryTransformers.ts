@@ -1,5 +1,6 @@
 import type { JournalEntryDto } from '@frequentation-shared'
 import type { ActivityType } from '@types'
+import type { ActivityTone } from '@ui/theme'
 import type { JournalEntryViewModel } from '@frequentation/types'
 import { getActivityColor } from '@frequentation/helpers/activityFormatters'
 
@@ -7,7 +8,8 @@ const DISPLAY_NAME_SEPARATOR = ' '
 
 export function toJournalEntryViewModel(
   dto: JournalEntryDto,
-  activityLabelLookup: (activity: ActivityType) => string
+  activityLabelLookup: (activity: ActivityType) => string,
+  activityColors: Record<ActivityTone, string>
 ): JournalEntryViewModel {
   return {
     id: dto.frequentation.id,
@@ -18,6 +20,6 @@ export function toJournalEntryViewModel(
       displayName: `${dto.student.prenom.trim()}${DISPLAY_NAME_SEPARATOR}${dto.student.nom.trim()}`
     },
     activityLabel: activityLabelLookup(dto.frequentation.activity),
-    activityColor: getActivityColor(dto.frequentation.activity)
+    activityColor: getActivityColor(dto.frequentation.activity, activityColors)
   }
 }

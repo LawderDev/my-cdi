@@ -1,6 +1,6 @@
 import type { DailyCountDto } from '@statistics-shared'
-import { buildWeeklyBars } from '../../helpers/buildWeeklyBars'
+import { buildWeeklyBars, type WeeklyBarColors } from '../../helpers/buildWeeklyBars'
 
-export function useWeeklyBarChart(dailyCounts: DailyCountDto[]) {
-  return { bars: buildWeeklyBars(dailyCounts) }
+export function useWeeklyBarChart(dailyCounts: DailyCountDto[], barColors: WeeklyBarColors) {
+  return { bars: buildWeeklyBars(dailyCounts, barColors) }
 }

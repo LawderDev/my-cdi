@@ -1,14 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { Button } from '@ui/components/Button'
-import { Icon } from '@ui/components/Icon'
 import type { ErrorFallbackProps } from './types/ErrorFallbackProps'
 import {
   DescriptionText,
   DetailsBox,
+  ErrorIcon,
   FallbackCard,
   Heading,
-  ICON_CSS,
   PageRoot,
   PreBlock,
   TitleRow
@@ -20,7 +19,7 @@ export function ErrorFallback({ error, onReload }: ErrorFallbackProps) {
     <PageRoot>
       <FallbackCard>
         <TitleRow>
-          <Icon name="error_outline" style={ICON_CSS} />
+          <ErrorIcon name="error_outline" />
           <Heading variant="h5">{t('errorBoundary.title')}</Heading>
         </TitleRow>
         <DescriptionText variant="body1">{t('errorBoundary.description')}</DescriptionText>

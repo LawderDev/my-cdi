@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ThemeProvider } from '@mui/material/styles'
+import { theme } from '@ui/theme'
 import type { ReactNode } from 'react'
 import { JournalBatchActionsContainer } from '../JournalBatchActionsContainer'
 import '@shared/i18n/config'
@@ -11,7 +13,11 @@ const ID_SECOND = 2
 
 function withQueryClient(ui: ReactNode) {
   const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } })
-  return <QueryClientProvider client={client}>{ui}</QueryClientProvider>
+  return (
+    <QueryClientProvider client={client}>
+      <ThemeProvider theme={theme}>{ui}</ThemeProvider>
+    </QueryClientProvider>
+  )
 }
 
 describe('JournalBatchActionsContainer', () => {

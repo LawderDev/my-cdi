@@ -1,15 +1,7 @@
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '@mui/material/styles'
 import type { StatsForPeriodDto } from '@statistics-shared'
-import {
-  ACCENT_BG,
-  ACCENT_COLOR,
-  INFO_BG,
-  INFO_COLOR,
-  SUCCESS_BG,
-  SUCCESS_COLOR,
-  WARNING_BG,
-  WARNING_COLOR
-} from '../../StatsKpiCardsContainer.styles'
+import { buildStatsKpiTones } from './helpers/buildStatsKpiTones'
 
 export interface KpiViewModel {
   iconName: string
@@ -23,32 +15,34 @@ const RATE_SUFFIX = '%'
 
 export function useStatsKpiCards(stats: StatsForPeriodDto): KpiViewModel[] {
   const { t } = useTranslation('statistics')
+  const theme = useTheme()
+  const tones = buildStatsKpiTones(theme.palette)
   return [
     {
       iconName: 'people',
-      iconBg: ACCENT_BG,
-      iconColor: ACCENT_COLOR,
+      iconBg: tones.accentBg,
+      iconColor: tones.accentColor,
       label: t('kpi.totalVisits'),
       value: stats.totalVisits.toLocaleString('fr-FR')
     },
     {
       iconName: 'trending_up',
-      iconBg: SUCCESS_BG,
-      iconColor: SUCCESS_COLOR,
+      iconBg: tones.successBg,
+      iconColor: tones.successColor,
       label: t('kpi.averagePerDay'),
       value: stats.averagePerDay.toLocaleString('fr-FR')
     },
     {
       iconName: 'wb_sunny',
-      iconBg: WARNING_BG,
-      iconColor: WARNING_COLOR,
+      iconBg: tones.warningBg,
+      iconColor: tones.warningColor,
       label: t('kpi.morningRate'),
       value: `${stats.morningRate}${RATE_SUFFIX}`
     },
     {
       iconName: 'nights_stay',
-      iconBg: INFO_BG,
-      iconColor: INFO_COLOR,
+      iconBg: tones.infoBg,
+      iconColor: tones.infoColor,
       label: t('kpi.afternoonRate'),
       value: `${stats.afternoonRate}${RATE_SUFFIX}`
     }

@@ -1,14 +1,12 @@
 import type { Dayjs } from 'dayjs'
-import { Icon } from '@ui/components/Icon'
-import { theme } from '@ui/theme'
 
 import {
   HiddenTimePicker,
   PeriodBadge,
   TimeButton,
   TimeDisplay,
-  TimeRow,
-  TIME_ICON_FONT_SIZE_PX
+  TimeIcon,
+  TimeRow
 } from './TimeRowPresenter.styles'
 
 interface TimeRowPresenterProps {
@@ -35,10 +33,7 @@ export function TimeRowPresenter({
   return (
     <TimeRow>
       <TimeButton onClick={onOpen} aria-label={ariaLabel}>
-        <Icon
-          name="schedule"
-          style={{ fontSize: TIME_ICON_FONT_SIZE_PX, color: theme.palette.text.disabled }}
-        />
+        <TimeIcon name="schedule" />
         <TimeDisplay>{value}</TimeDisplay>
       </TimeButton>
       <PeriodBadge variant="caption">{periodLabel}</PeriodBadge>

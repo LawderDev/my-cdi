@@ -2,10 +2,9 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { shouldForwardStyledProp } from '@ui/helpers/shouldForwardStyledProp'
-import type { CSSProperties } from 'react'
-import { theme } from '@ui/theme'
 import { MONO_FONT_FAMILY } from '@ui/theme'
 import { Card } from '@ui/components/Card'
+import { Icon } from '@ui/components/Icon'
 
 const CARD_MAX_WIDTH_PX = 600
 const PAGE_MIN_HEIGHT = '60vh'
@@ -15,10 +14,12 @@ const MB_MEDIUM = 2
 const MB_LARGE = 2.5
 const PRE_MARGIN_TOP = 0.5
 
-export const ICON_CSS: CSSProperties = {
+export const ErrorIcon = styled(Icon, {
+  shouldForwardProp: shouldForwardStyledProp
+})(({ theme }) => ({
   color: theme.palette.error.main,
   fontSize: theme.typography.h2.fontSize
-}
+}))
 
 export const PageRoot = styled(Box, {
   shouldForwardProp: shouldForwardStyledProp

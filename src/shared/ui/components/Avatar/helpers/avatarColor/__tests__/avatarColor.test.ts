@@ -1,34 +1,60 @@
 import { describe, it, expect } from 'vitest'
-import { avatarColor, AVATAR_COLORS } from '../avatarColor'
+import { avatarColor, buildAvatarColors } from '../avatarColor'
+import { theme } from '@ui/theme'
 
-describe('avatarColor', () => {
-  it('exposes a fixed-length color palette', () => {
-    const expectedPaletteSize = 12
-    expect(AVATAR_COLORS).toHaveLength(expectedPaletteSize)
+const palette = theme.palette
+const avatarColors = buildAvatarColors(palette)
+
+describe('buildAvatarColors', () => {
+  it('derives every background from the palette', () => {
+    const paletteColors = new Set([
+      palette.primary.main,
+      palette.info.main,
+      palette.success.main,
+      palette.warning.main,
+      palette.error.main,
+      palette.activity.relaxation
+    ])
+    for (const pair of avatarColors) {
+      expect(paletteColors.has(pair.bg)).toBe(true)
+    }
   })
 
+  it('pairs every background with a contrast foreground', () => {
+    for (const pair of avatarColors) {
+      expect(pair.fg).toBe(palette.getContrastText(pair.bg))
+    }
+  })
+
+  it('exposes a fixed-length color palette', () => {
+    const expectedPaletteSize = 6
+    expect(avatarColors).toHaveLength(expectedPaletteSize)
+  })
+})
+
+describe('avatarColor', () => {
   it('returns deterministic { bg, fg } for the same id', () => {
     const seed = 7
-    const a = avatarColor(seed)
-    const b = avatarColor(seed)
+    const a = avatarColor(seed, palette)
+    const b = avatarColor(seed, palette)
     expect(a).toEqual(b)
   })
 
   it('cycles through the palette by id modulo length', () => {
     const seed = 0
-    const offset = AVATAR_COLORS.length
-    expect(avatarColor(seed)).toEqual(avatarColor(seed + offset))
+    const offset = avatarColors.length
+    expect(avatarColor(seed, palette)).toEqual(avatarColor(seed + offset, palette))
   })
 
   it('returns the first color for id 0', () => {
-    const result = avatarColor(0)
-    expect(result.bg).toBe(AVATAR_COLORS[0])
-    expect(result.fg).toBe('#fff')
+    const result = avatarColor(0, palette)
+    expect(result.bg).toBe(avatarColors[0]?.bg)
+    expect(result.fg).toBe(avatarColors[0]?.fg)
   })
 
   it('returns each result with bg and fg keys typed as string', () => {
-    const sampleSeed = AVATAR_COLORS.length - 1
-    const result = avatarColor(sampleSeed)
+    const sampleSeed = avatarColors.length - 1
+    const result = avatarColor(sampleSeed, palette)
     expect(typeof result.bg).toBe('string')
     expect(typeof result.fg).toBe('string')
   })

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ChangeEvent, MouseEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '@mui/material/styles'
 import dayjs from 'dayjs'
 import { EmptyState } from '@ui/components/EmptyState'
 import { Loader } from '@ui/components/Loader'
@@ -51,9 +52,10 @@ export function JournalEntryListContainer({
     }
   })
   const { getLabel } = useActivityLabels()
+  const theme = useTheme()
 
   const dtos = data ?? []
-  const entries = dtos.map((dto) => toJournalEntryViewModel(dto, getLabel))
+  const entries = dtos.map((dto) => toJournalEntryViewModel(dto, getLabel, theme.palette.activity))
   const filteredByPeriod = filterEntriesByPeriod(entries, period)
   const filtered = filterJournalEntriesBySearchTerm(filteredByPeriod, searchTerm)
 

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { toJournalEntryViewModel } from '../journalEntryTransformers'
+import { theme } from '@ui/theme'
 import { ActivityType } from '@types'
 import type { JournalEntryDto } from '@frequentation-shared'
 
@@ -29,7 +30,7 @@ const journalEntryDtoStub: JournalEntryDto = {
 describe('toJournalEntryViewModel', () => {
   it('produces a view model with displayName and label/color', () => {
     const labelLookup = (a: ActivityType) => `LABEL_${a}`
-    const result = toJournalEntryViewModel(journalEntryDtoStub, labelLookup)
+    const result = toJournalEntryViewModel(journalEntryDtoStub, labelLookup, theme.palette.activity)
 
     expect(result.id).toBe(1)
     expect(result.activity).toBe(ActivityType.WORK)
