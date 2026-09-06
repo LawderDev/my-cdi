@@ -6,7 +6,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import 'dayjs/locale/fr'
 import { ErrorBoundary } from '@ui/components/ErrorBoundary'
-import { theme } from '@ui/theme'
+import { createAppTheme } from '@ui/theme'
+import { useThemePreference } from '@settings/api/useThemePreference'
 import { AppRoutes } from './routes'
 
 import '@shared/i18n/config'
@@ -21,19 +22,28 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: QUERY_STALE_TIME_MS, retry: QUERY_RETRY_COUNT } }
 })
 
+function AppSurface() {
+  const preference = useThemePreference()
+  const appTheme = createAppTheme(preference.data)
+
+  return (
+    <ThemeProvider theme={appTheme}>
+      <CssBaseline />
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+        <ErrorBoundary>
+          <HashRouter>
+            <AppRoutes />
+          </HashRouter>
+        </ErrorBoundary>
+      </LocalizationProvider>
+    </ThemeProvider>
+  )
+}
+
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
-          <ErrorBoundary>
-            <HashRouter>
-              <AppRoutes />
-            </HashRouter>
-          </ErrorBoundary>
-        </LocalizationProvider>
-      </ThemeProvider>
+      <AppSurface />
     </QueryClientProvider>
   )
 }
