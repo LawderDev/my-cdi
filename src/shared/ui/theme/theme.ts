@@ -1,25 +1,92 @@
-import { alpha, createTheme } from '@mui/material/styles'
+import { alpha, createTheme, type PaletteOptions, type Theme } from '@mui/material/styles'
+import { serializeThemePreference } from '@lib/themePreference'
+import { DEFAULT_THEME_PREFERENCE, THEME_BACKGROUNDS, type ThemeAccent, type ThemeMode, type ThemePreference } from '@types'
 
 export const MONO_FONT_FAMILY = '"JetBrains Mono", ui-monospace, monospace'
 
 const SANS_FONT_FAMILY = '"Inter", system-ui, -apple-system, sans-serif'
 
-const ACCENT_COLOR = '#7c4dff'
-const ACCENT_HOVER_COLOR = '#916fff'
-const BG_COLOR = '#0f172a'
-const SIDEBAR_COLOR = '#080f1e'
-const SURFACE_COLOR = '#172033'
-const CARD_COLOR = '#1e293b'
-const TITLE_COLOR = '#e2e8f0'
-const TEXT_COLOR = '#94a3b8'
-const TEXT_DIM_COLOR = '#64748b'
-const BORDER_COLOR = '#334155'
-const BORDER_STRONG_COLOR = '#475569'
-const INFO_COLOR = '#60a5fa'
-const SUCCESS_COLOR = '#4ade80'
-const WARNING_COLOR = '#fbbf24'
-const DANGER_COLOR = '#f87171'
-const RELAXATION_COLOR = '#c084fc'
+interface AccentColors {
+  main: string
+  light: string
+  contrastText: string
+  soft: string
+}
+
+const ACCENT_COLORS: Record<ThemeAccent, Record<ThemeMode, AccentColors>> = {
+  purple: {
+    dark: { main: '#7c4dff', light: '#916fff', contrastText: '#ffffff', soft: '#c084fc' },
+    light: { main: '#7c4dff', light: '#916fff', contrastText: '#ffffff', soft: '#8b5cf6' }
+  },
+  pink: {
+    dark: { main: '#ec4899', light: '#f472b6', contrastText: '#ffffff', soft: '#f9a8d4' },
+    light: { main: '#ec4899', light: '#f472b6', contrastText: '#ffffff', soft: '#db2777' }
+  },
+  blue: {
+    dark: { main: '#3b82f6', light: '#60a5fa', contrastText: '#ffffff', soft: '#93c5fd' },
+    light: { main: '#3b82f6', light: '#60a5fa', contrastText: '#ffffff', soft: '#1d4ed8' }
+  },
+  red: {
+    dark: { main: '#ef4444', light: '#f87171', contrastText: '#ffffff', soft: '#fca5a5' },
+    light: { main: '#ef4444', light: '#f87171', contrastText: '#ffffff', soft: '#b91c1c' }
+  },
+  yellow: {
+    dark: { main: '#f59e0b', light: '#fbbf24', contrastText: '#1e293b', soft: '#fcd34d' },
+    light: { main: '#f59e0b', light: '#fbbf24', contrastText: '#1e293b', soft: '#b45309' }
+  }
+}
+
+interface ModeColors {
+  sidebar: string
+  surface: string
+  card: string
+  title: string
+  text: string
+  textDim: string
+  border: string
+  borderStrong: string
+  info: string
+  success: string
+  warning: string
+  danger: string
+  softShadow: string
+  largeShadow: string
+}
+
+const MODE_COLORS: Record<ThemeMode, ModeColors> = {
+  dark: {
+    sidebar: '#080f1e',
+    surface: '#172033',
+    card: '#1e293b',
+    title: '#e2e8f0',
+    text: '#94a3b8',
+    textDim: '#64748b',
+    border: '#334155',
+    borderStrong: '#475569',
+    info: '#60a5fa',
+    success: '#4ade80',
+    warning: '#fbbf24',
+    danger: '#f87171',
+    softShadow: '0 2px 12px rgba(0, 0, 0, 0.3)',
+    largeShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
+  },
+  light: {
+    sidebar: '#e2e8f0',
+    surface: '#e8edf5',
+    card: '#ffffff',
+    title: '#0f172a',
+    text: '#475569',
+    textDim: '#64748b',
+    border: '#cbd5e1',
+    borderStrong: '#94a3b8',
+    info: '#2563eb',
+    success: '#16a34a',
+    warning: '#d97706',
+    danger: '#dc2626',
+    softShadow: '0 2px 12px rgba(15, 23, 42, 0.12)',
+    largeShadow: '0 8px 32px rgba(15, 23, 42, 0.18)'
+  }
+}
 
 const BODY_FONT_SIZE_PX = 14
 const LINE_HEIGHT = 1.5
@@ -31,13 +98,8 @@ const BREAKPOINT_LG_PX = 1100
 const BREAKPOINT_XL_PX = 1536
 
 const LINE_HEIGHT_DISPLAY = 1.2
-const GLOW_ALPHA = 0.35
-const LARGE_GLOW_ALPHA = 0.4
-
-const SOFT_SHADOW = '0 2px 12px rgba(0, 0, 0, 0.3)'
-const LARGE_SHADOW = '0 8px 32px rgba(0, 0, 0, 0.4)'
-const ACCENT_GLOW_SHADOW = `0 2px 8px ${alpha(ACCENT_COLOR, GLOW_ALPHA)}`
-const ACCENT_LARGE_GLOW_SHADOW = `0 4px 16px ${alpha(ACCENT_COLOR, LARGE_GLOW_ALPHA)}`
+const ACCENT_GLOW_ALPHA = 0.35
+const ACCENT_LARGE_GLOW_ALPHA = 0.4
 
 export type ActivityTone = 'computer' | 'work' | 'reading' | 'relaxation' | 'game' | 'other'
 
@@ -128,184 +190,207 @@ declare module '@mui/material/styles' {
   }
 }
 
-export const theme = createTheme({
-  palette: {
-    mode: 'dark',
+function buildPaletteOptions(accent: ThemeAccent, mode: ThemeMode): PaletteOptions {
+  const modeColors = MODE_COLORS[mode]
+  const accentColors = ACCENT_COLORS[accent][mode]
+  return {
+    mode,
     primary: {
-      main: ACCENT_COLOR,
-      light: ACCENT_HOVER_COLOR
+      main: accentColors.main,
+      light: accentColors.light,
+      contrastText: accentColors.contrastText
     },
     info: {
-      main: INFO_COLOR
+      main: modeColors.info
     },
     success: {
-      main: SUCCESS_COLOR
+      main: modeColors.success
     },
     warning: {
-      main: WARNING_COLOR
+      main: modeColors.warning
     },
     error: {
-      main: DANGER_COLOR
+      main: modeColors.danger
     },
     background: {
-      default: BG_COLOR,
-      paper: CARD_COLOR
+      default: THEME_BACKGROUNDS[mode],
+      paper: modeColors.card
     },
     text: {
-      primary: TITLE_COLOR,
-      secondary: TEXT_COLOR,
-      disabled: TEXT_DIM_COLOR
+      primary: modeColors.title,
+      secondary: modeColors.text,
+      disabled: modeColors.textDim
     },
-    divider: BORDER_COLOR,
-    sidebar: SIDEBAR_COLOR,
-    surface: SURFACE_COLOR,
-    dividerStrong: BORDER_STRONG_COLOR,
+    divider: modeColors.border,
+    sidebar: modeColors.sidebar,
+    surface: modeColors.surface,
+    dividerStrong: modeColors.borderStrong,
     activity: {
-      computer: INFO_COLOR,
-      work: SUCCESS_COLOR,
-      reading: WARNING_COLOR,
-      relaxation: RELAXATION_COLOR,
-      game: DANGER_COLOR,
-      other: TEXT_COLOR
-    }
-  },
-  typography: {
-    fontFamily: SANS_FONT_FAMILY,
-    overline: {
-      fontSize: TYPE_SCALE.caption,
-      fontWeight: FONT_WEIGHTS.semibold,
-      lineHeight: LINE_HEIGHT,
-      textTransform: 'uppercase',
-      letterSpacing: '0.08em'
-    },
-    caption: {
-      fontSize: TYPE_SCALE.caption,
-      fontWeight: FONT_WEIGHTS.medium,
-      lineHeight: LINE_HEIGHT
-    },
-    body2: {
-      fontSize: TYPE_SCALE.body2,
-      fontWeight: FONT_WEIGHTS.medium,
-      lineHeight: LINE_HEIGHT
-    },
-    body1: {
-      fontSize: TYPE_SCALE.body1,
-      lineHeight: LINE_HEIGHT
-    },
-    subtitle2: {
-      fontSize: TYPE_SCALE.subtitle2,
-      fontWeight: FONT_WEIGHTS.semibold,
-      lineHeight: LINE_HEIGHT
-    },
-    subtitle1: {
-      fontSize: TYPE_SCALE.subtitle1,
-      fontWeight: FONT_WEIGHTS.semibold,
-      lineHeight: LINE_HEIGHT
-    },
-    h6: {
-      fontSize: TYPE_SCALE.h6,
-      fontWeight: FONT_WEIGHTS.semibold,
-      lineHeight: LINE_HEIGHT
-    },
-    h5: {
-      fontSize: TYPE_SCALE.h5,
-      fontWeight: FONT_WEIGHTS.semibold,
-      lineHeight: LINE_HEIGHT
-    },
-    h4: {
-      fontSize: TYPE_SCALE.h4,
-      fontWeight: FONT_WEIGHTS.bold,
-      lineHeight: LINE_HEIGHT
-    },
-    h3: {
-      fontSize: TYPE_SCALE.h3,
-      fontWeight: FONT_WEIGHTS.bold,
-      lineHeight: LINE_HEIGHT_DISPLAY
-    },
-    h2: {
-      fontSize: TYPE_SCALE.h2,
-      fontWeight: FONT_WEIGHTS.bold,
-      lineHeight: LINE_HEIGHT_DISPLAY
-    },
-    h1: {
-      fontSize: TYPE_SCALE.h2,
-      fontWeight: FONT_WEIGHTS.bold,
-      lineHeight: LINE_HEIGHT_DISPLAY
-    },
-    button: {
-      textTransform: 'none',
-      fontWeight: FONT_WEIGHTS.medium,
-      fontSize: TYPE_SCALE.subtitle2
-    }
-  },
-  shape: {
-    borderRadius: BORDER_RADIUS_PX
-  },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: BREAKPOINT_SM_PX,
-      md: BREAKPOINT_MD_PX,
-      lg: BREAKPOINT_LG_PX,
-      xl: BREAKPOINT_XL_PX
-    }
-  },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        'html, body': {
-          height: '100%',
-          margin: 0
-        },
-        body: {
-          fontFamily: SANS_FONT_FAMILY,
-          fontSize: BODY_FONT_SIZE_PX,
-          lineHeight: LINE_HEIGHT,
-          WebkitFontSmoothing: 'antialiased'
-        },
-        '#root': {
-          height: '100%',
-          overflow: 'hidden'
-        },
-        button: {
-          cursor: 'pointer',
-          border: 'none',
-          background: 'none',
-          font: 'inherit',
-          color: 'inherit'
-        },
-        'input, select, textarea': {
-          font: 'inherit',
-          color: 'inherit'
-        },
-        '*::-webkit-scrollbar': {
-          width: SCROLLBAR_WIDTH_PX
-        },
-        '*::-webkit-scrollbar-track': {
-          background: 'transparent'
-        },
-        '*::-webkit-scrollbar-thumb': {
-          background: BORDER_COLOR,
-          borderRadius: SCROLLBAR_THUMB_RADIUS_PX
-        },
-        '*::-webkit-scrollbar-thumb:hover': {
-          background: BORDER_STRONG_COLOR
-        }
-      }
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundImage: 'none'
-        }
-      }
+      computer: modeColors.info,
+      work: modeColors.success,
+      reading: modeColors.warning,
+      relaxation: accentColors.soft,
+      game: modeColors.danger,
+      other: modeColors.text
     }
   }
-})
+}
 
-// Elevation ramp: 1 = soft card shadow, 2 = large modal shadow,
-// 3/4 = accent glow for emphasized primary elements.
-theme.shadows[1] = SOFT_SHADOW
-theme.shadows[2] = LARGE_SHADOW
-theme.shadows[3] = ACCENT_GLOW_SHADOW
-theme.shadows[4] = ACCENT_LARGE_GLOW_SHADOW
+const THEME_CACHE = new Map<string, Theme>()
+
+export function createAppTheme(preference: ThemePreference): Theme {
+  const cacheKey = serializeThemePreference(preference)
+  const cachedTheme = THEME_CACHE.get(cacheKey)
+  if (cachedTheme) {
+    return cachedTheme
+  }
+  const modeColors = MODE_COLORS[preference.mode]
+  const accentColors = ACCENT_COLORS[preference.accent][preference.mode]
+  const appTheme = createTheme({
+    palette: buildPaletteOptions(preference.accent, preference.mode),
+    typography: {
+      fontFamily: SANS_FONT_FAMILY,
+      overline: {
+        fontSize: TYPE_SCALE.caption,
+        fontWeight: FONT_WEIGHTS.semibold,
+        lineHeight: LINE_HEIGHT,
+        textTransform: 'uppercase',
+        letterSpacing: '0.08em'
+      },
+      caption: {
+        fontSize: TYPE_SCALE.caption,
+        fontWeight: FONT_WEIGHTS.medium,
+        lineHeight: LINE_HEIGHT
+      },
+      body2: {
+        fontSize: TYPE_SCALE.body2,
+        fontWeight: FONT_WEIGHTS.medium,
+        lineHeight: LINE_HEIGHT
+      },
+      body1: {
+        fontSize: TYPE_SCALE.body1,
+        lineHeight: LINE_HEIGHT
+      },
+      subtitle2: {
+        fontSize: TYPE_SCALE.subtitle2,
+        fontWeight: FONT_WEIGHTS.semibold,
+        lineHeight: LINE_HEIGHT
+      },
+      subtitle1: {
+        fontSize: TYPE_SCALE.subtitle1,
+        fontWeight: FONT_WEIGHTS.semibold,
+        lineHeight: LINE_HEIGHT
+      },
+      h6: {
+        fontSize: TYPE_SCALE.h6,
+        fontWeight: FONT_WEIGHTS.semibold,
+        lineHeight: LINE_HEIGHT
+      },
+      h5: {
+        fontSize: TYPE_SCALE.h5,
+        fontWeight: FONT_WEIGHTS.semibold,
+        lineHeight: LINE_HEIGHT
+      },
+      h4: {
+        fontSize: TYPE_SCALE.h4,
+        fontWeight: FONT_WEIGHTS.bold,
+        lineHeight: LINE_HEIGHT
+      },
+      h3: {
+        fontSize: TYPE_SCALE.h3,
+        fontWeight: FONT_WEIGHTS.bold,
+        lineHeight: LINE_HEIGHT_DISPLAY
+      },
+      h2: {
+        fontSize: TYPE_SCALE.h2,
+        fontWeight: FONT_WEIGHTS.bold,
+        lineHeight: LINE_HEIGHT_DISPLAY
+      },
+      h1: {
+        fontSize: TYPE_SCALE.h2,
+        fontWeight: FONT_WEIGHTS.bold,
+        lineHeight: LINE_HEIGHT_DISPLAY
+      },
+      button: {
+        textTransform: 'none',
+        fontWeight: FONT_WEIGHTS.medium,
+        fontSize: TYPE_SCALE.subtitle2
+      }
+    },
+    shape: {
+      borderRadius: BORDER_RADIUS_PX
+    },
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: BREAKPOINT_SM_PX,
+        md: BREAKPOINT_MD_PX,
+        lg: BREAKPOINT_LG_PX,
+        xl: BREAKPOINT_XL_PX
+      }
+    },
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          'html, body': {
+            height: '100%',
+            margin: 0
+          },
+          body: {
+            fontFamily: SANS_FONT_FAMILY,
+            fontSize: BODY_FONT_SIZE_PX,
+            lineHeight: LINE_HEIGHT,
+            WebkitFontSmoothing: 'antialiased'
+          },
+          '#root': {
+            height: '100%',
+            overflow: 'hidden'
+          },
+          button: {
+            cursor: 'pointer',
+            border: 'none',
+            background: 'none',
+            font: 'inherit',
+            color: 'inherit'
+          },
+          'input, select, textarea': {
+            font: 'inherit',
+            color: 'inherit'
+          },
+          '*::-webkit-scrollbar': {
+            width: SCROLLBAR_WIDTH_PX
+          },
+          '*::-webkit-scrollbar-track': {
+            background: 'transparent'
+          },
+          '*::-webkit-scrollbar-thumb': {
+            background: modeColors.border,
+            borderRadius: SCROLLBAR_THUMB_RADIUS_PX
+          },
+          '*::-webkit-scrollbar-thumb:hover': {
+            background: modeColors.borderStrong
+          }
+        }
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundImage: 'none'
+          }
+        }
+      }
+    }
+  })
+
+  // Elevation ramp: 1 = soft card shadow, 2 = large modal shadow,
+  // 3/4 = accent glow for emphasized primary elements.
+  appTheme.shadows[1] = modeColors.softShadow
+  appTheme.shadows[2] = modeColors.largeShadow
+  appTheme.shadows[3] = `0 2px 8px ${alpha(accentColors.main, ACCENT_GLOW_ALPHA)}`
+  appTheme.shadows[4] = `0 4px 16px ${alpha(accentColors.main, ACCENT_LARGE_GLOW_ALPHA)}`
+
+  THEME_CACHE.set(cacheKey, appTheme)
+  return appTheme
+}
+
+export const theme = createAppTheme(DEFAULT_THEME_PREFERENCE)
