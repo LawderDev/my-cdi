@@ -21,6 +21,8 @@
       "@student/*": ["./src/features/student/main/*"],
       "@frequentation/*": ["./src/features/frequentation/main/*"],
       "@statistics/*": ["./src/features/statistics/main/*"],
+      "@settings/*": ["./src/features/settings/main/*"],
+      "@settings-shared": ["./src/features/settings/shared"],
       "@student-shared": ["./src/features/student/shared"],
       "@frequentation-shared": ["./src/features/frequentation/shared"],
       "@statistics-shared": ["./src/features/statistics/shared"],

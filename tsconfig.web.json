@@ -23,6 +23,8 @@
       "@student/*": ["./src/features/student/renderer/*"],
       "@frequentation/*": ["./src/features/frequentation/renderer/*"],
       "@statistics/*": ["./src/features/statistics/renderer/*"],
+      "@settings/*": ["./src/features/settings/renderer/*"],
+      "@settings-shared": ["./src/features/settings/shared"],
       "@student-shared": ["./src/features/student/shared"],
       "@frequentation-shared": ["./src/features/frequentation/shared"],
       "@statistics-shared": ["./src/features/statistics/shared"],

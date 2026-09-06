@@ -3,9 +3,11 @@ import {
   APP_CHANNELS,
   STUDENT_CHANNELS,
   FREQUENTATION_CHANNELS,
-  STATISTICS_CHANNELS
+  STATISTICS_CHANNELS,
+  SETTINGS_CHANNELS
 } from '@shared/ipc/channels'
 import { UPDATER_CHANNELS, type UpdaterChannel } from '@shared/ipc/updaterChannels'
+import { parseThemePreferenceFromArgv } from '@lib/themePreference'
 
 function invoke<Output>(channel: string, input: unknown): Promise<Output> {
   return ipcRenderer.invoke(channel, input)
@@ -42,6 +44,11 @@ const electronAPI = {
   statistics: {
     getStats: (input: unknown) => invoke(STATISTICS_CHANNELS.GET_STATS, input)
   },
+  settings: {
+    getTheme: () => invoke(SETTINGS_CHANNELS.GET_THEME, undefined),
+    setTheme: (input: unknown) => invoke(SETTINGS_CHANNELS.SET_THEME, input)
+  },
+  getInitialThemePreference: () => parseThemePreferenceFromArgv(process.argv),
   getAppVersion: async (): Promise<string> => {
     const result = await ipcRenderer.invoke(APP_CHANNELS.GET_VERSION)
     if (

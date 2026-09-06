@@ -3,6 +3,8 @@ import { alpha } from '@mui/material/styles'
 import { createAppTheme, theme } from '../theme'
 import { THEME_ACCENTS, THEME_MODES, DEFAULT_THEME_PREFERENCE, THEME_BACKGROUNDS } from '@types'
 
+const ACCENT_GLOW_ALPHA = 0.35
+
 const ALL_PREFERENCES = THEME_ACCENTS.flatMap((accent) =>
   THEME_MODES.map((mode) => ({ accent, mode }))
 )
@@ -72,6 +74,8 @@ describe('createAppTheme', () => {
     const pinkLight = createAppTheme({ accent: 'pink', mode: 'light' })
     expect(dark.shadows[1]).not.toBe(light.shadows[1])
     expect(light.shadows[3]).not.toBe(pinkLight.shadows[3])
-    expect(light.shadows[3]).toBe(`0 2px 8px ${alpha(light.palette.primary.main, 0.35)}`)
+    expect(light.shadows[3]).toBe(
+      `0 2px 8px ${alpha(light.palette.primary.main, ACCENT_GLOW_ALPHA)}`
+    )
   })
 })

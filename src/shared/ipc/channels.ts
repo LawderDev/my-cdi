@@ -25,8 +25,14 @@ export const STATISTICS_CHANNELS = {
   GET_STATS: 'statistics.getStats'
 } as const
 
+export const SETTINGS_CHANNELS = {
+  GET_THEME: 'settings.getTheme',
+  SET_THEME: 'settings.setTheme'
+} as const
+
 export type AppChannel = (typeof APP_CHANNELS)[keyof typeof APP_CHANNELS]
 export type StudentChannel = (typeof STUDENT_CHANNELS)[keyof typeof STUDENT_CHANNELS]
 export type FrequentationChannel =
   (typeof FREQUENTATION_CHANNELS)[keyof typeof FREQUENTATION_CHANNELS]
 export type StatisticsChannel = (typeof STATISTICS_CHANNELS)[keyof typeof STATISTICS_CHANNELS]
+export type SettingsChannel = (typeof SETTINGS_CHANNELS)[keyof typeof SETTINGS_CHANNELS]

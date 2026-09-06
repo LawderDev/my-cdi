@@ -15,6 +15,8 @@ import type {
   JournalEntryDto
 } from '@frequentation-shared'
 import type { PeriodRangeDto, StatsForPeriodDto } from '@statistics-shared'
+import type { ThemePreferenceResponseDto, UpdateThemePreferenceDto } from '@settings-shared'
+import type { ThemePreference } from '@types'
 import type {
   UpdateAvailableInfo,
   DownloadProgressInfo,
@@ -52,6 +54,11 @@ export interface StatisticsApi {
   getStats: (input: PeriodRangeDto) => Promise<IpcResult<StatsForPeriodDto>>
 }
 
+export interface SettingsApi {
+  getTheme: () => Promise<IpcResult<ThemePreferenceResponseDto>>
+  setTheme: (input: UpdateThemePreferenceDto) => Promise<IpcResult<ThemePreferenceResponseDto>>
+}
+
 export interface UpdaterAPI {
   onUpdateAvailable: (listener: (info: UpdateAvailableInfo) => void) => Unsubscribe
   onUpdateNotAvailable: (listener: () => void) => Unsubscribe
@@ -66,7 +73,9 @@ export interface ElectronAPI {
   student: StudentApi
   frequentation: FrequentationApi
   statistics: StatisticsApi
+  settings: SettingsApi
   getAppVersion: () => Promise<string>
+  getInitialThemePreference: () => ThemePreference
   updater: UpdaterAPI
 }
 
